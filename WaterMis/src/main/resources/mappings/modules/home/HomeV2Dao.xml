@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.home.dao.HomeV2Dao" >
+
+
+    <select id="getUseWaterThAnalysis" resultType="com.wapwag.woss.modules.home.entity.HomeDTO">
+        select
+        concat(dateTime,'_',unit) id,
+        dateTime,
+        pv,
+        unit
+        from (
+        SELECT
+        DATE_FORMAT(date_time, ${formatDate}) AS dateTime,
+        sum(pv) AS pv,
+        eu as unit,
+        id_pump_house as id_device
+        FROM
+        ${tableName}
+        WHERE
+        date_time BETWEEN #{startTime} AND #{endTime}
+        and pv &lt; 10000
+        group by eu,DATE_FORMAT(date_time, ${formatDate})
+        ) temp
+        ORDER by dateTime ASC,unit asc
+    </select>
+
+    <!-- 按区域统计指定月的 用水统计-->
+    <select id="getUseWaterMonthAnalysisByArea" resultType="com.wapwag.woss.modules.home.entity.HomeDTO">
+        select r.name areaName,r.ID areaId,
+
+        concat(temp.dateTime,'_',temp.unit) id,
+        temp.dateTime,
+        temp.pv,
+        temp.unit,
+        temp.id_pump_house pumpHouseId
+
+        from regional r
+        LEFT join pump_house h on r.id=h.ID_REGION
+        LEFT JOIN (
+        SELECT
+        DATE_FORMAT(date_time, ${formatDate}) AS dateTime,
+        sum(pv) AS pv,
+        eu as unit,
+        id_pump_house
+        FROM
+        ${tableName}
+        WHERE
+        date_time BETWEEN #{startTime} AND #{endTime}
+        and pv &lt; 10000
+        and eu in('m3','kWh')
+        group by eu,id_pump_house
+        ) temp on h.id=temp.id_pump_house
+        ORDER by temp.dateTime ASC,temp.unit asc
+    </select>
+
+
+    <!-- 地图  获取实时蓄水量-->
+    <select id="getFreeWaterDayAddAnalysisByDeviceId" resultType="com.wapwag.woss.modules.home.entity.HomeDTO">
+
+        SELECT
+            r.`name` areaName,
+            r.ID aearId,
+            h.`NAME` pumpName,
+            h.id,
+            device.ID deviceId,
+            dl.device_id,
+            dl.SX_GG AS sxGg,
+            sum( dataV.serviceValue ) AS pv
+        FROM
+            regional r
+            LEFT JOIN pump_house h ON r.id = h.ID_REGION
+            LEFT JOIN device device ON device.ID_PUMP_HOUSE = h.id
+            LEFT JOIN device_set_label dl ON dl.device_id = device.ID
+            LEFT JOIN (
+            SELECT
+                deviceData.ID_DEVICE AS deviceId,
+                deviceData.ID_SERVICE AS serviceId,
+                fu.TYPE AS type,
+                fu.MEMO AS serviceName,
+                deviceData.DATE_TIME AS serviceDate,
+                IFNULL(
+            CASE
+                TRUNCATE ( deviceData.pv * CASE WHEN service.ratio IS NULL THEN 1 ELSE service.ratio END, 2 )
+                WHEN '0.00' THEN
+                '0' ELSE TRUNCATE ( deviceData.pv * CASE WHEN service.ratio IS NULL THEN 1 ELSE service.ratio END, 2 )
+                END,
+                '-'
+                ) AS serviceValue,
+                fu.UNIT AS serviceUnit
+            FROM
+                (
+            SELECT
+                *
+            FROM
+                ${tableName}
+            WHERE
+                DATE_TIME > date_sub( now( ), INTERVAL 3 MINUTE )
+                AND PV > 0
+            ORDER BY
+                DATE_TIME DESC
+                LIMIT 100000
+                ) deviceData
+                INNER JOIN services service ON service.ID = deviceData.ID_SERVICE
+                INNER JOIN FUNCTION fu ON fu.id = service.ID_FUNCTION
+            WHERE
+                service.node_display = '0'
+                AND fu.UNIT = 'm'
+            GROUP BY
+                deviceData.id_service
+                ) dataV ON dl.device_id = dataV.deviceId
+            WHERE
+                dataV.serviceValue > 0
+            GROUP BY
+                device.ID
+    </select>
+
+
+
+    <!-- 根据泵房获取昨日用水量/耗电量（增长前10，减少后10，排名前10，最后10）-->
+    <select id="getUseWaterDayAddAnalysisByPumpHouse" resultType="com.wapwag.woss.modules.home.entity.HomeDTO">
+        select h.name areaName,r.ID aearId,h.`NAME` pumpName,
+
+
+        concat(temp.dateTime,'_',temp.unit) id,
+        temp.dateTime,
+        temp.pv,
+        temp.unit,
+        temp.id_pump_house
+
+        from regional r
+        LEFT join pump_house h on r.id=h.ID_REGION
+        LEFT JOIN (
+        SELECT
+        DATE_FORMAT(date_time, ${formatDate}) AS dateTime,
+        sum(pv) AS pv,
+        eu as unit,
+        id_pump_house
+        FROM
+        ${tableName}
+        WHERE
+        date_time BETWEEN #{startTime} AND #{endTime}
+        and pv &lt; 10000
+        and eu in('m3','kWh')
+        group by eu,id_pump_house,DATE_FORMAT(date_time, ${formatDate})
+        ) temp on h.id=temp.id_pump_house
+        ORDER by temp.dateTime ASC,temp.unit asc
+    </select>
+
+
+    <!-- 获取 芜湖 地图名称-->
+    <select id="getMapAreaName" resultType="com.wapwag.woss.modules.home.entity.HomeDTO">
+        select r.name areaName,r.ID aearId,h.`NAME` pumpName
+        from regional r
+        LEFT join pump_house h on r.id=h.ID_REGION
+        where r.ID>340200
+    </select>
+
+
+    <!-- 获取 芜湖 地图每个区域的泵房数量-->
+    <select id="getMapAreaPumpHouse" resultType="com.wapwag.woss.modules.home.entity.HomeDTO">
+        select r.name areaName,r.ID areaId,h.`NAME` pumpName,count(1) pv
+        from pump_house h
+        LEFT join regional r on r.id=h.ID_REGION
+        where r.ID>340200
+        GROUP BY r.id
+    </select>
+
+
+    <select id="getCurrentDataByDeviceIdAndCode" resultType="com.wapwag.woss.modules.home.entity.HomeDTO">
+       select  date_format(aa.DATE_TIME, '%H:%i:%s') dateTime,
+        ( aa.pv * CASE WHEN ratio IS NULL THEN 1 ELSE ratio END ) AS pv
+        from
+        (
+        SELECT
+        sv.ID_SERVICE,
+        sv.DATE_TIME,
+            sv.PV
+        FROM
+            ${tableName} sv
+        WHERE
+             sv.id_device =#{deviceId}
+        ) aa
+        JOIN services s ON s.id = aa.id_service and s.code = #{code}
+    </select>
+
+
+</mapper>

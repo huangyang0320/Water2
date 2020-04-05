@@ -1,0 +1,1049 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.home.dao.DeviceDao">
+
+	<resultMap id="BaseResultMap"
+		type="com.wapwag.woss.modules.home.entity.DeviceInfo">
+		<id column="device_id" property="deviceId" jdbcType="VARCHAR" />
+		<result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+		<result column="date_manufacture" property="dateManufacture"
+			jdbcType="TIMESTAMP" />
+		<result column="date_purchase" property="datePurchase"
+			jdbcType="TIMESTAMP" />
+		<result column="purchase_amount" property="purchaseAmount"
+			jdbcType="DECIMAL" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+		<collection property="projectInfo"
+			resultMap="com.wapwag.woss.modules.home.dao.ProjectDao.BaseResultMap" />
+		<collection property="videoInfo"
+			resultMap="com.wapwag.woss.modules.home.dao.VideoDao.BaseResultMap" />
+	</resultMap>
+
+	<resultMap id="ReferenceMap"
+		type="com.wapwag.woss.modules.home.entity.DeviceInfo">
+		<id column="device_id" property="deviceId" jdbcType="VARCHAR" />
+		<result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+		<result column="date_manufacture" property="dateManufacture"
+			jdbcType="TIMESTAMP" />
+		<result column="date_purchase" property="datePurchase"
+			jdbcType="TIMESTAMP" />
+		<result column="purchase_amount" property="purchaseAmount"
+			jdbcType="DECIMAL" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="DeviceMetaMap"
+		type="com.wapwag.woss.modules.home.entity.DeviceMeta">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="DATA_TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="UNIT" property="unit" jdbcType="VARCHAR" />
+		<result column="RangeMinimum" property="min" jdbcType="VARCHAR" />
+		<result column="RangeMaximum" property="max" jdbcType="VARCHAR" />
+		<result column="Default_Visible" property="display" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<sql id="whereTimeDimen">
+		<choose>
+			<when test="dimen == 'hour'">
+			<if test="tableName !=null and tableName !=''">
+				${tableName} sv
+			</if>
+			<if test="tableName == null or tableName ==''">
+				service_values_hour sv
+			</if>	
+			</when>
+			<when test="dimen == 'day'">
+				service_values_day sv
+			</when>
+			<when test="dimen == 'month'">
+				service_values_month sv
+			</when>
+			<when test="dimen == 'year'">
+				service_values_year sv
+			</when>
+		</choose>
+	</sql>
+
+	<select id="get" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		di.ID AS device_id,
+		di. NAME AS device_name,
+		pi.NAME as PROJECT_NAME,
+		pi.ADDRESS as PROJECT_ADDRESS,
+		phi.ALL_PIC_URL,
+		vi.id AS video_id,
+		vi.pump_house_id as video_pump_house_id,
+		vi.name as video_name,
+		vi.monitor_ip,
+		vi.monitor_port,
+		vi.channel_no
+		FROM
+		device di
+		LEFT JOIN
+		pump_house phi on di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN
+		project pi ON
+		phi.id_project = pi.id
+		LEFT JOIN
+		regional ri on ri.id = pi.ID_REGION
+		LEFT JOIN
+		video_info vi ON di.ID_PUMP_HOUSE = vi.pump_house_id
+		where
+		di.ID_PUMP_HOUSE is not null
+		AND di.del_flag = '0'
+		AND di.ID =
+		#{deviceId, jdbcType = VARCHAR}
+		ORDER BY
+		di.ID
+	</select>
+
+	<select id="findDeviceMeta" resultMap="DeviceMetaMap">
+		SELECT
+		ID, NAME, CODE,
+		DATA_TYPE, MEMO, IFNULL(UNIT, '') as UNIT, RangeMaximum,
+		RangeMinimum,
+		Default_Visible
+		FROM
+		services
+		WHERE
+		ID_DEVICE = #{deviceId, jdbcType =
+		VARCHAR}
+		Order By
+		CODE
+	</select>
+
+	<select id="findDeviceConsumeMeta" resultType="java.util.Map">
+		SELECT
+		*
+		FROM
+		energy_index_param
+		WHERE
+		ID_PUMP_HOUSE IN
+		<foreach collection="pumphouseIds.split(',')" separator=","
+			open="(" close=")" item="item">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="findDeviceRealTimeData" resultType="java.lang.String">
+		SELECT
+		GROUP_CONCAT(
+		SUBSTRING_INDEX(a.id_service, '\\', - 1),
+		'|',
+		IFNULL(case
+		truncate(pv * case when ratio is null then 1 else ratio end
+		,2)
+		when '0.00' then '0' else
+		truncate(pv * case when ratio is null then
+		1 else ratio end ,2)
+		end, '-')
+		)
+		FROM
+		(
+		SELECT
+		*
+		FROM
+		(
+		SELECT
+		*
+		FROM
+		${tableName}
+		WHERE
+		ID_DEVICE =
+		#{deviceId, jdbcType = VARCHAR}
+		and
+		date_time &gt;
+		date_sub(now(), interval
+		3 Minute)
+		<if test="dimen != null">
+			AND ID_SERVICE in
+			<foreach collection="dimen.split(',')" separator="," open="("
+				close=")" item="item">
+				concat(#{deviceId, jdbcType = VARCHAR}, '\\',
+				#{item})
+			</foreach>
+		</if>
+		ORDER BY
+		DATE_TIME DESC
+		) a
+		GROUP BY
+		a.id_service
+		) a left join services s
+		on s.id = a.id_service
+	</select>
+
+	<select id="findDeviceHistoryData1" resultType="java.util.Map">
+		SELECT
+		date_format(sv.DATE_TIME, '%Y-%m-%d %H:%i:%s') as queryDate,
+		s.code as queryIndex,
+		avg(sv.pv) as queryValue
+		FROM
+		<include refid="whereTimeDimen" />
+		LEFT JOIN
+		services s ON s.ID = sv.ID_SERVICE
+		WHERE
+		sv.DATE_TIME BETWEEN
+		#{startDate, jdbcType = VARCHAR} AND #{endDate, jdbcType =
+		VARCHAR}
+		AND
+		sv.ID_DEVICE = #{deviceId, jdbcType = VARCHAR}
+		<if test="index.split(',').length > 1">
+			AND s.code in
+			<foreach collection="index.split(',')" separator="," open="("
+				close=")" item="item">
+				#{item}
+			</foreach>
+		</if>
+		<if test="index.split(',').length == 1">
+			AND s.code = #{index, jdbcType = VARCHAR}
+		</if>
+		GROUP BY
+		s.code,
+		sv.DATE_TIME
+	</select>
+
+	<select id="findDeviceHistoryData" resultType="java.util.Map">
+		select queryDate , queryIndex ,
+		queryValue * case when ratio is null
+		then 1 else ratio end
+		queryValue from (
+		SELECT
+		date_format(sv.DATE_TIME,
+		'%Y-%m-%d %H:%i:%s') as queryDate,
+		SUBSTRING_INDEX(sv.id_service, '\\',
+		- 1) AS queryIndex,
+		avg(sv.pv) as
+		queryValue,
+		sv.id_service
+		FROM
+		<include refid="whereTimeDimen" />
+		WHERE
+		sv.DATE_TIME BETWEEN #{startDate, jdbcType = VARCHAR} AND
+		#{endDate, jdbcType =
+		VARCHAR}
+		AND sv.ID_DEVICE = #{deviceId, jdbcType =
+		VARCHAR}
+		<if test="index.split(',').length > 1">
+			AND sv.id_service in
+			<foreach collection="index.split(',')" separator="," open="("
+				close=")" item="item">
+				concat(#{deviceId, jdbcType = VARCHAR}, '\\',
+				#{item})
+			</foreach>
+		</if>
+		<if test="index.split(',').length == 1">
+			AND sv.id_service = concat(#{deviceId, jdbcType =
+			VARCHAR}, '\\',
+			#{index, jdbcType = VARCHAR})
+		</if>
+		GROUP BY
+		sv.ID_SERVICE,
+		sv.DATE_TIME
+		) temp join services s on s.id =
+		temp.id_service
+	</select>
+
+	<select id="findDeviceConsume" resultType="java.util.Map">
+		SELECT
+		date_format(sv.DATE_TIME, '%Y-%m-%d %H:%i:%s') as queryDate,
+		s.code as queryIndex,
+		sv.TAG_NAME as queryName,
+		IFNULL((max - min), 0)
+		as queryValue
+		FROM
+		<include refid="whereTimeDimen" />
+		LEFT JOIN
+		services s ON s.ID = sv.ID_SERVICE
+		WHERE
+		sv.DATE_TIME BETWEEN
+		#{startDate, jdbcType = VARCHAR} AND #{endDate, jdbcType =
+		VARCHAR}
+		AND
+		sv.ID_DEVICE = #{deviceId, jdbcType = VARCHAR}
+		AND (
+		TAG_NAME LIKE
+		'%电量%'
+		OR TAG_NAME LIKE '%累计流量%'
+		)
+	</select>
+
+	<select id="findDeviceConsumeSpecial" resultType="java.util.Map">
+		SELECT
+		date_format(sv.DATE_TIME, '%Y-%m-%d %H:%i:%s') as queryDate,
+		sv.id_service AS queryIndex,
+		case when eu = 'kWh' then '累计电量' else
+		'累计流量' end as queryName,
+		IFNULL(sum(pv),
+		0) as queryValue
+		FROM
+		service_values_summary sv
+		WHERE
+		sv.DATE_TIME BETWEEN
+		#{startDate,
+		jdbcType = VARCHAR} AND
+		#{endDate,
+		jdbcType =
+		VARCHAR}
+		and eu in
+		('kWh','m3')
+		AND
+		sv.id_device = #{deviceIndexs}
+		group by
+		eu,substring(date_time,1,(
+		<choose>
+			<when test="dimen == 'day'">
+				13
+			</when>
+			<when test="dimen == 'month'">
+				10
+			</when>
+			<when test="dimen == 'year'">
+				7
+			</when>
+		</choose>
+		))
+	</select>
+
+	<select id="findDiffDeviceConsume" resultType="java.util.Map">
+		SELECT
+		sv.ID_DEVICE AS queryId,
+		d.NAME AS queryDevice,
+		sv.TAG_NAME As
+		queryIndex,
+		(max(MAX) - min(MIN)) AS queryValue
+		FROM
+		<include refid="whereTimeDimen" />
+		LEFT JOIN
+		device d ON sv.ID_DEVICE = d.ID
+		WHERE
+		sv.DATE_TIME BETWEEN
+		#{startDate, jdbcType = VARCHAR} AND #{endDate, jdbcType =
+		VARCHAR}
+		AND
+		sv.ID_DEVICE IN
+		<foreach collection="deviceIds.split(',')" separator="," open="("
+			close=")" item="item">
+			#{item}
+		</foreach>
+		AND (
+		TAG_NAME LIKE '%电量%'
+		OR TAG_NAME LIKE '%累计流量%'
+		)
+		GROUP BY
+		ID_DEVICE,
+		TAG_NAME
+	</select>
+
+	<select id="findDiffDeviceConsumeSpecial" resultType="java.util.Map">
+		SELECT
+		sv.ID_device AS queryId,
+		sv.id_device deviceId,
+		d.name deviceName,
+		sv.eu as queryName,
+		IFNULL(sum(pv), 0) AS queryValue
+		FROM
+		service_values_summary sv join device d on d.id = sv.id_device
+		WHERE
+		sv.DATE_TIME BETWEEN #{startDate, jdbcType = VARCHAR} AND
+		#{endDate,
+		jdbcType =
+		VARCHAR}
+		and sv.eu in ('kWh','m3')
+		AND sv.id_device in
+		<foreach collection="deviceIndexs.split(',')" separator=","
+			open="(" close=")" item="item">
+			#{item}
+		</foreach>
+		GROUP BY
+		sv.eu,sv.id_device
+	</select>
+	<select id="mapRealDetail" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select label name,pv memo
+		from (
+
+		select ss.label,ss.sort,sv.id_device,
+		case
+		truncate(pv * case when
+		ratio is null then 1 else ratio end ,2)
+		when '0.00' then '0' else
+		truncate(pv * case when ratio is null then 1 else ratio end ,2)
+		end pv
+		from device d join
+		${tableName} sv on sv.id_device = d.id join
+		sys_dict
+		ss on
+		ss.value = d.LOCATION
+		left join services s on s.id =
+		sv.id_service
+		where
+		sv.date_time &gt;
+		date_sub(now(), interval
+		3 Minute)
+		and
+		d.id_pump_house = #{pumpHouseId}
+		and
+		ss.type = 'device_location' and
+		tag_name like
+		'%出口压力%' and pv &gt; 0
+		order by date_time desc ) vv group
+		by
+		vv.id_device order by vv.sort
+	</select>
+	<select id="getLatestDeviceData" resultType="java.util.Map">
+		SELECT
+		deviceData.ID_SERVICE as serviceId,
+		deviceData.TAG_NAME as
+		serviceName,
+		deviceData.DATE_TIME as serviceDate,
+		deviceData.PV as
+		serviceValue,
+		service.UNIT AS serviceUnit
+		FROM
+		(
+		SELECT
+		*
+		FROM
+		${tableName}
+		<where>
+			<if test="serviceId != null and !serviceId.isEmpty()">
+				AND ID_SERVICE IN
+				<foreach collection="serviceId.split(',')" separator=","
+					open="(" close=")" item="item">
+					#{item}
+				</foreach>
+			</if>
+			<if test="deviceId.indexOf(',') == -1">
+				AND ID_DEVICE = #{deviceId}
+			</if>
+			<if test="deviceId.indexOf(',') > -1 ">
+				AND ID_DEVICE in
+				<foreach collection="deviceId.split(',')" separator=","
+					open="(" close=")" item="item">
+					#{item}
+				</foreach>
+			</if>
+			AND DATE_TIME BETWEEN #{startDate} AND #{endDate}
+		</where>
+		ORDER BY
+		DATE_TIME DESC
+		) deviceData
+		INNER JOIN services
+		service ON
+		service.ID = deviceData.ID_SERVICE
+		<where>
+			<if test="serviceId != null and !serviceId.isEmpty()">
+				AND deviceData.ID_SERVICE IN
+				<foreach collection="serviceId.split(',')" separator=","
+					open="(" close=")" item="item">
+					#{item}
+				</foreach>
+			</if>
+			<if test="deviceId.indexOf(',') == -1">
+				AND deviceData.ID_DEVICE = #{deviceId}
+			</if>
+			<if test="deviceId.indexOf(',') > -1 ">
+				AND deviceData.ID_DEVICE in
+				<foreach collection="deviceId.split(',')" separator=","
+					open="(" close=")" item="item">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+		GROUP BY
+		deviceData.id_service
+	</select>
+
+	<select id="getServiceData" resultType="map">
+		SELECT
+		ID_SERVICE as serviceId,
+		TAG_NAME as serviceName,
+		DATE_TIME as
+		serviceDate,
+		PV as serviceValue
+		FROM
+		${tableName}
+		WHERE
+		DATE_TIME
+		BETWEEN
+		#{startDate} AND #{endDate}
+		AND
+		ID_SERVICE IN
+		<foreach collection="serviceIds.split(',')" separator=","
+			open="(" close=")" item="item">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="getServiceInfo" resultType="map">
+		SELECT
+		se.id AS serviceId,
+		se.MEMO AS serviceName,
+		se.CODE AS
+		serviceCode,
+		se.ID_DEVICE AS deviceId,
+		se.code AS functionId,
+		se.RATIO as
+		multiple,
+		se.type AS type,
+		se.UNIT AS unit,
+		'' IS_CUMULATIVE,
+		''
+		IS_PARAM_SETTING,
+		'' IS_ALARM,
+		'' IS_PARAM_STATUS,
+		se.RangeMinimum AS
+		min,
+		se.RangeMaximum AS max,
+		se.Default_Visible AS visible
+		FROM
+		services
+		se
+		WHERE
+		<if test="deviceId.indexOf(',') == -1">
+			ID_DEVICE = #{deviceId}
+		</if>
+		<if test="deviceId.indexOf(',') > -1 ">
+			ID_DEVICE in
+			<foreach collection="deviceId.split(',')" separator="," open="("
+				close=")" item="item">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="mapOnlineStat" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select id_device as id
+		from ${tableName} where date_time &gt;
+		date_sub(now(),
+		interval
+		10
+		Minute) and id_device = #{deviceId} limit 0,1
+	</select>
+
+	<select id="pumpOnlineStat" resultType="String">
+		SELECT
+		id_device
+		FROM
+		${tableName}
+		WHERE
+		date_time > date_sub( now( ),
+		INTERVAL 5 MINUTE )
+		AND id_device IN
+		<foreach item="item" index="index" collection="deviceId" open="("
+			separator="," close=")">
+			#{item.deviceId}
+		</foreach>
+		GROUP BY id_device
+
+	</select>
+
+	<select id="findDeviceByPumpHouse" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT d.id,name,CONCAT("h","--",ID_PUMP_HOUSE) pid,d.id deviceId,ID_PUMP_HOUSE
+		pumpHouseId,id_project projectId,name deviceName,
+		case  WHEN pd.devStatus is null then 2 ELSE pd.devStatus END devStatus
+		FROM device d
+		LEFT JOIN (select * from pump_dev_status where createTime  &gt;  DATE_SUB(NOW(), INTERVAL 3 MINUTE)) pd ON pd.devId = d.ID
+		WHERE 1=1  and d.id
+		in
+		(SELECT
+		di.id
+		FROM
+		regional ri
+		LEFT JOIN project pi ON pi.ID_REGION = ri.id
+		LEFT JOIN pump_house
+		phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE =
+		phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		GROUP BY
+		di.id)
+		GROUP BY d.id
+	</select>
+
+	<select id="findDeviceByWaterDepart" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		d.id,
+		NAME,
+		CONCAT("h", "--", ID_PUMP_HOUSE) pid,
+		d.id deviceId,
+		ID_PUMP_HOUSE pumpHouseId,
+		id_project projectId,
+		NAME deviceName,
+		case WHEN pd.devStatus is null THEN 2 ELSE pd.devStatus END  devStatus
+		FROM
+		device  d  LEFT JOIN (select * from pump_dev_status where createTime  &gt;  DATE_SUB(NOW(), INTERVAL 3 MINUTE)) pd ON  pd.devId= d.ID
+		WHERE 1=1  and
+		d.id IN (
+		SELECT
+		di.id
+		FROM
+		project pi
+		LEFT JOIN regional r ON pi.ID_REGION = r.id
+		LEFT JOIN pump_house phi
+		ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE =
+		phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN
+		sys_office o ON o.id = pi.water_depart_orgNode
+		WHERE
+		se.id IS NOT NULL
+		AND pi.ID_REGION IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND
+		pi.water_depart_orgNode IS NOT NULL
+		GROUP BY
+		di.id
+		)
+		GROUP BY
+		d.id
+	</select>
+
+	<select id="findDeviceByPumpHouseNew" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		d.id,
+		NAME,
+		CONCAT("h", "--", ID_PUMP_HOUSE) pid,
+		d.id deviceId,
+		ID_PUMP_HOUSE pumpHouseId,
+		id_project projectId,
+		NAME deviceName,
+		case WHEN pd.devStatus is null then 2 ELSE pd.devStatus end devStatus
+		FROM
+		device d LEFT JOIN (select * from pump_dev_status where createTime  &gt;  DATE_SUB(NOW(), INTERVAL 3 MINUTE))  pd on pd.devId = d.ID
+		WHERE 1=1  and
+		d.id IN (
+		SELECT
+		di.id
+		FROM
+		regional ri
+		LEFT JOIN project pi ON pi.ID_REGION = ri.id
+		LEFT JOIN pump_house
+		phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE =
+		phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND
+		pi.region_type IS NOT NULL
+		GROUP BY
+		di.id
+		)
+		GROUP BY
+		d.id
+	</select>
+
+	<!-- 水务所节点显示的树 -->
+	<select id="findDeviceByPumpHouseAndOffice" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT d.id,name,CONCAT("h","--",ID_PUMP_HOUSE) pid,d.id deviceId,ID_PUMP_HOUSE
+		pumpHouseId,id_project projectId,name deviceName,
+		CASE when pd.devStatus is null then 2 ELSE pd.devStatus END devStatus
+		FROM device d LEFT JOIN (select * from pump_dev_status where createTime  &gt;  DATE_SUB(NOW(), INTERVAL 3 MINUTE)) pd on pd.devId = d.ID
+		WHERE 1=1 and d.id
+		in (
+		SELECT
+		di.id
+		FROM
+		project pi
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device
+		di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE =
+		di.ID
+		LEFT JOIN sys_office o ON o.id = pi.water_house_orgNode
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND
+		pi.water_house_orgNode IS NOT NULL
+		GROUP BY
+		di.id ) GROUP BY d.id
+	</select>
+
+	<!-- 营业所所节点显示的树 -->
+	<select id="findDeviceByPumpHouseAndBusiness" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT d.id,name,CONCAT("h","--",ID_PUMP_HOUSE) pid,d.id deviceId,ID_PUMP_HOUSE
+		pumpHouseId,id_project projectId,name deviceName,
+		case WHEN pd.devStatus is null THEN 2 ELSE pd.devStatus END  devStatus
+		FROM device d  LEFT JOIN (select * from pump_dev_status where createTime  &gt;  DATE_SUB(NOW(), INTERVAL 3 MINUTE)) pd ON  pd.devId= d.ID
+		WHERE 1=1  and d.id
+		in (
+		SELECT
+		di.id
+		FROM
+		project pi
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device
+		di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE =
+		di.ID
+		LEFT JOIN sys_office o ON o.id = pi.business_place_orgNode
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND
+		pi.business_place_orgNode IS NOT NULL
+		GROUP BY
+		di.id
+		) GROUP BY d.id
+	</select>
+
+	<!-- 水司 区域农村 泵房 设备 -->
+	<select id="findDeviceByWaterDepartAndType" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		d.id,
+		NAME,
+		CONCAT("h", "--", ID_PUMP_HOUSE) pid,
+		d.id deviceId,
+		ID_PUMP_HOUSE pumpHouseId,
+		id_project projectId,
+		NAME deviceName,
+		case WHEN pd.devStatus is null THEN 2 ELSE pd.devStatus END  devStatus
+		FROM
+		device d  LEFT JOIN (select * from pump_dev_status where createTime  &gt;  DATE_SUB(NOW(), INTERVAL 3 MINUTE)) pd ON  pd.devId= d.ID
+		WHERE 1=1 and
+		d.id IN (
+		SELECT
+		di.id
+		FROM
+		project pi
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device
+		di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE =
+		di.ID
+		LEFT JOIN sys_office o ON o.id = pi.water_depart_orgNode
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.water_depart_orgNode IS NOT NULL
+		AND pi.region_type IS NOT NULL
+		GROUP BY
+		di.id
+		) GROUP BY d.id
+	</select>
+
+	<select id="findDeviceListByPumpHouse" resultType="com.wapwag.woss.modules.biz.entity.DeviceInfo">
+		SELECT id deviceId,`NAME` deviceName,TYPE type ,
+		CASE
+		WHEN LOCATION = 1 THEN
+		'低区'
+		WHEN LOCATION = 2 THEN
+		'中区'
+		WHEN LOCATION= 3 THEN '高区'
+		WHEN LOCATION= 4 THEN '中高区'
+		WHEN LOCATION= 5
+		THEN '超高区'
+		ELSE '' END location
+		from device WHERE ID_PUMP_HOUSE= #{pumpHouseId} AND del_flag ='0'
+	</select>
+
+	<select id="findDeviceRealTimeDataByPoint" resultType="com.wapwag.woss.modules.biz.entity.PointInfo">
+		SELECT
+        case WHEN  TAG_NAME='' then s.name ELSE TAG_NAME END pointName,
+        s.UNIT unit,
+		SUBSTRING_INDEX(a.id_service, '\\', - 1)
+		pointCode,
+
+		IFNULL(case
+		truncate(pv * case when ratio is null then 1 else ratio end
+		,2)
+		when
+		'0.00' then '0' else
+		truncate(pv * case when ratio is null then
+		1 else
+		ratio end ,2)
+		end, '-') pointValue
+
+		FROM
+		(
+		SELECT
+		*
+		FROM
+		(
+		SELECT
+		*
+		FROM
+		${tableName}
+		WHERE
+		ID_DEVICE =
+		#{deviceId,
+		jdbcType = VARCHAR}
+		and date_time &gt;
+		date_sub(now(), interval
+		2 Minute)
+		<if test="dimen != null">
+			AND ID_SERVICE in
+			<foreach collection="dimen.split(',')" separator="," open="("
+				close=")" item="item">
+				concat(#{deviceId, jdbcType = VARCHAR}, '\\',
+				#{item})
+			</foreach>
+		</if>
+		ORDER BY
+		DATE_TIME DESC
+		) a
+		GROUP BY
+		a.id_service
+		) a left join services s
+		on s.id = a.id_service where s.DATA_TYPE!='Bool'
+		ORDER BY s.data_sort asc
+	</select>
+	<select id="findHistoryDataByDto" resultType="com.wapwag.woss.modules.biz.entity.ServiceValueDto"
+		parameterType="com.wapwag.woss.modules.biz.entity.MonitorHistoryDto">
+		select queryDate ,
+		ROUND(queryValue * case when ratio is null
+		then 1 else ratio end ,4)
+		queryValue from (
+		SELECT
+		date_format(sv.DATE_TIME,
+		'%Y-%m-%d %H:%i:%s') as queryDate,
+		SUBSTRING_INDEX(sv.id_service, '\\',
+		- 1) AS queryIndex,
+		avg(sv.pv) as
+		queryValue,
+		sv.id_service
+		FROM
+		<include refid="whereTimeDimen" />
+		WHERE
+		sv.DATE_TIME BETWEEN #{beginDate, jdbcType = VARCHAR} AND
+		#{endDate, jdbcType = VARCHAR}
+		AND sv.id_service = #{idAndFunCode,
+		jdbcType = VARCHAR}
+		GROUP BY
+		sv.ID_SERVICE,
+		sv.DATE_TIME
+		) temp join
+		services s on s.id =
+		temp.id_service order by queryDate
+	</select>
+	<select id="findDeviceByPumpHoseId"
+		resultType="com.wapwag.woss.modules.biz.entity.DevicePumpHoseDto">
+		select id AS deviceId,ID_PUMP_HOUSE AS pumpHoseId from device where
+		ID_PUMP_HOUSE in
+		<foreach item="item" index="index" collection="pumpId" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		group by id
+	</select>
+	<select id="findDevice" resultType="String">
+		select ID_DEVICE from
+		${tableName} WHERE date_time > date_sub( now( ), INTERVAL 5 MINUTE )
+		GROUP BY ID_DEVICE
+	</select>
+	<select id="findPump" resultType="String">
+		select ID_PUMP_HOUSE AS pumpHoseId from device where 1=1
+		<if test="deviceId.size()>0">
+			and
+			id in
+			<foreach item="item" index="index" collection="deviceId" open="("
+					 separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		group by ID_PUMP_HOUSE
+	</select>
+</mapper>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>设置密码</title>
+    <style>
+        object {
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+<img id="sample" style="display: none">
+
+<!-- jQuery Js -->
+<script src="static/assets/js/jquery-1.10.2.js"></script>
+<script>
+    $(function() {
+        var imgUrl = location.search.replace("?", "");
+        var $devicePic = $("#sample").clone();
+        $devicePic.prop("src", imgUrl);
+        $devicePic.css({width: "504px", height: "414px", display: ""});
+        $("body").append($devicePic);
+    });
+</script>
+
+</body>
+</html>

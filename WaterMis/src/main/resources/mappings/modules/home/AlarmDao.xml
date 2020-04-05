@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.home.dao.AlarmDao" >
+
+  <resultMap id="BaseResultMap" type="com.wapwag.woss.modules.home.entity.AlarmInfo" >
+    <result column="alarm_id" property="alarmId" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="device_id" property="deviceId" jdbcType="VARCHAR" />
+    <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+    <result column="alarm_content" property="alarmContent" jdbcType="VARCHAR" />
+    <result column="alarm_reason" property="alarmReason" jdbcType="VARCHAR" />
+    <result column="alarm_type" property="alarmType" jdbcType="VARCHAR" />
+    <result column="alarm_time" property="alarmTime" jdbcType="TIMESTAMP" />
+    <result column="task_description" property="taskDescription" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+    <sql id="whereCondition">
+        FROM
+            alarm_info ai
+            LEFT JOIN project pi ON ai.project_id = pi.id
+            LEFT JOIN device di ON ai.device_id = di.ID
+            LEFT JOIN alarm_task_description atd ON ai.alarm_type = atd.alarm_type
+        where
+            ai.alarm_time BETWEEN #{startDate, jdbcType = VARCHAR} AND #{endDate, jdbcType = VARCHAR}
+    </sql>
+
+    <select id="getCount" resultType="long">
+        SELECT
+            count(1)
+         FROM
+            alarm_info ai
+        where
+            ai.alarm_time BETWEEN #{startDate, jdbcType = VARCHAR} AND #{endDate, jdbcType = VARCHAR}
+    </select>
+
+    <select id="findLatestAlarms" resultMap="BaseResultMap">
+        SELECT
+            ai.alarm_content,
+            date_format(ai.alarm_time, '%Y-%m-%d %H:%i:%s') as alarm_time,
+            ai.alarm_type,
+            pi.NAME as project_name,
+            di.ID as device_id,
+            di.NAME as device_name,
+            atd.task_description
+        <include refid="whereCondition" />
+        order by ai.alarm_time desc
+        LIMIT 20
+    </select>
+
+</mapper>

@@ -1,0 +1,330 @@
+<style type="text/css">
+.like {
+	font-size: 12px;
+}
+.columns.columns-right {
+    position: absolute !important;
+    top: 9px;
+    right: 280px;
+}
+</style>
+<div id="page-inner">
+	<div class="row">
+		<div class="col-md-12 col-xs-12">
+			<!-- Advanced Tables -->
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<form name="personStatus" id="personStatus">
+						<div class="query-parameter">
+							<label>濮撳悕 : </label>
+							<input class="device-id form-control input-text2">
+							<label>杞ㄨ抗鏃堕棿: </label>
+							<input type="text" id="beginTime" readonly class="device-id form-control input-text1 warn-time-begin">-
+							<input type="text" id="endTime" readonly class="device-id form-control input-text1 warn-time-end">
+							<button class="btn btn-primary query-btn">鏌� 璇�</button>
+						</div>
+					</form>
+				</div>
+				<div class="panel-body">
+					
+					<div class="table-responsive">
+						<table class="table table-hover" id="dataTables-example">
+						</table>
+					</div>
+
+				</div>
+			</div>
+			<!--End Advanced Tables -->
+		</div>
+	</div>
+	<!-- /. ROW  -->
+</div>
+
+
+<!-- Script -->
+<script type="text/javascript"
+	src="https://api.map.baidu.com/api?v=2.0&ak=TnTtZt52jtuwnf8aNHl3H1Eh"></script>
+<script type="text/javascript">
+	var loadTag = 0;
+	var rcMap;
+	var mapAddress;
+	$(function() {
+		document.onkeydown = keydown;
+		$(".right-menu").animate({
+			top : '-580px'
+		}, function() {
+			$(this).hide();
+			$(".showRightMenu").fadeIn();
+		});
+
+		//鍒濆鍖栨椂闂�
+		initTime();
+		// 鍒濆鍖栨棤婊氬姩鏉�
+		$("#page-wrapper").css("overflow-y", "hidden");
+		// table height
+		var height = $(window).height() - $(".top-navbar").height()
+				- $(".panel-heading").height() - 21;
+		var detaylHeigth = $(window).height() - $(".top-navbar").height()
+				- $(".panel-heading").height() - 500;
+		/**************************************************/
+		$('#dataTables-example')
+				.bootstrapTable(
+						{
+							url : CONTEXT_PATH+'/system/getAllUser',
+							cache : false,
+							striped : true,
+							height : height,//璁惧畾楂樺害锛屽浐瀹氬ご閮�
+							search : false,//鏄惁鎼滅储
+							queryParamsType : '',
+							pageSize : 10,
+							pageNumber : 1,
+							sidePagination : 'server',
+							pagination : true,//鏄惁鍒嗛〉
+							pageList : [ 10, 20 ],
+							searchOnEnterKey : false,//鍥炶溅鎼滅储 onPostHeader 
+							clickToSelect : true,
+							showRefresh : false,//鍒锋柊鎸夐挳
+							showColumns : true,//鍒楅�夋嫨鎸夐挳
+							showExport:true,
+							exportDataType:'basic',
+							minimumCountColumns : 2,
+							onPostHeader : function(data) {
+								if (loadTag == 1) {
+									loadTag = 0;
+									modBootMsg();
+								}
+							},
+							onLoadError:function(data){
+						       	   LOADING.hide();
+						     },
+							onLoadSuccess : function(data) {
+								LOADING.hide();
+								loadTag = 1;
+							},
+							minimumCountColumns : 2,
+							smartDisplay : true,
+							locale : "zh-CN",//涓枃鏀寔
+							detailView : false, //鏄惁鏄剧ず璇︽儏鎶樺彔
+							columns : [
+									{
+										field : 'no',
+										title : '宸ュ彿',
+										align : 'center'
+									},
+									{
+										field : 'name',
+										title : '濮撳悕',
+										align : 'center'
+									},
+									{
+										field : 'status',
+										title : '鍦ㄧ嚎鐘舵��',
+										align : 'center'
+									},
+									{
+										field : 'position',
+										title : '鏈�杩戜綅缃�',
+										align : 'center'
+									},
+									{
+										field : 'action',
+										title : '鎿嶄綔',
+										align : 'center',
+										formatter : function(value, row, index) {
+											return [
+													'<a class="like" href="javascript:void(0)" title="鍦板浘瀹氫綅">',
+													'<i class="fa fa-random"></i>',
+													'</a>' ].join('');
+										},
+										events : {
+											'click .like' : function(e, value,
+													row, index) {
+												checkCoodIsExit(row);
+											}
+										}
+									} ],
+							//娉ㄥ唽鍔犺浇瀛愯〃鐨勪簨浠躲�傛敞鎰忎笅杩欓噷鐨勪笁涓弬鏁帮紒
+							onExpandRow : function(index, row, $detail) {
+								InitSubTable(index, row, $detail);
+							}
+						});
+
+		// 鎿嶄綔浜嬩欢
+		var mapLocation = function(obj) {
+			$.dialog({
+				id : 'PersonnelTrack',
+				title : '浜哄憳杞ㄨ抗 - ' + obj.person_name,
+				content : 'url:personnelMap.html',
+				data : obj,// 浼犲��
+				width : $(window).width() - 200,
+				height : $(window).height() - 60,
+				max : true,
+				min : true,
+				resize : false,
+				fixed : true
+			});
+		}
+
+		function checkCoodIsExit(row) {
+			var time = $("#beginTime").val() + "," + $("#endTime").val();
+			jQuery.ajax({
+				type : 'POST',
+				async : false,
+				contentType : 'application/json',
+				url : CONTEXT_PATH+'/system/getCoordinateByUserId/' + row.id + "/" + time,
+				dataType : 'json',
+				success : function(data) {
+					if (undefined == data || data.length < 1) {
+						showErrorMsg("閫夋嫨鐨勬椂闂存娌℃湁鏁版嵁锛岃閲嶆柊鎿嶄綔");
+					} else {
+						row.time = time;
+						mapLocation(row);// 瀹氫綅鍑芥暟
+					}
+				},
+				error : function(data) {
+					alert("error");
+				}
+			});
+		}
+
+		//鍒濆鍖栧瓙琛ㄦ牸
+		var InitSubTable = function(index, row, $detail) {
+			var parentid = row.MENU_ID;
+			var cur_table = $detail.html('<table></table>').find('table');
+			$(cur_table).bootstrapTable({
+				url : CONTEXT_PATH+'/system/getAllUser',
+				cache : false,
+				striped : true,
+				height : detaylHeigth,//璁惧畾楂樺害锛屽浐瀹氬ご閮�
+				search : false,//鏄惁鎼滅储
+				queryParamsType : '',
+				pageSize : 10,
+				pageNumber : 1,
+				sidePagination : 'server',
+				pagination : true,//鏄惁鍒嗛〉
+				pageList : [ 10, 20 ],
+				searchOnEnterKey : false,//鍥炶溅鎼滅储
+				clickToSelect : true,
+				showRefresh : false,//鍒锋柊鎸夐挳
+				showColumns : false,//鍒楅�夋嫨鎸夐挳
+				minimumCountColumns : 2,
+				smartDisplay : true,
+				locale : "zh-CN",//涓枃鏀寔
+				columns : [ {
+					field : 'id',
+					title : '鏃堕棿',
+					align : 'center'
+				}, {
+					field : 'name',
+					title : '缁忓害',
+					align : 'center'
+				}, {
+					field : 'no',
+					title : '绾害',
+					align : 'center'
+				}, {
+					field : 'position',
+					title : '浣嶇疆',
+					align : 'center'
+				} ]
+			});
+		};
+
+		/********************************************************/
+		// datetimepicker init
+		$(".warn-time-begin, .warn-time-end").datetimepicker({
+			language : 'zh-CN',
+			format : 'yyyy-mm-dd',
+			weekStart : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			minView : 2,
+			forceParse : 0
+		});
+	});
+	function getUserAddress(rowObj, i) {
+        return "";
+		var longi = rowObj.longi;
+		var lati = rowObj.lati;
+		var map = new BMap.Map("allmap");
+		var point = new BMap.Point(longi, lati);
+		var gc = new BMap.Geocoder();
+		gc.getLocation(point, function(rs) {
+			var addComp = rs.addressComponents;
+			mapAddress = addComp.province + " " + addComp.city + " "
+					+ addComp.district + " " + addComp.street + " "
+					+ addComp.streetNumber;
+			if (isEmp(mapAddress)) {
+				rowObj.position = '-';
+			} else {
+				rowObj.position = mapAddress;
+			}
+			$('#dataTables-example').bootstrapTable('updateRow', {
+				index : i,
+				row : rowObj
+			});
+
+		});
+
+	}
+	function modBootMsg() {
+		var nowTime = new Date().getTime();
+		var allTableData = $('#dataTables-example').bootstrapTable('getData');
+		var flag = false;
+		for (i = 0; i < allTableData.length; i++) {
+			var rowObj = allTableData[i];
+			if (!isEmp(rowObj.addDate)) {
+				if ((nowTime - 1000 * 60 * 60 * 24 * 3) > rowObj.addDate) {
+					rowObj.status = "鍚�";
+				} else {
+					rowObj.status = "鏄�";
+				}
+				if (!isEmp(rowObj.longi) && !isEmp(rowObj.lati)) {
+					mapAddress = "";
+					getUserAddress(rowObj, i);
+					continue;
+				}
+			}
+			rowObj.status = "鍚�";
+			$('#dataTables-example').bootstrapTable('updateRow', {
+				index : i,
+				row : rowObj
+			});
+		}
+	}
+	function isEmp(str) {
+
+		if (undefined == str || null == str || "" == str) {
+			return true;
+		} else {
+			if (str > 0) {
+				return false;
+			}
+			str = str.trim();
+			if (undefined == str || null == str || "" == str) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	function initTime() {
+		var myDate = new Date();
+		var weekTime = 24 * 60 * 60 * 1000 * 30;
+		$("#beginTime").val(formatDate(myDate.getTime() - weekTime));
+		$("#endTime").val(formatDate(myDate.getTime()));
+	}
+	function formatDate(strTime) {
+		var date = new Date(strTime);
+		return date.getFullYear() + "-" + (date.getMonth() + 1) + "-"
+				+ date.getDate();
+	}
+	function keydown(e){
+		   if(e.keyCode == 116){
+			   $("#page-wrapper").load("personnelStatus.html");
+			   return false;
+		   }
+		   return true;
+	}
+</script>

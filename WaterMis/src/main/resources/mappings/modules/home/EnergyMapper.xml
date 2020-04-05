@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.home.dao.EnergyMapper">
+
+	<select id="getDevicesEngrgy" resultType="com.wapwag.woss.modules.home.entity.HistoryData">
+		select
+			concat(idDevice,'_',unit) as idDevice, 
+			avgData			
+		from 
+		(
+			SELECT
+				${type} as idDevice,
+				sum(pv) AS avgData,
+				eu as unit
+			FROM
+				service_values_summary
+			WHERE
+				${type} IN 
+				(
+				<foreach collection="devices" item="item" separator=",">
+					#{item}
+				</foreach>
+				)
+				AND date_time BETWEEN #{startTime} AND #{endTime}
+			group by ${type},eu
+		) temp
+		ORDER by idDevice ASC,unit asc
+	</select>
+	<select id="getDeviceEngrgy" resultType="com.wapwag.woss.modules.home.entity.HistoryData">
+		select
+		    concat(id_device,'_',dateTime,'_',unit) as idDevice,
+			avgData
+		from (
+			SELECT
+				DATE_FORMAT(date_time, ${dateTime}) AS dateTime,
+				sum(pv) AS avgData,
+				eu as unit,
+				${type} as id_device
+			FROM
+				service_values_summary
+			WHERE
+				${type} IN
+				(
+				<foreach collection="devices" item="item" separator=",">
+					#{item}
+				</foreach>
+				)
+				AND date_time BETWEEN #{startTime} AND #{endTime}
+				and pv &lt; 10000
+			group by ${type},eu,DATE_FORMAT(date_time, ${dateTime})
+		) temp
+		ORDER by dateTime ASC,unit asc
+	</select>
+	
+	<select id="getNames" resultType="java.util.HashMap">
+        select 
+			concat(l.id,'') as pumpid , 
+			l.NAME as pumpname,
+			d.ID as devid, 
+			d.name as devname
+			from PUMP_HOUSE l join device d on d.id_pump_house = l.id
+        WHERE
+            <if test="'id_device' == type">
+                d.id IN
+            </if>
+            <if test="'id_pump_house' == type">
+                l.id IN
+            </if>
+				
+				(
+				<foreach collection="devices" item="item" separator=",">
+					#{item}
+				</foreach>
+				)
+    </select>
+    
+    <!-- 根据泵房ID查询设备Ids -->
+    <select id="getDevIdsbyPumpIds" resultType="java.util.HashMap">
+        select 
+            concat(d.id,'') dev,
+            concat(dl.id,'') pump 
+        from device d join pump_house dl on dl.id = d.id_pump_house
+        where dl.id in
+            (
+				<foreach collection="devices" item="item" separator=",">
+					#{item}
+				</foreach>
+			)
+    </select>
+    
+    <!-- 根据泵房ID查询设备Ids -->
+    <select id="getAllDevs" resultType="com.wapwag.woss.modules.home.entity.HundredVO">
+        select 
+		    case when d.type like '%ZWG%' or d.type like '%WII%' or d.type like '%ZWX%' or d.type like '%WPD%' then '1'
+			when d.type like '%ZWB%' or d.type like '%VII%' or d.type like '%WeII%' then '2' else '1' end unit,
+			d.id devID,
+			p.id pumpID,
+			<if test="queryType == 'dev'">
+			concat(p.name,'_',case when dict.label is null then '低区' else dict.label end) pumpName
+			</if>
+			<if test="queryType != 'dev'">
+			p.name pumpName
+			</if>
+			
+		from device d join pump_house p on p.id = d.id_pump_house  
+		left join (select value,label from sys_dict where type = 'device_location') dict on dict.value = d.location
+		where d.id in (
+				SELECT 
+				    authobject_id
+				FROM
+				    permission_info
+				WHERE
+				    role_id IN (SELECT 
+				            role_id
+				        FROM
+				            sys_user_role
+				        WHERE
+				            user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+				GROUP BY authobject_id
+			)
+    </select>
+    
+    <select id="getAllStatValsSum" resultType="com.wapwag.woss.modules.home.entity.HundredVO">
+        SELECT 
+			concat(sv.id_device,'_',sv.eu) devID,
+			sum(sv.pv)*(case when s.ratio  is null then 1 else s.ratio  end) pv
+		FROM service_values_summary_day sv left join services s on s.id = sv.ID_SERVICE
+		where 
+		    sv.id_pump_house is not null
+		    AND date_time BETWEEN #{startDate} AND #{endDate}
+		    and pv > 0
+		    and eu in ('m3','kWh')
+		group by sv.id_device,sv.eu
+    </select>
+    
+    <select id="getAllStatValsAvg" resultType="com.wapwag.woss.modules.home.entity.HundredVO">
+        SELECT 
+			concat(sv.id_device,'_',sv.eu) devID,
+			avg(sv.pv)*(case when s.ratio  is null then 1 else s.ratio  end) pv
+		FROM service_values_summary_day sv left join services s on s.id = sv.ID_SERVICE
+		where 
+		    date_time BETWEEN #{startDate} AND #{endDate}
+		    and sv.id_pump_house is not null
+		    and pv > 0
+		    and eu in ('out','in')
+		group by sv.id_device,sv.eu
+    </select>
+</mapper>

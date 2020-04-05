@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.DevicePumpLabelDao">
+    
+	<sql id="devicePumpLabelColumns">
+		a.id AS "id",
+		a.device_id AS "device.id",
+		a.model_no AS "modelNo",
+		a.sbedgsll AS "sbedgsll",
+		a.rated_power AS "ratedPower",
+		a.sbedgsyc AS "sbedgsyc",
+		a.speed AS "speed"
+	</sql>
+	
+	<sql id="devicePumpLabelJoins">
+	</sql>
+    
+	<select id="get" resultType="DevicePumpLabel">
+		SELECT 
+			<include refid="devicePumpLabelColumns"/>
+		FROM device_pump_label a
+		<include refid="devicePumpLabelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DevicePumpLabel">
+		SELECT 
+			<include refid="devicePumpLabelColumns"/>
+		FROM device_pump_label a
+		<include refid="devicePumpLabelJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DevicePumpLabel">
+		SELECT 
+			<include refid="devicePumpLabelColumns"/>
+		FROM device_pump_label a
+		<include refid="devicePumpLabelJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO device_pump_label(
+			id,
+			device_id,
+			model_no,
+			sbedgsll,
+			rated_power,
+			sbedgsyc,
+			speed
+		) VALUES (
+			#{id},
+			#{device.id},
+			#{modelNo},
+			#{sbedgsll},
+			#{ratedPower},
+			#{sbedgsyc},
+			#{speed}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE device_pump_label SET 	
+			device_id = #{device.id},
+			model_no = #{modelNo},
+			sbedgsll = #{sbedgsll},
+			rated_power = #{ratedPower},
+			sbedgsyc = #{sbedgsyc},
+			speed = #{speed}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM device_pump_label
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

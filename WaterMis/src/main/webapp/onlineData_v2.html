@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>实时数据</title>
+        <link rel="shortcut icon" href="static/v2/favicon.ico">
+        <link href="static/v2/assets/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="static/v2/assets/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+        <link href="static/v2/assets/iCheck/iCheck.css" rel="stylesheet" />
+        <link href="static/v2/monitor/css/onlineData.css" rel="stylesheet" />
+    </head>
+
+    <body>
+
+        <div id="page-wrapper">
+            <div class="row rows-container">
+                <div class="col-bg-3" style="margin-right: 0.8%;">
+                    <div class="panel panel-default" id="gaugeData1" style="height:150px;"></div>
+                </div>
+                <div class="col-bg-3" style="margin-right: 0.8%;">
+                    <div class="panel panel-default" id="gaugeData2" style="height:150px;"></div>
+                </div>
+                <div class="col-bg-3" style="margin-right: 0.8%;">
+                    <div class="panel panel-default" id="gaugeData3" style="height:150px;"></div>
+                </div>
+                <div class="col-bg-3">
+                    <div class="panel panel-default" id="gaugeData4" style="height:150px;"></div>
+                </div>
+            </div>
+            <!--/.row-->
+            <div class="row">
+                <div class="col-bg-12">
+                    <div class="panel panel-default">
+                        <ul id="myTab" class="nav nav-tabs">
+                            <li class="active"><a href="#realtime-chart" data-toggle="tab" @click="redrawLine">实时曲线图</a></li>
+                            <li><a href="#realtime-table" data-toggle="tab">实时数据列表</a></li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div class="tab-pane fade in active" id="realtime-chart">
+                                <div class="panel-body">
+                                    <div class="col-bg-9" style="margin-right: 0.8%;">
+                                        <div class="auto-resize" id="onlineDataChart" data-height="255"></div>
+                                    </div>
+                                    <div class="col-bg-3" style="float: right">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" style="padding: 0 0 10px 0;">
+                                                <span>监测指标列表</span>
+
+                                            </div>
+                                            <div class="panel-body" style="padding: 10px 0 0 0;">
+                                                <div class="auto-resize" id="device-norm-data" data-height="301">
+                                                    <div class="list-group" v-cloak>
+                                                        <li  :class="[ 'list-group-item']"  v-for="service in chartServiceInfo">
+                                                            <label class="icheck-label">
+                                                                <div class="icheckbox_minimal-blue icheck-item" :class="{'checked': selectedServices.indexOf(service.serviceId) > -1}">
+                                                                    <input class="minimal icheck-input" type="checkbox" :value="service.serviceId" v-model="selectedServices" @click="limitService(service)">
+                                                                </div>
+                                                                <div :class="[ 'colour_black_'+service.index]">{{ service.serviceName }}</div>
+                                                            </label>
+                                                        </li>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="realtime-table">
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <div class="auto-resize" data-height="255" id="realtime-datalist">
+                                            <table class="table table-hover" id="dataTables-example">
+                                                <thead>
+                                                    <tr>
+                                                        <th>实时监测指标</th>
+                                                        <th>当前值</th>
+                                                        <th>单位</th>
+                                                        <th>更新时间</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="even gradeA" v-for="service in onlineData">
+                                                        <td> {{ service.serviceName }}</td>
+                                                        <td class="systemFault-point" v-if="serviceMap[service.serviceId]['type'] === 'bool'">
+                                                            <em :class="serviceMap[service.serviceId]['on']" v-if="service.serviceValue"></em>
+                                                            <em :class="serviceMap[service.serviceId]['off']" v-if="!service.serviceValue"></em>
+                                                        </td>
+                                                        <td v-if="serviceMap[service.serviceId]['type'] !== 'bool'">
+                                                            {{ formatServiceValue(service.serviceId, service.serviceValue) }}
+                                                        </td>
+                                                        <td> {{ service.serviceUnit }}</td>
+                                                        <td>{{ formateDate(service.serviceDate) }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <!-- table -->
+                                        </div>
+                                        <!-- realtime-datalist -->
+                                    </div>
+                                </div>
+                                <!-- panel-body -->
+                            </div>
+                            <div class="tab-pane fade" id="onlineDeviceModelTag">
+                                <div class="panel-body">
+                                    <div class="col-bg-6" style="margin-right: 0.3%;">
+                                        <div class="auto-resize devicePic-container" data-height="255">
+                                            <svg id="monitor-svg" width="100%" height="100%" viewBox="0, 0, 1920, 1080" preserveAspectRatio="none slice">
+                                                <image xlink:href="static/v2/assets/style/img/pump.png" width="1920" height="1080"></image>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="col-bg-2" style="margin-right: 0.3%;">
+                                        <div class="deviceParams">
+                                            <div class="monitor-title">参数设定</div>
+                                            <div class="auto-resize paramsList" data-height="285">
+                                                <table class="table table-bordered">
+                                                    <tbody>
+                                                        <tr v-for="service in settingData">
+                                                            <td width="60%">{{ service.serviceName }}</td>
+                                                            <td width="40%" @dblclick="updateDeviceParams($event, service)">
+                                                                {{ service.serviceValue }}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-bg-4">
+                                        <div class="remote-mode">
+                                            <div class="monitor-title">门禁控制</div>
+                                            <table class="table table-bordered modeContainer" style="margin-bottom: 7px;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td v-for="(item, index) in remoteDoor">
+                                                            <span>{{ item.name }}</span>
+                                                            <em :class="item.isOn === true?'modeOpen':'modeClose'" @click="changeDoor($event, item)"></em>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="monitor-title">远程模式</div>
+                                            <table class="table table-bordered modeContainer" style="margin-bottom: 7px;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td v-for="(item, index) in remoteMode">
+                                                            <span>{{ item.name }}</span>
+                                                            <em :class="item.isOn === false?'modeOn':'modeOn'" @click="changeMode($event, item)"></em>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="titleContainer">
+                                                <table class="table table-bordered" style="margin-bottom: 0;">
+                                                    <thead>
+                                                        <tr class="monitor-title">
+                                                            <td width="14%">水泵</td>
+                                                            <td width="32%" colspan="2">运行状态</td>
+                                                            <td width="54%" colspan="2">远程控制</td>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                            <div class="auto-resize statusContainer" data-height="342">
+                                                <table class="table table-bordered">
+                                                    <tbody>
+                                                        <tr v-for="(item, index) in pumpData">
+                                                            <td width="14%">{{ (index + 1) + '#' }}</td>
+                                                            <td width="14%">
+                                                                <em :class="item.statusCode"></em>
+                                                            </td>
+                                                            <td width="18%">
+                                                                <span>{{ item.statusName }}</span>
+                                                            </td>
+                                                            <td width="30%">
+                                                                <div class="switch-container" v-if="item.status !== 'unknown'" @click="controlPumps(item)">
+                                                                    <div :class="item.statusCode !== 'stop' ?'switch-on switch-animate':'switch-off switch-animate'">
+                                                                        <span class="switch-left">ON</span><span class="switch-span">&nbsp;</span><span class="switch-right">OFF</span>
+                                                                   </div>
+                                                                </div>
+                                                            </td>
+                                                            <td width="24%" class="setFrequency">
+                                                                <i class="fa fa-pencil-square-o"></i>
+                                                                <span @click="updateFrequency(item)">频率设定</span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /. ROW  -->
+        </div>
+
+        <!-- JavaScript -->
+        <script src="static/v2/assets/style/common/resize.js"></script>
+        <script src="static/v2/assets/jquery/2.2.0/jQuery-2.2.0.min.js"></script>
+        <script src="static/v2/assets/layer/3.0.3/layer.js"></script>
+        <script src="static/v2/assets/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="static/v2/assets/iCheck/iCheck.min.js"></script>
+        <script src="static/v2/assets/moment/2.18.1/moment.min.js"></script>
+        <script src="static/v2/assets/highcharts/5.0.10/highcharts.js"></script>
+        <script src="static/v2/assets/echarts/3.5.1/echarts.min.js"></script>
+        <script src="static/v2/assets/vue/2.2.6/vue.min.js"></script>
+        <script src="static/v2/assets/vue-resource/1.2.1/vue-resource.min.js"></script>
+        <script src="static/v2/index/scripts/constant.js"></script>
+        <script src="static/v2/monitor/scripts/onlineData_v2.js"></script>
+
+    </body>
+
+</html>

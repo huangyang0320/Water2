@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!--suppress JSJQueryEfficiency, HtmlExtraClosingTag, CheckTagEmptyBody -->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="pragma" content="no-cache">
+        <meta http-equiv="cache-control" content="no-cache">
+        <script src="static/hikang/js/messages_zh_cn.js"></script>
+        <script src="static/hikang/js/baseLib.js"></script>
+        <script src="static/hikang/js/monitor_oneocx.js"></script>
+        <script src="static/hikang/js/setting.js"></script>
+        <script src="static/hikang/js/extend.js"></script>
+        <script src="static/hikang/js/keyEvent.js"></script>
+        <script src="static/hikang/js/monitor_expand_oneocx.js"></script>
+        <script>
+            var pt = {
+                ctx: "/",
+                debug: 'false',
+                lang: 'zh_cn',
+                history: "" == "true" ? true : false
+            };
+
+            var userId = '1';
+            var addressIp='139.196.77.237';
+            var ispcUrl = '';
+            ispcUrl = ispcUrl==''||ispcUrl=='null'?null:ispcUrl;
+            var cameraPlayType = '1';
+            var ocxName = 'HIKOCX.CAB';
+            //var ocxName = 'HIKOCX.CAB';
+            var presetCount = 300;
+            var playId = 0;
+            var onlineInfo = 1;
+            var checkPeriod = 2;
+            var hasExpandToUserOrg=1;
+            var playCamera;
+            var playOrgCamera;
+            var ztreeOnLoadSuccess;
+            var online_pfc = 0;
+            var tokenUrl = 'http://139.196.77.237:80/cms/applyToken';
+            var codebase= '6,3,5,0';
+            var yuyanMode = false;
+            var oriTemplete = '';
+
+            var gisPreview = false;
+            var enableShortcut=true;    //用于判断是否使用快捷键功能
+            var shortcutChange=false;   //当重新配置了快捷键时，通过该变量使得更改后的快捷键立即生效
+
+            var favTabSel = (''=='' ? 'false' : '');
+            var systemStyle = 'lightblue';//获取当前皮肤，初始化控件时用
+
+            var noMeaning = 'DFDczpOBEVCVuuU6jlfptw==' + ' ' + 'XR6BipD4QAHG9bV80Ai/qw==';
+            var ocx;
+            var init = function (obj) {
+            };
+
+            function getDefaultOcx(){
+                return $('#preview_0').hikui();
+            }
+
+            // Loader 动态加载组件
+            var loader = (function($,loader) {
+                return {
+                    show : function(title, callback) {
+                        var text = title || language.text('loading');
+                        var html = $('<div id="loaderTop" class="loading-overlay"><div class="loading-m"><i></i><span>' + text + '</span></div><div class="shadow"></div></div>');
+                        if ($('#loaderTop').length > 0)
+                            $('#loaderTop').remove();
+                        $('body').append(html);
+                        if ($.fn.bgiframe) {
+                            $("#loaderTop").bgiframe();
+                        }
+                        var w = $('.loading-m', html).outerWidth(), ml = parseInt(w) / 2, h = $('.loading-m', html).outerHeight(), mt = parseInt(h) / 2;
+                        $('.loading-m', html).css({
+                            marginTop : '-' + mt + 'px',
+                            marginLeft : '-' + ml + 'px'
+                        });
+                        try {
+                            if (callback)
+                                callback();
+                        } catch (e) {
+                        }
+                    },
+                    update : function(title){
+                        $('#loaderTop .loading-m span').text(title);
+                    },
+                    hide : function(callback) {
+                        $('#loaderTop').hide().remove();
+                        try {
+                            if (callback)
+                                callback();
+                        } catch (e) {
+                        }
+                    }
+                }
+            })(jQuery, loader || {})
+
+            /**
+             * 初始化控件
+             */
+            function init_win(index) {
+                if ($('#preview_0').hikui()) {
+                    return;
+                }
+                (function() {
+                    $.parser.add({
+                        '{ocx_previewTemp}': 'HYWater/static/hikang/js'
+                    },{
+                        ocx_previewTemp: {
+                            alias: '{ocx_previewTemp}/'
+                        }
+                    });
+                    var obj=settingPanel.setting.getPreviewImageSegment(addressIp,userId);
+                    var saveLayout=obj.saveLayout;
+                    if(!saveLayout&&saveLayout!=0){
+                        saveLayout=1;
+                    }
+                    var Layout=obj.layout;
+                    if(!Layout){
+                        Layout=settingPanel.setting.getPreviewDefaultLayout();
+                    }
+                    hik($('#preview_0')).ocx_previewTemp({
+                        index : index,
+                        msgEl : $('#grids_div'),
+                        ocxName : ocxName,
+                        codebase : codebase,
+                        params:{
+                            SaveLayout:saveLayout,
+                            Layout:Layout,
+                            Skin:systemStyle
+                        },
+                        getCameraIdByWinId:function(lWndId){
+                            return win_status[lWndId]&&win_status[lWndId].cameraId;
+                        },
+                        listeners : {
+                            'create' : function(t) {
+                            },
+                            'MsgNotify' : function(lMsgId, lErrorCode, szDetail, lWndId, szIndexCode) {
+                                try {
+                                    if(window.console){
+                                        console.log(lMsgId+","+lErrorCode+","+szDetail+","+lWndId+","+szIndexCode);
+                                    }
+                                    messageMap[lMsgId] && messageMap[lMsgId](this,lErrorCode,szDetail,index, szIndexCode);
+                                } catch (e) {
+                                    $.sticky('操作失败，请重试。错误码：'+lMsgId, {type:"error"});
+                                    if(window.console){
+                                        console.error("%d,%d,%s,%d,%s,%s", lMsgId, lErrorCode, szDetail, lWndId, szIndexCode,e);
+                                    }
+                                }
+                            },
+                            log:function(lWndId,logInfo,action){
+                                recordLog(win_status[lWndId].cameraId,logInfo,action,win_status[lWndId].indexCode)
+                            },
+                            logByCameraId:function(cameraId,logInfo,action){
+                                recordLog(cameraId,logInfo,action,win_status[lWndId].indexCode)
+                            }
+                        }
+                    });
+                }());
+
+            }
+
+            function login(callback) {
+                $.get("https://web.cloud4water.com/hikang/hikang/token", function (token) {
+                    var res = {"address":"139.196.77.237","token":token};
+                    var st = res.token;
+                    var cmsip = res.address;
+                    var szLoginXml = '<?xml version="1.0" encoding="utf-8"?>'
+                        +'<LoginInfo>'
+                        +'<LoginType>1</LoginType>'//  <!-- 登录方式1：ST登录2：密码登录-->
+                        +'<SynLogin>1</SynLogin>' //0是异步，1是同步
+                        +'<IP>' + cmsip + '</IP>'//  <!-- IP地址-->
+                        +'<Port>' + port + '</Port>'// <!-- 端口-->
+                        +'<UserName>' + userName + '</UserName>'// <!-- 用户名-->
+                        +'<ST>' + st + '</ST>'// <!-- ST指令-->
+                        +'<PassWord></PassWord>'// <!-- 用户级别-->
+                        +'<Encrypt></Encrypt>'// <!-- 密钥-->
+                        +'</LoginInfo>';
+                    if ($('#preview_0').hikui()){
+                        ocx = $('#preview_0').hikui();
+                        var result=ocx.LoginPlat(szLoginXml);   //需要调用控件的这个函数，否则无法播放视频
+                        ocx.setLimitTimeCtrl(1);
+                        console.info(result)
+                    }
+                    callback();
+                });
+
+            }
+            
+            function startTest() {
+                login(function () {
+                    var indexCode = '001597';
+                    var result = {"playInfo":{"cameraId":317,"devType":0,"indexCode":indexCode,"installWay":0,"name":"南宁恒大绿洲泵房门","orgId":50,"orgIndexCode":"45010000","playType":0,"playUrl":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Preview><StreamSvr><Svr type=\"3\" ip=\"139.196.77.237\" port=\"7302\" rtspPort=\"7302\"\/><Svr type=\"4\" ip=\"139.196.77.237\" port=\"557\"\/><\/StreamSvr><CamIndexCode>001539<\/CamIndexCode><DevIndexCode>001380<\/DevIndexCode><LinkType>1<\/LinkType><StreamType>1<\/StreamType><CamName>南宁恒大绿洲泵房门<\/CamName><UserName><\/UserName><PassWord><\/PassWord><UserLevel>50<\/UserLevel><DevType>1<\/DevType><Manufacturer>0<\/Manufacturer><ProSeries>106<\/ProSeries><ChannelNo>1<\/ChannelNo><SubStream>MAIN<\/SubStream><NetZone cnid=\"1\" pnid=\"1\"\/><TreatyType>EHOME<\/TreatyType><\/Preview>","substream":1},"privilegeCode":"10051,10020,10052,10029,10011,10022,10033,10099,10021,10032,10002,10024,10013,10012,10034,10001,10015,10004,10003,10014,10028,10006,10027,10005","success":true};
+
+                    var playurl = '<?xml version="1.0" encoding="utf-8"?><Preview><CamIndexCode>' + indexCode + '</CamIndexCode></Preview>';
+                    console.info(playurl);
+                    var xocx = $('#preview_0').hikui();
+                    if (xocx) {
+                        xocx.SetRightCode(result.privilegeCode);
+                        if (xocx) {
+                            xocx.StartPreview(playurl);
+                            xocx.addIndexCodeMap(indexCode,playurl,indexCode);
+                        }
+                    }
+                });
+            }
+
+            var tokenUrl = 'http://139.196.77.237:80/cms/applyToken';
+            var userName = 'admin';
+            var a = tokenUrl.indexOf(":",6);
+            var port = tokenUrl.substring(a+1,tokenUrl.indexOf("/",a));
+
+            $(function () {
+                init_win(0);
+                startTest();
+            });
+
+        </script>
+    </head>
+    <body style="width: 99%;height: 98%;position: absolute">
+    <div id="grids_div"></div>
+    <div id="preview_0" style="width: 100%; height: 100%;"></div>
+    </body>
+</html>

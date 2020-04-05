@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.DeviceElectricalLabelDao">
+    
+	<sql id="deviceElectricalLabelColumns">
+		a.id AS "id",
+		a.device_id AS "device.id",
+		a.model_no AS "modelNo",
+		a.rated_voltage AS "ratedVoltage",
+		a.rated_power AS "ratedPower",
+		a.standards AS "standards",
+		a.control_quantity AS "controlQuantity",
+		a.rated_current AS "ratedCurrent",
+		a.rated_frequency AS "ratedFrequency"
+	</sql>
+	
+	<sql id="deviceElectricalLabelJoins">
+	</sql>
+    
+	<select id="get" resultType="DeviceElectricalLabel">
+		SELECT 
+			<include refid="deviceElectricalLabelColumns"/>
+		FROM device_electrical_label a
+		<include refid="deviceElectricalLabelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DeviceElectricalLabel">
+		SELECT 
+			<include refid="deviceElectricalLabelColumns"/>
+		FROM device_electrical_label a
+		<include refid="deviceElectricalLabelJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DeviceElectricalLabel">
+		SELECT 
+			<include refid="deviceElectricalLabelColumns"/>
+		FROM device_electrical_label a
+		<include refid="deviceElectricalLabelJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO device_electrical_label(
+			id,
+			device_id,
+			model_no,
+			rated_voltage,
+			rated_power,
+			standards,
+			control_quantity,
+			rated_current,
+			rated_frequency
+		) VALUES (
+			#{id},
+			#{device.id},
+			#{modelNo},
+			#{ratedVoltage},
+			#{ratedPower},
+			#{standards},
+			#{controlQuantity},
+			#{ratedCurrent},
+			#{ratedFrequency}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE device_electrical_label SET 	
+			device_id = #{device.id},
+			model_no = #{modelNo},
+			rated_voltage = #{ratedVoltage},
+			rated_power = #{ratedPower},
+			standards = #{standards},
+			control_quantity = #{controlQuantity},
+			rated_current = #{ratedCurrent},
+			rated_frequency = #{ratedFrequency}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM device_electrical_label
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

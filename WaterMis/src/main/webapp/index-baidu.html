@@ -1,0 +1,630 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="ie=11">
+    <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
+     <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src * ;img-src *">    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+    <!-- Icon title -->
+    <link rel="shortcut icon" id="iconPic" href="" type="image/x-icon">
+    <title>二次供水管理平台</title>
+    <!-- Bootstrap Styles-->
+    <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
+
+    <link href="static/assets/css/bootstrapValidator.min.css" rel="stylesheet" />
+    <!-- TABLE STYLES-->
+    <link href="static/assets/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+    <!-- FontAwesome Styles-->
+    <link href="static/assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- RightMenu Styles -->
+    <link href="static/assets/css/jquery-accordion-menu.css" rel="stylesheet" />
+    <!-- Datetimepicker Styles -->
+    <link href="static/assets/js/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <!-- iCheck Styles -->
+    <link href="static/assets/js/iCheck/iCheck.css" rel="stylesheet" />
+    <!-- ScrollBar Styles -->
+    <link href="static/assets/css/scrollBar.css" rel="stylesheet" />
+    <!-- Custom Styles-->
+    <link href="static/assets/css/custom-styles.css" rel="stylesheet" />
+    <!-- Ztrr Styles -->
+    <link href="static/ztree/css/demo.css" type="text/css" rel="stylesheet" >
+    <link href="static/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css" rel="stylesheet" >
+
+    <link rel="stylesheet" type="text/css" href="theme/css/load.css">
+
+
+<!--	<script src="static/assets/vide/preview.js"></script>
+    <script src="static/assets/vide/playback.js"></script>-->
+    <style>
+        .showRightMenu:after{
+            background-color:transparent;
+        }
+        a{
+            text-decoration:none;
+        }
+        .alertWindow{
+            top: 150px !important;
+        }
+        html, body{
+            min-width: 1000px;
+            min-height: 700px;
+            overflow: visible;
+        }
+        input::-ms-clear{display: none;}
+        input::-ms-reveal{display: none;}
+        #page-wrapper{
+            height:100% !important;
+        }
+        #iframebar{
+            background-color: rgba(0,0,0,0) !important;
+        }
+
+      .navbar .nav > li .dropdown-menu {
+          margin: 0;
+      }
+        .navbar .nav > li:hover .dropdown-menu {
+            display: block;
+        }
+
+        .top-navbar > div .nav > li > a {
+            position: relative;
+            display: block;
+            padding: 10px;
+            margin: 10px;
+            color: #fff;
+            margin-right: 35px;
+            font-size: 15px;
+        }
+
+      /*  a {font-size:13px}
+        a:link {color: blue; text-decoration:none;}!*未访问：蓝色、无下划线*!
+        a:active {color: red; }!*激活：红色*!
+        a:visited {color:purple;text-decoration:none;}!*已访问：purple、无下划线*!
+        a:hover {color: red; text-decoration:underline;}!*鼠标移近：红色、下划线*!*/
+    </style>
+</head>
+
+<body>
+    <div class="cover-container">
+        <div class="loadingBar-container">
+            <div id="loader"></div>
+            <!--<img src="static/assets/img/ring-alt.gif">-->
+            <!--<div id="fountainG">
+                <div id="fountainG_1" class="fountainG">
+                </div>
+                <div id="fountainG_2" class="fountainG">
+                </div>
+                <div id="fountainG_3" class="fountainG">
+                </div>
+                <div id="fountainG_4" class="fountainG">
+                </div>
+                <div id="fountainG_5" class="fountainG">
+                </div>
+                <div id="fountainG_6" class="fountainG">
+                </div>
+                <div id="fountainG_7" class="fountainG">
+                </div>
+                <div id="fountainG_8" class="fountainG">
+                </div>
+            </div>-->
+        </div>
+        <div class="percentBar-container">
+            <span class="percentBar"></span>
+        </div>
+    </div>
+
+    <div id="wrapper">
+        <nav class="navbar navbar-default top-navbar" role="navigation" style="z-index: 9999">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index-baidu.html">
+                    <img id="topPic" src="">
+                </a>
+
+            </div>
+            <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user"></i>
+                        <span id="loginUser"></span>
+                        <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+                        <li role="presentation">
+                            <a href="javascript:;" id="logout">
+                                <i class="fa fa-power-off"></i>
+                                退出系统
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-question-circle"></i>
+                        下载
+                        <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+                        <li role="presentation">
+                            <a href="/DownLoadPlugin/VideoWebPlugin.zip"><i class="fa fa-download"></i>下载视频控件</a>
+                        </li>
+                    </ul>
+                </li>
+                <li style="margin-right: 10px; position: relative">
+                    <a href="javascript:;" id="showWarnDialog">
+                        <i class="fa fa-warning"></i>
+                        <span class="label label-warning warn-info"></span>
+                        告警
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+
+        <nav class="navbar navbar-default top-navbar" role="navigation" style="margin-top: 50px;">
+            <div id="header-menu" style="margin-left: 0px">
+
+                <ul class="nav navbar-nav" id="header-menu-all" style="margin-bottom: -10px;">
+                    <!-- <li class="dropdown">
+                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                             系统预览
+                             &lt;!&ndash;<b class="caret"></b>&ndash;&gt;
+                         </a>
+                         <ul class="dropdown-menu">
+                             <li><a href="#" data-location="themeStatNew.html" target="mainBody">系统首页</a></li>
+                             <li>
+                                 <a href="javascript:;" data-location="themeStatNew.html" class="a-child"><span class="fa fa-caret-right"></span>地图导航</a>
+
+                             </li>
+                             <li class="divider"></li>
+                             <li><a href="#" onclick="showAlert()">主题页面</a></li>
+                         </ul>
+                     </li>-->
+                </ul>
+
+            </div>
+        </nav>
+
+        <!--/. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation" style="display: none">
+		    <div id="sideNav"><i class="fa fa-caret-left"></i></div>
+            <div class="sidebar-collapse">
+
+            </div>
+        </nav>
+        <!-- /. technicalSupport -->
+        <!--<div class="technicalSupport">技术支持:上海XXXXXX智慧水务</div>-->
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" style="margin-top: 40px">
+
+        </div>
+        <script>
+            function closeVideo(){
+               try {
+                   window.closeWin();
+               }catch (e) {
+                   console.log("exec closeVideo......")
+               }
+            }
+        </script>
+        <!-- /. PAGE WRAPPER  -->
+
+        <nav class="navbar-default pull-right" id="deviceMenuRight">
+            <div class="showRightMenu" style="padding: 0px" >
+                <a href="javascript:;">
+                    <i class='fa fa-cog'></i>
+                    <span id="rightMenuMsg" style="padding: 5px 22px 5px 10px;display: inline-block;width: 10px;"></span>
+                </a>
+                <br>
+                <a href="javascript:;" title="显示设备列表"><i class="fa fa-angle-double-down"></i></a>
+                <iframe id="iframebar" src="about:blank" frameBorder=0 allowtransparency="yes"  marginHeight=0 marginWidth=0 style="overflow: hidden; border-radius: 11px; position:absolute;visibility:inherit; top:0px;left:0px;height:100%;width:100%;z-index:-1;background-color: rgba(0, 0, 0, 0)">
+                </iframe>
+            </div>
+            <div class="right-menu" id="right-menu-list" style="display: block; top: 102px;"></div>
+        </nav>
+
+        <!-- /. RIGHT MENU -->
+
+        <div class="alarmTips">
+                <iframe frameborder="0" width="100%" height="100%"></iframe>
+        </div>
+        <!-- /.ALARM TIPS -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModalAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="z-index: 99991">
+        <iframe  src="about:blank" frameBorder=0 allowtransparency="yes"  marginHeight=0 marginWidth=0 style="overflow: hidden; border-radius: 11px; position:absolute;visibility:inherit; top:0px;left:0px;height:100%;width:100%;z-index:-1;background-color: rgba(0, 0, 0, 0)">
+        </iframe>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">提示</h4>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <!--<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>-->
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" >确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ConfirmModal" tabindex="-1" role="dialog" style="z-index: 99991">
+        <iframe  src="about:blank" frameBorder=0 allowtransparency="yes"  marginHeight=0 marginWidth=0 style="overflow: hidden; border-radius: 11px; position:absolute;visibility:inherit; top:0px;left:0px;height:100%;width:100%;z-index:-1;background-color: rgba(0, 0, 0, 0)">
+        </iframe>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"> </h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary " id="ConfirmBtn" data-dismiss="modal">确定</button>
+                    <button type="button" class="btn btn-default " id="cancelBtn" data-dismiss="modal">取消</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="myModalZtreeType" tabindex="-1" role="dialog">
+        <iframe  src="about:blank" frameBorder=0 allowtransparency="yes"  marginHeight=0 marginWidth=0 style="overflow: hidden; border-radius: 11px; position:absolute;visibility:inherit; top:0px;left:0px;height:100%;width:100%;z-index:-1;background-color: rgba(0, 0, 0, 0)">
+        </iframe>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"> 右侧菜单结构选择 </h4>
+                </div>
+                <div class="modal-body">
+                    <p>One fine body&hellip;</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary " onclick="renderZtree()">确定</button>
+                    <button type="button" class="btn btn-default " data-dismiss="modal">取消</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="alarmConfirm" tabindex="-1" role="dialog" style="z-index: 99991">
+        <iframe  src="about:blank" frameBorder=0 allowtransparency="yes"  marginHeight=0 marginWidth=0 style="overflow: hidden; border-radius: 11px; position:absolute;visibility:inherit; top:0px;left:0px;height:100%;width:100%;z-index:-1;background-color: rgba(0, 0, 0, 0)">
+        </iframe>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"> 报警确认 </h4>
+                </div>
+                <div class="panel-heading">
+                    <form id="alermCount">
+                        <div class="query-parameter">
+                            <input type="hidden" id="confirmId">
+                            <label>泵房名称 : </label>
+                            <input class="device-id form-control input-text4" readonly="readonly" id="confirmPhName">
+                            <label>所属区位 : </label>
+                            <input class="device-id form-control input-text4" readonly="readonly" id="confirmDevName">
+                            <br>
+                            <br>
+                            <label>报警类型 : </label>
+                            <input class="device-id form-control input-text4" readonly="readonly" id="confirmType">
+                            <label>报警时间 : </label>
+                            <input class="device-id form-control input-text4" readonly="readonly" id="confirmDate">
+                            <br>
+                            <br>
+                            <label>确认原因 : </label>
+                            <input class="device-id form-control input-text5" type="text" id="confirmReason">
+                            <br>
+                            <br>
+                            <label>解决方案 : </label>
+
+							<textarea rows="4" cols="60" name="comment" form="usrform" id="confirmRemark" class="form-control" readonly></textarea>
+                        </div>
+                   </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" onclick="alarmConfirm()">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModalProDeaL" tabindex="-1" role="dialog" aria-labelledby="myModalProDeaL" style="z-index: 99991">
+        <iframe  src="about:blank" frameBorder=0 allowtransparency="yes"  marginHeight=0 marginWidth=0 style="overflow: hidden; border-radius: 11px; position:absolute;visibility:inherit; top:0px;left:0px;height:100%;width:100%;z-index:-1;background-color: rgba(0, 0, 0, 0)">
+        </iframe>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"> 故障报警分析 </h4>
+                </div>
+                <div class="modal-body" style="margin:20px 0px;">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" id="tabThisPage" role="tablist">
+                        <li id="topLi" role="presentation" class="active"><a isOpen="true" href="#myModalProDeaL01" role="tab" data-toggle="tab">可能原因</a></li>
+                        <li id="lastLi" role="presentation"><a isOpen="false" href="#myModalProDeaL02" role="tab" data-toggle="tab">建议方案</a></li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content  pre-scrollable" style="max-height: 206px">
+                        <div role="tabpanel" class="tab-pane active" id="myModalProDeaL01" > </div>
+                        <div role="tabpanel" class="tab-pane" id="myModalProDeaL02"> </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary " data-dismiss="modal">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myWorkModal" style="z-index: 99991">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title">创建工单</h3>
+                </div>
+                <div class="modal-body" style="height:500px ;overflow-y: auto">
+                    <form id="workOrder">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="workType">工单类型</label>
+                                    <input type="text" class="form-control" readonly id="workType" name="workType" value="告警工单" placeholder="请输入">
+                                   <!-- <select class="form-control" id="workType" name="workType">
+                                        <option value="1">告警工单</option>
+                                    </select>-->
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-md-offset-1">
+                                <div class="form-group">
+
+                                    <label for="alarmContent">工单名称</label>
+                                    <input type="text" class="form-control" readonly id="alarmContent" name="alarmContent" placeholder="请输入">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                   <!--  <label for="taskSource">工单来源</label>  -->
+                                     <input type="hidden" class="form-control" id="taskSource" name="taskSource" value="二供平台" placeholder="请输入">
+
+                                    <label for="phName">泵房名称</label>
+                                    <input type="text" class="form-control" readonly id="phName" name="phName" placeholder="请输入">
+                                    <input type="hidden" class="form-control" readonly id="phId" name="phId" placeholder="请输入">
+
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-md-offset-1">
+                                <div class="form-group">
+                                    <label for="address">泵房地址</label>
+                                    <input type="text" class="form-control" readonly id="address" name="address" placeholder="请输入">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="alarmTime">告警时间</label>
+                                    <input type="text" class="form-control" readonly id="alarmTime" name="alarmTime" placeholder="请输入">
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-md-offset-1">
+                                <div class="form-group">
+                                    <label for="alarmStatus">告警状态</label>
+                                    <input type="text" class="form-control" readonly id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
+                                    <!--2：待接单-->
+                                    <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="2"  placeholder="请输入">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="processName">告警等级</label>
+                                    <input type="text" class="form-control" id="alarmLevel" name="alarmLevel" placeholder="请输入">
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-md-offset-1">
+                                <div class="form-group">
+                                    <label for="processName">所在设备</label>
+                                    <input type="text" class="form-control" readonly id="processName" name="processName" placeholder="请输入">
+                                    <input type="hidden"  class="form-control" readonly id="deviceId" name="deviceId" placeholder="请输入">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="planStartTime">计划开始时间</label>
+                                    <input id ="planStartTime" name="planStartTime" type="text" value="" readonly style="background-color: white" class="planStartTime form-control timepicker">
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-md-offset-1">
+                                <div class="form-group">
+                                    <label for="planEndTime">计划结束时间</label>
+                                    <input id ="planEndTime" name="planEndTime" type="text" value="" readonly style="background-color: white"  class="planEndTime form-control timepicker">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-11">
+                                <div class="form-group">
+                                    <label for="alarmReason">告警原因</label>
+                                    <textarea class="form-control" rows="3" id="alarmReason" name="alarmReason"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-11">
+                                <div class="form-group">
+                                    <label for="planContent">解决方案</label>
+                                    <textarea class="form-control" rows="3" id="planContent" name="planContent"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label for="deptId">执行人</label>
+                                    <select class="form-control" id="deptId" name="deptId">
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="submitWorkOrder()">创建</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="alertWork" style="z-index: 99991">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">提示</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="alertWorkMessage" style="color: red"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myWorkModal" data-dismiss="modal">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="alertError" style="z-index: 99991">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">提示</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="alertErrorMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="refresh()" data-dismiss="modal">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+<!--  megban -->
+<!--<div id="globMB" style=" display: none; position: fixed;left: 0px;top: 0px;width: 100%;height: 100%; z-index:999999;overflow: hidden; background: rgba(255,255,255,0.7)">
+    <div style="width: 40px;height: 40px;position: absolute;top: 50%;left: 50%;margin-top: -20px;margin-left: -20px"><img src="static/assets/js/lhgdialog/skins/icons/loading.gif" alt=""></div>
+</div>-->
+    <!-- /.modal -->
+
+    <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="static/assets/js/jquery-1.10.2.js"></script>
+
+    <script>
+        var SYSTEM_LOADING;
+        $(function() {
+            // loading bar
+            var barLen = 0;
+            SYSTEM_LOADING = setInterval(function(){
+                barLen ++;
+                if(barLen > 95){
+                    clearInterval(SYSTEM_LOADING);
+                } else {
+                    $(".percentBar").text(barLen + "%");
+                }
+            }, 20);
+
+            $.post("/HYWater/config/getProjectPic", function(result) {
+                $("#topPic").attr("src", "static/configResourse/"+result.projectPic+"/top_title.png");
+                $("#iconPic").attr("href", "static/configResourse/"+result.projectPic+"/favicon.ico");
+            });
+        });
+    </script>
+    <script src="static/assets/js/jquery-form.js"></script>
+    <script src="static/assets/js/jQuery.base64.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="static/assets/js/bootstrap.min.js"></script>
+    <!-- BOOTSTRAP SCRIPTS -->
+    <script src="static/assets/js/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="static/assets/js/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+    <script src="static/assets/js/bootstrap-table/bootstrap-table-export.js"></script>
+    <script src="static/assets/js/bootstrap-table/tableExport.js"></script>
+    <script src="static/assets/js/bootstrapValidator.min.js"></script>
+    <!-- Highcharts Js -->
+    <script src="static/assets/js/Highcharts-4.2.3/highcharts.js"></script>
+    <script src="static/assets/js/Highcharts-4.2.3/highcharts-3d.js"></script>
+    <script src="static/assets/js/Highcharts-4.2.3/highcharts-more.js"></script>
+    <script src="static/assets/js/Highcharts-4.2.3/modules/solid-gauge.js"></script>
+    <script src="static/assets/js/Highcharts-4.2.3/modules/exporting.js"></script>
+    <script src="static/assets/js/Highcharts-4.2.3/modules/no-data-to-display.src.js"></script>
+    <!-- ArcGIS Map Js -->
+    <script src="static/assets/js/Highcharts-4.2.3/modules/export-csv.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="static/assets/js/jquery.metisMenu.js"></script>
+
+    <!-- Ztee Js -->
+    <script type="text/javascript" src="static/ztree/js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="static/ztree/js/jquery.ztree.excheck.min.js"></script>
+    <script type="text/javascript" src="static/ztree/js/jquery.ztree.exhide.min.js"></script>
+
+    <!-- RightMenu Js -->
+    <script src="static/assets/js/jquery-accordion-menu.js"></script>
+    <!-- Lhgdialog Js -->
+    <script src="static/assets/js/lhgdialog/lhgdialog.min.js?skin=iblue"></script>
+    <!-- Datetimepicker Js -->
+    <script src="static/assets/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="static/assets/js/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+    <!-- iCheck Js -->
+    <script src="static/assets/js/iCheck/iCheck.min.js"></script>
+    <!-- Date util -->
+    <script src="static/assets/js/date_time.js"></script>
+    <!-- Baidu Map Js -->
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=TnTtZt52jtuwnf8aNHl3H1Eh"></script>
+    <!-- Constant Js -->
+    <script src="static/assets/js/constant.js"></script>
+    <!-- Util Js -->
+    <script src="static/assets/js/util.js"></script>
+    <!-- Custom Js -->
+    <!--<script src="static/assets/js/custom.js"></script>-->
+
+    <script src="static/assets/js/yxn-header-menu.js"></script>
+
+    <script type="text/javascript" src="static/chPlayer/chplayer.min.js"></script>
+
+    <!-- 加密 -->
+    <script type="text/javascript" src="static/assets/js/aesYxn/core-min.js"></script>
+    <script type="text/javascript" src="static/assets/js/aesYxn/cipher-core-min.js"></script>
+    <script type="text/javascript" src="static/assets/js/aesYxn/mode-ecb-min.js"></script>
+    <script type="text/javascript" src="static/assets/js/aesYxn/lib-typedarrays.js"></script>
+    <script type="text/javascript" src="static/assets/js/aesYxn/aes-min.js"></script>
+    <script type="text/javascript" src="static/assets/js/aesYxn/aes.js"></script>
+
+
+</body>
+
+</html>

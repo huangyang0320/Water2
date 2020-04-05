@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.biz.dao.WaterCompanyDao" >
+  <resultMap id="BaseResultMap" type="com.wapwag.woss.modules.biz.entity.WaterCompany" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="regional_id" property="regionalId" jdbcType="VARCHAR" />
+    <result column="pinyin" property="pinyin" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="updator" property="updator" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, company_name, parent_id, regional_id, pinyin, memo, create_date, creator, update_date, 
+    updator, del_flag,type
+  </sql>
+  
+  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from water_company
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+    <select id="getByPid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from water_company
+    where parent_id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String" >
+<!--     delete from water_company -->
+<!--     where id = #{id,jdbcType=VARCHAR} -->
+    update water_company set  del_flag = "1" where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.wapwag.woss.modules.biz.entity.WaterCompany" >
+    insert into water_company (id, company_name, parent_id, 
+      regional_id, pinyin, memo, 
+      create_date, creator, update_date, 
+      updator, del_flag,type)
+    values (#{id,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
+      #{regionalId,jdbcType=VARCHAR}, #{pinyin,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{updator,jdbcType=VARCHAR}, #{delFlag,jdbcType=VARCHAR},##{type,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="update" parameterType="com.wapwag.woss.modules.biz.entity.WaterCompany" >
+    update water_company
+    set company_name = #{companyName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      regional_id = #{regionalId,jdbcType=VARCHAR},
+      pinyin = #{pinyin,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      updator = #{updator,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=VARCHAR},
+      type =#{type,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  	<select id="findList" resultMap="BaseResultMap">
+        select * from water_company 
+		where '1' = '1' and del_flag = "0"
+		<if test="companyName != null and companyName != '' ">
+			  and company_name like 
+			       <if test="dbName == 'oracle'">'%'||#{companyName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{companyName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{companyName},'%')</if>
+		</if>
+		order by update_Date desc
+	</select>
+	
+	<select id="waterCompanyTree" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+       select id, company_name name ,parent_id pId FROM water_company where del_flag = "0"
+	</select>
+	
+	<select id="findWaterCompanyByRole" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo" parameterType="com.wapwag.woss.modules.home.entity.TreeTypeDto">
+			SELECT
+		w.company_name name ,
+		w.id id ,
+		CASE when w.parent_id='' then 0 else 
+		w.parent_id end pid
+		FROM
+			project pi
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN water_company w on w.id = pi.company_node
+		WHERE
+			se.id IS NOT NULL
+		AND di.ID IN (
+			SELECT
+				AUTHOBJECT_ID
+			FROM
+				permission_info pi
+			WHERE
+				AUTH_TYPE = 'DEVICE'
+			AND ROLE_ID IN (
+				SELECT
+					ROLE_ID
+				FROM
+					sys_user_role
+				WHERE
+					user_id = #{userId}
+			)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.company_node is not NULL
+		 AND w.type =#{waterCompanyType}
+		AND w.del_flag ='0'
+		GROUP BY w.id
+	 </select>
+	 
+	 <select id="findWaterCompanyTreeByPid" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+              select id, company_name name ,0 pId FROM water_company where del_flag = "0" AND id in (
+				<foreach collection="waterCompanyTreeInfo" item="item" separator=",">
+					#{item.pId}
+				</foreach>
+				)
+				GROUP BY id 
+	</select>
+	
+	<select id="findWaterCompanyByRoleAndNode" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo" parameterType="java.lang.String">
+		SELECT
+			w.company_name NAME,
+			w.id id,
+		 w.parent_id pid,
+		 w.type
+		FROM
+			water_company w
+		LEFT JOIN project pi ON w.id = pi.company_node
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		WHERE
+			se.id IS NOT NULL
+		AND di.ID IN (
+			SELECT
+				AUTHOBJECT_ID
+			FROM
+				permission_info pi
+			WHERE
+				AUTH_TYPE = 'DEVICE'
+			AND ROLE_ID IN (
+				SELECT
+					ROLE_ID
+				FROM
+					sys_user_role
+				WHERE
+					user_id = #{userId}
+			)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.company_node IS NOT NULL
+		AND w.del_flag = '0'
+		and w.parent_id !=''
+		GROUP BY
+			w.id
+	</select>
+	
+	<select id="findWaterCompanyTreeByPidAndPid" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+			select id, company_name name , CASE when parent_id='' then 0 else 
+					parent_id end pid FROM water_company where del_flag = "0" and id in (
+						<foreach collection="waterCompanyTreeInfo" item="item" separator=",">
+					#{item.pId}
+				</foreach>
+				)
+				GROUP BY id 
+	</select>
+	
+	<select id="findWaterCompanyByRoleAndVideo" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo" parameterType="com.wapwag.woss.modules.home.entity.TreeTypeDto">
+					SELECT
+				w.company_name NAME,
+				w.id id,
+				CASE
+			WHEN w.parent_id = '' THEN
+				0
+			ELSE
+				w.parent_id
+			END pid
+			FROM
+				project pi
+			LEFT JOIN pump_house phi ON phi.id_project = pi.id
+			LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+			LEFT JOIN services se ON se.ID_DEVICE = di.ID
+			LEFT JOIN water_company w ON w.id = pi.company_node
+			LEFT JOIN video_info v on v.pump_house_id = phi.id
+			WHERE
+				se.id IS NOT NULL
+			AND di.ID IN (
+				SELECT
+					AUTHOBJECT_ID
+				FROM
+					permission_info pi
+				WHERE
+					AUTH_TYPE = 'DEVICE'
+				AND ROLE_ID IN (
+					SELECT
+						ROLE_ID
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}
+				)
+			)
+			AND di.ID_PUMP_HOUSE IS NOT NULL
+			AND di.del_flag = '0'
+			AND pi.company_node IS NOT NULL
+			AND w.type = #{waterCompanyType}
+			AND w.del_flag = '0'
+			AND v.id is not null 
+			GROUP BY
+				w.id
+	 </select>
+	 
+	 <select id="findWaterCompanyByRoleAndNodeAndVideo" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo" parameterType="java.lang.String">
+				SELECT
+			w.company_name NAME,
+			w.id id,
+			w.parent_id pid,
+			w.type
+		FROM
+			water_company w
+		LEFT JOIN project pi ON w.id = pi.company_node
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN video_info v ON v.pump_house_id = phi.id
+		WHERE
+			se.id IS NOT NULL
+		AND di.ID IN (
+			SELECT
+				AUTHOBJECT_ID
+			FROM
+				permission_info pi
+			WHERE
+				AUTH_TYPE = 'DEVICE'
+			AND ROLE_ID IN (
+				SELECT
+					ROLE_ID
+				FROM
+					sys_user_role
+				WHERE
+					user_id = #{userId}
+			)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.company_node IS NOT NULL
+		AND w.del_flag = '0'
+		AND w.parent_id != ''
+		AND v.id IS NOT NULL
+		GROUP BY
+			w.id
+	</select>
+	
+</mapper>

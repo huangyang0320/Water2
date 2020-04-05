@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.home.dao.RegionalDao">
+	<resultMap id="BaseResultMap"
+		type="com.wapwag.woss.modules.home.entity.RegionalInfo">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+		<result column="parent_ids" property="parentIds" jdbcType="VARCHAR" />
+		<result column="region_name" property="name" jdbcType="VARCHAR" />
+		<result column="Longi" property="longi" jdbcType="DECIMAL" />
+		<result column="Lati" property="lati" jdbcType="DECIMAL" />
+		<result column="type" property="type" jdbcType="CHAR" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+		<result column="del_flag" property="delFlag" jdbcType="CHAR" />
+		<collection property="pumpHouseList"
+			resultMap="com.wapwag.woss.modules.home.dao.PumpHouseDao.BaseResultMap" />
+	</resultMap>
+
+	<select id="findAllDeviceCount" resultType="Integer"
+		parameterType="java.lang.String">
+		SELECT 
+		            count(AUTHOBJECT_ID)
+		        FROM
+		            permission_info pi
+		        WHERE
+		            AUTH_TYPE = 'DEVICE'
+		                AND ROLE_ID IN (SELECT 
+		                    ROLE_ID
+		                FROM
+		                    sys_user_role
+		                WHERE
+		                    user_id = #{userId})
+		                OR ROLE_ID IN (SELECT 
+		                    role_id
+		                FROM
+		                    sys_office_role_new
+		                WHERE
+		                    office_id = (SELECT 
+		                            office_id
+		                        FROM
+		                            sys_user
+		                        WHERE
+		                            id = #{userId}))
+	</select>
+
+	<select id="findAllDevice" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		ri.id,
+		ri. NAME AS region_name,
+		phi.id AS pump_house_id,
+		phi. NAME AS PUMP_HOUSE_NAME,
+		phi.ADDRESS AS PUMP_HOUSE_ADDRESS,
+		phi.Longi,
+		phi.Lati,
+		phi.ALL_PIC_URL,
+		di.ID AS device_id,
+		di. NAME AS device_name,
+		vi.id AS video_id,
+		vi.pump_house_id as video_pump_house_id,
+		vi.monitor_ip,
+		vi.monitor_port,
+		vi.channel_no,
+		vi. NAME AS video_name,
+		pi.id as project_id
+		FROM
+		regional ri
+		LEFT JOIN project pi ON pi.ID_REGION = ri.id
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN video_info vi ON vi.pump_house_id = phi.id
+		WHERE
+		se.id IS NOT NULL AND
+		di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		)
+		AND
+		di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		ORDER BY
+		di.ID
+	</select>
+
+	<!-- 加上组织机构下的角色 -->
+	<select id="findAllRegionalByRole" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo"
+		parameterType="java.lang.String">
+		SELECT
+		ri.id ,
+		ri.name,
+		ri.parent_id pId,
+		ri.Longi longi,
+		ri.Lati lati
+		FROM
+		regional ri
+		LEFT JOIN project pi ON pi.ID_REGION = ri.id
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		) OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		GROUP BY
+		ri.id
+	</select>
+
+	<!-- 增加了组织机构角色 -->
+	<select id="findAllRegionalByRoleAndType" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo"
+		parameterType="java.lang.String">
+		SELECT
+		ri.id ,
+		ri.name,
+		0 pId,
+		ri.Longi longi,
+		ri.Lati lati
+		FROM
+		regional ri
+		LEFT JOIN project pi ON pi.ID_REGION = ri.id
+		LEFT JOIN pump_house
+		phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE =
+		phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		) OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND
+		pi.region_type is not null
+		GROUP BY
+		ri.id
+	</select>
+
+	<select id="findAllRegionalByCompany" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		p.ID_REGION id,
+		r. NAME,
+		p.company_node pid,
+		r.Longi longi,
+		r.Lati lati
+		FROM
+		project p
+		LEFT JOIN regional r ON p.ID_REGION = r.id
+		LEFT JOIN water_company w
+		ON p.company_node = w.id
+		WHERE
+		p.ID_REGION is not null and p.company_node in (
+		<foreach collection="waterCompanyTreeInfo" item="item"
+			separator=",">
+			#{item.id}
+		</foreach>
+		)
+		GROUP BY p.ID_REGION
+	</select>
+
+	<select id="findAllRegionalByWaterDepart" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		p.ID_REGION id,
+		r. NAME,
+		p.water_depart_orgNode pid,
+		r.Longi longi,
+		r.Lati lati
+		FROM
+		project p
+		LEFT JOIN regional r ON p.ID_REGION = r.id
+		WHERE
+		p.ID_REGION IS NOT NULL
+		and p.water_depart_orgNode is not NULL
+		AND p.ID_REGION IN (
+		SELECT
+		r.id
+		FROM
+		project pi
+		LEFT JOIN regional r ON pi.ID_REGION = r.id
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN sys_office o ON o.id = pi.water_depart_orgNode
+		WHERE
+		se.id IS NOT NULL
+		AND pi.ID_REGION IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.water_depart_orgNode IS NOT NULL
+		GROUP BY
+		r.id
+		)
+		GROUP BY
+		p.ID_REGION
+	</select>
+
+	<select id="findAllCity" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		select id ,parent_id pid ,name,
+		Longi longi,
+		Lati lati from regional WHERE id in (
+		<foreach collection="cityTreeInfo" item="item" separator=",">
+			#{item.pId}
+		</foreach>
+		) GROUP BY id
+	</select>
+
+	<!-- 增加组织角色 -->
+	<select id="findAllRegionalByVideo" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo"
+		parameterType="java.lang.String">
+		SELECT
+		ri.id ,
+		ri.name,
+		ri.parent_id pId
+		FROM
+		regional ri
+		LEFT JOIN project pi ON pi.ID_REGION = ri.id
+		LEFT JOIN pump_house
+		phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE =
+		phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN video_info vi ON vi.pump_house_id= phi.id
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		) OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND vi.id is not NULL
+		GROUP BY
+		ri.id
+	</select>
+
+	<!-- 增加组织角色 -->
+	<select id="findAllRegionalByRoleAndTypeAndVideo" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo"
+		parameterType="java.lang.String">
+		SELECT
+		ri.id ,
+		ri.name,
+		0 pId
+		FROM
+		regional ri
+		LEFT JOIN project pi ON pi.ID_REGION = ri.id
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN video_info v on v.pump_house_id = phi.id
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		) OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.region_type is not null
+		AND v.id is not null
+		GROUP BY
+		ri.id
+	</select>
+
+	<select id="findAllRegionalByCompanyAndVideo" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		p.ID_REGION id,
+		r. NAME,
+		p.company_node pid
+		FROM
+		project p
+		LEFT JOIN regional r ON p.ID_REGION = r.id
+		LEFT JOIN water_company w
+		ON p.company_node = w.id
+		LEFT JOIN pump_house h on h.id_project = p.id
+		LEFT JOIN video_info v on v.pump_house_id = h.id
+		WHERE
+		p.ID_REGION IS NOT NULL
+		AND v.id is not null
+		AND p.company_node IN (
+		<foreach collection="waterCompanyTreeInfo" item="item"
+			separator=",">
+			#{item.id}
+		</foreach>
+		)
+		GROUP BY
+		p.ID_REGION
+	</select>
+
+	<select id="findAllRegionalByWaterDepartNew" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		p.ID_REGION id,
+		r. NAME,
+		p.water_depart_orgNode pid
+		FROM
+		project p
+		LEFT JOIN regional r ON p.ID_REGION = r.id
+		LEFT JOIN pump_house h ON h.id_project = p.id
+		LEFT JOIN video_info v ON v.pump_house_id = h.id
+		WHERE
+		p.ID_REGION IS NOT NULL
+		AND v.id IS NOT NULL
+		AND p.water_depart_orgNode IS NOT NULL
+		AND p.ID_REGION IN (
+		SELECT
+		r.id
+		FROM
+		project pi
+		LEFT JOIN regional r ON pi.ID_REGION = r.id
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN sys_office o ON o.id = pi.water_depart_orgNode
+		LEFT JOIN video_info v ON v.pump_house_id = phi.id
+		WHERE
+		se.id IS NOT NULL
+		AND pi.ID_REGION IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.water_depart_orgNode IS NOT NULL
+		AND v.id IS NOT NULL
+		GROUP BY
+		r.id
+		)
+		GROUP BY
+		p.ID_REGION
+	</select>
+
+</mapper>

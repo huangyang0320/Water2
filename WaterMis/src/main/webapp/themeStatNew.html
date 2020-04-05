@@ -1,0 +1,37 @@
+
+<style type="text/css">
+    .roww {
+    margin-left: -10px;
+    margin-top: -10px;
+        height: 100%;
+    }
+   #onlineDataPage{
+       width: 100% !important;
+       height: 95% !important;
+   }
+
+</style>
+
+<div id="page-inner">
+	<div class="roww">
+        <iframe id="onlineDataPage" src="themeNew.html" style="border: none;outline: none;"></iframe>
+    </div>
+    <!-- /. ROW  -->
+</div>
+<script>
+    $(function () {
+        //
+        // 初始化无滚动条
+        $("#page-wrapper").css("overflow-y", "hidden");
+        // 计算图表展示区域和设备指标显示区域的高度
+        var calcHeight = function() {
+            return $(window).height() - $(".top-navbar").height();
+        };
+
+        $('#onlineDataPage').height(calcHeight());
+
+        $(window).resize(function() {
+            $('#onlineDataPage').height(calcHeight());
+        });
+    });
+</script>

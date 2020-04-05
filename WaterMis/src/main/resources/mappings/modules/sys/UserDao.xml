@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.sys.dao.UserDao">
+	
+    <sql id="userColumns">
+    	a.id,
+    	<!-- a.company_id AS "company.id", -->
+    	a.office_id AS "office.id",
+    	a.login_name,
+    	a.password,
+    	a.no,
+		a.name,
+		a.email,
+		a.phone,
+		a.mobile,
+		a.user_type,
+		a.login_ip,
+		a.login_date,
+		a.remarks,
+		a.login_flag,
+		a.photo,
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date,
+		a.del_flag,
+		a.alarmRate,
+		a.treeTypes,
+		a.tree_selection,
+		a.is_control,
+    	<!-- c.name AS "company.name",
+    	c.parent_id AS "company.parent.id",
+    	c.parent_ids AS "company.parentIds",
+    	ca.id AS "company.area.id",
+    	ca.name AS "company.area.name",
+    	ca.parent_id AS "company.area.parent.id",
+    	ca.parent_ids AS "company.area.parentIds", -->
+    	o.name AS "office.name",
+    	o.parent_id AS "office.parent.id",
+    	o.parent_ids AS "office.parentIds",
+    	oa.id AS "office.area.id",
+    	oa.name AS "office.area.name",
+    	oa.parent_id AS "office.area.parent.id",
+    	oa.parent_ids AS "office.area.parentIds"
+    	<!-- cu.id AS "company.primaryPerson.id",
+    	cu.name AS "company.primaryPerson.name",
+    	cu2.id AS "company.deputyPerson.id",
+    	cu2.name AS "company.deputyPerson.name", -->
+    	<!-- ou.id AS "office.primaryPerson.id",
+    	ou.name AS "office.primaryPerson.name",
+    	ou2.id AS "office.deputyPerson.id",
+    	ou2.name AS "office.deputyPerson.name" --><!-- ,
+        r.id AS "roleList.id",
+        r.office_id AS "roleList.office.id",
+        r.name AS "roleList.name",
+        r.enname AS "roleList.enname",
+        r.role_type AS "roleList.roleType",
+        r.data_scope AS "roleList.dataScope" -->
+    </sql>
+    
+    <sql id="userJoins">
+		<!-- LEFT JOIN sys_office c ON c.id = a.company_id  -->
+		LEFT JOIN sys_office o ON o.id = a.office_id
+		LEFT JOIN regional oa ON oa.id = o.area_id
+	<!-- 	LEFT JOIN sys_user cu ON cu.id = c.primary_person
+		LEFT JOIN sys_user cu2 ON cu2.id = c.deputy_person -->
+		<!-- LEFT JOIN sys_user ou ON ou.id = o.primary_person
+		LEFT JOIN sys_user ou2 ON ou2.id = o.deputy_person --><!-- 
+		LEFT JOIN sys_user_role ur ON ur.user_id = a.id
+        LEFT JOIN sys_role r ON r.id = ur.role_id -->
+    </sql>
+	
+	<!-- 根据编号获得用户 -->
+	<select id="get" resultType="User">
+		SELECT
+			<include refid="userColumns"/><!-- ,
+			ro.office_id AS "roleList.officeList.id" -->
+		FROM sys_user a
+		<include refid="userJoins"/><!-- 
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+		WHERE a.id = #{id}
+	</select>
+	
+	<!-- 根据登录名查询用户 -->
+	<select id="getByLoginName" resultType="User" parameterType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM sys_user a
+		<include refid="userJoins"/>
+		WHERE a.login_name = #{loginName} AND a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+	
+	<!-- 根据登录名查询用户 -->
+	<select id="getByName" resultType="User" parameterType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM sys_user a
+		<include refid="userJoins"/>
+		WHERE a.login_name = #{name} AND a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+	
+	<!-- 分页查询用户信息 -->
+	<select id="findList" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM sys_user a
+		<include refid="userJoins"/>
+		<if test="role != null and role.id != null and role.id != ''">
+			JOIN sys_user_role ur ON ur.user_id = a.id AND ur.role_id = #{role.id}
+		</if>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<!-- <if test="company != null and company.id != null and company.id != ''">
+			AND (c.id = #{company.id} OR c.parent_ids LIKE 
+					<if test="dbName == 'oracle'">'%,'||#{company.id}||',%')</if>
+					<if test="dbName == 'mssql'">'%,'+#{company.id}+',%')</if>
+					<if test="dbName == 'mysql'">CONCAT('%,', #{company.id}, ',%'))</if>
+		</if> -->
+		<if test="office != null and office.id != null and office.id != ''">
+			AND (o.id = #{office.id} OR o.parent_ids LIKE 
+					<if test="dbName == 'oracle'">'%,'||#{office.id}||',%')</if>
+					<if test="dbName == 'mssql'">'%,'+#{office.id}+',%')</if>
+					<if test="dbName == 'mysql'">CONCAT('%,', #{office.id}, ',%'))</if>
+		</if>
+		<!-- 如果不是超级管理员，则不显示超级管理员用户 -->
+		<if test="!currentUser.admin">
+			AND a.id != '1'
+		</if>
+		<if test="loginName != null and loginName != ''">
+			AND a.login_name like 
+					<if test="dbName == 'oracle'">'%'||#{loginName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{loginName}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{loginName}, '%')</if>
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name like 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">CONCAT('%', #{name}, '%')</if>
+		</if>
+		<!-- 数据范围过滤 -->
+		${sqlMap.dsf}
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY o.code, a.name
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 根据OfficeId获取用户（树查询用户时用） -->
+	<select id="findUserByOfficeId" resultType="User" useCache="true">
+		SELECT
+			a.id, a.name, a.login_name
+		FROM sys_user a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.office_id = #{office.id}
+		ORDER BY a.name
+	</select>
+	
+	<!-- 查询全部用户 -->
+	<select id="findAllList" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		FROM sys_user a
+		<include refid="userJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		ORDER BY o.code, a.name
+	</select>
+	
+	<!-- 查询全部用户数目 -->
+	<select id="findAllCount" resultType="long">
+		SELECT
+			COUNT(1)
+		FROM sys_user a
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+	
+	<!-- 插入用户 -->
+	<insert id="insert">
+		INSERT INTO sys_user(
+			id, 
+			office_id, 
+			login_name, 
+			password, 
+			no, 
+			name, 
+			email, 
+			phone, 
+			mobile, 
+			user_type, 
+			create_by, 
+			create_date, 
+			update_by, 
+			update_date, 
+			remarks, 
+			login_flag, 
+			photo, 
+			alarmRate,
+			del_flag,
+			treeTypes,
+			tree_selection,
+			is_control
+		) VALUES (
+			#{id}, 
+			#{office.id}, 
+			#{loginName}, 
+			#{password}, 
+			#{no}, 
+			#{name}, 
+			#{email}, 
+			#{phone}, 
+			#{mobile}, 
+			#{userType}, 
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate}, 
+			#{remarks}, 
+			#{loginFlag}, 
+			#{photo},
+			#{alarmRate}, 
+			#{delFlag},
+			#{treeTypes},
+			#{treeSelection},
+			#{isControl}
+		)
+	</insert>
+	
+	<!-- 更新用户 -->
+	<update id="update">
+		UPDATE sys_user SET 
+			<!-- company_id = #{company.id},  -->
+			office_id = #{office.id}, 
+			login_name = #{loginName}, 
+			password = #{password}, 
+			no = #{no}, 
+			name = #{name}, 
+			email = #{email}, 
+			phone = #{phone}, 
+			mobile = #{mobile}, 
+			user_type = #{userType}, 
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks},
+			login_flag = #{loginFlag},
+			photo = #{photo},
+			alarmRate = #{alarmRate},
+			treeTypes= #{treeTypes},
+			is_control=#{isControl}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 删除用户和角色关联表数据 -->
+	<delete id="deleteUserRole">
+		DELETE FROM sys_user_role WHERE user_id = #{id}
+	</delete>
+	
+	<!-- 插入用户和角色关联表数据 -->
+	<insert id="insertUserRole">
+		INSERT INTO sys_user_role(user_id, role_id)
+		<foreach collection="roleList" item="role" separator=" union all ">
+			SELECT #{id}, #{role.id}
+			<if test="dbName != 'mssql'">
+			FROM dual
+			</if>
+		</foreach>
+	</insert>
+	
+	<!-- 更新用户信息  -->
+	<update id="updateUserInfo">
+		UPDATE sys_user SET 
+			email = #{email}, 
+			phone = #{phone}, 
+			mobile = #{mobile}, 
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks},
+			photo = #{photo}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 更新用户密码 -->
+	<update id="updatePasswordById">
+		UPDATE sys_user SET 
+			password = #{password} 
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 更新登录信息，如登录IP、登录时间 -->
+	<update id="updateLoginInfo">
+		UPDATE sys_user SET 
+			login_ip = #{loginIp}, 
+			login_Date = #{loginDate} 
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 逻辑删除用户 -->
+	<update id="delete">
+		UPDATE sys_user SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 更新告警设置 -->
+	<update id="updateAlarmRateById">
+		UPDATE sys_user SET 
+			alarmrate = #{alarmRate} 
+		WHERE id = #{id}
+	</update>
+	<resultMap type="com.wapwag.woss.modules.sys.entity.UserTreeSelection" id="userTree">
+		<result column="treeTypes" property="treeTypes" />
+		<result column="tree_selection" property="treeSelection" />
+		<result column="is_control" property="isControl" />
+	</resultMap>
+	<select id="findUserTreeHave" resultMap="userTree">
+		SELECT
+			a.id,
+			a.treeTypes,
+			a.tree_selection,
+			a.is_control
+		FROM sys_user a
+		WHERE a.id = #{userId} AND a.del_flag = #{delFlag}
+	</select>
+	<select id="listUserHaveTree" resultType="com.wapwag.woss.modules.sys.entity.DictVo">
+		SELECT
+			sd.value,
+			sd.label,
+			sd.type,
+			sd.description,
+			sd.sort,
+			sd.parent_Id
+		FROM sys_dict sd
+		WHERE
+			sd.type ='treeTypes' AND
+			sd.value IN
+		<foreach item="treeTypes" index="index" collection="list" open="(" separator="," close=")">
+			#{treeTypes}
+		</foreach>
+		ORDER BY sort
+	</select>
+	<update id="updateUserDefaultTree">
+		UPDATE sys_user SET
+			tree_selection=#{treeSelection}
+		WHERE id = #{id}
+	</update>
+
+<!--批量同步用户-->
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO sys_user(
+			id,
+			login_name,
+			no,
+			name,
+			email,
+			phone,
+			mobile,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES
+		<foreach collection="list" item="user" index="index" separator=",">
+		(
+			#{user.id,jdbcType=VARCHAR},
+			#{user.account,jdbcType=VARCHAR},
+			#{user.empNo,jdbcType=VARCHAR},
+			#{user.empName,jdbcType=VARCHAR},
+			#{user.email,jdbcType=VARCHAR},
+			#{user.extNumber,jdbcType=VARCHAR},
+			#{user.mobile,jdbcType=VARCHAR},
+			#{user.createBy.id,jdbcType=VARCHAR},
+			#{user.createDate},
+			#{user.updateBy.id,jdbcType=VARCHAR},
+			#{user.updateDate}
+			)
+		</foreach>
+	</insert>
+
+    <update id="updateUserData" parameterType="com.wapwag.woss.modules.sys.entity.UserDto">
+        UPDATE sys_user SET
+        id=#{id},
+        office_id = #{officeId},
+        `password` =#{password},
+        phone = #{phone},
+        photo =  #{photo},
+        user_type = #{userType},
+        login_ip =#{loginIp},
+        login_date = #{loginDate},
+        update_date = #{updateDate},
+        remarks = #{remarks},
+        login_flag = #{loginFlag},
+        del_flag = #{delFlag},
+        alarmRate = #{alarmRate},
+        treeTypes= #{treeTypes},
+        is_control=#{isControl},
+        alarm_Reception_Level=#{alarmReceptionLevel},
+        crol_Type=#{crolType},
+        theme_Type=#{themeType}
+        WHERE login_name = #{loginName}
+    </update>
+
+    <!--查询已经授权的-->
+    <select id="getAllUserData" resultType="com.wapwag.woss.modules.sys.entity.UserDto">
+	   SELECT
+            s.id id,
+            s.login_Name loginName,
+            s.office_id officeId,
+            s.`password` password,
+            s.phone phone,
+            s.photo photo,
+            s.user_type userType,
+            s.login_ip loginIp,
+            s.login_date loginDate,
+            s.update_date updateDate,
+            s.remarks remarks,
+            s.login_flag loginFlag,
+            s.del_flag delFlag,
+            s.alarmRate alarmRate,
+            s.treeTypes treeTypes,
+            s.is_control isControl,
+            s.alarm_Reception_Level alarmReceptionLevel,
+            s.crol_Type crolType,
+            s.theme_Type themeType
+        FROM
+            sys_user s
+        INNER JOIN sys_user_role r on s.id=r.user_id
+        GROUP BY s.id
+
+    </select>
+
+	<delete id="deleteUserData">
+		DELETE FROM sys_user  where login_name not in ('hujinfeng','guliping','anky_lin','wateruser','chen_chun','ning_gong','admin')
+	</delete>
+	<delete id="deleteEmployeeData">
+		DELETE FROM sys_employee
+	</delete>
+
+	<!--批量同步HR人事用户-->
+	<insert id="batchEmployeeInsert" parameterType="java.util.List">
+		INSERT INTO sys_employee(
+		id,
+		empNo,
+		empName,
+		account,
+		orgCode,
+		orgName,
+		entryDate,
+		nationality,
+		married,
+		status,
+		birthDate,
+		gender,
+		nativePlace,
+		email,
+		university,
+		workType,
+		empCategory,
+		education,
+		extNumber,
+		mobile,
+		companyAddress,
+		contactAddress,
+		weChat,
+		position,
+		positionCode,
+		groupPosition,
+		job,
+		title,
+		positionProperty,
+		identityProperty,
+		empProperty,
+		region,
+		area,
+		costCenter,
+		nation,
+		firstLevelDept,
+		secondLevelDept,
+		pSFirstLevelDept,
+		groupEntryDate,
+		age,
+		politicalStatus,
+		create_by,
+		create_date,
+		update_by,
+		update_date
+
+		) VALUES
+		<foreach collection="list" item="user" index="index" separator=",">
+			(
+			#{user.id ,jdbcType=VARCHAR},
+			#{user.empNo ,jdbcType=VARCHAR},
+			#{user.empName ,jdbcType=VARCHAR},
+			#{user.account ,jdbcType=VARCHAR},
+			#{user.orgCode ,jdbcType=VARCHAR},
+			#{user.orgName ,jdbcType=VARCHAR},
+			#{user.entryDate ,jdbcType=VARCHAR},
+			#{user.nationality ,jdbcType=VARCHAR},
+			#{user.married ,jdbcType=VARCHAR},
+			#{user.status ,jdbcType=VARCHAR},
+			#{user.birthDate ,jdbcType=VARCHAR},
+			#{user.gender ,jdbcType=VARCHAR},
+			#{user.nativePlace ,jdbcType=VARCHAR},
+			#{user.email ,jdbcType=VARCHAR},
+			#{user.university ,jdbcType=VARCHAR},
+			#{user.workType ,jdbcType=VARCHAR},
+			#{user.empCategory ,jdbcType=VARCHAR},
+			#{user.education ,jdbcType=VARCHAR},
+			#{user.extNumber ,jdbcType=VARCHAR},
+			#{user.mobile ,jdbcType=VARCHAR},
+			#{user.companyAddress ,jdbcType=VARCHAR},
+			#{user.contactAddress ,jdbcType=VARCHAR},
+			#{user.weChat ,jdbcType=VARCHAR},
+			#{user.position ,jdbcType=VARCHAR},
+			#{user.positionCode ,jdbcType=VARCHAR},
+			#{user.groupPosition ,jdbcType=VARCHAR},
+			#{user.job ,jdbcType=VARCHAR},
+			#{user.title ,jdbcType=VARCHAR},
+			#{user.positionProperty ,jdbcType=VARCHAR},
+			#{user.identityProperty ,jdbcType=VARCHAR},
+			#{user.empProperty ,jdbcType=VARCHAR},
+			#{user.region ,jdbcType=VARCHAR},
+			#{user.area ,jdbcType=VARCHAR},
+			#{user.costCenter ,jdbcType=VARCHAR},
+			#{user.nation ,jdbcType=VARCHAR},
+			#{user.firstLevelDept ,jdbcType=VARCHAR},
+			#{user.secondLevelDept ,jdbcType=VARCHAR},
+			#{user.pSFirstLevelDept ,jdbcType=VARCHAR},
+			#{user.groupEntryDate ,jdbcType=VARCHAR},
+			#{user.age ,jdbcType=VARCHAR},
+			#{user.politicalStatus ,jdbcType=VARCHAR},
+
+			#{user.createBy.id ,jdbcType=VARCHAR},
+			#{user.createDate},
+			#{user.updateBy.id ,jdbcType=VARCHAR},
+			#{user.updateDate}
+			)
+		</foreach>
+	</insert>
+
+</mapper>

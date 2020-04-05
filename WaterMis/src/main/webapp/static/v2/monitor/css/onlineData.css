@@ -1,0 +1,343 @@
+@charset "utf-8";
+@import url('../../assets/style/common/common.css');
+@import url('../../assets/style/common/deviceConfiguration.css');
+
+body {
+    margin: 0 10px 0 10px;
+}
+
+.col-bg-4 {
+    width: 33.3333%;
+}
+
+.col-bg-8 {
+    width: 66.6667%;
+}
+
+#device-norm-data label {
+    display: block !important;
+    width: 100%;
+    padding: 5px 10px 8px 10px !important;
+    margin: 0 !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+#highcharts-realtime-data {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+#realtime-datalist th, td {
+    text-align: center;
+}
+
+.panel-heading {
+    padding-bottom: 0px !important;
+    border-bottom: none;
+}
+
+.panel-heading span {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #337ab7;
+    background-color: #e5e9ef;
+}
+
+.panel-body {
+    padding: 10px;
+}
+
+#device-norm-data {
+    overflow-y: auto;
+    /*border: 1px solid #ccc;*/
+}
+
+.devicePic-container {
+    background: url(../../assets/style/img/pumpBK.jpg) 50% 40% no-repeat;
+}
+
+.deviceParams .paramsList, .remote-mode, .statusContainer {
+    position: relative;
+    width: 100%;
+    height: auto;
+    font-size: 12px;
+    overflow-x: hidden;
+    overflow-y: auto; 
+}
+
+.modeContainer em {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    margin-left: 20px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.modeContainer em.modeOn {
+    background: url(../../assets/style/img/on.jpg) center no-repeat;
+}
+.modeContainer em.modeOff {
+    background: url(../../assets/style/img/off.jpg) center no-repeat;
+}
+
+.modeContainer em.modeClose {
+    background: url(../../assets/style/img/close.png) center no-repeat;
+}
+
+.modeContainer em.modeOpen {
+    background: url(../../assets/style/img/open.png) center no-repeat;
+}
+
+.statusContainer em {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+}
+.statusContainer em.run {
+    background: url(../../assets/style/img/run.jpg) center no-repeat;
+}
+.statusContainer em.rest {
+    background: url(../../assets/style/img/rest.jpg) center no-repeat;
+}
+.statusContainer em.stop {
+    background: url(../../assets/style/img/stop.jpg) center no-repeat;
+}
+.statusContainer em.fault {
+    background: url(../../assets/style/img/fault.jpg) center no-repeat;
+}
+.statusContainer em.warn {
+    background: url(../../assets/style/img/warn.jpg) center no-repeat;
+}
+.statusContainer em.unknown {
+    background: url(../../assets/style/img/unknown.jpg) center no-repeat;
+}
+
+/* switch-container */
+.switch-container {
+    position: relative;
+    width: 80px;
+    height: 25px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.switch-container div {
+    position: relative;
+    width: 120px;
+    line-height: 25px;
+}
+
+.switch-container span {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    width: 40px;
+    text-align: center;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -o-user-select:none;
+    user-select:none;
+}
+
+.switch-on {
+    left: 0;
+}
+
+.switch-off {
+    left: -40px;
+}
+
+.switch-animate {
+    -webkit-transition: left 0.5s;
+    -moz-transition: left 0.5s;
+    -o-transition: left 0.5s;
+    transition: left 0.5s;
+}
+
+.switch-left {
+    color: #fff;
+    background-color: #5bc0de;
+}
+
+.switch-span {
+    background-color: #fff;
+}
+
+.switch-right {
+    color: #000;
+    background-color: #eeeeee;
+}
+
+/* setFrequency */
+.setFrequency {
+    color: #3b7fd2;
+}
+
+.setFrequency i {
+    margin-right: 3px;
+}
+
+.setFrequency span {
+    cursor: pointer;
+}
+
+/* waterMonitor-container */
+.waterMonitor-container {
+    position: relative;
+    width: 100%;
+    background: url(../../assets/style/img/waterMonitorBK.jpg) 100% 70% no-repeat;
+    overflow: hidden;
+}
+
+/* animation */
+@keyframes run {
+    from {
+        stroke-dasharray: 10, 5;
+    }
+    to {
+        stroke-dasharray: 40, 5;
+    }
+}
+.runing {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: run 30s linear infinite;
+}
+
+
+
+.colour_black_0 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #FFB6C1;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_1 {
+    display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #778899;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_2 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #ADD8E6;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_3 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #E1FFFF;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_4 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #20B2AA;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_5 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #90EE90;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_6 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #F08080;
+    border: none;
+    cursor: pointer;
+}
+
+/*
+ * Video loading failed styles
+ */
+.videoFailed {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #000;
+    z-index: 998;
+    opacity: .1;
+}
+.failedTips {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    top: 0;
+    left: 0;
+    color: #a2433f;
+    line-height: 60px;
+    background-color: #ffeae9;
+    z-index: 999;
+}
+.failedTips img {
+    margin: 0 5px 0 18px;
+}
+.failedTips span {
+    font-size: 14px;
+}

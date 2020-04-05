@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.ServiceValuesCurrentDao">
+  <resultMap id="BaseResultMap" type="com.wapwag.woss.modules.biz.entity.ServiceValuesCurrent">
+    <result column="ID_DEVICE" jdbcType="VARCHAR" property="idDevice" />
+    <result column="ID_SERVICE" jdbcType="VARCHAR" property="idService" />
+    <result column="FUNCTION_NAME" jdbcType="VARCHAR" property="functionName" />
+    <result column="FUNCTION_MEMO" jdbcType="VARCHAR" property="functionMemo" />
+    <result column="DATE_TIME" jdbcType="TIMESTAMP" property="dateTime" />
+    <result column="PV" jdbcType="REAL" property="pv" />
+    <result column="MIN" jdbcType="REAL" property="min" />
+    <result column="MAX" jdbcType="REAL" property="max" />
+    <result column="UNIT" jdbcType="VARCHAR" property="unit" />
+    <result column="FUNCTION_TYPE" jdbcType="VARCHAR" property="functionType"/>
+  </resultMap>
+  <insert id="insert" parameterType="com.wapwag.woss.modules.biz.entity.ServiceValuesCurrent">
+    insert into service_values_current (ID_DEVICE, ID_SERVICE, FUNCTION_NAME, 
+      FUNCTION_MEMO, DATE_TIME, PV, MIN, MAX, UNIT,FUNCTION_TYPE
+      )
+    values (#{idDevice,jdbcType=VARCHAR}, #{idService,jdbcType=VARCHAR}, #{functionName,jdbcType=VARCHAR}, 
+      #{functionMemo,jdbcType=VARCHAR}, #{dateTime,jdbcType=TIMESTAMP}, #{pv,jdbcType=REAL}, 
+       #{min,jdbcType=REAL}, #{max,jdbcType=REAL}, #{unit,jdbcType=VARCHAR}, 
+      #{functionType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wapwag.woss.modules.biz.entity.ServiceValuesCurrent">
+     insert into service_values_current
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="idDevice != null">
+        ID_DEVICE,
+      </if>
+      <if test="idService != null">
+        ID_SERVICE,
+      </if>
+      <if test="functionName != null">
+        FUNCTION_NAME,
+      </if>
+      <if test="functionMemo != null">
+        FUNCTION_MEMO,
+      </if>
+      <if test="dateTime != null">
+        DATE_TIME,
+      </if>
+      <if test="pv != null">
+        PV,
+      </if>
+      <if test="min != null">
+        MIN,
+      </if>
+      <if test="max != null">
+        MAX,
+      </if>
+      <if test="unit != null">
+        UNIT,
+      </if>
+      <if test="functionType != null">
+      	FUNCTION_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="idDevice != null">
+        #{idDevice,jdbcType=VARCHAR},
+      </if>
+      <if test="idService != null">
+        #{idService,jdbcType=VARCHAR},
+      </if>
+      <if test="functionName != null">
+        #{functionName,jdbcType=VARCHAR},
+      </if>
+      <if test="functionMemo != null">
+        #{functionMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="dateTime != null">
+        #{dateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pv != null">
+        #{pv,jdbcType=REAL},
+      </if>
+      <if test="min != null">
+        #{min,jdbcType=REAL},
+      </if>
+      <if test="max != null">
+        #{max,jdbcType=REAL},
+      </if>
+      <if test="unit != null">
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="functionType != null">
+      	#{functionType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="saveOrUpdate">
+		REPLACE INTO service_values_current ( ID_DEVICE, ID_SERVICE, FUNCTION_NAME, FUNCTION_MEMO, FUNCTION_TYPE, DATE_TIME, PV, MIN, MAX, UNIT ) SELECT
+		deviceData.ID_DEVICE AS idDevice,
+		deviceData.ID_SERVICE AS idService,
+		fu.NAME functionName,
+		fu.MEMO AS functionMemo,
+		fu.DATA_TYPE AS functionType,
+		deviceData.DATE_TIME AS dateTime,
+		IFNULL(
+		CASE
+			TRUNCATE ( deviceData.pv * CASE WHEN service.ratio IS NULL THEN 1 ELSE service.ratio END, 2 ) 
+			WHEN '0.00' THEN
+			'0' ELSE TRUNCATE ( deviceData.pv * CASE WHEN service.ratio IS NULL THEN 1 ELSE service.ratio END, 2 ) 
+			END,
+			'-' 
+			) AS pv,
+			ifnull( service.RangeMinimum, fu.MIN_RV ) min,
+			IFNULL( service.RangeMaximum, fu.MAX_RV ) max,
+			fu.UNIT AS unit 
+		FROM
+			( SELECT * FROM ${tableName} WHERE DATE_TIME &gt; date_sub( now( ), INTERVAL 60 SECOND ) ORDER BY DATE_TIME DESC LIMIT 100000 ) deviceData
+			INNER JOIN services service ON service.ID = deviceData.ID_SERVICE
+			INNER JOIN FUNCTION fu ON fu.id = service.ID_FUNCTION 
+		GROUP BY
+			deviceData.id_service
+  </insert>
+</mapper>

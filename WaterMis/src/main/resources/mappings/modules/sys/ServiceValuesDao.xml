@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.sys.dao.ServiceValuesDao">
+
+	<select id="lastStatTime" resultType="java.lang.String">
+		select
+		substring(date_time,1,19) from
+		${tableName} order by date_time desc
+		limit 0 , 1
+	</select>
+
+	<update id="statServiceValsHour">
+		insert ignore into ${insetTableName}
+		select
+		id_device,id_service,tag_name,${name},avg(pv),eu,
+		min(pv),max(pv),count(pv)
+		from ${tableName} where
+		date_time &gt;=
+		#{beginTime} and
+		date_time &lt;= #{endTime}
+		group by
+		id_service
+	</update>
+	<delete id="deleteOldVal">
+		delete from ${insetTableName} where date_time &gt;=
+		#{beginTime}
+	</delete>
+	<update id="statServiceValsDMY">
+		insert ignore into ${insetTableName}
+		select
+		id_device,id_service,tag_name,concat(substring(date_time,1,#{subIndex}),#{subTag}),avg(pv),eu,
+		min(pv),max(pv),sum(count)
+		from ${tableName} where
+		date_time &gt;
+		#{beginTime} and
+		date_time &lt; #{endTime}
+		group by
+		id_service
+	</update>
+	<update id="statServiceValsSummary">
+		insert ignore into service_values_summary
+		select
+		id_device,id_service,tag_name,concat(substring(date_time,1,13),':00:00'),max(pv)
+		- min(pv),
+		min(pv),max(pv),count(pv)
+		from ${tableName} where
+		date_time
+		&gt; #{beginTime} and
+		date_time &lt; #{endTime}
+		and pv &gt; 0
+		and
+		(tag_name like '%累计%' or tag_name like '%系统耗电%' or tag_name like
+		'%总耗电量%')
+		group by
+		id_service
+	</update>
+	<update id="addNullstat">
+		insert ignore into ${insetTableName} values
+		('','','',#{beginTime},0,'',0,0,0)
+	</update>
+	<select id="checkSVTable" resultType="java.lang.String">
+		select table_name from
+		INFORMATION_SCHEMA.tables where
+		table_name like '%${tableName}%'
+		order
+		by table_name desc limit 0,1
+	</select>
+
+	<update id="statSumToDay">
+		insert ignore into service_values_summary_day
+		SELECT
+		id_device,
+		id_pump_house,
+		ID_SERVICE,
+		TAG_NAME,
+		SUBSTRING(DATE_TIME, 1,
+		10),
+		TRUNCATE(SUM(pv), 3) sum_pv,
+		eu,
+		MIN(min),
+		MAX(max),
+		type
+		FROM
+		service_values_summary
+		WHERE date_time &gt;= #{beginTime} and date_time &lt; #{endTime} and
+		eu IN ('m3' , 'kWh')
+		GROUP BY
+		SUBSTRING(DATE_TIME, 1, 10) , id_device , eu
+	</update>
+
+	<update id="statAvgToDay">
+		insert ignore into service_values_summary_day
+		SELECT
+		id_device,
+		id_pump_house,
+		ID_SERVICE,
+		TAG_NAME,
+		SUBSTRING(DATE_TIME, 1, 10),
+		TRUNCATE(avg(pv), 3) sum_pv,
+		eu,
+		MIN(min),
+		MAX(max),
+		type
+		FROM
+		service_values_summary
+		WHERE date_time &gt;= #{beginTime} and date_time &lt; #{endTime} and
+		eu IN ('in' , 'out')
+		GROUP BY SUBSTRING(DATE_TIME, 1, 10) , id_device , eu
+	</update>
+	
+	<select id="checkTableExit" resultType="java.lang.String">
+		SELECT table_name FROM information_schema.TABLES WHERE table_name = #{tableName} limit 1
+	</select>
+	
+	<update id="createTable">
+		CREATE TABLE  ${tableName} (
+		  ID_DEVICE varchar(50) NOT NULL,
+		  ID_SERVICE varchar(50) NOT NULL,
+		  TAG_NAME varchar(250) DEFAULT NULL,
+		  DATE_TIME datetime DEFAULT NULL,
+		  PV float(18,6) DEFAULT NULL,
+		  EU varchar(50) DEFAULT NULL,
+		  MIN float(18,0) DEFAULT NULL,
+		  MAX float(18,0) DEFAULT NULL,
+		  COUNT int(11) DEFAULT NULL,
+		  UNIQUE KEY uq_service_values_hour_ix (ID_SERVICE,DATE_TIME) USING BTREE,
+		  KEY service_values_hour_tms (DATE_TIME) USING BTREE,
+		  KEY service_values_device (ID_DEVICE) USING BTREE
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8
+	</update>
+	
+</mapper>

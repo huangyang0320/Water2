@@ -1,0 +1,89 @@
+[{
+    "title": "系统预览",
+    "icon": "fa-search",
+    "subMenu": [{
+      "title": "系统首页",
+      "url": "systemOverview"
+    }]
+  },{
+    "title": "系统导航",
+    "icon": "fa-flag",
+    "subMenu": [{
+      "title": "地图导航",
+      "url": "home-map-arcgis"
+    }, {
+      "title": "泵站导航",
+      "url": "pumpGuide"
+    }, {
+      "title": "SCADA导航",
+      "event": "showSCADA"
+    }]
+  }, {
+    "title": "实时监控",
+    "icon": "fa-eye",
+    "subMenu": [{
+      "title": "实时数据",
+      "url": "realtimeData"
+    }, {
+      "title": "历史数据",
+      "url": "historyData"
+    }, {
+      "title": "能耗分析",
+      "url": "energyanalysis"
+    }, {
+      "title": "功耗分析",
+      "url": "poweranalysis",
+      "enabled": "true"
+    }, {
+      "title": "视频监控",
+      "url": "videoMonitor",
+      "enabled": "false"
+    }]
+  }, {
+    "title": "设备管理",
+    "icon": "fa-gears",
+    "subMenu": [{
+      "title": "设备档案",
+      "url": "deviceArchives"
+    }, {
+      "title": "泵房信息",
+      "url": "pumpInfo"
+    }, {
+      "title": "维保信息",
+      "url": "maintenance"
+    }]
+  }, {
+    "title": "生产管理",
+    "icon": "fa-wrench",
+    "enabled": "false",
+    "subMenu": [{
+      "title": "门禁管理",
+      "url": "doorAccess",
+      "enabled": "false"
+    }, {
+      "title": "人员状态",
+      "url": "personnelStatus",
+      "enabled": "false"
+    }]
+  }, {
+    "title": "统计分析",
+    "icon": "fa-bar-chart-o",
+    "subMenu": [{
+      "title": "告警查询",
+      "url": "alarmQuery"
+    }, {
+      "title": "历史查询",
+      "url": "historyQuery"
+    }]
+  }, {
+    "title": "系统管理",
+    "icon": "fa-desktop",
+    "subMenu": [{
+      "title": "告警参数",
+      "event": "showAlert"
+    }, {
+      "title": "密码设置",
+      "event": "showPassword",
+      "enabled": "false"
+    }]
+}]

@@ -1,0 +1,154 @@
+<style type="text/css">
+	/*
+	 * inline styles
+	 * energyanalysis styles
+	 */
+	#page-inner {
+        padding: 0 10px 10px 10px;
+    }
+    .panel-body {
+        padding: 6px 15px 6px 0px;
+        height:100%;
+    }
+	/* Water/Electricity/Water-Electricity */
+	.water,
+	.electricity,
+	.water-electricity {
+		text-align: center;
+		font-size: 14px;
+		font-family: "Microsoft YaHei",serif;
+	}
+	.water {
+		background-color: #8ab1e2;
+	}
+	.electricity {
+		background-color: #9bb2d0;
+	}
+	.water-electricity {
+		background-color: #559fc2;
+	}
+	label.consumption-title {
+		font-weight: normal !important;
+		font-size: 16px;
+		color: #fff;
+	}
+	.consumption-content span {
+		color: #fdff55;
+	}
+	.consumption-content label {
+		display: block;
+		font-weight: normal !important;
+		color: #333;
+	}
+	/* bar-chart */
+	.bar-chart-title {
+		position: relative;
+		padding: 4px 10px;
+		font-size: 14px;
+		color: #333;
+		font-family: "Microsoft YaHei",serif;
+		background-color: #e5e9ef !important;
+	}
+	.bar-chart-title .titlename {
+		font-size: 13px;
+		color: #337ab7;
+	}
+	.device-btn {
+		position: absolute;
+		display: inline-block;
+		right: 10px;
+		background-color: rgb(5, 141, 199);
+		padding: 0 8px;
+		color: #fff;
+		cursor: pointer;
+	}
+	#device-menu {
+		overflow-x: hidden;
+		overflow-y: auto;
+		padding: 1px 0 !important;
+		margin: 0 !important;
+		z-index: 10;
+	}
+	#deviceCodes {
+		overflow-x: hidden;
+		overflow-y: auto;
+		padding: 1px 0 !important;
+		margin: 0 !important;
+		
+		z-index: 10;
+	}
+	
+</style>
+
+<form id="queryForm" style="display: none">
+	<input name="deviceId" type="hidden">
+	<input name="deviceIds" type="hidden">
+	<input name="deviceIndexs" type="hidden">
+	<input name="diffDeviceIndexs" type="hidden">
+	<input name="dimen" type="hidden" value="day">
+	<input name="startDate" type="hidden">
+	<input name="endDate" type="hidden">
+	<input name="addOnDate" type="hidden">
+</form>
+<div id="page-inner">
+	<div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div id="selectedDevice"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div class="chart-time">
+                <div class="time-length" id="time-length">
+                    <label>统计时长 : </label>
+                    <span class="daytime active">日</span>
+                    <span class="monthtime">月</span>
+                    <span class="yeartime">年</span>
+                </div>
+                <div class="time-period">
+                    <label for="statisticDate">统计时段 : </label>
+                    <input type="text" readonly class="form_datetime form-control timepicker" id="statisticDate">
+                </div>
+                <div class="time-superposition">
+                    <label for="addOnTime">叠加时长 : </label>
+                    <select class="superposition" id="addOnTime" style="width:50px"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+    <div class="row">
+        <div class="col-md-9 col-sm-12 col-xs-12">
+            <div class="panel panel-default">
+				<div class="panel-body">
+					<!-- chart -->
+					<div class="col-xs-12 col-md-12">
+						<div id="highcharts-history-data"></div>
+					</div>
+        		</div>
+            </div>
+        </div>
+        <!-- col-md-9 -->
+        <div class="col-md-3 col-sm-12 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="bar-chart-title">
+                    	<span class="titlename">设备千吨水耗电量对比</span>
+					    <div class="device-btn"><span class="device-choose">请选择设备 </span><i class="fa fa-angle-double-down"></i></div>
+					    <ul class="dropdown-menu" id="device-menu"></ul>
+                    	<!-- device list -->
+                    	<ul class="dropdown-menu" id="deviceCodes" style="width: 383px; display: block; height: 747px;">
+                            <li class="list-group-item"><label title="进水端实际压力"><input checked="true" id="deviceMenu17060193" class="minimal my-checkbox" name="serviceCode" type="checkbox" value="InletPressure" data-device-name="进水端实际压力">进水端实际压力</label></li>
+	                        <li class="list-group-item"><label title="出水端实际压力"><input id="deviceMenu17060193" class="minimal my-checkbox" name="serviceCode"type="checkbox" value="OutletPressure" data-device-name="出水端实际压力">出水端实际压力</label></li>
+                            <li class="list-group-item"><label title="瞬时流量"><input id="deviceMenu17060193" class="minimal my-checkbox" name="serviceCode" type="checkbox" value="InstantaneousFlow" data-device-name="瞬时流量">瞬时流量</label></li>
+                           <li class="list-group-item"><label title="电量"><input id="deviceMenu17060193" class="minimal my-checkbox" name="serviceCode" type="checkbox" value="Active_power" data-device-name="电量">电量</label></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- col-md-3 -->
+    </div>
+</div>
+<!-- /. PAGE INNER  -->
+<script src="static/assets/js/realtimeMonitor/passStat.js"></script>

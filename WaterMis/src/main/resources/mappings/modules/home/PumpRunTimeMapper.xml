@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.home.dao.PumpRunTimeMapper">
+
+	<!-- 查询泵机运行时间 -->
+	<select id="qryRunTime" resultType="HashMap">
+		select
+			start_date startDate,
+			end_date endDate,
+			mark
+		from
+			service_values_run_statistics
+		where
+			type = '2'
+		  	AND device_code = #{deviceId}
+			AND service_id = #{serviceId}
+			AND start_date &gt;= #{startDate} and start_date &lt;= #{endDate}
+			AND start_date is not null and end_date is not null
+			and start_date &lt; end_date
+		group by device_code, service_id, start_date
+
+	</select>
+
+	<select id="qryFreRunTime" resultType="java.util.HashMap">
+		select
+			name ,
+			case when value &gt;= 0 then truncate(value,2)
+				else 0 end value
+		from (
+			select
+				name, sum(value) value
+			from (
+				select
+					concat(name,'_',mark) as name,
+					case when value &gt;= ${maxVal} - 0.02 then ${maxVal}
+						when value &lt;= 0.01 then '0'
+						else value end value
+				from (
+					select
+						service_id as name ,
+						case when mark = '1' then '低频'
+							when mark = '2' then '中频'
+							when mark = '3' then '高频'
+						end mark,
+						TIMESTAMPDIFF(SECOND,start_date,end_date)/${except} value
+					from service_values_run_statistics
+					where type = '2'
+						AND device_code = #{devCode}
+						AND start_date &gt;= #{start} and start_date &lt;= #{end}
+				) tempval
+			) temp group by name
+		) t
+
+	</select>
+
+	<select id="getPHNameByDevId" resultType="String">
+		select
+			ph.name
+		from
+			device dev
+			join pump_house ph on ph.id = dev.ID_PUMP_HOUSE
+		where dev.id = #{deviceId}
+	</select>
+
+
+</mapper>

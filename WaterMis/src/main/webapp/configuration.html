@@ -1,0 +1,2051 @@
+<style>
+    .ztree li span.button.switch{
+       min-width: auto;
+    }
+    .list-group-ul{
+      padding-left: 20px;
+    }
+    .list-group-ul-device{
+        padding: 20px 0px;
+    }
+    .list-li-item{
+        font-size: 14px;
+        list-style-type:none;
+        display: inline-block;
+        margin-right: 15px;
+    }
+    .device-status{
+        padding: 20px 0px;
+        text-align: right;
+    }
+    .device-door{
+        width: 60px;
+        height: 55px;
+        margin: 20px 0;
+        background: url(static/assets/img/entranceGuard.png) center no-repeat;
+        background-size: 100% 100%;
+        display: none;
+    }
+    .device-scroll{
+        overflow-y: scroll;
+        height: 95px;
+    }
+    #videoBtn{
+        display: inline-block;
+        padding: 20px 0px;
+        cursor: pointer;
+    }
+    #deviceStatus .list-li-item{
+        font-size: 12px;
+    }
+    .paramSpan{
+        cursor: pointer;
+        height: 20px;
+        line-height: 20px;
+    }
+    .btn-group-xs>.btn, .btn-xs{
+        vertical-align: text-top;
+        padding: 0 5px;
+    }
+    .paramConc{
+        height: 20px;
+    }
+    .glyphicon-facetime-video:before{
+        font-size: 20px;
+    }
+    #cfgVideoList li{ position: relative;  margin-top: -2px;}
+    #cfgVideoList .list-li-item span{
+       position: absolute;
+        left: 44px;
+        top: 2px;
+        min-width: 200px;
+    }
+    .modeContainer em {
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        margin-left: 20px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    .modeContainer em.modeOpen {
+        background: url(static/v2/assets/style/img/open.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+    .modeContainer em.modeClose {
+        background: url(static/v2/assets/style/img/close.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+    .modeContainer em.modeOn {
+        background: url(static/assets/img/icon-run.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+    .modeContainer em.modeOff {
+        background: url(static/assets/img/icon-stop.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+
+    .modeContainer em.modeOn1 {
+        background: url(static/assets/img/icon-allow.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+    .modeContainer em.modeOff1 {
+        background: url(static/assets/img/icon-notallow.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+
+    .modeContainer em.stop {
+        background: url(static/v2/assets/style/img/stop.jpg) center no-repeat;
+    }
+    .modeContainer em.run {
+        background: url(static/v2/assets/style/img/run.jpg) center no-repeat;
+    }
+    .table-bordered>tbody>tr>td{
+        vertical-align: middle;
+    }
+    .has-switch.switch-small{
+     margin-left: 14px;
+    }
+    .modal-backdrop{display: none;}
+   #msgAll .list-dis-block{
+       display: none;
+       float: left;
+       margin-right: 20px;
+    }
+    #msgAll{
+        position: relative;
+        overflow: visible;
+    }
+   .multiNodeShow{
+        position: absolute;
+       /* bottom: -200px;
+        right: 0px;
+        padding-right: 322px;*/
+        width: 80%;
+        height: 200px;
+   }
+   .multiNodeShow{
+       overflow: hidden;
+   }
+   .multiNodeOne{
+       min-width: 300px;
+       float: right;
+       margin-right: 20px;
+   }
+   .multiNodeOneTitle{
+       padding: 0 15px 0 10px;
+       min-width: 90px;
+       max-width: 115px;
+       height: 20px;
+       color: #fff;
+       font-weight: 700;
+       font-size: 12px;
+       text-align: center;
+       cursor: pointer;
+       vertical-align:text-top;
+       background-color: #4f638b;
+       display: inline-block;
+       overflow: hidden;
+       position: relative;
+   }
+   .multiNodeContOut{
+       display: inline-block;
+       vertical-align:text-top;
+       overflow: hidden;
+       width: 200px;
+   }
+    .multiNodeCont{
+        float: left;
+        list-style-type:none;
+        width: 200px;
+        color: #383838;
+        text-align: left;
+        padding: 0 10px;
+        background-color: #c5c5c5;
+        word-break: break-all;
+        display: inline-block;
+        line-height: 18px;
+        border: 1px solid #d8d8d8;
+        border-radius: 3px;
+        vertical-align: top;
+    }
+    .multiNodeContFirst{
+        display: block !important;
+    }
+    .multiNodeContHide{
+        display: none;
+        margin-top: 2px;
+    }
+    .multiNodeMark{
+        display: none;
+        width: 28px;
+        height: 17px;
+        border: none;
+        cursor: pointer;
+        position: absolute;
+        right: -4px;
+        top: 1px;
+    }
+    .multiNodeMarkUp{
+        background: url(static/assets/img/sq.png) no-repeat 50%;
+    }
+    .multiNodeMarkDown{
+        background: url(static/assets/img/zk.png) no-repeat 50%;
+    }
+    .pre-scrollable{
+        max-height:300px ;
+    }
+    .door-modal-body{
+        overflow: hidden;
+    }
+    .doorCtr-out{
+        width: 100%;
+    }
+    .doorCtr-out.doorCtr-outMore{
+        float: left;
+        width: 50%;
+    }
+    .door-modal-body .doorImage{
+        width: 150px;
+        height: 200px;
+        margin: 20px auto 0;
+    }
+    .door-modal-body .doorImageOpen{
+        background: url(static/assets/img/entranceOpen.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+    .door-modal-body .doorImageClose{
+        background: url(static/assets/img/entranceClose.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+    .door-modal-body .doorCtr{
+        width: 112px;
+        height: 36px;
+        margin: 20px auto 0;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    .door-modal-body .doorCtr.doorOpen {
+        background: url(static/assets/img/doorOpen.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+    .door-modal-body .doorCtr.doorClose {
+        background: url(static/assets/img/doorClose.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+    .has-switchsh.switch-small{
+        min-width:55px !important ;
+    }
+
+    .pumpCtr{
+        width: 40px;
+        height: 25px;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+    .pumpCtr.pumpCtrRun{
+        background: url(static/assets/img/icon-run.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+    .pumpCtr.pumpCtrStop{
+        background: url(static/assets/img/icon-stop.png) center no-repeat;
+        background-size: 100% 100%;
+    }
+
+    .modalOver {
+        position: fixed;
+        /* top: 0; */
+        /* right: 0; */
+        bottom: 0;
+        left: 0;
+        z-index: 1050;
+        display: none;
+        overflow: hidden;
+        -webkit-overflow-scrolling: touch;
+        outline: 0;
+    }
+
+    .modal-backdrop {
+        opacity: 0 !important;
+        filter: alpha(opacity=0) !important;
+    }
+
+    .list-li-item-zd{
+        font-size: 14px;
+        list-style-type: none;
+        /* display: inline-block; */
+        /*margin-right: 15px;*/
+    }
+</style>
+<script type="text/javascript" src="static/home/js/echarts.min.js"></script>
+<link href="static/v2/assets/style/common/deviceConfiguration.css" rel="stylesheet" />
+<link href="static/v2/assets/style/common/common.css" rel="stylesheet" />
+<link href="static/assets/css/bootstrapSwitch.css" rel="stylesheet" />
+<script src="static/assets/js/bootstrapSwitch.js"></script>
+
+<div class="row" style="margin: 0px;height: 12%; width:100%; color: #3056aa; position: absolute;display: none" id="msgAll">
+  <!--  <div class="col-md-3">
+        <div  id="pumpName" style="min-width: 260px; padding: 20px 0 0 20px;font-size: 14px">泵房名称：...</div>
+        <ul class="list-group-ul" id="singleNodes">
+        </ul>
+    </div>
+    <div class="col-md-1 device-status">设备状态:</div>-->
+    <div class="col-md-3">
+        <span></span>
+        <ul class="list-group-ul-device" id="deviceStatus">
+        </ul>
+    </div>
+    <!--<div class="col-md-1 device-status">视频监控: </div>-->
+    <!--<div class="col-md-2">-->
+        <!--<ul class="list-group-ul-device" id="cfgVideoList">暂无</ul>-->
+    <!--</div>-->
+    <div class="col-md-1 device-door" id="deviceDoor" onclick="showDoor()"></div>
+    <div class="multiNodeShow" id="multiNodeShow">
+        <!--<div class="multiNodeOne">-->
+            <!--<div class="multiNodeOneTitle" onclick="multiNodeToggle(this)" tog = "false" >累计耗电量 <span class="multiNodeMark multiNodeMarkDown"></span></div>-->
+            <!--<ul class="multiNodeContOut">-->
+                <!--<li class="multiNodeCont multiNodeContFirst>1</li>-->
+        <!--<li class="multiNodeCont multiNodeContHide">"2</li>-->
+                <!--<li class="multiNodeCont multiNodeContHide">3</li>-->
+                <!--<li class="multiNodeCont multiNodeContHide">4</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+        <!--<div class="multiNodeOne">-->
+            <!--<div class="multiNodeOneTitle" onclick="multiNodeToggle(this)" tog = "false" >累计耗电量 <span class="multiNodeMark multiNodeMarkDown"></span></div>-->
+            <!--<ul class="multiNodeContOut">-->
+            <!--</ul>-->
+        <!--</div>-->
+    </div>
+</div>
+
+
+<div class="row" id="svgContent" style="margin: 0px;height: 90%;background-color: #d8d8d8">
+    <svg width="100%" height="100%" viewBox="0, 0, 1705, 797"  xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none slice" id="svgcfn">
+    </svg>
+</div>
+<!--泵房基本信息-->
+<div class="row" style="margin: 0px;height: 12%; width:100%; color: #3056aa; position: absolute;" id="111">
+<div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false" style="top:74px;left: 13px">
+    <div class="modal-dialog" role="document" style="width: 230px;">
+        <div class="modal-content" style="background-color: rgba(39, 90, 182, 0.9);">
+          <!--  <div style="background-color: #127ed4;border-radius: 5px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="titlePumpContent"> <span  id="a" style="font-size: 12px;font-weight: 500"></span> </h4>
+            </div>-->
+            <div class="modal-body"  id="pumpDataInfo" style="width: 230px;height: 400px;text-align: left;color: rgba(244,244,244,0.73);overflow-y: auto">
+                <ul id="pumpDataInfoUl"></ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade " id="showDataInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false" style="top:50px">
+    <div id ="modalDialog" class="modal-dialog" role="document" style="width: 800px;">
+        <div class="modal-content" >
+            <div class="modal-header" style="background-color: rgba(39, 90, 182, 0.9);border-radius: 5px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="titleContent"> <span  id="c" style="font-size: 12px;font-weight: 500"></span> </h4>
+            </div>
+            <div class="modal-body"  id="dataInfo" style="width: 800px;height: 350px;text-align: center;">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="lowerControl" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="static" data-keyboard="false" style="top:100px">
+    <div class="modal-dialog" role="document" style="width: 850px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">参数控制 <span  id="lowerCTitle" style="font-size: 12px;font-weight: 500"></span> </h4>
+            </div>
+            <div class="modal-body"  id="noMsg"></div>
+            <div id="switchMb" style="display: none" >
+                <div class="switch switch-small" onclick="swithClick(this)">
+                    <input type="checkbox" checked />
+                </div>
+            </div>
+            <div id="switchMbHide" style="display: none" >
+                <div class="switch switch-small" onclick="swithClick(this)">
+                    <input type="checkbox"/>
+                </div>
+            </div>
+            <div class="modal-body" id="deviceCparam" style="overflow: hidden;position: relative">
+                <div id="lowerControlMb" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 9999;cursor: not-allowed;display: none;"></div>
+
+                <div class="row">
+                    <div class="monitor-title">远程模式</div>
+                    <table class="table table-bordered modeContainer" style="margin-bottom: 7px;">
+                        <tbody>
+                        <tr id="RAutoRManual">
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--<div id="vueStayle">-->
+                    <!--<div class="monitor-title">门禁控制</div>-->
+                    <!--<table class="table table-bordered modeContainer" style="margin-bottom: 7px;">-->
+                        <!--<tbody>-->
+                        <!--<tr>-->
+                            <!--<td>-->
+                                <!--<span>远程开门</span>-->
+                                <!--<em class="modeOpen" onclick="openOrCloseDoor(2)"></em>-->
+                            <!--</td>-->
+                            <!--<td>-->
+                                <!--<span>远程关门</span>-->
+                                <!--<em class="modeClose" onclick="openOrCloseDoor(1)"></em>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
+                    <!--</table>-->
+                <!--</div>-->
+
+                <div class="row col-md-6 pre-scrollable" style="padding-left:0px;">
+                    <table class="table table-bordered table-hover" style="margin-bottom: 0px">
+                      <thead>
+                        <tr class="monitor-title">
+                            <td width="40%">测点名称</td>
+                            <td width="60%">值</td>
+                        </tr>
+                      </thead>
+                      <tbody id="lowerControlTbody">
+                      </tbody>
+                    </table>
+                </div>
+                <div class="row col-md-6 pre-scrollable" id="rManualOp" style="position: relative">
+                    <table class="table table-bordered modeContainer " style="margin-bottom: 0;">
+                        <thead>
+                        <tr class="monitor-title">
+                            <td width="30%">水泵</td>
+                            <td width="70%" colspan="2">运行状态</td>
+                            <!--<td width="70%" colspan="2">远程控制</td>-->
+                        </tr>
+                        </thead>
+                        <tbody id="deviceParamId" class="pre-scrollable">
+                        <tr><td colspan="2" style="text-align: center; padding: 20px 0px"> 暂无数据 </td></tr>
+                        </tbody>
+                    </table>
+                    <div id="disableMb" style="cursor:not-allowed;width: 100%;height: 100%;position: absolute;z-index: 9999;left: 0;top: 0;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModalMsg" tabindex="-1" role="dialog" aria-labelledby="myModalLabelMsg" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="top:150px">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabelMsg"></h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary isOk" data-dismiss="modal" >确定</button>
+                <button type="button" class="btn btn-default isClose" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="pumpDataUl_1" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+<ul id="pumpUl_1" style="margin-left: 10px"></ul>
+</div>
+<div id="pumpDataUl_2" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+    <ul id="pumpUl_2" style="margin-left: 10px"></ul>
+</div>
+<div id="pumpDataUl_3" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+    <ul id="pumpUl_3" style="margin-left: 10px"></ul>
+</div>
+<div id="pumpDataUl_4" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+    <ul id="pumpUl_4" style="margin-left: 10px"></ul>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModalForDoor" tabindex="-1" role="dialog" aria-labelledby="myModalLabelMsg" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="top:150px">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">门禁控制</h4>
+            </div>
+            <div class="modal-body door-modal-body"  id="doorModalBody">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+var svrStr = $('#svgcfn')
+
+/**
+ * 获取门禁信息
+ */
+function getDeviceDoorInfo() {
+    $.ajax({
+        type:"POST",
+        url: CONTEXT_PATH+'/monitor/configuration/entranceGuard',
+        async: false,
+        datatype:"JSON",
+        data:{pumpId: GLOBAL_SELECT_DEVICE.pumpHouseId},
+        success: function (res) {
+            if(res.length > 0){
+                var doorClass = "", doorClassMsg = "doorImageOpen", btnClass = "doorOpen", doorCtr = "0";
+                $('#deviceDoor').show();
+                $('#doorModalBody').html('');
+                if(res.length>1) doorClass = "doorCtr-outMore";
+                res.map(function (v) {
+                    if(v.status == 0){
+                        doorClassMsg = "doorImageClose";
+                        btnClass = "doorClose";
+                        doorCtr = "1"
+                    }
+                    var str = $(' <div class="doorCtr-out '+doorClass+'">\n' +
+                        '                    <p>门禁名称：'+ v.name +'</p>\n' +
+                        '                    <div class="doorImage '+ doorClassMsg +'" id="doorImage"></div>\n' +
+                        '                    <div class="doorCtr '+ btnClass +'" doorToStatus="'+doorCtr+'" uuid="'+ v.uuid +'" onclick="doorCtr(this)"></div>\n' +
+                        '                </div>')
+                    $('#doorModalBody').append(str);
+                })
+            }else{
+                $('#deviceDoor').hide()
+            }
+        }
+    })
+}
+
+/**
+ * 弹出门禁信息
+ */
+function showDoor() {
+    $('#myModalForDoor').modal('show');
+}
+
+
+/**
+ * 门禁下控
+ */
+function doorCtr(self) {
+    var doorToStatus = $(self).attr('doorToStatus');
+    var uuid = $(self).attr('uuid');
+    let deviceId = $('#lowerCTitle').attr('device')
+    // LOADING.show();
+    $.ajax({
+        type: "POST",
+        url: CONTEXT_PATH + '/monitor/configuration/remoteCtrl',
+        async: false,
+        contentType: 'application/json',
+        datatype: "JSON",
+        data: JSON.stringify({
+            deviceId: uuid,
+            pointCode: 'DoorAccess',
+            pointValue:  doorToStatus ,
+        }),
+        success: function (response) {
+            // LOADING.hide();
+            if (response.status == 'complete') {
+                if(doorToStatus == 0){
+                    $(self).attr('doorToStatus', 1);
+                    $(self).addClass('doorClose').removeClass('doorOpen')
+                    $(self).parent().find('.doorImage').addClass('doorImageClose').removeClass('doorImageOpen')
+                }else{
+                    $(self).attr('doorToStatus', 0);
+                    $(self).addClass('doorOpen').removeClass('doorClose')
+                    $(self).parent().find('.doorImage').addClass('doorImageOpen').removeClass('doorImageClose')
+                }
+                // openAlertModel("myModalAlert" , '请求成功！');
+            }
+            if(response.status == 'error'){
+                openAlertModel("myModalAlert" , response.errorMessage);
+            }
+        },
+        error:function () {
+            LOADING.hide();
+            openAlertModel("myModalAlert" , '请求失败！');
+        }
+    })
+
+}
+
+
+
+
+
+/**
+ * 获取点位信息
+ */
+function getConfigurantionParam(){
+    svrStr.html("");
+    $('#multiNodeShow').html('');
+    $.ajax({
+        type:"POST",
+        url: CONTEXT_PATH+'/monitor/configuration/getPumpNode',
+        async: false,
+        datatype:"JSON",
+        data:{phid: GLOBAL_SELECT_DEVICE.pumpHouseId},
+        success: function (res) {
+            if(res){
+                $('#pumpName').html("泵房名称："+ res.phName)
+                $("#deviceStatus").html("")
+                window.conctolParam = res
+                setImage(res.phUrl, '1705', '797')
+                if(res.Identification == "1"){
+                    showDeviceStatus(res.deviceInfo, false)
+                    dealVideoMsg()
+                    getConfigurantionData(false)
+                }else {
+                    $("#pumpBaseInfo").modal('hide');
+                    LOADING.hide();
+                }
+            }
+        }
+    })
+}
+
+
+/**
+ * 获取泵房-设备信息
+ */
+function getDeviceStatus(){
+    $.ajax({
+        type:"POST",
+        contentType: 'application/json',
+        url: CONTEXT_PATH+'/monitor/statistic/getDeviceStatus',
+        async: false,
+        datatype:"JSON",
+        data:JSON.stringify({pumpHouseId: GLOBAL_SELECT_DEVICE.pumpHouseId}),
+        success: function (res) {
+            if(res){
+                showDeviceStatus(res, true)
+            }
+        }
+    })
+}
+
+function  dealVideoMsg() {
+    var conctolParams = window.conctolParam;
+    if(conctolParams.videoInfo){
+        conctolParams.videoInfo.map(function (v) {
+            $("#cfgVideoList").html('')
+            $("#cfgVideoList").append('<li class="list-li-item">' +
+                '<a class="list-li-item" href="javascript:showVideo(\''+v.monitorIp+'\')">' +
+                '<i class="glyphicon glyphicon-facetime-video"></i>' +
+                '<span>'+ v.videoName +'</span>' +
+                '</a>' +
+                '</li>')
+        })
+    }
+}
+
+/**
+ * 获取设备测点数据
+ */
+function getConfigurantionData(type){
+    $.ajax({
+        type:"POST",
+        url: CONTEXT_PATH+'/monitor/configuration/getServiceValues',
+        async: false,
+        datatype:"JSON",
+        data:{phid: GLOBAL_SELECT_DEVICE.pumpHouseId},
+        success: function (res) {
+            LOADING.hide();
+            window.FrequencyOutput = {};
+            window.runPump = {};
+
+            window.openend_directvalve;//直供水阀门
+            window.openend_tankinvalve;//水箱阀门
+            window.level_tank=[];//水箱液位
+            window.pressure_szjs=[];//进口压力
+
+            window.conctolData = [];
+            if(res){
+                res.map(function (v) {
+				    if(v.tagName.indexOf("进口压力") >= 0 || v.tagName.indexOf("总进水压力") >= 0){
+                        window.pressure_szjs.push(v);
+                	}
+                	if(v.tagName.indexOf("出口压力") >= 0 || v.tagName.indexOf("出水压力") >= 0){
+                		v.tagName = "出口压力";
+                	}
+                    if(v.tagName.indexOf("水箱液位") >= 0){
+                  		v.tagName = "水箱液位";
+                        window.level_tank.push(v);
+                  	}
+                    if(v.tagName == "进口压力" || v.tagName == "出口压力" || v.tagName == "水箱液位" ){
+                        window.conctolData.push(v);
+                    }
+                    if(v.code.indexOf('sewagepump_run') >= 0){
+                        if(!window.FrequencyOutput[v.idDevice]) window.FrequencyOutput[v.idDevice] = [];
+                        window.FrequencyOutput[v.idDevice].push(v);
+                    }
+                    if(v.code.indexOf('run_pump') >= 0){
+                        if(!window.runPump[v.idDevice]) window.runPump[v.idDevice] = [];
+                        window.runPump[v.idDevice].push(v);
+                    }
+                    if(v.code.indexOf('openend_directvalve') >= 0){
+                        openend_directvalve=v;
+                    }
+                    if(v.code.indexOf('openend_tankinvalve') >= 0){
+                        openend_tankinvalve=v;
+                    }
+
+
+                })
+                //multiNodeMsgShow(res)
+                singleNode(res)
+                //
+                $("#pumpBaseInfo").modal('show');
+                pumpBaseInfo(res);
+            }else{
+                $("#pumpBaseInfo").modal('hide');
+            }
+            setSvg(type);
+        }
+    })
+}
+
+/**
+ * 获取设备下控参数
+ */
+function getlowerControlMsg(deviceId) {
+    $.ajax({
+        type:"POST",
+        url: CONTEXT_PATH+'/monitor/configuration/getCtrlParms',
+        async: false,
+        datatype:"JSON",
+        data:{
+            deviceCode:deviceId,
+            pumpId:GLOBAL_SELECT_DEVICE.pumpHouseId
+        },
+        success: function (resp) {
+            var res = JSON.parse(resp)
+            if(res.doorSource){
+                window.doorSource = res.doorSource
+            }
+            if(res.status == "complete"){
+                dealDeviceMsg(res)
+            }else{
+                $('#deviceCparam').hide();
+                $('#noMsg').html('<div class="row">' +
+                    '                    <div class="col-md-12">该设备暂时还没有配置下控参数！</div>' +
+                    '                </div>').show()
+            }
+        }
+    })
+}
+
+
+function dealDeviceMsg(res) {
+    $('#RAutoRManual').html("");
+    $('#lowerCTitle').html('设备：（'+ res.resultData.deviceId +'）').attr('device', res.resultData.deviceId);
+    /* 设备运行模式 */
+    if(res.resultData.rStartUp){
+        if(res.resultData.rStartUp.pointValue == 1){
+            $('#lowerControlMb').hide();
+            $('#RAutoRManual').append("<td> <span id=\"deviceRunType\">设备运行模式：远程</span></td>")
+        }
+        if(res.resultData.rStartUp.pointValue == 0){
+            $('#lowerControlMb').show();
+            $('#RAutoRManual').append("<td> <span id=\"deviceRunType\">设备运行模式: 本地</span></td>")
+        }
+
+    }else {
+        $('#RAutoRManual').append("<td> <span>设备运行模式：..</span></td>")
+    }
+
+    /* 远程启停 */
+    if(res.resultData.rAuto && res.resultData.rAuto.pointValue == 0){
+        $('#RAutoRManual').append("<td id='rAutoThis'><span>远程启动</span><em class=\"modeOn\" onclick=\"contrParam('R_Auto', 1,'确认开启远程停止','rAutoThis', '远程停止')\"> </em></td>")
+    }
+    if(res.resultData.rAuto && res.resultData.rAuto.pointValue == 1){
+        $('#RAutoRManual').append("<td id='rAutoThis'><span>远程停止</span> <em class=\"modeOn modeOff\" onclick=\"contrParam('R_Auto', 0,'确认开启远程启动','rAutoThis', '远程启动')\"></em></td>")
+    }
+
+    /* 远程手动 */
+   // /* if(res.resultData.rStartUp && res.resultData.rStartUp.pointValue == 0){
+   //      $('#disableMb').show()
+   //      $('#RAutoRManual').append("<td id='rManualThis'><span>远程功能关</span> <em class=\"modeOn modeOff\" onclick=\"contrParam('R_StartUp', 1 ,'确认开启远程功能', 'rManualThis', '远程功能开')\"></em></td>")
+   //  }
+   //  if(res.resultData.rStartUp && res.resultData.rStartUp.pointValue == 1){
+   //      $('#disableMb').show()
+   //      $('#RAutoRManual').append("<td id='rManualThis'><span>远程功能开</span> <em class=\"modeOn\" onclick=\"contrParam('R_StartUp', 0 ,'确认关闭远程功能', 'rManualThis', '远程功能关')\"></em></td>")
+   //  }*/
+
+    /* 远程急停 */
+    if(res.resultData.rEStop && res.resultData.rfeedback.pointValue == 0){
+      /*  $('#RAutoRManual').append("<td id='rEStopThis'><span>远程复位</span> <em class=\"modeOn modeOff\" onclick=\"contrParam('R_E_stop', 0,'确认进行远程复位操作', 'rEStopThis', '远程复位')\"></em></td>")*/
+        $('#RAutoRManual').append("<td id='rEStopThis'><span>远程急停</span> <em class=\"modeOn modeOff1\" onclick=\"contrParam('R_E_stop', 1,'确认进行远程急停操作', 'rEStopThis', '远程急停')\"></em></td>")
+    }
+    if(res.resultData.rEStop && res.resultData.rfeedback.pointValue == 1){
+        $('#RAutoRManual').append("<td id='rEStopThis'><span>远程急停</span> <em class=\"modeOn modeOff1\" style='cursor: not-allowed'></em></td>")
+    }
+
+    /* 水泵状态 */
+    if(res.resultData.pumpParam){
+        $("#deviceParamId").html('');
+        if(res.resultData.pumpParam.length>0){
+            res.resultData.pumpParam.map(function (val) {
+                $switchMb = $('#switchMb').find('.switch').clone(true);
+                $switchMbHide = $('#switchMbHide').find('.switch').clone(true);
+                val.map(function (v, i , arr) {
+                    if(v.pointCode.indexOf('FrequencyOper')>0 && v.pointCode !== "FrequencyOper" ){
+                        let pointName =  v.pointName.split('#')[0];
+                        let classname = "stop", namestatus = "停止"
+                        if(v.pointValue == 1){
+                            classname = "run";
+                            namestatus = "运行中"
+                        }
+                        v.classNamePump = 'pumpOnePump'+i;
+                        let str = $("<tr class='pumpOnePump"+i+"'>\n" +
+                            "<td width=\"20%\">"+ pointName +"#</td>\n" +
+                            "<td width=\"10%\"><em class='pumpRunIcon "+ classname +"'></em></td>\n" +
+                            "<td width=\"70%\"><span>"+namestatus+"</span></td>\n" +
+                            // /*"<td width=\"20%\" class='switchM"+i+"' param = "+ JSON.stringify(v) +">" +
+                            // "</td>\n" +
+                            // "<td width=\"40%\" class=\"setFrequency\">" +
+                            // "<div class='paramSpan' val = '"+v.pointValue+ "' onclick='showChange(this)'><i class=\"fa fa-pencil-square-o\"></i> <span>频率设定</span></div>" +
+                            // '<div class="paramConc" style="display: none"><input class="xkparams" type="text" style="border:0px;width: 30px;margin-right: 5px" pointCode="'+ arr[2].pointCode +'" deviceId = "'+ deviceid +'"  onchange="changeDeviceCparam(this)" value="'+ arr[2].pointValue+'">' +
+                            // '<span>'+arr[2].pointUnit +'</span ><button type="button" class="btn btn-primary btn-xs" style="margin-left: 4px"onclick="changeDeviceCparam(this)">确定</button>' +
+                            // ' <button type="button" class="btn btn-default btn-xs"  onclick="hideChange(this)">取消</button>' +
+                            // '</div>'+
+                            // "</td>\n" +*/
+                            "</tr>");
+                        if(v.pointValue == 1){
+                            str.find('.switchM'+i).append($switchMb)
+                        }else{
+                            str.find('.switchM'+i).append($switchMbHide)
+                        }
+                        $("#deviceParamId").append(str);
+                        $("#deviceParamId").find('.switch-small').unbind()
+                    }
+                })
+            })
+        }else{
+            $("#deviceParamId").append("<tr><td colspan=\"2\" style=\"text-align: center; padding: 20px 0px\"> 暂无数据 </td></tr>");
+        }
+    }
+
+    /* 门禁情况 */
+    if(res.resultData.doorAccess){
+        if(res.resultData.doorAccess.pointValue == 0){
+            $('#deviceCdoorAccess').html('门禁状态：关').show()
+        }
+        if(res.resultData.doorAccess.pointValue == 1){
+            $('#deviceCdoorAccess').html('门禁状态：开').show()
+
+        }
+    }else {
+        $('#deviceCdoorAccess').hide()
+    }
+
+    /* 远程急停 */
+    if(res.resultData.rEStop){
+        $('.lowerCrestop').show()
+    }else {
+        $('.lowerCrestop').hide()
+    }
+
+    var paramList = res.resultData.setParam
+    var paramStr = ""
+    var deviceid = res.resultData.deviceId
+    if(paramList && paramList.length > 0){
+        paramList.map(function (v, i ) {
+            if(!v.pointUnit){  v.pointUnit = ""}
+            paramStr += '<tr><th>'+ v.pointName +'</th><th> ' +
+                '<div class="paramSpan" val = "'+v.pointValue+'" onclick="showChange(this)"> '+v.pointValue+'<span> '+ v.pointUnit +'</span></div>'+
+                '<div class="paramConc" style="display: none"><input class="xkparams" type="text" style="border:0px;width: 100px;margin-right: 5px" pointCode="'+ v.pointCode +'" deviceId = "'+ deviceid +'"  onchange="changeDeviceCparam(this)" value="'+ v.pointValue+'">' +
+                '<button type="button" class="btn btn-primary btn-xs" onclick="changeDeviceCparam(this)">确定</button>' +
+                ' <button type="button" class="btn btn-default btn-xs"  onclick="hideChange(this)">取消</button>' +
+                '</div></th></tr>'
+        })
+    }
+    $('#lowerControlTbody').html(paramStr);
+    $('#noMsg').hide()
+    $('#deviceCparam').show();
+}
+
+/* 绑定toggle事件 */
+function multiNodeToggle(self) {
+    if($(self).attr('tog') == 'true'){
+        $(self).parent().find('.multiNodeCont').addClass('multiNodeContHide');
+        $(self).find('.multiNodeMark').addClass('multiNodeMarkDown').removeClass('multiNodeMarkUp');
+        $(self).attr('tog', 'false')
+    }else {
+        $(self).parent().find('.multiNodeCont').removeClass('multiNodeContHide');
+        $(self).find('.multiNodeMark').addClass('multiNodeMarkUp').removeClass('multiNodeMarkDown');
+        $(self).attr('tog', 'true')
+    }
+}
+
+/**
+ * 展示多节点
+ */
+function multiNodeMsgShow(arr) {
+    $('#multiNodeShow').html('');
+    if(window.conctolParam.multiNode && window.conctolParam.multiNode.length>0){
+        window.conctolParam.multiNode.map(function (v, i) {
+            if(v.points.length>0 && i<4){
+                let str = $(' <div class="multiNodeOne">\n' +
+                    '            <div class="multiNodeOneTitle" onclick="multiNodeToggle(this)" tog = "true" >'+ v.nodeName +'<span class="multiNodeMark multiNodeMarkDown"></span></div>\n' +
+                    '            <ul class="multiNodeContOut">\n' +
+                    '            </ul>\n' +
+                    '        </div>')
+                let index = true, isShowNode = false;
+                v.points.map(function (val) {
+                    arr.map(function (value) {
+                        if(!value.unit) value.unit = "";
+                       if(value.idDevice == val.deviceId && value.code == val.pointName){
+                           if(window.conctolParam.deviceInfo.length>0){
+                               let dn = val.deviceId, content, listr;
+                               window.conctolParam.deviceInfo.map(function (infoVal) {
+                                   if(infoVal.id == val.deviceId ){
+                                       dn = infoVal.devicePosition
+                                   }
+                               })
+                               if(value.unit){
+                                   content = dn + '-' + val.pointMemo + '：'+ value.pv + value.unit;
+                               }else {
+                                   content = dn + '-' + val.pointMemo + '：'+ value.pv ;
+                               }
+                               if(index){
+                                   listr = $('<li class="multiNodeCont multiNodeContFirst">'+ content +'</li>')
+                                   index = false;
+                                   isShowNode = true;
+                               }else{
+                                   listr = $('<li class="multiNodeCont multiNodeContHide">'+ content +'</li>')
+                                   str.find('.multiNodeMark').show();
+                               }
+                               str.find('.multiNodeContOut').append(listr);
+                           }
+                       }
+                    })
+                })
+                if(isShowNode && v.nodeCode!= "input" && v.nodeCode!="output"){
+                    $('#multiNodeShow').append(str)
+                }
+            }
+        })
+    }
+}
+
+
+function pumpBaseInfo(res){
+    $('#pumpDataInfoUl').html('')
+    $('#pumpUl_1').html('')
+    $('#pumpUl_2').html('')
+    $('#pumpUl_3').html('')
+    $('#pumpUl_4').html('')
+
+    var conctolParams = window.conctolParam;
+    $('#pumpDataInfoUl').append(' <div style="font-size: 14px;font-weight: 500;text-align:center;">'+conctolParam.phName+'</div><hr style="margin-top: 0px;margin-bottom: 0px;">')
+
+    if(conctolParams.deviceInfo.length>0){
+      /*  $('#pumpDataInfoUl').append(' <li class="list-li-item" style="font-size: 12px;font-weight: 500">'+"告警信息："+'<img src="'+"/HYWater/static/assets/img/alarmY.png"+'"px style="float:right;margin-top: 1px"></li><hr style="margin-top: 0px;margin-bottom: 0px;">')
+
+      */
+        conctolParams.deviceInfo.map(function (v,i) {
+               if(i==0){
+                   $('#pumpDataInfoUl').append(' <li class="list-li-item-zd" style="font-size: 12px;font-weight: 500">'+ "基本状况"+'</li><hr style="margin-top: 0px;margin-bottom: 0px;">')
+               }else if(i==1){
+                $('#pumpDataInfoUl').append(' <li class="list-li-item-zd" style="font-size: 12px;font-weight: 500">'+ "一区告警"+'</li><hr style="margin-top: 0px;margin-bottom: 0px;">')
+                $('#pumpUl_1').append('<li class="list-li-item-zd" style="font-size: 12px;font-weight: 500">'+ "一区"+'</li><hr style="margin-top: 0px;margin-bottom: 0px;">')
+
+               }else if(i==2){
+                    $('#pumpDataInfoUl').append(' <li class="list-li-item-zd" style="font-size: 12px;font-weight: 500">'+ "二区告警"+'</li><hr style="margin-top: 0px;margin-bottom: 0px;">')
+                    $('#pumpUl_2').append('<li class="list-li-item-zd" style="font-size: 12px;font-weight: 500">'+ "二区"+'</li><hr style="margin-top: 0px;margin-bottom: 0px;">')
+
+               }if(i==3){
+                    $('#pumpDataInfoUl').append(' <li class="list-li-item-zd" style="font-size: 12px;font-weight: 500">'+ "三区告警"+'</li><hr style="margin-top: 0px;margin-bottom: 0px;">')
+                    $('#pumpUl_3').append('<li class="list-li-item-zd" style="font-size: 12px;font-weight: 500">'+ "三区"+'</li><hr style="margin-top: 0px;margin-bottom: 0px;">')
+            }if(i==4){
+                    $('#pumpDataInfoUl').append(' <li class="list-li-item-zd" style="font-size: 12px;font-weight: 500">'+ "四区告警"+'</li><hr style="margin-top: 0px;margin-bottom: 0px;">')
+                    $('#pumpUl_4').append('<li class="list-li-item-zd" style="font-size: 12px;font-weight: 500">'+ "四区"+'</li><hr style="margin-top: 0px;margin-bottom: 0px;">')
+
+            }
+               res.map(function (d) {
+                //总进水瞬时流量
+                if(v.id==d.idDevice){
+                    if(d.idService.indexOf("flow_instant")>=0 ||
+                        d.idService.indexOf("chlorine_js")>=0 ||
+                        d.idService.indexOf("turbidity_js")>=0 ||
+                       /* d.idService.indexOf("sewagepump_run")>=0 ||*/
+                        d.idService.indexOf("frequency_pump")>=0 ||
+                        d.idService.indexOf("flowinstant_outwater")>=0 ) {
+                        var unit=d.unit==undefined?"":d.unit;
+                        if(i==0){
+                            $('#pumpDataInfoUl').append(' <li class="list-li-item" style="font-size: 11px;font-weight: 500">'+ d.tagName+":"+d.pv +" "+unit+'</li>')
+                        }else if(i==1){
+                            $('#pumpUl_1').append(' <li  class="list-li-item '+v.id+'" style="font-size: 11px;font-weight: 500">'+ d.tagName+":"+d.pv +" "+unit+'</li>')
+                        }else if(i==2){
+                            $('#pumpUl_2').append(' <li  class="list-li-item '+v.id+'" style="font-size: 11px;font-weight: 500">'+ d.tagName+":"+d.pv +" "+unit+'</li>')
+                        }else if(i==3){
+                            $('#pumpUl_3').append(' <li  class="list-li-item '+v.id+'" style="font-size: 11px;font-weight: 500">'+ d.tagName+":"+d.pv +" "+unit+'</li>')
+                        }else if(i==4){
+                            $('#pumpUl_4').append(' <li  class="list-li-item '+v.id+'" style="font-size: 11px;font-weight: 500">'+ d.tagName+":"+d.pv +" "+unit+'</li>')
+                        }
+
+                    }
+                    if(d.idService.indexOf("sewagepump_run")>=0) {
+                        var imgPath=d.pv==1?"/HYWater/static/assets/img/runY.png":"/HYWater/static/assets/img/unRunY.png";
+                        $('#pumpDataInfoUl').append(' <li class="list-li-item" style="font-size: 11px;font-weight: 500">'+ d.tagName+'状态：<img src="'+imgPath+'"px style="float:right;margin-top: 3px"></li>')
+                    }
+
+                    if(d.idService.indexOf("tubeburst_outwater")>=0  || d.idService.indexOf("stop_electric")>=0  ||
+                        d.idService.indexOf("overpressure_pumptotal")>=0  || d.idService.indexOf("nonewater_signal")>=0  ||
+                        d.idService.indexOf("error_pump1")>=0 ) {
+                        var imgPath=d.pv==1?"/HYWater/static/assets/img/alarmY.png":"/HYWater/static/assets/img/unAlarmY.png";
+                        $('#pumpDataInfoUl').append(' <li class="list-li-item" style="font-size: 11px;font-weight: 500">'+ d.tagName+'状态：<img src="'+imgPath+'"px style="float:right;margin-top: 3px"></li>')
+                    }
+                }
+
+            });
+
+        });
+    }
+}
+/**
+ * 展示单测点
+ */
+function singleNode(arr) {
+    console.log(arr)
+    console.log(window.conctolParam)
+    var conctolParams = window.conctolParam;
+
+    $('#singleNodes').html('')
+    if(conctolParams.singleNode.length>0 ){
+        conctolParams.singleNode.map(function (v) {
+            let content =  v.nodeName +'：暂无'
+            if(arr.length>0){
+                arr.map(function (val) {
+                    if(val.code == v.nodeCode && val.unit) content = v.nodeName + ":" + val.pv + val.unit
+                    if(val.code == v.nodeCode && !val.unit) content = v.nodeName + ":" + val.pv
+                })
+            }
+            $('#singleNodes').append(' <li class="list-li-item">'+ content +'</li>')
+        })
+    }
+}
+
+function setSvg(reloading) {
+    var conctolPs = window.conctolParam
+    var conctolDt = window.conctolData
+    if(reloading){
+        $('#svgcfn').find('text[name="defult"]').html("")
+    }
+
+    // 添加下控点
+    if(!reloading){
+        console.log(222)
+        if(conctolPs.curDevicePos && conctolPs.curDevicePos.remoteCtrlPos){
+            conctolPs.curDevicePos.remoteCtrlPos.map(function (v, i) {
+                if(conctolPs.deviceInfo[i]){
+                    v.deviceId = conctolPs.deviceInfo[i].id
+                    setCicle(v, "control")
+                    setRect(v, "control")
+                    var devicePosition =  conctolPs.deviceInfo[i].devicePosition
+                    if( devicePosition!= "" && devicePosition != "undefined" &&devicePosition != "null" ){
+                       /* setText(v, conctolPs.deviceInfo[i].devicePosition, "control")*/
+                        setText(v, "门禁", "control")
+                    }
+                }
+            })
+        }
+    }
+
+    if(conctolPs.deviceInfo[0].isWaterTank == 1){//水箱设备只展示水箱液位 可能存在多个
+        if(conctolPs.curDevicePos && window.level_tank){
+            conctolPs.curDevicePos.tankPos.map(function (v, i) {
+                if (!reloading) {
+                    setCicle(v,conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位")
+                    setRect(v)
+                }
+                var val=window.level_tank[i];
+                if (val!=undefined && val.tagName == "水箱液位" ) {
+                    setText(v, '水箱液位：'+ val.pv +  val.unit);
+                }
+            })
+        }
+    }
+
+
+    if(conctolPs.deviceInfo[0].isWaterTank == 1){//非水箱只展示 进口压力
+        if(conctolPs.curDevicePos && window.pressure_szjs){
+            conctolPs.curDevicePos.inletPos.map(function (v, i) {
+                if (!reloading) {
+                    setCicle(v,conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力")
+                    setRect(v)
+                }
+                var val=window.pressure_szjs[i];
+                if (val!=undefined && (val.tagName == "进口压力" || val.tagName == "总进水压力") ) {
+                    setText(v, '进口压力：'+ val.pv +  val.unit);
+                }
+            })
+        }
+    // 添加进口压力点
+ /*   if(conctolPs.curDevicePos && conctolPs.curDevicePos.inletPos){
+        conctolPs.curDevicePos.inletPos.map(function (v, i) {
+            if(!reloading){
+                setCicle(v,conctolPs.deviceInfo[i],"pressure_szjs1","进口压力")
+                setRect(v)
+            }
+            if(conctolPs.deviceInfo[i]){
+                var deviceId = conctolPs.deviceInfo[i].id
+                var inletPos = {
+                    pv:'...',
+                    unit:'Mpa',
+                }
+                if(conctolDt){
+                    conctolDt.map(function (val) {
+                        if (deviceId == val.idDevice  &&  (val.tagName == "进口压力" || val.tagName == "总进水压力")){
+                            inletPos = val
+                        }
+                    })
+                }
+                setText(v, '进口压力：'+ inletPos.pv +  inletPos.unit)
+            }
+        })
+    }*/
+    }
+    // 添加出口压力点
+    if(conctolPs.curDevicePos && conctolPs.curDevicePos.outletPos) {
+        conctolPs.curDevicePos.outletPos.map(function (v, i) {
+            if (!reloading) {
+                setCicle(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+                setRect(v)
+            }
+            if(conctolPs.deviceInfo[i+1]){
+                var deviceId = conctolPs.deviceInfo[i+1].id
+                var outletPos = {
+                    pv: '...',
+                    unit: 'Mpa',
+                }
+                if (conctolDt) {
+                    conctolDt.map(function (val) {
+                        if (deviceId == val.idDevice && (val.tagName == "出口压力" || val.tagName == "出水压力")) {
+                            outletPos = val
+                        }
+                    })
+                }
+                setText(v, '出口压力：' + outletPos.pv + outletPos.unit)
+            }
+        })
+    }
+    // 添加设备点
+    if(!reloading){
+        if(conctolPs.curDevicePos && conctolPs.curDevicePos.deviceNamePos) {
+            conctolPs.curDevicePos.deviceNamePos.map(function (v, i) {
+                if(conctolPs.deviceInfo[i]) setText(v, '设备：'+ conctolPs.deviceInfo[i].devicePosition, 'device')
+            })
+        }
+    }
+    // 添加泵风扇
+    if(!reloading){
+        var k=0;
+        if(conctolPs.curDevicePos && conctolPs.curDevicePos.pumpPos) {
+            conctolPs.curDevicePos.pumpPos.map(function (v, i) {
+
+                v.map(function (va, j) {
+                    if(conctolPs.deviceInfo[i+1] && window.runPump[conctolPs.deviceInfo[i+1].id] !=undefined) {
+                        if(j<=2){
+                            var val=window.runPump[conctolPs.deviceInfo[i+1].id][j];
+                            if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
+                                setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
+                            }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
+                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                            }
+                            setDiv(va,"pumpDataUl_1");
+                        }else if(j<6){
+                            if(j==3){
+                                i++;
+                                k=0;
+                            }
+                            var val=window.runPump[conctolPs.deviceInfo[i+1].id][k];
+                            if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
+                                setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
+                            }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
+                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                            }
+                            setDiv(va,"pumpDataUl_2");
+                            k++;
+                        }else if(j<9){
+                            if(j==6){
+                                i++;
+                                k=0;
+                            }
+                            var val=window.runPump[conctolPs.deviceInfo[i+1].id][k];
+                            if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
+                                setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
+                            }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
+                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                            }
+                            setDiv(va,"pumpDataUl_3");
+                            k++;
+                        }
+                        else if(j<12){
+                            if(j==9){
+                                i++;
+                                k=0;
+                            }
+                            var val=window.runPump[conctolPs.deviceInfo[i+1].id][k];
+                            if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
+                                setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
+                            }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
+                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                            }
+                            setDiv(va,"pumpDataUl_4");
+                            k++;
+                        }
+
+                    }
+                })
+
+            })
+        }
+
+        /*if(conctolPs.curDevicePos && conctolPs.curDevicePos.pumpPos) {
+            conctolPs.curDevicePos.pumpPos.map(function (v, i) {
+                v.map(function (va, j) {
+                    if(conctolPs.deviceInfo[i+1] && window.runPump[conctolPs.deviceInfo[i+1].id] !=undefined) {
+                        window.runPump[conctolPs.deviceInfo[i].id].map(function (val, k) {
+                            if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
+                                setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
+                                return false;
+                            }
+                            if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
+                                setImage('static/assets/img/unRun.png', '25', '25', va.x, va.y);
+                                return false;
+                            }
+                        })
+                    }
+               })
+
+            })
+        }*/
+
+
+    }
+    // 添加阀门
+    if(!reloading){
+        var conctolParams = window.conctolParam;
+        var z_status=window.openend_directvalve.pv==1?"打开":"关闭";
+        var box_status=window.openend_tankinvalve.pv==1?"打开":"关闭";
+        if(conctolParams.phName=="金海龙韵"){
+
+            var v={x:960,y:380};
+            setRect(v,"control")
+            setText(v, '直供水阀门:'+box_status,"control");
+            setImage('static/assets/img/fmY.png', '35', '35', 940, 360);
+
+            var v1={x:1095,y:283};
+            setRect({x:1095,y:283},"control")
+            setText(v1, '水箱阀门:'+z_status,"control")
+            setImage('static/assets/img/fmY.png', '35', '35', 1093, 258);
+
+        }else if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号" ){
+
+            var v={x:940,y:195};
+            setRect(v,"control")
+            setText(v, '直供水阀门:'+box_status,"control");
+           setImage('static/assets/img/fmY.png', '35', '35', 940, 175);
+
+            var v1={x:1140,y:80};
+            setRect({x:1140,y:80},"control")
+            setText(v1, '水箱阀门:'+z_status,"control")
+            setImage('static/assets/img/fmY.png', '35', '35', 1140, 80);
+
+        }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府"){
+
+            var v={x:1080,y:265};
+            setRect(v,"control")
+            setText(v, '直供水阀门:'+box_status,"control");
+           setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
+
+            var v1={x:980,y:165};
+            setRect({x:980,y:165},"control")
+            setText(v1, '水箱阀门:'+z_status,"control")
+            setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
+
+        }
+        return false;
+    }
+
+
+
+    $('#svgContent').html(svrStr)
+}
+
+
+// 定义圆点
+function setCicle(v, type,code,dateType) {
+    var circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    if(type == "control"){
+        $(circle).html('<animate attributeType="CSS" attributeName="opacity" from="0.2" to="1" dur="1s" repeatCount="indefinite" />')
+        $(circle).attr('onclick', 'lowerControl('+v.deviceId +')')
+        $(circle).css('cursor', 'pointer')
+    }else{
+        if(type!=undefined){
+            $(circle).attr('onclick', 'showDiv("'+type.id+'","'+type.devicePosition+'","'+code+'","'+dateType+'")')
+           // $(circle).attr('onmouseout', 'hideDiv("'+type.id+'")')
+            $(circle).css('cursor', 'pointer')
+        }
+
+    }
+    var circleStr = $(circle).attr({
+        cx:  v.x,
+        cy:  v.y,
+        r:  '8',
+        fill: "#0ee1ff"
+    })
+    svrStr.append(circleStr);
+}
+
+// 定义文字背景
+function setRect(v, type) {
+    var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    if(type == "control"){
+        var rectStr = $(rect).attr({
+            x:  v.x + 10,
+            y:  v.y - 30,
+            rx:  '5',
+            ry:  '5',
+            width: "120",
+            height: "30",
+            fill: "##5461",
+            stroke:"#fff",
+            "stroke-width": '1',
+            "fill-opacity":"0.3"
+        })
+    }else{
+        var rectStr = $(rect).attr({
+            x:  v.x - 20,
+            y:  v.y + 10,
+            rx:  '5',
+            ry:  '5',
+            width: "150",
+            height: "30",
+            fill: "##5461",
+            stroke:"#fff",
+            "stroke-width": '1',
+            "fill-opacity":"0.3"
+        })
+    }
+    svrStr.append(rectStr);
+}
+
+// 定义文本内容
+function setText(v, keyVal, type){
+    var type = type || "defult"
+    var text = document.createElementNS("http://www.w3.org/2000/svg","text");
+    if(type == "control") {
+        var textStr = $(text).attr({
+            x: v.x + 18,
+            y: v.y - 10,
+            fill: "#fff",
+        })
+    }
+    if(type == "device"){
+        var textStr = $(text).attr({
+            x:  v.x - 10,
+            y:  v.y ,
+            fill:  "#fff",
+        })
+    }
+    if(type == "defult"){
+        var textStr = $(text).attr({
+            x:  v.x - 10,
+            y:  v.y  + 30,
+            fill:  "#fff",
+            name:  "defult",
+        })
+    }
+
+    $(text).text(keyVal)
+    svrStr.append(textStr);
+}
+
+function setDiv(va,id){
+    var circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    $(circle).attr('onmouseout', 'hideTip("'+id+'")')//移开
+    $(circle).attr('mouseover', 'showTip("'+id+'")')//移入
+    $(circle).attr('onclick', 'showTip("'+id+'")')
+    $(circle).css('cursor', 'pointer')
+    var circleStr = $(circle).attr({
+        cx:  va.x,
+        cy:  va.y,
+        r:  '50',
+        fill: "#0000"
+    })
+    svrStr.append(circleStr);
+}
+
+// 定义图片
+function setImage(src, w, h, DX, DY) {
+    var dX = DX || '0', dY = DY || '0';
+    var image = document.createElementNS("http://www.w3.org/2000/svg","image");
+    var imageStr = $(image).attr({
+        width: w,
+        height: h,
+        href: src,
+        x: dX,
+        y: dY,
+    })
+    svrStr.append(imageStr);
+}
+
+function showDeviceStatus(data, type) {
+    $("#deviceStatus").html("")
+    if(type){
+        data.map(function (val) {
+            if(val.deviceStatus == 0){
+                var  dstatus = "离线"
+            }
+            if(val.deviceStatus == 1){
+                var dstatus = "在线"
+            }
+            if(val.location){
+                $("#deviceStatus").append('<li class="list-li-item">' + val.location +' ( '+ showDT() +' ) '+ dstatus +'</li>')
+            }else {
+                $("#deviceStatus").append('<li class="list-li-item">' + val.deviceId +' ( '+ showDT() +' ) '+ dstatus +'</li>')
+            }
+        })
+    }else {
+        data.map(function (val, i) {
+            $("#deviceStatus").append('<li class="list-li-item">' + val.devicePosition +' ( '+ showDT() +' )</li>')
+        })
+    }
+}
+
+/**
+ * 下控弹窗
+ */
+function lowerControl(deviceId){
+    getlowerControlMsg(deviceId)
+    $('#lowerControl').modal('show')
+}
+
+/**
+ * 弹窗
+ */
+function modalMsg(title, content, isShowOk, isShowClose, fun, param) {
+    let titleThis = title ||  "提示";
+    let contentThis = content ||  "";
+    let funs = fun || false;
+    if(isShowOk){
+        if(funs){
+            $('#myModalMsg').find('.isOk').attr({'param':param, 'onclick':funs+"(this)"}).show();
+        }else{
+            $('#myModalMsg').find('.isOk').attr({'param':"", 'onclick':""}).show();
+        }
+    }else {
+        $('#myModalMsg').find('.isOk').attr({'param':"", 'onclick':""}).hide();
+    }
+    if(isShowClose){
+        $('#myModalMsg').find('.isClose').show();
+    }else {
+        $('#myModalMsg').find('.isClose').hide();
+    }
+    $('#myModalMsg').find('.modal-title').html(titleThis);
+    $('#myModalMsg').find('.modal-body').html(contentThis);
+    $('#myModalMsg').modal('show');
+}
+
+/**
+ *  配置视频
+ * @param video
+ */
+function showVideo(video) {
+    $.dialog({
+        id: 'device-video',
+        title: '泵房视频',
+        content: 'url:video8700.html?videoNo=' + video + '&rnd=' + new Date().getTime(),
+        width: 900,
+        height: 520,
+        fixed: true,
+        max: true,
+        min: false,
+        resize: false,
+        lock: true,
+        background: '#000',
+        opacity: 0.65,
+        ok: false,
+        drag: false
+        /*,
+        button: [{
+            name: '云镜控制',
+            callback: function() {
+                this.iframe.contentWindow.toggleBtn();
+                return false;
+            }
+        }]*/
+    });
+};
+
+
+/**
+ * 显示当前时间
+ * @returns {string|*}
+ */
+function showDT() {
+    var currentDT = new Date();
+    var y,m,date,day,hs,ms,ss,theDateStr;
+    y = currentDT.getFullYear(); //四位整数表示的年份
+    m = currentDT.getMonth()+1; //月
+    date = currentDT.getDate(); //日
+    hs = currentDT.getHours(); //时
+    ms = currentDT.getMinutes(); //分
+    ss = currentDT.getSeconds(); //秒
+    theDateStr = y+"年"+  m +"月"+date+"日 "+hs+":"+ms+":"+ss;
+    return  theDateStr;
+}
+
+function callRefresh(){
+    LOADING.show();
+    getConfigurantionParam()
+    getDeviceDoorInfo()
+    getDeviceStatus()
+}
+function showChange(self) {
+    $(self).hide();
+    $(self).parent().find('.paramConc').show();
+    $(self).parent().find('input').val($(self).attr('val'));
+    $(self).parent().find('input').focus();
+}
+
+function hideChange(self){
+    $(self).parent().hide();
+    $(self).parent().parent().find('.paramSpan').show();
+    return false;
+}
+function openOrCloseDoor(param) {
+   if(param == 2){
+       modalMsg('远程开关门', '确定启用 远程开门 操作？', true, true, 'openOrCloseDoorAjax', param)
+   }
+   if(param == 1){
+       modalMsg('远程开关门', '确定启用 远程关门 操作？', true, true, 'openOrCloseDoorAjax',param)
+   }
+}
+function openOrCloseDoorAjax(){
+    let deviceId = $('#lowerCTitle').attr('device')
+    let param =$('#myModalMsg').find('.isOk').attr('param')
+    LOADING.show();
+    if(window.doorSource != "1" && param){
+        param = parseInt(param)-1
+    }
+    $.ajax({
+        type: "POST",
+        url: CONTEXT_PATH + '/monitor/configuration/remoteCtrl',
+        async: false,
+        contentType: 'application/json',
+        datatype: "JSON",
+        data: JSON.stringify({
+            deviceId: deviceId,
+            pointCode: 'DoorAccess',
+            pointValue:  param ,
+            doorSource:  window.doorSource,
+        }),
+        success: function (response) {
+            LOADING.hide();
+            if (response.status == 'complete') {
+                openAlertModel("myModalAlert" , '请求成功！');
+            }
+            if(response.status == 'error'){
+                openAlertModel("myModalAlert" , response.errorMessage);
+            }
+        },
+        error:function () {
+            LOADING.hide();
+            openAlertModel("myModalAlert" , '请求失败！');
+        }
+    })
+}
+
+function contrParam(pointCodes, param, content, id, successShow){
+    let obj ={}
+    obj.pointCodes = pointCodes;
+    obj.param = param;
+    obj.id = id;
+    obj.successShow = successShow;
+    modalMsg('提示', content, true, true, 'changePumpParam', JSON.stringify(obj))
+}
+
+function changePumpParam(self) {
+    let deviceId = $('#lowerCTitle').attr('device')
+    let obj = JSON.parse($(self).attr('param'));
+    LOADING.show();
+    $.ajax({
+        type: "POST",
+        url: CONTEXT_PATH + '/monitor/configuration/remoteCtrl',
+        async: false,
+        contentType: 'application/json',
+        datatype: "JSON",
+        data: JSON.stringify({
+            deviceId: deviceId,
+            pointCode: obj.pointCodes,
+            pointValue: obj.param,
+        }),
+        success: function (response) {
+            LOADING.hide();
+            if (response.status == 'complete') {
+                $('#lowerControl').modal('hide');
+                let idThis = obj.id;
+                $('#'+idThis).find('span').html(obj.successShow);
+                // if(idThis == 'rManualThis'){
+                //     if(obj.param == 1) $('#'+idThis).find('em').removeClass('modeOff');
+                //     if(obj.param == 0) $('#'+idThis).find('em').addClass('modeOff');
+                // }else{
+                //     if(obj.param == 0) $('#'+idThis).find('em').removeClass('modeOff');
+                //     if(obj.param == 1) $('#'+idThis).find('em').addClass('modeOff');
+                // }
+                openAlertModel("myModalAlert" , '操作成功！');
+            }
+            if (response.status == 'error') {
+                openAlertModel("myModalAlert" ,  response.errorMessage);
+            }
+        },
+        error:function () {
+            LOADING.hide();
+            openAlertModel("myModalAlert" , '请求失败！');
+        }
+    })
+}
+/**
+ * 修改水泵状态
+ */
+function swithClick(self) {
+    let cls = $(self).find('.switch-animate').hasClass('switch-off');
+    let sendData =  JSON.parse($(self).parent().attr('param'))
+    if(cls){
+        sendData.pointValue = 1;
+        $(self).find('.switch-animate').removeClass('switch-on').addClass('switch-off');
+        $(self).find('input').prop('checked', false);
+        modalMsg('提示', '确定启用水泵操作？', true, true, 'remoteCtrl', JSON.stringify(sendData))
+    }else{
+        sendData.pointValue = 0;
+        $(self).find('.switch-animate').addClass('switch-on').removeClass('switch-off');
+        $(self).find('input').prop('checked', true);
+        modalMsg('提示', '确定关闭水泵操作？', true, true, 'remoteCtrl', JSON.stringify(sendData))
+    }
+}
+
+function remoteCtrl(self) {
+    let sendData = JSON.parse($(self).attr('param'));
+    let deviceId = $('#lowerCTitle').attr('device');
+    LOADING.show();
+    $.ajax({
+        type: "POST",
+        url: CONTEXT_PATH + '/monitor/configuration/remoteCtrl',
+        async: false,
+        contentType: 'application/json',
+        datatype: "JSON",
+        data: JSON.stringify({
+            deviceId: deviceId,
+            pointCode: sendData.pointCode,
+            pointValue: sendData.pointValue,
+        }),
+        success: function (response) {
+            LOADING.hide();
+            if (response.status == 'complete') {
+                if(sendData.pointValue == 1) $('.'+sendData.classNamePump).find('.switch-animate').removeClass('switch-off').addClass('switch-on');
+                if(sendData.pointValue == 0) $('.'+sendData.classNamePump).find('.switch-animate').removeClass('switch-on').addClass('switch-off');
+                openAlertModel("myModalAlert" , "操作成功");
+            }
+            if (response.status == 'error') {
+                openAlertModel("myModalAlert" , response.errorMessage);
+            }
+        },
+        error:function (r) {
+            LOADING.hide();
+            openAlertModel("myModalAlert" , "请求失败");
+        }
+    })
+}
+
+function changeDeviceCparam(href) {
+    $thisParam = $(href).parent().find('.xkparams')
+    let sendData = {}
+    sendData.thisCparamVal =  $thisParam.val();
+    sendData.thisCparamDeviceId =  $thisParam.attr('deviceId');
+    sendData.thisCparamPointCode =  $thisParam.attr('pointCode');
+    window.hrefp =  href;
+
+    modalMsg('提示', '确认修改该测点参数？', true, true, 'chengeParamForP', JSON.stringify(sendData))
+
+}
+function chengeParamForP(self) {
+    let obj = JSON.parse($(self).attr('param'));
+    LOADING.show();
+    $.ajax({
+        type: "POST",
+        url: CONTEXT_PATH + '/monitor/configuration/remoteCtrl',
+        async: false,
+        contentType: 'application/json',
+        datatype: "JSON",
+        data: JSON.stringify({
+            deviceId: obj.thisCparamDeviceId,
+            pointCode: obj.thisCparamPointCode,
+            pointValue: obj.thisCparamVal,
+        }),
+        success: function (res) {
+            LOADING.hide();
+            if (res.status == 'complete') {
+                $('#lowerControl').modal('hide');
+                $thisParam.attr('value', $thisParam.val())
+                $(self).parent().parent().find('.paramSpan').html($thisParam.val())
+                //hideChange(window.href);
+                openAlertModel("myModalAlert" , '操作成功！');
+            }
+            if (res.status == 'error') {
+                openAlertModel("myModalAlert" , res.errorMessage);
+                $thisParam.val($thisParam.attr('value'))
+            }
+        },
+        error:function () {
+            LOADING.hide();
+            openAlertModel("myModalAlert" , '请求失败！');
+        }
+    })
+// else {
+//         $thisParam.val($thisParam.attr('value'))
+//     }
+}
+
+
+
+
+function defChoose() {
+    callRefresh();
+}
+var lastOnClickParams={};
+function initThisPage() {
+   // $("#pumpBaseInfo").modal('show');
+    callRefresh();
+   setInterval(function () {
+        getConfigurantionData(true)
+        getDeviceStatus()
+    }, 15000)
+
+    /*setInterval(function () {
+        if(lastOnClickParams.deviceId!=undefined){
+            showDiv(lastOnClickParams.deviceId,lastOnClickParams.deviceName,lastOnClickParams.code,lastOnClickParams.dateType);
+        }
+
+    }, 30000)*/
+
+}
+//关闭后触发
+$('#showDataInfo').on('hide.bs.modal', function () {
+    lastOnClickParams={};
+})
+
+
+
+
+/**
+ * 下控弹窗
+ */
+function showDiv(deviceId,deviceName,code,dateType){
+    lastOnClickParams={};
+    lastOnClickParams.deviceId=deviceId;
+    lastOnClickParams.deviceName=deviceName;
+    lastOnClickParams.code=code;
+    lastOnClickParams.dateType=dateType;
+
+    $('#showDataInfo').modal('show');
+
+    $("#titleContent").html(deviceName+"("+dateType+")");
+    jQuery.ajax({
+        type : 'POST',
+        contentType : 'application/json',
+        url : 'a' + '/homeV2/getCurrentDataByDeviceIdAndCode/'+deviceId+"/data/"+code,
+        dataType : 'json',
+        success : function(data) {
+            if (undefined == data || data==null) {
+                return;
+            } else {
+                var markLine = baseLine(code);
+                setEcharts(data.xData,data.yData,dateType,markLine);
+
+            }
+        },
+        error : function(data) {
+
+        }
+    });
+
+}
+function baseLine(type){
+    var markLine={};
+
+
+    if(type.indexOf('level_tank')>=0){
+        markLine ={
+            silent: true,
+                lineStyle: {
+                normal: {
+                    color: '#01fef9'                   // 这儿设置安全基线颜色
+                }
+            },
+            data: [
+                {
+                    yAxis: 0.2
+                },{
+                    yAxis: 1.9
+                }
+            ],
+            label: {
+                normal:
+                    {
+                        formatter:function(e){
+                           if(e.value==0.2){
+                               return '0.2\n下限'
+                           }else  if(e.value==1.9){
+                               return '1.9\n上限'
+                           }
+
+                        }
+                    }
+            }
+        }
+
+        return markLine;
+    }else if(type.indexOf('pressure_outwater')>=0){
+        markLine ={
+            silent: true,
+            lineStyle: {
+                normal: {
+                    color: '#01fef9'                   // 这儿设置安全基线颜色
+                }
+            },
+            data: [
+                {
+                    yAxis: 0.65
+                }
+            ],
+            label: {
+                normal:
+                    {
+                        formatter:'0.65\n阈值'
+                    }
+            }
+        }
+        return markLine;
+    }else{
+        markLine="";
+    }
+    return markLine;
+}
+function setEcharts(xData,yData,dateType,markLine){
+    var myChart = echarts.init(document.getElementById('dataInfo'));
+    option = {
+        /*color:['#47d5a6'],*/
+       /* backgroundColor: 'rgba(1,202,217,.2)',*/
+
+        grid: {
+            left: '1%',
+            right: '4%',
+            bottom: '12%',
+            top:'4%',
+            containLabel: true
+        },
+        /*  toolbox: {
+              feature: {
+                  saveAsImage: {}
+              }
+          },*/
+
+        tooltip: {
+            trigger: 'axis',
+            formatter: "{b}<br/>{a}:{c}",
+            position:function(p){   //其中p为当前鼠标的位置
+                return [p[0] + 10, p[1] - 10];
+            },axisPointer: {
+                type: 'cross',
+                animation: false,
+                label: {
+                    backgroundColor: '#505765'
+                }
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: true,
+            boundaryGap: [0, '100%'],
+            splitLine: {
+                show: false
+            },
+            data: xData,/*,
+            axisLabel:{
+                interval: 0,  //控制坐标轴刻度标签的显示间隔.设置成 0 强制显示所有标签。设置为 1，隔一个标签显示一个标签。设置为2，间隔2个标签。以此类推
+                rotate:45,//倾斜度 -90 至 90 默认为0
+                textStyle:{
+                    fontWeight:"bold",  //加粗
+                    color:"#000000"   //黑色
+                },
+                formatter:function(value){
+                    var len = value.length;
+                    if(len>5){
+                        return (value.substring(0, 10) + "\n"+value.substring(10));
+                    }else{
+                        return value;
+                    }
+                }
+            },*/
+
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, '100%'],
+            splitLine: {
+                show: false
+            }
+        },
+        visualMap: {
+            show: false,
+            pieces: [
+                {
+                    gt: 0,
+                    lte: 0.2,          //这儿设置基线上下颜色区分 基线下面为绿色
+                    color: '#d6d440'
+                },
+                {
+                    gt: 0.2,
+                    lte: 1.9,          //这儿设置基线上下颜色区分 基线下面为绿色
+                    color: '#45d60c'
+                }, {
+
+                    gt: 1.9,          //这儿设置基线上下颜色区分 基线上面为红色
+                    color: '#d60f16'
+                }]
+        },
+       dataZoom: [{
+            startValue: '00:00:00'
+        }, {
+            type: 'inside'
+        }],
+        series: [
+            {
+                name:dateType,
+                type:'line',
+                symbol: 'none',
+           /*     areaStyle: {normal: {}},*/
+                data:yData,
+                markLine: markLine
+
+            }
+
+        ]
+    };
+
+    option.yAxis.max=2.2;
+
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    window.addEventListener("resize",function(){
+        myChart.resize();
+    });
+}
+
+pageLoading(initThisPage);
+
+/**
+ * 可以拖动
+ * yanxioaneng 2020-04-04
+ * @type {{moveTarget: null, mouseDragDown: boolean, mouseEndPoint: {top: number, left: number}, basePoint: {top: number, left: number}, mouseStartPoint: {top: number, left: number}, topleng: number}}
+ */
+var dragModal={
+    mouseStartPoint:{"left":0,"top":  0},
+    mouseEndPoint : {"left":0,"top":  0},
+    mouseDragDown : false,
+    basePoint : {"left":0,"top":  0},
+    moveTarget:null,
+    topleng:0
+}
+$(document).on("mousedown",".modal-header",function(e){
+    //webkit内核和火狐禁止文字被选中
+    $('body').addClass('select')
+    //ie浏览器禁止文字选中
+    document.body.onselectstart=document.body.οndrag=function(){
+        return false;
+    }
+    if($(e.target).hasClass("close"))//点关闭按钮不能移动对话框
+        return;
+    dragModal.mouseDragDown = true;
+    dragModal.moveTarget = $(this).parent().parent();
+    dragModal.mouseStartPoint = {"left":e.clientX,"top":  e.pageY};
+    dragModal.basePoint = dragModal.moveTarget.offset();
+    dragModal.topLeng=e.pageY-e.clientY;
+});
+$(document).on("mouseup",function(e){
+    dragModal.mouseDragDown = false;
+    dragModal.moveTarget = undefined;
+    dragModal.mouseStartPoint = {"left":0,"top":  0};
+    dragModal.basePoint = {"left":0,"top":  0};
+});
+$(document).on("mousemove",function(e){
+    if(!dragModal.mouseDragDown || dragModal.moveTarget == undefined)return;
+    var mousX = e.clientX;
+    var mousY = e.pageY;
+    if(mousX < 0)mousX = 0;
+    if(mousY < 0)mousY = 25;
+    dragModal.mouseEndPoint = {"left":mousX,"top": mousY};
+    var width = dragModal.moveTarget.width();
+    var height = dragModal.moveTarget.height();
+    var clientWidth=document.body.clientWidth
+    var clientHeight=document.body.clientHeight;
+    if(dragModal.mouseEndPoint.left<dragModal.mouseStartPoint.left - dragModal.basePoint.left){
+        dragModal.mouseEndPoint.left=0;
+    }
+    else if(dragModal.mouseEndPoint.left>=clientWidth-width+dragModal.mouseStartPoint.left - dragModal.basePoint.left){
+        dragModal.mouseEndPoint.left=clientWidth-width-38;
+    }else{
+        dragModal.mouseEndPoint.left =dragModal.mouseEndPoint.left-(dragModal.mouseStartPoint.left - dragModal.basePoint.left);//移动修正，更平滑
+
+    }
+    if(dragModal.mouseEndPoint.top-(dragModal.mouseStartPoint.top - dragModal.basePoint.top)<dragModal.topLeng){
+        dragModal.mouseEndPoint.top=dragModal.topLeng;
+    }else if(dragModal.mouseEndPoint.top-dragModal.topLeng>clientHeight-height+dragModal.mouseStartPoint.top - dragModal.basePoint.top){
+        dragModal.mouseEndPoint.top=clientHeight-height-38+dragModal.topLeng;
+    }
+    else{
+        dragModal.mouseEndPoint.top = dragModal.mouseEndPoint.top - (dragModal.mouseStartPoint.top - dragModal.basePoint.top);
+    }
+    dragModal.moveTarget.offset(dragModal.mouseEndPoint);
+});
+$(document).on('hidden.bs.modal','.modal',function(e){
+    $('.modal-dialog').css({'top': '0px','left': '0px'})
+    $('body').removeClass('select')
+    document.body.onselectstart=document.body.οndrag=null;
+})
+
+
+function hideTip(pumpDataUl){
+    var div = $("#"+pumpDataUl);
+        div.hide();
+}
+
+function showTip(pumpDataUl){
+    var div = $("#"+pumpDataUl);
+    if (div.is(":hidden")) {
+        div.show();
+        div.css("left", document.body.scrollLeft + event.clientX + 1);
+        div.css("top", document.body.scrollLeft + event.clientY + 10);
+    } else {
+        div.hide();
+    }
+}
+
+</script>

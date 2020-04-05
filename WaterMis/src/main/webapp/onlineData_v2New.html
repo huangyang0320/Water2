@@ -1,0 +1,201 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>实时数据</title>
+    <link rel="shortcut icon" href="static/v2/favicon.ico">
+    <link href="static/v2/assets/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="static/v2/assets/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="static/v2/assets/iCheck/iCheck.css" rel="stylesheet" />
+    <link href="static/v2/monitor/css/onlineData.css" rel="stylesheet" />
+    <style type="text/css">
+        /*
+         * inline styles
+         * history data styles
+         */
+        #page-wrapper {
+            padding: 0 10px 10px 10px;
+        }
+        #onlineDataChart {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        #device-norm-data{
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+        }
+        .black_overlay{ 
+        	display: none; 
+        	position: absolute; 
+        	top: 0%; 
+        	left: 0%; 
+        	width: 100%; 
+        	height: 100%; 
+        	background-color:#DCDCDC; 
+        	z-index:1001; 
+        	-moz-opacity: 0.6; 
+        	opacity:.60; 
+        	filter: alpha(opacity=60); 
+        } 
+   		.white_content { 
+   			display: none; 
+   			position: absolute; 
+   			top: 1%; 
+   			left: 1%; 
+   			width:98%; 
+   			height: 95%; 
+   			border: 1px solid #FFFFF0; 
+   			background-color: white; 
+   			z-index:1002; 
+   			overflow: hidden; 
+   		}
+        .col-ss{
+            max-width: 420px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="page-wrapper">
+    <div id="rowsContainerDivOuter" style="height: 176px;display: none;">
+        <div class="row rows-container" id="rowsContainerDivs" style="min-width: 1270px;">
+        </div>
+    </div>
+    <div id="bigRowDiv" class="white_content" >
+        <button type="button" onclick="back();" style="float: right;margin-right: 100px;">返回</button>
+        <div id="enlargeOnlineDataChart" style="min-width:600px;min-height:500px;height:95%;width:96%">			
+        </div>
+    </div>
+  	<div id="fade" class="black_overlay"> 
+  	</div> 
+    <div class="row" id="rowDiv">
+        <div class="col-bg-12">
+            <div class="panel panel-default">
+                <ul id="myTab" class="nav nav-tabs">
+                    <li class="active"><a href="#realtime-chart" data-toggle="tab" @click="redrawLine" onclick="onRealtimeChart()">实时曲线图</a></li>
+                    <li><a href="#realtime-table" data-toggle="tab" onclick="realDataTablClick()">实时数据列表</a></li>
+                </ul>
+
+                <div id="myTabContent" class="tab-content" style="height: 85%;">
+                    <div class="tab-pane fade in active" id="realtime-chart">
+                        <div class="panel-body">
+                            <div class="col-bg-9" style="margin-right: 0.8%;">
+                                <div class="auto-resize" id="onlineDataChart" data-height="130" style="min-width:400px;height:600px;"></div>
+                                <div style="position: absolute;top: 0;right: 15px; display: none">
+                                    <button type="button" onclick="enlarge();">放大</button>
+                                </div>
+                            </div>
+
+                            <div class="col-bg-3" style="float: right">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" style="padding: 0 0 10px 0;">
+                                        <span>监测指标列表</span>
+                                    </div>
+                                    <div class="panel-body" style="padding: 10px 0 0 0;">
+                                        <div class="auto-resize" id="device-norm-data" data-height="220">
+                                            <ul class="list-group"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="realtime-table">
+                        <div class="panel-body">
+                            <div class="row rows-container" id="rowsContainerDiv">
+                                <div class="col-bg-4" style="margin-right: 0%;">
+                                    <div class="table-responsive">
+                                        <div class="auto-resize panel panel-default" data-height="130" id="realtime-datalist1">
+                                            <table class="table table-hover" id="dataTables-example1" style="font-size: 13px;">
+                                                <caption class="text-center">
+                                                	<img src="static/assets/img/line-icon.png" class="img-circle" width="21px" style="margin-right:10px"><span>曲线参数</span></caption>
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">指标</th>
+                                                    <th class="text-center">值</th>
+                                                    <th class="text-center">更新时间</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="realtimeTbody1">
+        
+                                                </tbody>
+                                            </table>
+                                            <!-- table -->
+                                        </div>
+                                        <!-- realtime-datalist -->
+                                    </div>
+                                </div>
+                                <div class="col-bg-4" style="margin-right: 0%; ">
+                                    <div class="table-responsive">
+                                        <div class="auto-resize panel panel-default" data-height="130" id="realtime-datalist3">
+                                            <table class="table table-hover" id="dataTables-example3" style="font-size: 13px;">
+                                                <caption class="text-center">
+                                                	<img src="static/assets/img/status-icon.png"  class="img-circle" width="21px" style="margin-right:10px;" ><span>状态参数</span></caption>
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">指标</th>
+                                                    <th class="text-center">值</th>
+                                                    <th class="text-center">更新时间</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="realtimeTbody3">
+        
+                                                </tbody>
+                                            </table>
+                                            <!-- table -->
+                                        </div>
+                                        <!-- realtime-datalist -->
+                                    </div>
+                                </div>                                
+                                <div class="col-bg-4">
+                                    <div class="table-responsive">
+                                        <div class="auto-resize panel panel-default" data-height="130" id="realtime-datalist2">
+                                            <table class="table table-hover" id="dataTables-example2" style="font-size: 13px;">
+                                                <caption class="text-center"><img src="static/assets/img/edit-icon.png" class="img-circle" width="21px" style="margin-right:10px"><span>设置参数</span></caption>
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">指标</th>
+                                                    <th class="text-center">值</th>
+                                                    <th class="text-center">更新时间</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="realtimeTbody2">
+        
+                                                </tbody>
+                                            </table>
+                                            <!-- table -->
+                                        </div>
+                                        <!-- realtime-datalist -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- panel-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="static/v2/assets/style/common/resize.js"></script>
+<script src="static/v2/assets/jquery/2.2.0/jQuery-2.2.0.min.js"></script>
+<script src="static/v2/assets/layer/3.0.3/layer.js"></script>
+<script src="static/v2/assets/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="static/v2/assets/iCheck/iCheck.min.js"></script>
+<script src="static/v2/assets/moment/2.18.1/moment.min.js"></script>
+<script src="static/v2/assets/highcharts/5.0.10/highcharts.js"></script>
+<script src="static/v2/assets/echarts/3.5.1/echarts.min.js"></script>
+    <script src="static/assets/js/Highcharts-4.2.3/modules/no-data-to-display.src.js"></script>
+<script src="static/v2/assets/vue/2.2.6/vue.min.js"></script>
+<script src="static/v2/assets/vue-resource/1.2.1/vue-resource.min.js"></script>
+<script src="static/v2/index/scripts/constant.js"></script>
+<script src="static/v2/monitor/scripts/onlineData_v2New.js"></script>
+
+</body>
+
+</html>

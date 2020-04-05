@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.sys.dao.PumpServiceValueDao">
+	<select id="findList" parameterType="com.wapwag.woss.modules.sys.entity.PumpServiceValue"
+		resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValue">
+		SELECT
+		<!-- 测试 -->
+		<if test="operType == 'test'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d %H:%i:%s') as
+			beginTime,
+		</if>
+		<!-- 分钟 -->
+		<if test="operType == 'ho'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d %H:%i') as beginTime,
+		</if>
+		<!-- 小时 -->
+		<if test="operType == 'da'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d %H') as beginTime,
+		</if>
+		<!-- 日 -->
+		<if test="operType == 'mo'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d') as beginTime,
+		</if>
+		<!-- 月 -->
+		<if test="operType == 'ye'">
+			DATE_FORMAT(sv.date_time,'%Y-%m') as beginTime,
+		</if>
+		GROUP_CONCAT(s.code, '|', truncate(sv.pv, 2)) as tagName,
+		GROUP_CONCAT(s.code, '|',count) as operType
+		FROM
+		<!-- 分钟 -->
+		<if test="operType == 'ho'">
+			service_values_hour sv
+		</if>
+		<!-- 小时 -->
+		<if test="operType == 'da'">
+			service_values_day sv
+		</if>
+		<!-- 日 -->
+		<if test="operType == 'mo'">
+			service_values_month sv
+		</if>
+		<!-- 月 -->
+		<if test="operType == 'ye'">
+			service_values_year sv
+		</if>
+		LEFT JOIN
+		services s
+		ON s.ID = sv.ID_SERVICE
+		where
+		sv.date_time &lt;=
+		#{endTime}
+		and
+		sv.date_time &gt;= #{beginTime}
+		and
+		sv.id_device =
+		#{deviceId} group by sv.date_time
+		order by sv.date_time desc
+	</select>
+	<select id="findAll" parameterType="com.wapwag.woss.modules.sys.entity.PumpServiceValue"
+		resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValue">
+		select temp.beginTime,temp.count,f.memo tagName,
+		case
+		truncate(temp.pv *
+		case when s.ratio is null then 1 else s.ratio end ,2)
+		when '0.00' then '0'
+		else
+		truncate(temp.pv * case when s.ratio is null then 1 else s.ratio end
+		,2)
+		end pv from (
+		SELECT
+		tag_name as tagName,
+		sv.count,
+		truncate(sv.pv, 2)
+		as pv,
+		<!-- 测试 -->
+		<if test="operType == 'test'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d %H:%i:%s') as beginTime
+		</if>
+		<!-- 分钟 -->
+		<if test="operType == 'ho'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d %H:%i') as beginTime
+		</if>
+		<!-- 小时 -->
+		<if test="operType == 'da'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d %H') as beginTime
+		</if>
+		<!-- 日 -->
+		<if test="operType == 'mo'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d') as beginTime
+		</if>
+		<!-- 月 -->
+		<if test="operType == 'ye'">
+			DATE_FORMAT(sv.date_time,'%Y-%m') as beginTime
+		</if>
+		,sv.id_service
+		FROM
+		<!-- 分钟 -->
+		<if test="operType == 'ho'">
+			service_values_hour sv
+		</if>
+		<!-- 小时 -->
+		<if test="operType == 'da'">
+			service_values_day sv
+		</if>
+		<!-- 日 -->
+		<if test="operType == 'mo'">
+			service_values_month sv
+		</if>
+		<!-- 月 -->
+		<if test="operType == 'ye'">
+			service_values_year sv
+		</if>
+		where
+		sv.date_time &lt;= #{endTime}
+		and
+		sv.date_time &gt;= #{beginTime}
+		and
+		sv.id_device = #{deviceId}
+		) temp join
+		services s on s.id =
+		temp.id_service join function f on f.id=s.id_function
+		order by beginTime desc
+	</select>
+	<select id="findOneAll" parameterType="com.wapwag.woss.modules.sys.entity.PumpServiceValue"
+		resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValue">
+		select temp.beginTime,temp.count,f.memo tagName,
+		case
+		truncate(temp.pv *
+		case when s.ratio is null then 1 else s.ratio end ,2)
+		when '0.00' then '0'
+		else
+		truncate(temp.pv * case when s.ratio is null then 1 else s.ratio end
+		,2)
+		end pv from (
+		SELECT
+		id_service,
+		tag_name as tagName,
+		sv.count,
+		truncate(sv.pv, 2) as pv,
+		<!-- 分钟 -->
+		<if test="operType == 'ho'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d %H:%i') as beginTime
+		</if>
+		<!-- 小时 -->
+		<if test="operType == 'da'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d %H') as beginTime
+		</if>
+		FROM
+		${tableName} sv
+		where
+		id_device = #{deviceId}
+
+		and
+		date_time &lt;=
+		#{endTime}
+		and
+		date_time &gt;= #{beginTime}
+		) temp join
+		services s on s.id
+		= temp.id_service join function f on f.id = s.id_function
+		order by beginTime desc
+	</select>
+	<select id="exportAll" parameterType="com.wapwag.woss.modules.sys.entity.PumpServiceValue"
+		resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValue">
+		SELECT
+		<!-- 测试 -->
+		<if test="operType == 'test'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d %H:%i:%s') as
+			beginTime,
+		</if>
+		<!-- 分钟 -->
+		<if test="operType == 'ho'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d %H:%i') as beginTime,
+		</if>
+		<!-- 小时 -->
+		<if test="operType == 'da'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d %H') as beginTime,
+		</if>
+		<!-- 日 -->
+		<if test="operType == 'mo'">
+			DATE_FORMAT(sv.date_time,'%Y-%m-%d') as beginTime,
+		</if>
+		<!-- 月 -->
+		<if test="operType == 'ye'">
+			DATE_FORMAT(sv.date_time,'%Y-%m') as beginTime,
+		</if>
+		GROUP_CONCAT(s.code, '|', truncate(sv.pv, 2)) as tagName,
+		GROUP_CONCAT(s.code, '|',count) as operType
+		FROM
+		<!-- 分钟 -->
+		<if test="operType == 'ho'">
+			service_values_hour sv
+		</if>
+		<!-- 小时 -->
+		<if test="operType == 'da'">
+			service_values_day sv
+		</if>
+		<!-- 日 -->
+		<if test="operType == 'mo'">
+			service_values_month sv
+		</if>
+		<!-- 月 -->
+		<if test="operType == 'ye'">
+			service_values_year sv
+		</if>
+		LEFT JOIN
+		services s
+		ON s.ID = sv.ID_SERVICE
+		where
+		sv.date_time &lt;
+		#{endTime}
+		and
+		sv.date_time &gt;= #{beginTime}
+		and
+		sv.id_device =
+		#{deviceId} group by sv.date_time
+		order by sv.date_time desc
+	</select>
+	<select id="countSum" parameterType="com.wapwag.woss.modules.sys.entity.PumpServiceValue"
+		resultType="java.lang.String">
+		SELECT
+		subString(tmp.date_time,1,19) from (
+		select
+		sv.date_time
+		FROM
+		<!-- 分钟 -->
+		<if test="operType == 'ho'">
+			service_values_hour sv
+		</if>
+		<!-- 小时 -->
+		<if test="operType == 'da'">
+			service_values_day sv
+		</if>
+		<!-- 日 -->
+		<if test="operType == 'mo'">
+			service_values_month sv
+		</if>
+		<!-- 月 -->
+		<if test="operType == 'ye'">
+			service_values_year sv
+		</if>
+		where
+		sv.date_time &lt;= #{endTime}
+		and
+		sv.date_time &gt;= #{beginTime}
+		and
+		sv.id_device = #{deviceId} group by sv.date_time
+		) tmp order by
+		tmp.date_time asc
+	</select>
+	<select id="countOneSum" parameterType="com.wapwag.woss.modules.sys.entity.PumpServiceValue"
+		resultType="java.lang.String">
+		SELECT
+		tmp.date_time from (
+		select
+		sv.date_time
+		FROM
+		${tableName} sv
+		where
+		sv.id_device = #{deviceId}
+		<if test="operType == 'da' ">
+			and
+			sv.date_time &lt;= #{endTime}
+			and
+			sv.date_time &gt;=
+			#{beginTime}
+		</if>
+		group by sv.date_time
+		) tmp
+	</select>
+	<select id="exitTable" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select count(table_name) from INFORMATION_SCHEMA.tables
+		where table_name =
+		#{tableName}
+	</select>
+	<select id="findServiceByDeviceID" resultType="java.lang.String">
+		select f.memo from
+		services s join function f on f.name = s.code where
+		s.id_device =
+		#{deviceId} order by f.id asc
+	</select>
+	<select id="powerStatisRel" resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValue">
+		select * from
+		${tableName} where id_device = #{deviceId}
+		and tag_name like '%功率%' and
+		pv &gt; 0
+		order by date_time desc
+		limit 0,1
+	</select>
+	<select id="powerStatis" resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValue">
+		select pv ,
+		substring(date_time,1,16) as remarks
+		from ${tableName} where
+		id_device =
+		#{deviceId}
+		and date_time &gt; #{beginTime} and
+		tag_name like '%功率%' and
+		pv &gt; 0
+	</select>
+	<select id="pumpRunStatis" resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValueNew">
+		select * from (
+		select
+		tag_name as
+		tagName, pv as min from (
+		SELECT
+		id_device,tag_name,pv,date_time FROM
+		${tagName} where
+		id_device =
+		#{deviceId} and date_time &gt; date_sub(now(), interval 2
+		Minute) order
+		by date_time desc
+		) aa group by aa.tag_name
+		) svs
+
+	</select>
+	<select id="frequencyStatisRel" resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValue">
+		select * from
+		${tableName} where id_device = #{deviceId}
+		and tag_name like '%频率%' and
+		pv &gt; 0
+		order by date_time desc
+		limit 0,1
+	</select>
+	<select id="frequencyStatis" resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValue">
+		select pv
+		,
+		substring(date_time,1,16) as remarks
+		from ${tableName} where
+		id_device =
+		#{deviceId}
+		and date_time &gt; #{beginTime} and
+		tag_name
+		like '%#%频率%'
+		and pv &gt; 0
+
+	</select>
+	<select id="performance" resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValue">
+		SELECT
+		concat(subString(sv.date_time,1,18),'0') as dateTime
+		,truncate(sv.pv,2) as
+		pv,substring(f.memo,1,2) as tagName,s.ratio FROM
+		${tableName} sv join services s on
+		s.id = sv.id_service
+		join function f
+		on f.id = s.id_function
+		where sv.id_device = #{deviceId} and
+		sv.date_time &gt; date_sub(now(),
+		interval 60 Minute) and
+		sv.pv &gt; 0
+		and
+		<if test="remarks == '01'">
+			f.memo like '%变频频率%'
+		</if>
+		<if test="remarks == '02'">
+			f.memo like '%电机功率%'
+		</if>
+		order by sv.date_time asc limit 100000
+	</select>
+	<select id="performanceRel" resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValue">
+		select unit as
+		remarks,pv,tagName,ratio from (
+		SELECT sv.id_service,f.unit,
+		truncate(sv.pv,2) as
+		pv,substring(f.memo,1,2) as tagName,s.ratio FROM
+		${tableName} sv join services s on
+		s.id = sv.id_service
+		join function f
+		on f.id = s.id_function
+		where sv.id_device = #{deviceId} and
+		sv.date_time &gt; date_sub(now(),
+		interval 2 Minute) and
+		sv.pv &gt; 0
+		and
+		(
+		f.memo like '%变频频率%'
+		or f.memo
+		like '%电机功率%'
+		)
+		order by sv.date_time
+		desc limit 0,10000
+		) vv group by id_service
+	</select>
+	<select id="pumpNames" resultType="java.lang.String">
+		select * from (
+		select
+		substring(f.memo,1,2) memo from services s join
+		function f on f.id =
+		s.id_function
+		where (f.memo like '%工频运行%' or f.memo
+		like '%变频运行%' or
+		f.memo like '%#水泵运行%') and s.id_device = #{deviceId}
+		) vv group by memo
+	</select>
+	<select id="energyMaxMin" resultType="com.wapwag.woss.modules.sys.entity.EnergyInfo">
+		select truncate(ele.pv,2) bEle,ele.name bPumpName,truncate(fow.pv,2) bFlow
+		,ele.id id from (
+		select sum(pv) pv,ph.name name,ph.id from
+		service_values_summary_day s join
+		device d on d.id = s.id_device join
+		pump_house ph on ph.id =
+		d.id_pump_house
+		where (tag_name like '%耗%' or
+		tag_name like '%电%') and pv &lt; 2000 and pv
+		&gt; 0 and date_time &gt;=
+		#{beginTime} and date_time &lt;= #{endTime}
+		group by ph.id
+		) ele
+		left join
+		(select sum(pv) pv,ph.name
+		name,d.id from service_values_summary_day s join
+		device d on d.id =
+		s.id_device join pump_house ph on ph.id =
+		d.id_pump_house
+		where
+		(tag_name like '%累计流量%') and pv &lt; 1000 and date_time &gt;=
+		#{beginTime} and date_time &lt;= #{endTime}
+		group by ph.id) fow on fow.id = ele.id
+		order by ele.pv ${name}
+		limit 10
+	</select>
+	<select id="energy" resultType="com.wapwag.woss.modules.sys.entity.EnergyInfo">
+		select truncate(ele.pv,2) bEle,ele.name as bPumpName,truncate(fow.pv,2)
+		bFlow,ele.id id from (
+		select sum(pv) pv,ph.name name,ph.id from
+		service_values_summary_day s
+		join device d on d.id = s.id_device join
+		pump_house ph on ph.id =
+		d.id_pump_house
+		where (tag_name like '%耗%' or
+		tag_name like '%电%') and pv &lt; 2000 and pv
+		&gt; 0 and date_time &gt;=
+		#{beginTime} and date_time &lt;= #{endTime}
+		group by ph.id
+		) ele
+		left join
+		(select sum(pv) pv,ph.name
+		name,d.id from service_values_summary_day s join
+		device d on d.id =
+		s.id_device join pump_house ph on ph.id =
+		d.id_pump_house
+		where
+		(tag_name like '%累计流量%') and pv &lt; 1000 and date_time &gt;=
+		#{beginTime} and date_time &lt;= #{endTime}
+		group by ph.id) fow on fow.id = ele.id
+		where ele.pv &gt; (
+		select avg(pv)*1.5 from (
+		select sum(pv) pv,ph.name name,d.id from
+		service_values_summary_day s join
+		device d on d.id = s.id_device join
+		pump_house ph on ph.id =
+		d.id_pump_house
+		where (tag_name like '%耗%' or
+		tag_name like '%电%') and pv &lt; 2000 and pv
+		&gt; 0 and date_time &gt;=
+		#{beginTime} and date_time &lt;= #{endTime}
+		group by ph.id
+		) aa
+		)
+		order by ele.pv desc
+		limit 20
+	</select>
+	
+	<select id="energyMaxMinDev" resultType="com.wapwag.woss.modules.sys.entity.EnergyInfo">
+		select truncate(ele.pv,2) bEle,ele.name bPumpName,truncate(fow.pv,2) bFlow
+		,ele.id id from (
+		select sum(pv) pv,ph.name name,d.id from
+		service_values_summary_day s join
+		device d on d.id = s.id_device join
+		pump_house ph on ph.id =
+		d.id_pump_house
+		where (tag_name like '%耗%' or
+		tag_name like '%电%') and pv &lt; 2000 and pv
+		&gt; 0 and date_time &gt;=
+		#{beginTime} and date_time &lt;= #{endTime}
+		group by d.id
+		) ele
+		left join
+		(select sum(pv) pv,ph.name
+		name,d.id from service_values_summary_day s join
+		device d on d.id =
+		s.id_device join pump_house ph on ph.id =
+		d.id_pump_house
+		where
+		(tag_name like '%累计流量%') and pv &lt; 1000 and date_time &gt;=
+		#{beginTime} and date_time &lt;= #{endTime}
+		group by d.id) fow on fow.id = ele.id
+		order by ele.pv ${name}
+		limit 10
+	</select>
+	<select id="energyDev" resultType="com.wapwag.woss.modules.sys.entity.EnergyInfo">
+		select truncate(ele.pv,2) bEle,ele.name as bPumpName,truncate(fow.pv,2)
+		bFlow,ele.id id from (
+		select sum(pv) pv,ph.name name,d.id from
+		service_values_summary_day s
+		join device d on d.id = s.id_device join
+		pump_house ph on ph.id =
+		d.id_pump_house
+		where (tag_name like '%耗%' or
+		tag_name like '%电%') and pv &lt; 2000 and pv
+		&gt; 0 and date_time &gt;=
+		#{beginTime} and date_time &lt;= #{endTime}
+		group by d.id
+		) ele
+		left join
+		(select sum(pv) pv,ph.name
+		name,d.id from service_values_summary_day s join
+		device d on d.id =
+		s.id_device join pump_house ph on ph.id =
+		d.id_pump_house
+		where
+		(tag_name like '%累计流量%') and pv &lt; 1000 and date_time &gt;=
+		#{beginTime} and date_time &lt;= #{endTime}
+		group by d.id) fow on fow.id = ele.id
+		where ele.pv &gt; (
+		select avg(pv)*1.5 from (
+		select sum(pv) pv,ph.name name,d.id from
+		service_values_summary_day s join
+		device d on d.id = s.id_device join
+		pump_house ph on ph.id =
+		d.id_pump_house
+		where (tag_name like '%耗%' or
+		tag_name like '%电%') and pv &lt; 2000 and pv
+		&gt; 0 and date_time &gt;=
+		#{beginTime} and date_time &lt;= #{endTime}
+		group by d.id
+		) aa
+		)
+		order by ele.pv desc
+		limit 20
+	</select>
+</mapper>
+	

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.AccessDeviceDao">
+    
+	<sql id="accessDeviceColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.memo AS "memo",
+		a.access_type AS "accessType",
+		a.lock_type AS "lockType",
+		a.connect_type AS "connectType",
+		a.manufactor AS "manufactor",
+		a.assemblor AS "assemblor",
+		a.acc_ip_addr AS "accIpAddr",
+		a.hkAccessDeviceId AS "macAddr",
+		a.install_date AS "installDate",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="accessDeviceJoins">
+	</sql>
+    
+	<select id="get" resultType="AccessDevice">
+		SELECT 
+			<include refid="accessDeviceColumns"/>
+		FROM access_device a
+		<include refid="accessDeviceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AccessDevice">
+		SELECT 
+			<include refid="accessDeviceColumns"/>
+		FROM access_device a
+		<include refid="accessDeviceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AccessDevice">
+		SELECT 
+			<include refid="accessDeviceColumns"/>
+		FROM access_device a
+		<include refid="accessDeviceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO access_device(
+			id,
+			name,
+			memo,
+			access_type,
+			lock_type,
+			connect_type,
+			manufactor,
+			assemblor,
+			acc_ip_addr,
+			mac_addr,
+			install_date,
+			del_flag
+		) VALUES (
+			#{id},
+			#{name},
+			#{memo},
+			#{accessType},
+			#{lockType},
+			#{connectType},
+			#{manufactor},
+			#{assemblor},
+			#{accIpAddr},
+			#{macAddr},
+			#{installDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE access_device SET 	
+			name = #{name},
+			memo = #{memo},
+			access_type = #{accessType},
+			lock_type = #{lockType},
+			connect_type = #{connectType},
+			manufactor = #{manufactor},
+			assemblor = #{assemblor},
+			acc_ip_addr = #{accIpAddr},
+			mac_addr = #{macAddr},
+			install_date = #{installDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE access_device SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	<select id="findByPumpId" resultType="AccessDevice">
+		SELECT
+			<include refid="accessDeviceColumns"/>
+		FROM access_device a
+		WHERE a.pump_house_id = #{pumpId}
+	</select>
+</mapper>

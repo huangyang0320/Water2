@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.home.dao.VideoDao">
+
+	<resultMap id="BaseResultMap" type="com.wapwag.woss.modules.home.entity.VideoInfo">
+		<id column="video_id" property="videoId" jdbcType="VARCHAR" />
+		<result column="video_name" property="videoName" jdbcType="VARCHAR" />
+		<result column="video_pump_house_id" property="pumpHouseId"
+			jdbcType="VARCHAR" />
+		<result column="monitor_ip" property="monitorIp" jdbcType="VARCHAR" />
+		<result column="monitor_port" property="monitorPort" jdbcType="INTEGER" />
+		<result column="memo" property="memo" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="hkVideoDeviceId" property="hkVideoDeviceId" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<select id="getVideoByCode" resultType="com.wapwag.woss.modules.home.entity.VideoInfo">
+		select
+		monitor_ip as videoNo,
+		userName as userName,
+		password as userPassword
+		from video_info
+		where monitor_ip = #{videoNo} limit 0,1
+	</select>
+
+	<select id="findVideoByPumpId" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		id,
+		CONCAT("视频：", NAME) NAME,
+		CONCAT("h", "--", pump_house_id) pid,
+		hkVideoDeviceId monitorIp,
+		monitor_port monitorPort,
+		channel_no channelNo
+		FROM
+		video_info
+		WHERE
+		id IN (
+		SELECT
+		vi.id
+		FROM
+		regional ri
+		LEFT JOIN project pi ON pi.ID_REGION = ri.id
+		LEFT JOIN pump_house
+		phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE =
+		phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN
+		video_info vi ON vi.pump_house_id = phi.id
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND vi.id IS NOT
+		NULL
+		GROUP BY
+		vi.id
+		)
+		GROUP BY
+		id
+	</select>
+
+	<select id="findVideoByPumpIdNew" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		id,
+		CONCAT("视频：", NAME) NAME,
+		CONCAT("h", "--", pump_house_id) pid,
+		hkVideoDeviceId monitorIp,
+		monitor_port monitorPort,
+		channel_no channelNo
+		FROM
+		video_info
+		WHERE
+		id IN (
+		SELECT
+		v.id
+		FROM
+		regional ri
+		LEFT JOIN project pi ON pi.ID_REGION = ri.id
+		LEFT JOIN pump_house
+		phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE =
+		phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN
+		video_info v ON v.pump_house_id = phi.id
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND
+		pi.region_type IS NOT NULL
+		AND v.id IS NOT NULL
+		GROUP BY
+		v.id
+		)
+		GROUP BY
+		id
+	</select>
+
+	<select id="findVideoByPumpIdAndOffice" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		id,
+		CONCAT("视频：", NAME) NAME,
+		CONCAT("h", "--", pump_house_id) pid,
+		hkVideoDeviceId monitorIp,
+		monitor_port monitorPort,
+		channel_no channelNo
+		FROM
+		video_info
+		WHERE
+		id IN (
+		SELECT
+		vi.id
+		FROM
+		project pi
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device
+		di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE =
+		di.ID
+		LEFT JOIN sys_office o ON o.id = pi.water_house_orgNode
+		LEFT JOIN
+		video_info vi ON vi.pump_house_id = phi.id
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = '1'
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = '1'
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND
+		pi.water_house_orgNode IS NOT NULL
+		AND vi.id IS NOT NULL
+		GROUP BY
+		vi.id
+		) group by id
+	</select>
+
+	<select id="findVideoByPumpIdAndBusiness" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		id,
+		CONCAT("视频：", NAME) NAME,
+		CONCAT("h", "--", pump_house_id) pid,
+		hkVideoDeviceId monitorIp,
+		monitor_port monitorPort,
+		channel_no channelNo
+		FROM
+		video_info
+		WHERE
+		id IN (
+		SELECT
+		vi.id
+		FROM
+		project pi
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device
+		di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE =
+		di.ID
+		LEFT JOIN sys_office o ON o.id = pi.business_place_orgNode
+		LEFT
+		JOIN video_info vi ON vi.pump_house_id = phi.id
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = 1
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = '1'
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND
+		pi.business_place_orgNode IS NOT NULL
+		AND vi.id IS NOT NULL
+		GROUP BY
+		vi.id
+		) group by id
+	</select>
+
+	<select id="findVideoByPumpIdAndWaterDepart" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		id,
+		CONCAT("视频：", NAME) NAME,
+		CONCAT("h", "--", pump_house_id) pid,
+		hkVideoDeviceId monitorIp,
+		monitor_port monitorPort,
+		channel_no channelNo
+		FROM
+		video_info
+		WHERE
+		id IN (
+		SELECT
+		v.id
+		FROM
+		project pi
+		LEFT JOIN regional r ON pi.ID_REGION = r.id
+		LEFT JOIN pump_house phi
+		ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE =
+		phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN
+		sys_office o ON o.id = pi.water_depart_orgNode
+		LEFT JOIN video_info v
+		ON v.pump_house_id = phi.id
+		WHERE
+		se.id IS NOT NULL
+		AND pi.ID_REGION IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND
+		pi.water_depart_orgNode IS NOT NULL
+		AND v.id IS NOT NULL
+		GROUP BY
+		v.id
+		)
+		GROUP BY
+		id
+	</select>
+
+	<select id="findVideoByWaterTypePumpId" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		SELECT
+		id,
+		CONCAT("视频：", NAME) NAME,
+		CONCAT("h", "--", pump_house_id) pid,
+		hkVideoDeviceId monitorIp,
+		monitor_port monitorPort,
+		channel_no channelNo
+		FROM
+		video_info
+		WHERE
+		id IN (
+
+		SELECT
+		v.id
+		FROM
+		project pi
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN sys_office o ON o.id = pi.water_depart_orgNode
+		LEFT JOIN video_info v ON v.pump_house_id = phi.id
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.water_depart_orgNode IS NOT NULL
+		AND v.id IS NOT NULL
+		AND pi.region_type IS NOT NULL
+		GROUP BY
+		v.id ) GROUP BY id
+	</select>
+
+	<select id="findVideoListByPumpId" resultMap="BaseResultMap">
+		SELECT * FROM video_info WHERE pump_house_id = #{pumpHouseId}
+	</select>
+
+	<!-- 查询海康基础配置 -->
+    <select id="hikConf" resultType="java.util.HashMap">
+        select value as label ,label as value from sys_dict where type = 'hik'
+    </select>
+
+	<select id="getAccessDataByPumpId" resultType="com.wapwag.woss.modules.home.util.hik.AccessData">
+        select
+            name,
+<!--             MAC_ADDR uuid -->
+hkAccessDeviceId uuid
+        from access_device where pump_house_id = #{pumpId} and hkAccessDeviceId is not null
+    </select>
+
+</mapper>

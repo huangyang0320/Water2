@@ -1,0 +1,63 @@
+<style type="text/css">
+    #alarm-area-compare {
+        margin-bottom: 10px;
+    }
+    .columns.columns-right {
+        position: absolute !important;
+        top: -63px;
+        right: -265px;
+    }
+    .panel-body {
+        padding: 15px 0 !important;
+    }
+    @media(min-width: 1920px){
+        .columns.columns-right {
+            right: -400px !important;
+        }
+    }
+/*     .table-bordered   tr , td {
+         border: 1px solid rgba(193, 193, 193, 0.21); !* 整体表格边框 *!
+     }*/
+</style>
+<div id="page-inner">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <form id="alermCount">
+                        <div class="query-parameter">
+                            <label>区域名称 : </label>
+                            <select id="areaId" name="areaId" class="device-id form-control input-text2">
+                            </select>
+                            <label>项目名称 : </label>
+                            <select id="projectId" name="projectId" class="device-id form-control input-text2">
+                            </select>
+                             <label>泵房名称 : </label>
+                            <input type="text" id="name" name="pumpHouseName" class="device-id form-control input-text2">
+                            <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
+                        </div>
+                   </form>
+                </div>
+
+                <div class="panel-body">
+                    <div class="col-md-9 col-xs-9">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="dataTables-example" data-reorderable-columns="true">
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xs-3" style="padding-right: 10px;">
+                        <div id="alarm-area-compare"></div>
+                        <div id="alarm-type-compare"></div>
+                    </div>
+                </div>
+            </div>
+            <!--End Advanced Tables -->
+        </div>
+    </div>
+    <!-- /. ROW  -->
+</div>
+
+<!-- Script -->
+<script src="static/assets/js/countAnalysis/pumpInfo.js"></script>

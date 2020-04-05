@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html id="bgPic">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>登录</title>
+	<link rel="stylesheet" type="text/css" href="static/login_bak/css/login.css">
+	<link rel="shortcut icon" id="iconPic" href="" type="image/x-icon">
+</head>
+<body>
+	<div class="wrapper">
+		<div class="left">
+        <img id="logoPic" src="">
+	</div>
+		<div class="right">
+			<form class="login-form">
+				<label>用户登录</label>
+				<hr>
+				<input type="text" class="uname" placeholder="账户" value="tang.yong02">
+				<input type="text" class="upwd" placeholder="密码">
+				<div class="error-box"></div>
+				<!--<hr>-->
+				<button type="button" id="login">
+					<span>登 录</span>
+					<div class="spinner">
+						<div class="bounce1"></div>
+						<div class="bounce2"></div>
+						<div class="bounce3"></div>
+					</div>
+				</button>
+			</form>
+		</div>
+	</div>
+
+	<!-- JavaScript -->
+	<script type="text/javascript" src="static/assets/login/js/jquery-1.8.2.js"></script>
+	<script type="text/javascript">
+		// 登录
+		$('#login').on('click', function() {
+			var _this = $(this);
+			_this.attr("disabled",true);
+			_this.children('span').hide();
+			_this.children('div.spinner').fadeIn();
+			setTimeout(function() {
+				_this.children('div.spinner').hide();
+				_this.children('span').fadeIn();
+				_this.removeAttr("disabled");
+			}, 3000);
+		});
+
+		// 回车键触发
+        $('body').keydown(function() {
+            var event = arguments.callee.caller.arguments[0]||window.event;// 消除浏览器差异
+            if (event.keyCode == '13') {//keyCode=13是回车键
+                $('#login').click();
+            }
+        });
+
+        $(function () {
+		    var $errorBox = $('.error-box');
+            var $uname = $('.uname');
+            var $upwd = $('.upwd');
+
+			$upwd.prop('type', 'password');
+			$('.upwd').val("Tytyty123!3");
+            $upwd.focus(function() {
+                $(this).prop('type', 'password');
+			});
+
+            var validate = function ($input) {
+                var value = $input.val();
+                var msg = $input.prop('placeholder');
+
+                if (value === '') {
+                    msg += '不能为空';
+                } /*else if (!/^[0-9a-zA-Z_]+$/.test(value)) {
+                    msg += '必须为数字或字母';
+                } else if (!/^[0-9a-zA-Z_]{5,20}$/.test(value)) {
+                    msg += '长度在5到20位之间';
+				}*/
+
+
+		/*	} else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,.\/])+$/.test(value)) {
+				msg += '必须为数字或字母';
+			} else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,.\/]){5,20}$/.test(value)) {
+				msg += '长度在5到20位之间';
+			}*/
+
+
+				if ($input.prop('placeholder') !== msg) {
+                    $errorBox.text(msg);
+				} else {
+                    $errorBox.text('');
+				}
+
+                return msg === $input.prop('placeholder');
+            };
+
+            var login = function () {
+                $errorBox.show();
+
+                if (validate($uname) && validate($upwd)) {
+
+                    var loginInfo = {
+                        "loginName": $uname.val(),
+                        "password": $upwd.val()
+                    };
+
+                    $.post("/HYWater/a/user/login", loginInfo, function(result) {
+                        $errorBox.text(result["result"]);
+                        if (result.hasOwnProperty("user")) {
+                            var user = result["user"];
+                            user["map"] = result["map"];
+                            localStorage.setItem("user", JSON.stringify(user));
+                            location.replace("/HYWater/index-" + result["map"] + ".html");
+                        }
+                    });
+                }
+            };
+
+            $('#login').on("click", login);
+
+            $.post("/HYWater/config/getProjectPic", function(result) {
+                //$("#logoPic").attr("src", "static/configResourse/"+result.projectPic+"/login_title.png");
+                $("#bgPic").css("background", "url(static/configResourse/"+result.projectPic+"/bg.jpg)");
+				$("#bgPic").css("background-size", "cover");//页面自动填充整个页面
+                //$("#iconPic").attr("href", "static/configResourse/"+result.projectPic+"/favicon.ico");
+            });
+        });
+	</script>
+</body>
+</html>

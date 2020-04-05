@@ -1,0 +1,259 @@
+@charset "utf-8";
+
+*:not(input) {
+    margin: 0;
+    padding: 0;
+    -moz-user-select: none;
+    /*火狐*/
+    -webkit-user-select: none;
+    /*webkit浏览器*/
+    -ms-user-select: none;
+    /*IE10*/
+    -khtml-user-select: none;
+    /*早期浏览器*/
+    user-select: none;
+}
+
+::-webkit-input-placeholder {
+    color: #999;
+    font-size: 12px;
+}
+
+::-moz-placeholder {
+    color: #999;
+    font-size: 12px;
+}
+
+
+/* firefox 19+ */
+
+:-ms-input-placeholder {
+    color: #999;
+    font-size: 12px;
+}
+
+
+/* ie */
+
+input:-moz-placeholder {
+    color: #999;
+    font-size: 12px;
+}
+
+div,
+input {
+    -moz-box-sizing: border-box;
+    /*Firefox3.5+*/
+    -webkit-box-sizing: border-box;
+    /*Safari3.2+*/
+    -o-box-sizing: border-box;
+    /*Opera9.6*/
+    -ms-box-sizing: border-box;
+    /*IE8*/
+    box-sizing: border-box;
+}
+
+
+/*html*/
+
+html {
+    width: 100%;
+    height: 100%;
+    min-width: 1094px;
+    min-height: 424px;
+    /*background: url(/resourse_file/bg.jpg);*/
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+body {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Microsoft YaHei';
+}
+
+
+/*wrapper*/
+
+.wrapper {
+    position: absolute;
+    width: 1094px;
+    height: 424px;
+    top: 50%;
+    left: 50%;
+    margin-top: -212px;
+    margin-left: -547px;
+}
+
+.wrapper .left {
+    position: relative;
+    width: 600px;
+    /*height: 126px;*/
+    float: left;
+}
+
+.wrapper .left img {
+   /* height: 100%;*/
+}
+
+.wrapper .right {
+    position: relative;
+    width: 353px;
+    height: 100%;
+    padding: 47px 35px 65px 34px;
+    /* box-shadow: 2px 2px 10px #999;
+    /* background: url(../images/login.png);*/
+    float: right;
+}
+
+.wrapper .right .login-form {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.wrapper .right .login-form label {
+    display: block;
+    margin-bottom: 23px;
+    font-size: 24px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.wrapper .right .login-form hr {
+    height: 1px;
+    border: none;
+    border-top: 1px solid #bdbdbd;
+}
+
+.wrapper .right .login-form input {
+    display: block;
+    width: 100%;
+    height: 40px;
+    padding: 5px 10px 5px 50px;
+    color: #666;
+    font-size: 15px;
+    border: 1px solid #bdbdbd;
+    outline: none;
+}
+
+.wrapper .right .login-form input:focus {
+    box-shadow: 0 0 2px #333;
+}
+
+input.uname {
+    margin: 34px 0 25px 0;
+    background: #fff url(../images/uname.png) no-repeat;
+}
+
+input.upwd {
+    margin: 0 0 41px 0;
+    background: #fff url(../images/upwd.png) no-repeat;
+}
+
+.wrapper .right .login-form button {
+    display: block;
+    width: 100%;
+    height: 40px;
+    margin-top: 35px;
+    color: #fff;
+    font-size: 18px;
+    line-height: 40px;
+    border: none;
+    outline: none;
+    background-color: #42868d;
+    cursor: pointer;
+}
+
+.wrapper .right .login-form button:hover {
+    background-color: #209aa0;
+}
+
+
+.spinner {
+	display: none;
+    margin: 0 auto;
+    width: 150px;
+    text-align: center;
+}
+
+.spinner>div {
+    width: 15px;
+    height: 15px;
+    background-color: #1682da;
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
+    animation: bouncedelay 1.4s infinite ease-in-out;
+    /* Prevent first frame from flickering when animation starts */
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.spinner .bounce1 {
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+}
+
+@-webkit-keyframes bouncedelay {
+    0%,
+    80%,
+    100% {
+        -webkit-transform: scale(0.0)
+    }
+    40% {
+        -webkit-transform: scale(1.0)
+    }
+}
+
+@keyframes bouncedelay {
+    0%,
+    80%,
+    100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    }
+    40% {
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+    }
+}
+
+
+
+/*media*/
+
+@media screen and (max-width: 1366px) {
+    .wrapper .left {
+        height: 90px;
+        margin: 120px 0 0 120px;
+    }
+}
+
+@media screen and (min-width: 1367px) {
+    .wrapper .left {
+        height: 126px;
+        margin: 120px 0 0 0;
+    }
+}
+
+/*error-box*/
+.error-box {
+	display: none;
+    position: absolute;
+	width: 100%;
+	height: 30px;
+	top: 200px;
+	color: red;
+	font-size: 12px;
+	line-height: 30px;
+	text-align: center;
+}

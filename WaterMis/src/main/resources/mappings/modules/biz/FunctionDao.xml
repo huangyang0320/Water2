@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.FunctionDao">
+   <resultMap id="BaseResultMap" type="com.wapwag.woss.modules.biz.entity.Function">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CODE" jdbcType="VARCHAR" property="code" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="MEMO" jdbcType="VARCHAR" property="memo" />
+    <result column="TYPE" jdbcType="VARCHAR" property="type" />
+    <result column="DATA_TYPE" jdbcType="VARCHAR" property="dataType" />
+    <result column="UNIT" jdbcType="VARCHAR" property="unit" />
+    <result column="INIT_VALUE" jdbcType="DECIMAL" property="initValue" />
+    <result column="NORM_VALUE" jdbcType="DECIMAL" property="normValue" />
+    <result column="MIN_RV" jdbcType="DECIMAL" property="minRv" />
+    <result column="MAX_RV" jdbcType="DECIMAL" property="maxRv" />
+    <result column="DECIMAL" jdbcType="DECIMAL" property="decimal" />
+    <result column="RATIO" jdbcType="DECIMAL" property="ratio" />
+    <result column="IS_ALARM" jdbcType="INTEGER" property="isAlarm" />
+    <result column="IS_CUMULATIVE" jdbcType="INTEGER" property="isCumulative" />
+    <result column="IS_PARAM_SETTING" jdbcType="INTEGER" property="isParamSetting" />
+    <result column="IS_RESPONSIBLE" jdbcType="INTEGER" property="isResponsible" />
+    <result column="IS_PARAM_STATUS" jdbcType="INTEGER" property="isParamStatus" />
+    <result column="IS_RANGEABLE" jdbcType="INTEGER" property="isRangeable" />
+    <result column="VERSION" jdbcType="VARCHAR" property="version" />
+  </resultMap>
+  <sql id="Function_Base_Column_List">
+    ID, CODE, NAME, MEMO, TYPE, DATA_TYPE, UNIT, INIT_VALUE, NORM_VALUE, MIN_RV, MAX_RV, 
+    RATIO, IS_ALARM, IS_CUMULATIVE, IS_PARAM_SETTING, IS_RESPONSIBLE, IS_PARAM_STATUS, 
+    IS_RANGEABLE, VERSION
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Function_Base_Column_List" />
+    from function
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+	<sql id="functionColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.type AS "type",
+		a.data_type AS "dataType",
+		a.range_min AS "rangeMin",
+		a.range_max AS "rangeMax",
+		a.unit AS "unit",
+		a.memo AS "memo"
+	</sql>
+	<sql id="Base_Column_List">
+		a.id,
+		a.name,
+		a.type,
+		a.data_type,
+		a.range_min,
+		a.range_max,
+		a.unit,
+		a.memo
+	</sql>
+	<sql id="functionJoins">
+	</sql>
+    
+	<select id="get" resultType="Function">
+		SELECT 
+			<include refid="functionColumns"/>
+		FROM function a
+		<include refid="functionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Function">
+		SELECT 
+			<include refid="functionColumns"/>
+		FROM function a
+		<include refid="functionJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Function">
+		SELECT 
+			<include refid="functionColumns"/>
+		FROM function a
+		<include refid="functionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO function(
+			id,
+			name,
+			type,
+			id_device,
+			id_service_group,
+			data_type,
+			enable_alarm,
+			enable_value_alarm,
+			enable_alarm_response,
+			range_min,
+			range_max,
+			unit,
+			memo
+		) VALUES (
+			#{id},
+			#{name},
+			#{type},
+			#{device.id},
+			#{serviceGroup.id},
+			#{dataType},
+			#{enableAlarm},
+			#{enableValueAlarm},
+			#{enableAlarmResponse},
+			#{rangeMin},
+			#{rangeMax},
+			#{unit},
+			#{memo}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE function SET 	
+			name = #{name},
+			type = #{type},
+			id_device = #{device.id},
+			id_service_group = #{serviceGroup.id},
+			data_type = #{dataType},
+			enable_alarm = #{enableAlarm},
+			enable_value_alarm = #{enableValueAlarm},
+			enable_alarm_response = #{enableAlarmResponse},
+			range_min = #{rangeMin},
+			range_max = #{rangeMax},
+			unit = #{unit},
+			memo = #{memo}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM function
+		WHERE id = #{id}
+	</update>
+	<select id="getByDeviceIds"  resultMap="BaseResultMap">
+	select 
+	<include refid="Function_Base_Column_List"/> 
+	from
+		(SELECT
+			f.*
+		FROM
+			device d
+			JOIN services s ON s.ID_DEVICE = d.id
+			JOIN FUNCTION f ON f.id = s.ID_FUNCTION 
+		WHERE s.node_display='0'
+			and d.id IN 
+			 <foreach collection="deviceIds.split(',')" item="item" index="index" open="(" separator="," close=")">
+      			#{item}
+    		</foreach>
+			 ) tmp
+			group by <include refid="Function_Base_Column_List"/> 
+			order by id
+	</select>
+</mapper>

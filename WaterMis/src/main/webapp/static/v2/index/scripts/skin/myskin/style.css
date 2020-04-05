@@ -1,0 +1,9 @@
+/*
+ * define personal styles for layer skin
+ * author: superdongguo
+ * time: 2017-04-11
+ */
+
+body .layer-ext-myskin .layui-layer-title{
+	background-color: #5C97DE;
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>登录</title>
+	<link rel="stylesheet" type="text/css" href="static/login_bak/css/login.css">
+	<link rel="shortcut icon" id="iconPic" href="" type="image/x-icon">
+
+
+	<script src="static/assets/js/jquery-1.10.2.js"></script>
+	<script src="static/assets/js/jquery-form.js"></script>
+	<script src="static/assets/js/jQuery.base64.js"></script>
+</head>
+<body>
+<p>正在进入后台管理系统.......</p>
+</body>
+<script>
+	$(function(){
+		mgSysLogin("http://localhost:8080/HFWater/admin/login","admin","HYadmin");
+	})
+	function mgSysLogin(url,username,password) {
+		jQuery.ajax({
+			type: 'POST',
+			contentType: 'application/json',
+			url: url,
+			data:{username:username,password:password},
+			dataType: 'json',
+			success: function (data) {
+				//LOADING.hide();
+				window.location.href="http://localhost:8080/HFWater/admin"
+
+			},
+			error: function (data) {
+				//LOADING.hide();
+			}
+		});
+	}
+</script>
+</html>

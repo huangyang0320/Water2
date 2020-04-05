@@ -1,0 +1,219 @@
+<style type="text/css">
+    .panel {
+        margin-bottom: 10px;
+    }
+	.chart-container {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    .margin-bottom {
+        margin-bottom: 0px;
+    }
+    .breadcrumb a {
+        color: #fff;
+        margin: 0 5px;
+        padding: 5px 20px;
+        border-radius: 15px;
+        background: #0278E7;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .breadcrumb a:hover {
+        background: #2e69c1;
+    }
+    .total-icon, .total-value {
+        float: left;
+    }
+    .total-icon {
+        width: 30%;
+        padding: 14px 0;
+    }
+    .total-icon .fa-size {
+        cursor: pointer;
+        font-size: 4em;
+    }
+    .total-value {
+        width: 70%;
+    }
+    .total-value h3 {
+        margin-top: 25px;
+        font-size: 28px;
+    }
+    #areaCountLocation {
+        /*padding-left: 25%;*/
+        padding: 0 15%;
+        font-size: 12px;
+        line-height: 12px;
+    }
+    #areaCountLocation label {
+        float: left;
+    }
+    #areaCountLocation span {
+        float: right;
+    }
+    #areaCountLocation br {
+        clear: both;
+    }
+    #myTab li {
+        cursor: pointer;
+    }
+    .lastDay, .nextDay {
+        margin-right: 20px;
+        float: right;
+    }
+    .lastDay:focus, .nextDay:focus {
+        outline: none;
+    }
+    @media screen and (min-width: 1920px){
+        .total-value {
+            width: 60%;
+        }
+        .total-icon .fa-size {
+            font-size: 5em;
+        }
+        .total-value h3 {
+            margin-top: 30px;
+            font-size: 32px;
+        }
+    }
+</style>
+<div id="page-inner">
+    <div class="chart-container">
+        <!-- /. ROW  -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="breadcrumb" id="viewpage_link">
+                    <a href="home-map-baiduNew.html" title="地图导航">进入地图</a>
+                    <a href="realtimeDataNew.html" title="实时数据">实时数据</a>
+                    <!--<a href="javascript:;" onclick="showSCADA()" title="SCADA导航">SCADA</a>-->
+                </div>
+            </div>
+        </div>
+        <!-- /. ROW  -->
+        <div class="row">
+            <div class="col-md-3 col-sm-12 col-xs-12">
+                <div class="panel panel-primary text-center no-boder bg-color-green">
+                    <div class="panel-body">
+                        <div class="total-icon"><i class="fa fa-home fa-size"></i></div>
+                        <div class="total-value"><h3 id="deviceSum">--</h3></div>
+                    </div>
+                    <div class="panel-footer back-footer-green">
+                        泵房总计 ( 个 )
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-12 col-xs-12">
+                <div class="panel panel-primary text-center no-boder bg-color-blue">
+                    <div class="panel-body">
+                        <div class="total-icon"><i class="fa fa-bolt fa-size"></i></div>
+                        <div class="total-value"><h3 id="deviceElement">--</h3></div>
+                    </div>
+                    <div class="panel-footer back-footer-blue">
+                        累积电量 ( kWh )
+                    </div>
+                </div>
+            </div>
+             <div class="col-md-3 col-sm-12 col-xs-12">
+                <div class="panel panel-primary text-center no-boder bg-color-red">
+                    <div class="panel-body" style="padding-bottom: 14px;">
+                        <div class="total-icon"><i class="fa fa-tint fa-size"></i></div>
+                        <div class="total-value"><h3 id="deviceFlow">--</h3></div>
+                    </div>
+                    <div class="panel-footer back-footer-red">
+                        累积流量 ( m³ )
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-12 col-xs-12">
+                <div class="panel panel-primary text-center no-boder bg-color-brown">
+                    <div class="panel-body">
+                        <div class="total-icon" id="click_to_showAlarm"><i class="fa fa-exclamation-circle fa-size"></i></div>
+                        <div class="total-value"><h3 id="systemRunTime">--</h3></div>
+                    </div>
+                    <div class="panel-footer back-footer-brown">
+                        	当月告警次数 (次 )
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /. ROW  -->
+        <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="deviceTypeAccounting"></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="areaDeviceAccounting"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- /. ROW  -->
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel panel-default">
+                    <!-- panel-body -->
+                    <div class="panel-body">
+                        <ul id="myTab" class="nav nav-tabs">
+                            <li id="ele1" class="active"><a data-toggle="tab">日</a></li>
+                            <li id="ele2"><a data-toggle="tab">月</a></li>
+                            <li id="ele3"><a data-toggle="tab">年</a></li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <!-- day -->
+                            <div class="tab-pane fade in active" id="day-dailyElectricityCompare">
+                                <div id="dailyElectricityCompare"></div>
+                                <div class="btn btn-success nextDay disabled" id="nextDayEle">下一天</div>
+                                <div class="btn btn-success lastDay" id="lastDayEle">上一天</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- panel-body end -->
+                </div>
+            </div>
+        </div>
+        <!-- /. ROW  -->
+        <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="MaintenanceCompareByArea"></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="AlarmCompareByType"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- /. ROW  -->
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="panel panel-default margin-bottom">
+                    <div class="panel-body">
+                        <div id="dailyAlarmCompare"></div>
+                        <div class="btn btn-danger nextDay disabled" id="nextDayAla">下一天</div>
+                        <div class="btn btn-danger lastDay" id="lastDayAla">上一天</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /. ROW  -->
+    </div>
+</div>
+<!-- /. PAGE INNER  -->
+<script type="text/javascript" src="static/assets/js/systemOverview/systemOverview.js"></script>

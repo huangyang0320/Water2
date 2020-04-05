@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.DeviceSetLabelDao">
+    
+	<sql id="deviceSetLabelColumns">
+		a.id AS "id",
+		a.device_id AS "device.id",
+		a.equipment_model_no AS "equipmentModelNo",
+		a.pupmp_model_no AS "pupmpModelNo",
+		a.sbedgsll AS "sbedgsll",
+		a.power_rating AS "powerRating",
+		a.wlg_gg AS "wlgGg",
+		a.shapge_size AS "shapgeSize",
+		a.llkzq AS "llkzq",
+		a.qyg_gg AS "qygGg",
+		a.sx_gg AS "sxGg",
+		a.weight AS "weight",
+		a.environmental_temperature AS "environmentalTemperature",
+		a.pump_quantity AS "pumpQuantity",
+		a.cabinet_model_no AS "cabinetModelNo",
+		a.power_voltage AS "powerVoltage",
+		a.sbedgsyc AS "sbedgsyc",
+		a.total_power AS "totalPower",
+		a.zyzz_gg AS "zyzzGg",
+		a.scbcq AS "scbcq",
+		a.ex_factory_date AS "exFactoryDate",
+		a.full_device_xh AS "fullDeviceXh",
+		a.zn_yinshui AS "znYinshui",
+		a.fb_xinghao AS "fbXinghao",
+		a.qt_guige AS "qtGuige",
+		a.sl_kongzhi AS "slKongzhi",
+		a.wy_buchang AS "wyBuchang"
+	</sql>
+	
+	<sql id="deviceSetLabelJoins">
+	</sql>
+    
+	<select id="get" resultType="DeviceSetLabel">
+		SELECT 
+			<include refid="deviceSetLabelColumns"/>
+		FROM device_set_label a
+		<include refid="deviceSetLabelJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DeviceSetLabel">
+		SELECT 
+			<include refid="deviceSetLabelColumns"/>
+		FROM device_set_label a
+		<include refid="deviceSetLabelJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DeviceSetLabel">
+		SELECT 
+			<include refid="deviceSetLabelColumns"/>
+		FROM device_set_label a
+		<include refid="deviceSetLabelJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO device_set_label(
+			id,
+			device_id,
+			equipment_model_no,
+			pupmp_model_no,
+			sbedgsll,
+			power_rating,
+			wlg_gg,
+			shapge_size,
+			llkzq,
+			qyg_gg,
+			sx_gg,
+			weight,
+			environmental_temperature,
+			pump_quantity,
+			cabinet_model_no,
+			power_voltage,
+			sbedgsyc,
+			total_power,
+			zyzz_gg,
+			scbcq,
+			ex_factory_date,
+			full_device_xh,
+			zn_yinshui,
+			fb_xinghao,
+			qt_guige,
+			sl_kongzhi,
+			wy_buchang
+		) VALUES (
+			#{id},
+			#{device.id},
+			#{equipmentModelNo},
+			#{pupmpModelNo},
+			#{sbedgsll},
+			#{powerRating},
+			#{wlgGg},
+			#{shapgeSize},
+			#{llkzq},
+			#{qygGg},
+			#{sxGg},
+			#{weight},
+			#{environmentalTemperature},
+			#{pumpQuantity},
+			#{cabinetModelNo},
+			#{powerVoltage},
+			#{sbedgsyc},
+			#{totalPower},
+			#{zyzzGg},
+			#{scbcq},
+			#{exFactoryDate},
+			#{fullDeviceXh},
+			#{znYinshui},
+			#{fbXinghao},
+			#{qtGuige},
+			#{slKongzhi},
+			#{wyBuchang}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE device_set_label SET 	
+			device_id = #{device.id},
+			equipment_model_no = #{equipmentModelNo},
+			pupmp_model_no = #{pupmpModelNo},
+			sbedgsll = #{sbedgsll},
+			power_rating = #{powerRating},
+			wlg_gg = #{wlgGg},
+			shapge_size = #{shapgeSize},
+			llkzq = #{llkzq},
+			qyg_gg = #{qygGg},
+			sx_gg = #{sxGg},
+			weight = #{weight},
+			environmental_temperature = #{environmentalTemperature},
+			pump_quantity = #{pumpQuantity},
+			cabinet_model_no = #{cabinetModelNo},
+			power_voltage = #{powerVoltage},
+			sbedgsyc = #{sbedgsyc},
+			total_power = #{totalPower},
+			zyzz_gg = #{zyzzGg},
+			scbcq = #{scbcq},
+			ex_factory_date = #{exFactoryDate},
+			full_device_xh = #{fullDeviceXh},
+			zn_yinshui = #{znYinshui},
+			fb_xinghao = #{fbXinghao},
+			qt_guige = #{qtGuige},
+			sl_kongzhi = #{slKongzhi},
+			wy_buchang = #{wyBuchang}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM device_set_label
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

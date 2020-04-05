@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.sys.dao.AlarmDao">
+
+	<select id="findListCount" resultType="java.lang.String">
+		select count(a.device_id) from
+		(select device_id,project_id from alarm_info where
+		alarm_time &lt;= #{endTime}
+		and
+		alarm_time &gt;= #{beginTime}
+		<if test="deviceId != null and deviceId != ''">
+			and device_id = #{deviceId}
+		</if>
+		<if test="alarmType != null and alarmType != ''">
+			and alarm_type = #{alarmType}
+		</if>
+		<if test="pumpHouseId != null and pumpHouseId != ''">
+			and pump_house_id = #{pumpHouseId}
+		</if>
+		) a 
+		<if test="projectId != null and projectId != ''">
+			left join project p on p.id = a.project_id where  
+			p.id_region = #{projectId}
+		</if>
+	</select>
+	<select id="findList" resultType="com.wapwag.woss.modules.sys.entity.Alarm">
+		SELECT
+		a.alarm_Id as alarmId,
+		p.name as projectName,
+		p.id as projectId,
+		d.name as deviceName,
+		d.id as deviceId,
+		h.name as pumpHouseId,
+		a.alarm_Content as alarmContent,
+		s.label as alarmType,
+		ss.label as alarmReason,
+		a.alarm_time as alarmTime,
+		r.name as area,
+		DATE_FORMAT(a.alarm_time,'%Y-%m-%d %H:%i:%s') as alarmTimeStr
+		FROM
+		(
+		select * from alarm_info alarm  left JOIN project pp ON alarm.project_id = pp.id
+		 where
+		alarm.alarm_time &lt;= #{endTime}
+		and
+		alarm.alarm_time &gt;= #{beginTime}
+		<if test="deviceId != null and deviceId != ''">
+			and device_id = #{deviceId}
+		</if>
+		<if test="alarmType != null and alarmType != ''">
+			and alarm.alarm_type = #{alarmType}
+		</if>
+		<if test="pumpHouseId != null and pumpHouseId != ''">
+			and alarm.pump_house_id = #{pumpHouseId}
+		</if>
+		<if test="projectId != null and projectId != ''">
+			and pp.id_region = #{projectId}
+		</if>
+		order by alarm.alarm_time desc
+		limit #{minMun} , #{maxNum}
+		) a
+		left JOIN device d ON a.device_id = d.id
+		left JOIN project p ON d.id_project = p.id
+		left JOIN pump_house h ON d.id_pump_house = h.id
+		left join regional r on h.ID_REGION = r.id
+		left join ( select value,label from sys_dict where type = 'alarm' ) s on a.alarm_type = s.value
+		left join ( select value,label from sys_dict where type = 'alarm_reason' ) ss on a.alarm_Reason = ss.value
+	</select>
+	<select id="exportList" resultType="com.wapwag.woss.modules.sys.entity.Alarm">
+		SELECT
+		a.alarm_Id as alarmId,
+		p.name as projectName,
+		p.id as projectId,
+		d.name as deviceName,
+		d.id as deviceId,
+		h.name as pumpHouseId,
+		a.alarm_Content as alarmContent,
+		a.alarm_Reason as alarmReason,
+		s.label as alarmType,
+		a.alarm_time as alarmTime,
+		r.name as area,
+		DATE_FORMAT(a.alarm_time,'%Y-%m-%d %H:%i:%s') as alarmTimeStr
+		FROM alarm_info a
+		JOIN device d ON
+		a.device_id = d.id
+		JOIN project p ON d.id_project = p.id
+		JOIN pump_house h ON d.id_pump_house = h.id
+		join regional r on h.ID_REGION = r.id
+		join sys_dict s on a.alarm_type =
+		s.value
+		where
+		a.alarm_time &lt;= #{endTime}
+		and
+		s.type='alarm'
+		and
+		a.alarm_time &gt;= #{beginTime}
+		<if test="deviceId != null and deviceId != ''">
+			and a.device_Id like '%${deviceId}%'
+		</if>
+		<if test="alarmType != null and alarmType != ''">
+			and a.alarm_type = #{alarmType}
+		</if>
+		<if test="pumpHouseId != null and pumpHouseId != ''">
+			and h.id = #{pumpHouseId}
+		</if>
+		<if test="projectId != null and projectId != ''">
+			and h.id_region = #{projectId}
+		</if>
+		order by a.alarm_time desc
+		limit 0 ,#{exportMustNum}
+	</select>
+
+	<select id="areaAlarmCount" resultType="com.wapwag.woss.modules.sys.entity.Alarm">
+		select
+		r.name as alarmId,
+			count(r.name) as remarks
+		from (
+		select alarm.pump_house_id from alarm_info alarm  left JOIN project pp ON alarm.project_id = pp.id
+		 where
+		alarm.alarm_time &lt;= #{endTime}
+		and
+		alarm.alarm_time &gt;= #{beginTime}
+		<if test="alarmType != null and alarmType != ''">
+			and alarm.alarm_type = #{alarmType}
+		</if>
+		<if test="deviceId != null and deviceId != ''">
+			and alarm.device_id = #{deviceId}
+		</if>
+		<if test="pumpHouseId != null and pumpHouseId != ''">
+			and alarm.pump_house_id = #{pumpHouseId}
+		</if>
+		<if test="projectId != null and projectId != ''">
+			and pp.id_region = #{projectId}
+		</if>
+		) a
+		left join pump_house h on a.pump_house_id = h.id
+		left join regional r on h.ID_REGION = r.id
+		group by r.name
+	</select>
+	<select id="typeAlarmCount" resultType="com.wapwag.woss.modules.sys.entity.Alarm">
+		select
+		s.label as alarmId,
+			count(a.alarm_type) as remarks
+		from (
+		select alarm.alarm_type from alarm_info alarm  left JOIN project pp ON alarm.project_id = pp.id
+		 where
+		alarm.alarm_time &lt;= #{endTime}
+		and
+		alarm.alarm_time &gt;= #{beginTime}
+		<if test="deviceId != null and deviceId != ''">
+			and alarm.device_id = #{deviceId}
+		</if>
+		<if test="alarmType != null and alarmType != ''">
+			and alarm.alarm_type = #{alarmType}
+		</if>
+		<if test="pumpHouseId != null and pumpHouseId != ''">
+			and alarm.pump_house_id = #{pumpHouseId}
+		</if>
+		<if test="projectId != null and projectId != ''">
+			and pp.id_region = #{projectId}
+		</if>
+		) a
+		left join ( select value,label from sys_dict where type = 'alarm' ) s on a.alarm_type = s.value  
+		group by a.alarm_type
+	</select>
+	<select id="getAlarmType" resultType="com.wapwag.woss.modules.sys.entity.Alarm">
+		select
+		d.id as deviceId ,
+		d.label as deviceName
+		from sys_dict d
+		where d.type = #{type}
+	</select>
+	<select id="countAlarmTimes" resultType="com.wapwag.woss.modules.sys.entity.Alarm">
+		select ss.alarm as alarmId,count(ss.alarm) as remarks from (
+		select 
+			DATE_FORMAT(a.alarm_time,'%Y-%m-%d') as  alarm
+			from
+		(select alarm_time,device_id,project_id from alarm_info where
+		alarm_time &lt;= #{endTime}
+		and
+		alarm_time &gt;= #{beginTime}
+		<if test="deviceId != null and deviceId != ''">
+			and device_id = #{deviceId}
+		</if>
+		<if test="alarmType != null and alarmType != ''">
+			and alarm_type = #{alarmType}
+		</if>
+		<if test="pumpHouseId != null and pumpHouseId != ''">
+			and pump_house_id = #{pumpHouseId}
+		</if>
+		) a 
+		<if test="projectId != null and projectId != ''">
+			left join project p on p.id = a.project_id where  
+			p.id_region = #{projectId}
+		</if>
+		order by a.alarm_time desc
+		) ss group by ss.alarm
+	</select>
+</mapper>

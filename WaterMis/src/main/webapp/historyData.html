@@ -1,0 +1,216 @@
+<style type="text/css">
+	/*
+	 * inline styles
+	 * history data styles
+	 */
+	#page-inner {
+        padding: 0 10px 10px 10px;
+    }
+    .panel-body {
+        padding: 6px 15px;
+    }
+	 .time-superposition .download-data {
+	 	line-height: 20px;
+	 	font-size: 14px;
+	 	border: 1px solid transparent;
+	 	border-radius: 4px;
+	 	margin-left: 20px;
+	 	outline: none;
+	 }
+	 #highcharts-history-data,
+	 #highcharts-history-data2 {
+	 	position: relative;
+	 	width: 100%;
+	 	overflow: hidden;
+	 }
+	 #device-norm-data,
+	 #device-norm-data2 {
+	 	overflow-y: scroll;
+	 	border: 1px solid #ccc;
+	 }
+.colour_black_0 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #FFB6C1;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_1 {
+    display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #778899;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_2 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #ADD8E6;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_3 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #E1FFFF;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_4 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #20B2AA;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_5 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #90EE90;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_6 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #F08080;
+    border: none;
+    cursor: pointer;
+}
+</style>
+<form id="queryForm" style="display: none">
+	<input name="deviceId" type="hidden">
+	<input name="index" type="hidden">
+	<input name="dimen" type="hidden">
+	<input name="startDate" type="hidden">
+	<input name="endDate" type="hidden">
+    <input name="addOnDate" type="hidden">
+</form>
+<div id="page-inner">
+	<div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div id="selectedDevice"></div>
+        </div>
+    </div>
+	<div class="row">
+		<div class="col-xs-12 col-md-12">
+			<div class="chart-time">
+				<div class="time-length" id="time-length">
+					<label>统计时长 : </label>
+					<span class="hourtime active">时</span>
+					<span class="daytime">日</span>
+					<span class="monthtime">月</span>
+					<span class="yeartime">年</span>
+				</div>
+				<div class="time-period">
+					<label for="statisticDate">统计时段 : </label>
+					<input type="text" readonly class="form_datetime form-control timepicker" id="statisticDate">
+				</div>
+				<div class="time-superposition">
+					<label for="addOnTime">叠加时长 : </label>
+					<select class="superposition" id="addOnTime" style="width:50px"></select>
+					<button class="download-data btn-primary" id="export">导出数据</button>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!--/.row-->
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default">
+                <div>
+                     <div class="col-md-9 col-sm-12 col-xs-12">
+                    <ul id="myTab" class="nav nav-tabs">
+					   <li class="active"><a href="#tongbi-chart" data-toggle="tab">同比曲线</a></li>
+					   <li><a href="#huanbi-chart" data-toggle="tab">环比曲线</a></li>
+					</ul>
+                </div>
+                 <div class="col-md-3 col-sm-12 col-xs-12">
+                    <ul id="myTab" class="nav nav-tabs">
+					   <li class="active"><a id="moni" data-toggle="tab">模拟参量</a></li>
+					   <li><a id="statPar" data-toggle="tab">状态参数</a></li>
+					</ul>
+                </div>
+                </div>
+                
+				<div id="myTabContent" class="tab-content">
+				   <div class="tab-pane fade in active" id="tongbi-chart">
+				      	<div class="panel-body">
+				      		<div class="col-md-9 col-sm-12 col-xs-12">
+				      			<div id="highcharts-history-data" class="chart-height"></div>
+				      			<!-- tongbi chart -->
+				      		</div>
+				      		<div class="col-md-3 col-sm-12 col-xs-12">
+					            <div id="device-norm-data" class="chart-height">
+			                    	<ul class="list-group"></ul>
+			                    </div>
+						        <!-- DEVICELIST -->
+				      		</div>
+                		</div>
+				   </div>
+				   <div class="tab-pane fade" id="huanbi-chart">
+				      	<div class="panel-body">
+                    		<div class="col-md-9 col-sm-12 col-xs-12">
+				      			<div id="highcharts-history-data2" class="chart-height"></div>
+				      			<!-- huanbi chart -->
+				      		</div>
+				      		<div class="col-md-3 col-sm-12 col-xs-12">
+					            <div id="device-norm-data2" class="chart-height">
+			                    	<ul class="list-group"></ul>
+			                    </div>
+						        <!-- DEVICELIST -->
+						    </div>
+                		</div>
+				   </div>
+				</div>
+            </div>
+            <!-- panel -->
+        </div>
+        <!-- col-md-12 -->
+    </div>
+    <!-- /. ROW  -->
+</div>
+<!-- /. PAGE INNER  -->
+<script src="static/assets/js/realtimeMonitor/historyData.js"></script>

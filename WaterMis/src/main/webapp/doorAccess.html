@@ -1,0 +1,65 @@
+<style type="text/css">
+    .columns.columns-right {
+        position: absolute !important;
+        top: 9px;
+        right: 40px;
+    }
+</style>
+<div id="page-inner">
+    <div class="row">
+        <div class="col-md-8 col-xs-8">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <form id="countSubmit">
+                        <div class="query-parameter">
+                            <label>开启时间 : </label>
+                            <input id="beginTime" name="beginTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-begin timepicker">
+                            <label>结束时间 : </label>
+                            <input id="endTime" name="endTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-begin timepicker">
+                            <label>登录用户 : </label>
+                            <input id="userName"class="device-id form-control input-text2">
+                            <input type="hidden" id="pumpHouseId">
+                            <input type="hidden" id="user" name="userId">
+                            <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="dataTables-example">
+                            <thead>
+                                <tr>
+                                    <th data-field="doorId" class="text-center">门禁编号</th>
+                                    <th data-field="doorName"class="text-center">门禁名称</th>
+                                    <th data-field="userId"class="text-center">登录用户</th>
+                                    <th data-field="beginTime"class="text-center">开启时间</th>
+                                    <th data-field="endTime"class="text-center">结束时间</th>
+                                    <th data-visible="false" data-field="pumpHouseId"class="text-center">泵房名称</th>
+                                    <th data-visible="false" data-field="remark"class="text-center">备注</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+            <!--End Advanced Tables -->
+        </div>
+        <div class="col-md-4 col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="entertimes-title">
+                        <span>不同人员进出泵房次数对比</span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="entertimes-compare"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /. ROW  -->
+</div>
+<!-- Script -->
+<script src="static/assets/js/productionManage/doorAccess.js"></script>

@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.sys.dao.PumpDeviceRepairDao" >
+  <resultMap id="BaseResultMap" type="com.wapwag.woss.modules.sys.entity.PumpDeviceRepair" >
+    <id column="breakdown_id" property="breakdownId" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="device_id" property="deviceId" jdbcType="VARCHAR" />
+    <result column="pump_house_id" property="pumpHouseId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="repair_time" property="repairTime" jdbcType="TIMESTAMP" />
+    <result column="repair_content" property="repairContent" jdbcType="VARCHAR" />
+    <result column="ACCESSORIES_XH" property="accessoriesXh" jdbcType="VARCHAR" />
+    <result column="FAULT_REASON" property="faultReason" jdbcType="VARCHAR" />
+    <result column="solution" property="solution" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="createTIME" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    p.breakdown_id, 
+    pro.name as project_id, 
+    d.name as device_id, 
+    h.name as pump_house_id, 
+    u.name as user_name,
+    u.no as user_id, 
+    p.repair_time,
+    DATE_FORMAT(p.repair_time,'%Y-%m-%d %H:%i:%s') as repairDate,
+    p.repair_content, 
+    p.ACCESSORIES_XH, 
+    p.FAULT_REASON, 
+    p.solution, 
+    p.MEMO, 
+    DATE_FORMAT(p.createTIME,'%Y-%m-%d %H:%i:%s') as createTIME,
+    DATE_FORMAT(p.updatetime,'%Y-%m-%d %H:%i:%s') as updatetime
+  </sql>
+  <select id="findList" resultType="com.wapwag.woss.modules.sys.entity.PumpDeviceRepair">
+  	select  
+  	  <include refid="Base_Column_List" />
+  	from pump_device_repair_info p
+  		left join project pro on p.project_id = pro.id
+    	left join device d on p.device_id = d.id
+    	left join pump_house h on p.pump_house_id = h.id
+    	left join sys_user u on p.user_id = u.id
+    where p.breakdown_id &lt;&gt; '-1'
+  	<if test="projectId != null and projectId != ''">
+  		and p.project_id = #{projectId}
+  	</if>
+  	<if test="userId != null and userId != ''">
+  		and p.user_id in 
+  		(select s.id from sys_user s where s.name like  '%${userId}%' or no like '%${userId}%')
+  	</if>
+  	and p.device_id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userName}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userName}))
+			GROUP BY authobject_id
+		)
+  	order by p.repair_time desc
+  </select>
+  <select id="exportAll" resultType="com.wapwag.woss.modules.sys.entity.PumpDeviceRepair">
+  	select  
+  	  <include refid="Base_Column_List" />
+  	from pump_device_repair_info p
+  		left join project pro on p.project_id = pro.id
+    	left join device d on p.device_id = d.id
+    	left join pump_house h on p.pump_house_id = h.id
+    	left join sys_user u on p.user_id = u.id
+    where p.breakdown_id &lt;&gt; '-1'
+  	<if test="projectId != null and projectId != ''">
+  		and p.project_id = #{projectId}
+  	</if>
+  	<if test="userId != null and userId != ''">
+  		and p.user_id in 
+  		(select s.id from sys_user s where s.name like  '%${userId}%' or no like '%${userId}%')
+  	</if>
+  	and p.device_id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userName}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userName}))
+			GROUP BY authobject_id
+		)
+  	limit 0 ,#{exportMustNum}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from pump_device_repair_info
+    where breakdown_id = #{breakdownId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from pump_device_repair_info
+    where breakdown_id = #{breakdownId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wapwag.woss.modules.sys.entity.PumpDeviceRepair" >
+    insert into pump_device_repair_info (breakdown_id, project_id, device_id, 
+      pump_house_id, user_id, repair_time, 
+      repair_content, ACCESSORIES_XH, FAULT_REASON, 
+      solution, MEMO, createTIME, 
+      updatetime)
+    values (#{breakdownId,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{deviceId,jdbcType=VARCHAR}, 
+      #{pumpHouseId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{repairTime,jdbcType=TIMESTAMP}, 
+      #{repairContent,jdbcType=VARCHAR}, #{accessoriesXh,jdbcType=VARCHAR}, #{faultReason,jdbcType=VARCHAR}, 
+      #{solution,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wapwag.woss.modules.sys.entity.PumpDeviceRepair" >
+    insert into pump_device_repair_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="breakdownId != null" >
+        breakdown_id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="deviceId != null" >
+        device_id,
+      </if>
+      <if test="pumpHouseId != null" >
+        pump_house_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="repairTime != null" >
+        repair_time,
+      </if>
+      <if test="repairContent != null" >
+        repair_content,
+      </if>
+      <if test="accessoriesXh != null" >
+        ACCESSORIES_XH,
+      </if>
+      <if test="faultReason != null" >
+        FAULT_REASON,
+      </if>
+      <if test="solution != null" >
+        solution,
+      </if>
+      <if test="memo != null" >
+        MEMO,
+      </if>
+      <if test="createtime != null" >
+        createTIME,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="breakdownId != null" >
+        #{breakdownId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null" >
+        #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="pumpHouseId != null" >
+        #{pumpHouseId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="repairTime != null" >
+        #{repairTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="repairContent != null" >
+        #{repairContent,jdbcType=VARCHAR},
+      </if>
+      <if test="accessoriesXh != null" >
+        #{accessoriesXh,jdbcType=VARCHAR},
+      </if>
+      <if test="faultReason != null" >
+        #{faultReason,jdbcType=VARCHAR},
+      </if>
+      <if test="solution != null" >
+        #{solution,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wapwag.woss.modules.sys.entity.PumpDeviceRepair" >
+    update pump_device_repair_info
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null" >
+        device_id = #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="pumpHouseId != null" >
+        pump_house_id = #{pumpHouseId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="repairTime != null" >
+        repair_time = #{repairTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="repairContent != null" >
+        repair_content = #{repairContent,jdbcType=VARCHAR},
+      </if>
+      <if test="accessoriesXh != null" >
+        ACCESSORIES_XH = #{accessoriesXh,jdbcType=VARCHAR},
+      </if>
+      <if test="faultReason != null" >
+        FAULT_REASON = #{faultReason,jdbcType=VARCHAR},
+      </if>
+      <if test="solution != null" >
+        solution = #{solution,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        MEMO = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTIME = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where breakdown_id = #{breakdownId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wapwag.woss.modules.sys.entity.PumpDeviceRepair" >
+    update pump_device_repair_info
+    set project_id = #{projectId,jdbcType=VARCHAR},
+      device_id = #{deviceId,jdbcType=VARCHAR},
+      pump_house_id = #{pumpHouseId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      repair_time = #{repairTime,jdbcType=TIMESTAMP},
+      repair_content = #{repairContent,jdbcType=VARCHAR},
+      ACCESSORIES_XH = #{accessoriesXh,jdbcType=VARCHAR},
+      FAULT_REASON = #{faultReason,jdbcType=VARCHAR},
+      solution = #{solution,jdbcType=VARCHAR},
+      MEMO = #{memo,jdbcType=VARCHAR},
+      createTIME = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP}
+    where breakdown_id = #{breakdownId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,694 @@
+<style type="text/css">
+	.anchorBL{display:none}
+    .BMap_stdMpType0 {right: 30px !important}
+	.row {
+		margin-right: -4px;
+    	margin-left: -4px;
+	}
+    .container-bg {
+        position: absolute;
+        border:  1px solid #ccc;
+        border-radius: 5px;
+        background-color: #204e7f;
+        opacity: 0.5;
+        z-index: 1;
+    }
+    .container-choose {
+        position: absolute;
+        text-align: center;
+        z-index: 2;
+    }
+	.choose-bg {
+        width: 450px;
+        height: 50px;
+        left: 50px;
+        top: 36px;
+    }
+    .choose-button {
+        width: 430px;
+        height: 50px;
+        left: 60px;
+        top: 32px;
+    }
+    .choose-button button {
+        padding: 3px 15px;
+        border: 1px solid #fff;
+        color: #fff;
+        font-size: 13px;
+        font-family: "Microsoft YaHei";
+        background-color: transparent;
+    }
+    .choose-button button:hover,
+    .choose-button button:focus,
+    .choose-button button:visited,
+    .choose-button button:active {
+        border: 1px solid #fff;
+        color: #fff;
+        background-color: #09C;
+    }
+    .choose-button label {
+        margin: 18px 8px 0 40px;
+        color: #fff;
+        font-size: 13px;
+        font-family: "Microsoft YaHei";
+        font-weight: normal;
+    }
+    .choose-button select {
+        width: 92px;
+        color: #666;
+        font-size: 13px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+    .selectedDevice {
+        width: 450px;
+        height: 30px;
+        padding: 0 10px;
+        left: 50px;
+        top: 6px;
+        color: #fff;
+        line-height: 30px;
+    }
+    /*hoverInfo*/
+    .hoverInfo {
+        display: none;
+        position: fixed;
+        min-width: 180px;
+        height: auto;
+        color: #fff;
+        font-size: 12px;
+        line-height: 18px;
+        background: #09C;
+        border: 1px solid #60e8e3;
+        border-radius: 5px;
+        opacity: 0.8;
+        z-index: 2;
+    }
+    .hoverInfo ul {
+        margin: 0;
+        padding: 8px;
+        width: 100%;
+        height: 100%;
+    }
+    .hoverInfo ul li {
+        list-style: none;
+    }
+</style>
+<div class="row">
+    <div class="container-bg choose-bg"></div>
+	<div class="container-choose choose-button">
+        <!--<button class="btn btn-default" onclick="showSCADA()">SCADA</button>-->
+        <button class="btn btn-default" onclick="showAllPumphouses()">所有泵房</button>
+        <label>区域定位 : </label>
+        <select id="areaId" onchange="toAreaPump(this.value)">
+
+        </select>
+    </div>
+    <div class="container-bg selectedDevice"></div>
+    <div class="container-choose selectedDevice" id="selectedDevice"></div>
+    <div class="hoverInfo" id="pumpHouseSummary">
+        <ul>
+            <li>泵房编号：<span class="pumpHouseId"></span></li>
+            <li>泵房名称：<span class="pumpHouseName"></span></li>
+            <li>泵后压力(MPa)：<span class="device-index outletPressure"></span></li>
+            <li>耗电量(kWh)：<span class="device-index activePower"></span></li>
+        </ul>
+    </div>
+
+    <!-- /.CHOOSE BUTTON -->
+    <div id="baiduMap"></div>
+</div>
+<!-- Baidu Map Js -->
+<script type="text/javascript">
+    var MAP, selectDevice, showAllPumpHouse, console, showPic, showVideo, showSummary, showSummaryDelay, DIALOG_REQUEST;
+
+    var color = new Array("#09aa05","#aa0608","#1e33aa","#aa7163","#aa682b","#0d21aa");
+    //标注区域边界
+    function setArea(areaName,color){
+        MAP.enableScrollWheelZoom(true);
+
+        var bdary = new BMap.Boundary();
+        bdary.get(areaName, function(rs){       //获取行政区域
+            // MAP.clearOverlays();        //清除地图覆盖物
+            var count = rs.boundaries.length; //行政区域的点有多少个
+            for(var i = 0; i < count; i++){
+                var ply = new BMap.Polygon(rs.boundaries[i], {
+                    strokeWeight: 3,
+                    strokeOpacity:0,
+                    strokeColor: color,
+                    fillColor:color,
+                    fillOpacity:.15,
+                    strokeStyle:"solid",
+                    enableClicking:!1
+                }); //建立多边形覆盖物
+                MAP.addOverlay(ply);  //添加覆盖物
+                //MAP.setViewport(ply.getPath());    //调整视野
+            }
+        });
+    }
+
+
+    pageLoading(initBd);
+    function initBd(){
+        var top = $(".top-navbar").height()+20;
+        var height = $(window).height() - top;
+        var $baiduMap = $("#baiduMap");
+        $baiduMap.height(height + 5);
+        $baiduMap.css("overflow", "hidden");
+        $("#page-wrapper").css("overflow-y", "hidden");
+
+        $(window).resize(function() {
+            $("#baiduMap").height(height + 5);
+        });
+        MAP = new BMap.Map("baiduMap");
+        // 百度地图API功能
+        var point = new BMap.Point(118.434261,31.264748);
+        MAP.centerAndZoom(point, 13);
+
+        var myStyleJson = [
+            {
+                "featureType": "mountain",
+                "elementType": "geometry.stroke"/*,
+                "stylers": {
+                    "visibility": "off"
+                }*/
+            }
+        ]
+        MAP.setMapStyle({styleJson: myStyleJson });
+
+
+
+
+
+
+        showPic = function (pic) {
+            $.dialog({
+                id: 'device-pic',
+                title: '泵房图片',
+                content: 'url:device-pic.html?' + pic,
+                width: 520,
+                height: 435,
+                fixed: true,
+                max: false,
+                min: false,
+                resize: false,
+                lock: true,
+                top:50,
+                background: '#000',
+                opacity: 0.65,
+                ok: false,
+                drag: false,
+                init:function () {
+                    this.iframe.contentWindow.addEventListener("dblclick", function (ev) {
+                        this.frameElement.api.close();
+                    });
+                }
+            });
+        };
+
+        showVideo = function (video) {
+
+
+         /*   var url = 'videoBaidu.html?videoNo=' + video + '&rnd=' + new Date().getTime();  //要打开的网页地址
+            var features = "height=500, width=800, top=100, left=100, toolbar=no, menubar=no,scrollbars=no,resizable=no, location=no, status=no";  //设置新窗口的特性//动态生成一个超链接
+            //document.write('<a href="c.biancheng.net" target="newW">切换到C语言中文网首页</a>');
+            var me = window.open(url, new Date().getTime(), features);  //打开新窗口
+*/
+            $.dialog({
+                id: 'device-video',
+                title: '泵房视频',
+                content: 'url:videoBaidu.html?videoNo=' + video + '&rnd=' + new Date().getTime(),
+                width: 900,
+                height: 460,
+                top:110,
+                left:304,
+                fixed: true,
+                max: true,
+                min: false,
+                resize: false,
+                lock: true,
+                background: '#000',
+                opacity:1,
+                ok: false,
+                drag: false
+                /*,
+                button: [{
+                    name: '云镜控制',
+                    callback: function() {
+                        this.iframe.contentWindow.toggleBtn();
+                        return false;
+                    }
+                }]*/
+            });
+        };
+
+        showSummary = function (marker) {
+            var pumpHouse = marker.pumpHouse;
+            if($("#pumpHouseSummary ul").attr("class") != pumpHouse.pumpHouseName){
+                var detailHtml = '<li>泵房编号：<span class="pumpHouseId">'+pumpHouse.pumpHouseId+'</span></li>';
+                detailHtml += '<li>泵房名称：<span class="pumpHouseName">'+pumpHouse.pumpHouseName+'</span></li>';
+                $("#pumpHouseSummary").html('<ul class="'+pumpHouse.pumpHouseName+'">'+detailHtml+'</ul>')
+                $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json',
+                    url: parent.CONTEXT_PATH + "/monitor/statistic/" + pumpHouse.pumpHouseId + "/mapRealDetail",
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if(res){
+                            var detailHtml = '<li>泵房编号：<span class="pumpHouseId">'+pumpHouse.pumpHouseId+'</span></li>';
+                            detailHtml += '<li>泵房名称：<span class="pumpHouseName">'+pumpHouse.pumpHouseName+'</span></li>';
+                            detailHtml += '<li>泵房地址：<span class="pumpHouseName">'+pumpHouse.address+'</span></li>';
+                            detailHtml += '<li>供应商联系方式：<span class="pumpHouseName">'+pumpHouse.deviceManufacturersInformation+'</span></li>';
+                            detailHtml += '<li>物业联系方式：<span class="pumpHouseName">'+pumpHouse.propertyInformation+'</span></li>';
+                            /*detailHtml += '<li>告警信息：<span class="pumpHouseName">'+'无'+'</span></li>';*/
+                            for(var i = 0;i < res.length;i++){
+                                detailHtml += '<li>'+res[i].name+' 出口压力(MPa)：<span>'+res[i].memo+'</span></li>';
+                            }
+                            $("#pumpHouseSummary ."+pumpHouse.pumpHouseName).html(detailHtml);
+                        }
+                    }
+                })
+            }
+        };
+        callRefresh();
+        initAreaBtn(GLOBAL_REGION_LIST);
+    };
+    function initAreaBtn(areaList) {
+        window.pumpList = [];
+        var  $areaOption =  '<option>请选择区域</option>'
+        var k=0;
+        areaList.map(function (val) {
+            var objthis = {};
+           // if(val.pId && val.pId =="0" || val.pId =="320300") {
+            if(val.pId && val.pId =="340200") {
+                objthis.lati = val.lati;
+                objthis.longi = val.longi;
+                objthis.areaId = val.id;
+                objthis.areaName = val.name;
+                objthis = JSON.stringify(objthis);
+                if(objthis.length > 2){
+                    $areaOption += '<option value=' + objthis + '>'+ val["name"] +'</option>';
+                   // setArea(val["name"],color[k++])
+                }
+            }
+            if(val.pumpHouseId){
+                window.pumpList.push(val)
+            }
+        })
+        $('#areaId').html($areaOption);
+    }
+
+    function callRefresh() {
+        var pumpHouseId = GLOBAL_SELECT_DEVICE.pumpHouseId;
+    	if('FIRST_IN' == ALARM_TO_MAP_PUMP_ID){
+    		return;
+    	}
+    	if("" != ALARM_TO_MAP_PUMP_ID){
+    		pumpHouseId = ALARM_TO_MAP_PUMP_ID;
+    		GLOBAL_SELECT_DEVICE.pumpHouseId = pumpHouseId;
+    		ALARM_TO_MAP_PUMP_ID = "";
+    	}
+        LOADING.show();
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: CONTEXT_PATH + '/monitor/statistic/findPumpHouseInfoById',
+            data: JSON.stringify({
+                pumpHouseId: pumpHouseId
+            }),
+            dataType: 'JSON',
+            success: function (res) {
+                GLOBAL_PUMP_MSG_MAP = res;
+/*                console.log("------------------------");
+                console.log(res);
+                console.log(GLOBAL_REGION_LIST);*/
+                callRefreshInit(res);
+                LOADING.hide();
+            }
+        })
+    }
+    function callRefreshInit(pump) {
+        MAP.clearOverlays();
+        var map = MAP;
+        if(pump.pumpHouseStatus == 1){
+            var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
+        }else{
+            var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
+        }
+
+        var overlays = map.getOverlays();
+        var pumpHouse = {
+            "pumpHouseId":pump.pumpHouseId,
+            "longi":pump.longi,
+            "lati":pump.lati,
+            "deviceId":pump.id,
+            "pumpHouseName":pump.pumpHouseName,
+            "address":pump.address,
+            "monitorIpList":pump.monitorIpList,
+            "allPicUrl":pump.allPicUrl,
+            "deviceManufacturersInformation":pump.deviceManufacturersInformation,
+            "propertyInformation":pump.propertyInformation
+        };
+
+        if (pumpHouse["longi"] && pumpHouse["lati"]) {
+            var content = "<iframe id='deviceDialog"+ pump.pumpHouseId + "' style='top: 102px' width='443px' height='415px' frameborder='no' border='0' " +
+                "marginwidth='0' marginheight='0' scrolling='no' " +
+                "src='deviceDialog.html'></iframe>";
+            var infoWindow = new BMap.InfoWindow(content);
+            var point = new BMap.Point(pumpHouse["longi"], pumpHouse["lati"]);
+
+            if (overlays && overlays.length > 0) {
+                for (var i = 0; i < overlays.length; i++) {
+                    var overlay = overlays[i];
+                    if (point.equals(overlay.getPosition())) {
+                        point = overlay.getPosition();
+                    }
+                }
+            }
+            // 添加泵房图标
+            var myIcon = new BMap.Icon(mapPicUrl, new BMap.Size(68, 44), {
+                offset: new BMap.Size(117.981866, 34.310691),
+                imageOffset: new BMap.Size(0, 4)
+            });
+            var marker = new BMap.Marker(point, {icon: myIcon});
+            // map.clearOverlays()
+            map.addOverlay(marker);
+            map.centerAndZoom(point, 12);
+
+            marker.pumpHouse = pumpHouse;
+
+            marker.deviceDialogSummary = "<iframe id='deviceDialog' width='400px' height='215px' frameborder='no' border='0' " +
+                "marginwidth='0' marginheight='0' scrolling='no' " +
+                "src='deviceDialogSummary.html?" + pumpHouse["pumpHouseId"] + "'></iframe>";
+
+            marker.addEventListener("mouseover", function (event) {
+                var $wrapper = $("#wrapper");
+                var $pumpHouseSummary = $("#pumpHouseSummary");
+
+                var w1 = $wrapper.width();
+                var h1 = $wrapper.height();
+                var w2 = $pumpHouseSummary.width();
+                var h2 = $pumpHouseSummary.height();
+                var showX = event.clientX;
+                var showY = event.clientY;
+                if (showX >= (w1 - w2)) {
+                    $pumpHouseSummary.css("left", (showX - w2 - 5) + "px");
+                } else {
+                    $pumpHouseSummary.css("left", showX + "px");
+                }
+                if (showY >= (h1 - h2)) {
+                    $pumpHouseSummary.css("top", (showY - h2 - 5) + "px");
+                } else {
+                    $pumpHouseSummary.css("top", showY + "px");
+                }
+                $pumpHouseSummary.fadeIn().stop(true, true);
+                showSummary(this);
+            });
+
+            marker.addEventListener("mouseout", function () {
+                $("#pumpHouseSummary").hide();
+                if (showSummary && showSummaryDelay) {
+                    if (DIALOG_REQUEST) {
+                        DIALOG_REQUEST.abort();
+                    }
+                    clearTimeout(showSummaryDelay);
+                }
+            });
+
+            marker.addEventListener("click", function showWindowMap(e) {
+                $("#pumpHouseSummary").hide();
+                GLOBAL_PUMP_MSG_MAP = e.target.pumpHouse;
+                if (showSummary && showSummaryDelay) {
+                    if (DIALOG_REQUEST) {
+                        DIALOG_REQUEST.abort();
+                    }
+                    clearTimeout(showSummaryDelay);
+                }
+                this.openInfoWindow(infoWindow);
+            });
+            marker.openInfoWindow(infoWindow);
+            map.addControl(new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_RIGHT}));        // 添加平移缩放控件
+            map.addControl(new BMap.OverviewMapControl());       //添加缩略地图控件
+            map.enableScrollWheelZoom();//启用滚轮放大缩小
+        }
+
+        var k=0;
+        GLOBAL_REGION_LIST.map(function (val) {
+            console.log(val["name"]);
+            if(val["name"].indexOf(pumpHouse.pumpHouseName)>0){
+                GLOBAL_REGION_LIST.map(function (v) {
+                    if(v.id==val.pId) {
+                        setArea(v["name"], color[k++])
+                    }
+                })
+            }
+        })
+    }
+
+function doClean() {
+    var $deviceDialog = $("#deviceDialog");
+    if ($deviceDialog.length > 0) {
+        $deviceDialog[0].contentWindow.doClean();
+    }
+}
+
+
+var sendDataMapTree = {}
+sendDataMapTree.userId = GLOBAL_LOGIN_USER['userId'];
+sendDataMapTree.isSpread = false;
+
+/**
+ * 区域搜索
+ */
+function toAreaPump(point) {
+   /* var areaPonit = JSON.parse(point)
+    // 平移地图到区域点
+    var pointthis = new BMap.Point(areaPonit.longi, areaPonit.lati);
+    MAP.setZoom(13); // 设置缩放级别
+    MAP.setCenter(pointthis);
+    MAP.panTo(pointthis);*/
+
+
+    //清理之前的渲染图层
+    MAP.clearOverlays();
+   var areaPonit = JSON.parse(point)
+    // 平移地图到区域点
+    var pointthis = new BMap.Point(areaPonit.longi, areaPonit.lati);
+    var areaId = areaPonit.areaId;
+
+    MAP.setZoom(12); // 设置缩放级别
+    MAP.setCenter(pointthis);
+    MAP.panTo(pointthis);
+
+
+    areaMapClick(areaId);
+
+
+
+}
+
+/**
+ *  展示所有泵房
+ */
+function showAllPumphouses() {
+    LOADING.show();
+    MAP.clearOverlays()
+    var content = "<iframe id='deviceDialog' width='400px' height='415px' frameborder='no' border='0' " +
+        "marginwidth='0' marginheight='0' scrolling='no' " +
+        "src='deviceDialog.html'></iframe>";
+    var infoWindow = new BMap.InfoWindow(content);
+    window.infoWindow = infoWindow;
+    var allPumpArray = []
+    window.pumpList.map(function (v) {
+        allPumpArray.push(v.pumpHouseId);
+    })
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: CONTEXT_PATH + '/monitor/statistic/pumpOnlineStat',
+        data: JSON.stringify(allPumpArray) ,
+        dataType: 'JSON',
+        success: function (res) {
+            window.pumpList.map(function (v) {
+                var pointM = new BMap.Point(v.longi, v.lati);
+                var pumpHouse = {
+                    "pumpHouseId":v.pumpHouseId,
+                    "longi":v.longi,
+                    "lati":v.lati,
+                    "deviceId":v.id,
+                    "pumpHouseName":v.title,
+                    "address":v.address,
+                    "deviceManufacturersInformation":v.deviceManufacturersInformation,
+                    "propertyInformation":v.propertyInformation
+                };
+                if(isInArray(res, v.pumpHouseId)){
+                    var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
+                }else{
+                    var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
+                }
+                addMarker(pointM, pumpHouse, mapPicUrl);
+            })
+
+            $.post("/HYWater/config/getMapPoint", function(result) {
+                MAP.centerAndZoom(new BMap.Point(result.longi, result.lati), result.level);
+            });
+            LOADING.hide();
+
+
+            var k=0;
+            GLOBAL_REGION_LIST.map(function (val) {
+                if(val.pId && val.pId =="340200") {
+                    setArea(val["name"], color[k++])
+                }
+            })
+
+        }
+    })
+}
+
+function areaMapClick(areaId) {
+    var allPumpArray = []
+        window.pumpList.map(function (v) {
+            if(areaId==v.pId){
+                allPumpArray.push(v.pumpHouseId);
+            }
+        })
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: CONTEXT_PATH + '/monitor/statistic/pumpOnlineStat',
+        data: JSON.stringify(allPumpArray) ,
+        dataType: 'JSON',
+        success: function (res) {
+            window.pumpList.map(function (v) {
+                if(areaId==v.pId){
+                    var pointM = new BMap.Point(v.longi, v.lati);
+                    var pumpHouse = {
+                        "pumpHouseId":v.pumpHouseId,
+                        "longi":v.longi,
+                        "lati":v.lati,
+                        "deviceId":v.id,
+                        "pumpHouseName":v.title,
+                        "address":v.address,
+                        "deviceManufacturersInformation":v.deviceManufacturersInformation,
+                        "propertyInformation":v.propertyInformation
+                    };
+                    if(isInArray(res, v.pumpHouseId)){
+                        var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
+                    }else{
+                        var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
+                    }
+                    addMarker(pointM, pumpHouse, mapPicUrl);
+
+
+                }
+
+            })
+
+
+
+            /*定位到经纬度所在的区域 */
+           /* $.post("/HYWater/config/getMapPoint", function(result) {
+                MAP.centerAndZoom(new BMap.Point(result.longi, result.lati), result.level);
+            });*/
+            LOADING.hide();
+        }
+    })
+}
+
+
+
+// 创建标注
+function addMarker(point, pumpHouse, mapPicUrl){
+    var marker = new BMap.Marker(point);
+    // 添加泵房图标
+    var myIcon = new BMap.Icon(mapPicUrl, new BMap.Size(60, 44), {
+        offset: new BMap.Size(24, 33),
+        imageOffset: new BMap.Size(0, 1)
+    });
+    var marker = new BMap.Marker(point, {icon: myIcon});
+    MAP.addOverlay(marker);
+    marker.id = pumpHouse.pumpHouseId;
+    marker.pumpHouse = pumpHouse;
+
+    marker.deviceDialogSummary = "<iframe id='deviceDialog' width='400px' height='215px' frameborder='no' border='0' " +
+        "marginwidth='0' marginheight='0' scrolling='no' " +
+        "src='deviceDialogSummary.html?" + pumpHouse["pumpHouseId"] + "'></iframe>";
+
+    marker.addEventListener("mouseover", function (event) {
+        var $wrapper = $("#wrapper");
+        var $pumpHouseSummary = $("#pumpHouseSummary");
+        var w1 = $wrapper.width();
+        var h1 = $wrapper.height();
+        var w2 = $pumpHouseSummary.width();
+        var h2 = $pumpHouseSummary.height();
+        var showX = event.clientX;
+        var showY = event.clientY;
+        if (showX >= (w1 - w2)) {
+            $pumpHouseSummary.css("left", (showX - w2 - 5) + "px");
+        } else {
+            $pumpHouseSummary.css("left", showX + "px");
+        }
+        if (showY >= (h1 - h2)) {
+            $pumpHouseSummary.css("top", (showY - h2 - 5) + "px");
+        } else {
+            $pumpHouseSummary.css("top", showY + "px");
+        }
+        $pumpHouseSummary.fadeIn().stop(true, true);
+        showSummary(this);
+    });
+
+    marker.addEventListener("mouseout", function () {
+        $("#pumpHouseSummary").hide();
+        if (showSummary && showSummaryDelay) {
+            if (DIALOG_REQUEST) {
+                DIALOG_REQUEST.abort();
+            }
+            clearTimeout(showSummaryDelay);
+        }
+    });
+
+    marker.addEventListener("click", function showWindowMap(e) {
+        LOADING.show();
+        $("#pumpHouseSummary").hide();
+        GLOBAL_PUMP_MSG_MAP = e.target.pumpHouse;
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: CONTEXT_PATH + '/monitor/statistic/findPumpHouseInfoById',
+            data: JSON.stringify({ pumpHouseId: GLOBAL_PUMP_MSG_MAP.pumpHouseId}) ,
+            dataType: 'JSON',
+            success: function (res) {
+                GLOBAL_PUMP_MSG_MAP = res;
+                if (showSummary && showSummaryDelay) {
+                    if (DIALOG_REQUEST) {
+                        DIALOG_REQUEST.abort();
+                    }
+                    clearTimeout(showSummaryDelay);
+                }
+                MAP.setZoom(12); // 设置缩放级别
+                marker.openInfoWindow(window.infoWindow);
+                LOADING.hide();
+            }
+        })
+    });
+
+    if($("#areaId").val()!="" && "请选择区域"!=$("#areaId").val() ){
+        var areaObj = $.parseJSON( $("#areaId").val() );
+        setArea(areaObj.areaName,color[3]);
+    }
+}
+
+
+
+
+/**
+ * 切换右侧树回调
+ */
+function defChoose(){
+    callRefresh();
+    initAreaBtn(GLOBAL_REGION_LIST);
+}
+
+
+</script>

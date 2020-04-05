@@ -1,0 +1,179 @@
+<style type="text/css">
+	/*
+	 * inline styles
+	 * energyanalysis styles
+	 */
+	#page-inner {
+        padding: 0 10px 10px 10px;
+        height: 100%;
+    }
+    .panel-body {
+        padding: 0px 15px 6px;
+    }
+    #page-inner .pre-scrollable{
+      height: 90%;
+      max-height: 90%;
+    }
+	/* Water/Electricity/Water-Electricity */
+	.water,
+	.electricity,
+	.water-electricity {
+		text-align: center;
+		font-size: 14px;
+		font-family: "Microsoft YaHei",serif;
+	}
+	.water {
+		background-color: #8ab1e2;
+	}
+	.electricity {
+		background-color: #9bb2d0;
+	}
+	.water-electricity {
+		background-color: #559fc2;
+	}
+	label.consumption-title {
+		font-weight: normal !important;
+		font-size: 16px;
+		color: #fff;
+	}
+	.consumption-content span {
+		color: #fdff55;
+	}
+	.consumption-content label {
+		display: block;
+		font-weight: normal !important;
+		color: #333;
+	}
+	/* bar-chart */
+	.bar-chart-title {
+		position: relative;
+		padding: 4px 10px;
+		font-size: 18px;
+		color: #333;
+		font-family: "Microsoft YaHei",serif;
+		/*background-color: #F7F7FF !important;*/
+        text-align: center;
+	}
+	.device-btn {
+		position: absolute;
+		display: inline-block;
+		right: 10px;
+		background-color: rgb(5, 141, 199);
+		padding: 0 8px;
+		color: #fff;
+		cursor: pointer;
+	}
+	#device-menu {
+		overflow-x: hidden;
+		overflow-y: auto;
+		padding: 1px 0 !important;
+		margin: 0 !important;
+		z-index: 10;
+	}
+	#energyanalysis-mb{
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        font-size: 14px;
+        text-align: center;
+    }
+    #energyanalysis-mb span{
+        position: absolute;
+        top: 48%;
+        left: 0;
+        width: 100%;
+        text-align: center;
+    }
+</style>
+
+<form id="queryForm" style="display: none">
+	<input name="deviceId" type="hidden">
+	<input name="deviceIds" type="hidden">
+	<input name="deviceIndexs" type="hidden">
+	<input name="diffDeviceIndexs" type="hidden">
+	<input name="dimen" type="hidden" value="day">
+	<input name="startDate" type="hidden">
+	<input name="endDate" type="hidden">
+	<input name="addOnDate" type="hidden">
+	<input name="choose" type="hidden">
+</form>
+<div id="page-inner">
+	<div class="row">
+        <div class="col-xs-12 col-md-12" style="height: 28px">
+            <div id="selectedDevice"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div class="chart-time">
+				<div class="time-period" id="equipment">
+					<label>查询类型 : </label>
+					<label style="display: inline-block; cursor: pointer;"><input type="radio" name="optionsRadios" id="optionsRadios1" value="dev" checked>设备 </label>
+					<label style="display: inline-block; cursor: pointer;"><input type="radio" name="optionsRadios" id="optionsRadios2" value="pump" >泵房 </label>
+				</div>
+                <div class="time-length" id="time-length">
+                    <label>统计时长 : </label>
+                    <span class="daytime active">日</span>
+                    <span class="monthtime">月</span>
+                    <span class="yeartime">年</span>
+                </div>
+                <div class="time-period">
+                    <label for="statisticDate">统计时段 : </label>
+                    <input type="text" readonly class="form_datetime form-control timepicker" id="statisticDate">
+                </div>
+                <!--<div class="time-superposition">-->
+                    <!--<label for="addOnTime">叠加时长 : </label>-->
+                    <!--<select class="superposition" id="addOnTime" style="width:50px"></select>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+    <div class="row" style="height:95%">
+		<!-- col-md-3 -->
+		<div class="col-md-4 col-sm-4 col-xs-4" style="height: 100%">
+			<div class="panel panel-default" style="height: 60%;margin-bottom: 2%">
+				<div class="panel-body" id="energyanalysis-compare" style="position: relative; overflow: hidden;height: 100%">
+				</div>
+			</div>
+            <div class="panel panel-default" style="height: 28%; margin: 0px;margin-top: 4%">
+                <div class="panel-heading">
+                    <div class="bar-chart-title">
+                        综合能耗分析说明
+                    </div>
+                </div>
+                <div class="panel-body" style="position: relative;">
+                    <ul id="energyanalysis_msg" class="list-group" style="padding-bottom: 40px">
+                        <li id="energyanalysis_msg_kwh_m3" class="list-group-item" style="padding: 10px !important;">吨水耗电量最高：...</li>
+                        <li id="energyanalysis_msg_kwh" class="list-group-item" style="padding: 10px !important;">耗电量最少：...</li>
+                        <li id="energyanalysis_msg_m3" class="list-group-item" style="padding: 10px !important;">产水量最高：...</li>
+                    </ul>
+                </div>
+            </div>
+
+		</div>
+		<!-- col-md-9 -->
+        <div class="col-md-8 col-sm-8 col-xs-8" style="height:100%">
+            <div class="panel panel-default pre-scrollable">
+				<div class="panel-body">
+					<!-- chart -->
+                    <div class="col-xs-12 col-md-12" >
+                        <div id="energyanalysis-chart-m3"></div>
+                    </div>
+                    <div class="col-xs-12 col-md-12" style="margin-top: 20px;">
+                        <div id="energyanalysis-chart-kWh"></div>
+                    </div>
+                    <div class="col-xs-12 col-md-12" style="margin-top: 20px;">
+                        <div id="energyanalysis-chart-energy"></div>
+                    </div>
+        		</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /. PAGE INNER  -->
+<script src="static/assets/js/realtimeMonitor/energyanalysisNew.js"></script>

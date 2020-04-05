@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>告警参数</title>
+    <style type="text/css">
+        .warn-container2 {
+            display: none;
+            margin-top: 50px !important;
+        }
+        .warn-container1,
+        .warn-container2 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin: 42px 0 0 0;
+            padding: 0;
+            font-size: 14px;
+            font-family: "Microsoft YaHei";
+            border-radius: 5px;
+            color: #666666;
+        }
+        .warn-container1 li {
+            position: inline-block;
+            list-style: none;
+            float: left;
+            margin: 5px;
+        }
+        .warn-container2 label,
+        .warn-container2 input {
+            margin-left: 8px;
+            text-indent: 3px;
+        }
+        #base li{
+            margin:0 14px;
+        }
+        .backP{
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+        }
+        #otherwarn, #back{
+            cursor: pointer;
+            color: #275AB7;
+            padding-bottom: 2px;
+        }
+        #otherwarn:hover, #back:hover{
+            border-bottom: 1px solid #90AAD8 ;
+        }
+        .backMsg{
+            text-align: center;
+            overflow: hidden;
+            padding-left: 80px;
+        }
+        #warnpara{
+            float: right;
+            height: 22px;
+            box-sizing: border-box;
+            margin-right: 5px;
+            margin-left: 0px;
+        }
+        #selectType{
+            float: right;
+            height: 22px;
+            margin-right: 66px;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="warn-container1" id="base">
+        <ul style="overflow: hidden; color: #666666;padding: 0px">
+            <li><input type="radio" name="setTime" value="10:s"><label for="time1">10秒</label></li>
+            <li><input type="radio" name="setTime"value="1:m"><label for="time2">1分钟</label></li>
+            <li><input type="radio" name="setTime" value="5:m"><label for="time3">5分钟</label></li>
+            <li><input type="radio" name="setTime" value="none"><label for="time4">不提示告警</label></li>
+        </ul>
+        <div>
+            <p class="backP"><span id="otherwarn" >其他 >></span></p>
+        </div>
+    </div>
+
+    <div class="warn-container2" id="other">
+        <div class="backMsg">
+            请输入告警频率 :
+            <select name="selectAge" id="selectType">
+                <option value="s">秒</option>
+                <option value="m">分钟</option>
+                <option value="h">小时</option>
+            </select>
+            <input type="text" id="warnpara" size="5">
+        </div>
+        <div>
+            <p class="backP"><span  id="back">返回上一级 >></span></p>
+        </div>
+    </div>
+    <!-- 提交设置信息 -->
+    <div style="display: none">
+      <form id="form" method="post">
+        <input id="alarmRate" name="alarmRate">
+        <input id="alarmSubFlag" type="hidden" value="0">
+      </form>
+    </div>
+
+    <!-- jQuery Js -->
+    <script src="static/assets/js/jquery-1.10.2.js"></script>
+    <script type="text/javascript">
+    	function initBase(){
+    		var alarmRate=$('input:radio[name=setTime]:checked').val();
+	    	$("#alarmRate").val(alarmRate);
+    	}
+    	function initOther(){
+    		if(null !=$("#warnpara").val() && "" != $("#warnpara").val() && undefined != $("#warnpara").val()){
+				var alarmRate=$("#warnpara").val() + ":" + $("#selectType").val();
+				$("#alarmRate").val(alarmRate);
+			}else{
+				$("#alarmRate").val("");
+			}
+    	}
+	    // 复选框单选
+	    var checkboxList = $(".warn-container1").find("input");
+	    checkboxList.on("change", function(){
+	    	initBase();
+	    });
+	    
+		 $("#warnpara").keyup(function(){
+			 initOther();
+	    });
+		 
+		 $("#selectType").change(function(){
+			 initOther();
+		});
+        $(function(){
+            // 切换输入频率
+            $("#otherwarn").click(function(){
+            	initOther();
+                $("#base").hide();
+                $("#other").show();
+            });
+         // 切换输入频率
+            $("#back").click(function(){
+            	initBase();
+                $("#other").hide();
+                $("#base").show();
+            });
+         jQuery.ajax( { 
+     	    type : 'POST',  
+     	    contentType : 'application/json',  
+     	    url : parent.CONTEXT_PATH+'/system/qryAlarmConfig?'+ Math.random(),
+     	    dataType : 'json', 
+     	    success : function(data){
+     	     if(null == data.alarmRate || undefined == data.alarmRate){
+     	       $("input[name='setTime'][value='10:s']").attr("checked",true);
+     	      initBase();
+     	       return;
+     	     }
+     	     $('input[name="setTime"]').each(function(){
+    	    		if (this.value == data.alarmRate	){
+    	    			this.checked=true;
+    	    			initBase();
+    	    			return;
+    	    		}
+    	    	  });
+			  var alarmRate = $('input:radio[name=setTime]:checked').val();
+			  if(null == alarmRate || undefined == alarmRate){
+                $("#warnpara").val(data.alarmRate.split(":")[0]);
+                $("#selectType").val(data.alarmRate.split(":")[1]);
+                initOther();
+			  }
+			  
+		    },
+		    error : function(data)
+	   	    {
+		    }
+  		  });
+         
+        });
+    </script>
+
+</body>
+</html>

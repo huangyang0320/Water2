@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.ServicesDao">
+  <resultMap id="BaseResultMap" type="com.wapwag.woss.modules.biz.entity.Services">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="TYPE" jdbcType="VARCHAR" property="type" />
+    <result column="MEMO" jdbcType="VARCHAR" property="memo" />
+    <result column="ID_DEVICE" jdbcType="VARCHAR" property="idDevice" />
+    <result column="ID_SERVICE_GROUP" jdbcType="VARCHAR" property="idServiceGroup" />
+    <result column="DATA_TYPE" jdbcType="VARCHAR" property="dataType" />
+    <result column="ID_FUNCTION" jdbcType="VARCHAR" property="idFunction" />
+    <result column="RATIO" jdbcType="DECIMAL" property="ratio" />
+    <result column="InitValue" jdbcType="VARCHAR" property="initvalue" />
+    <result column="NormalValue" jdbcType="VARCHAR" property="normalvalue" />
+    <result column="EnableAlarm" jdbcType="INTEGER" property="enablealarm" />
+    <result column="EnableValueAlarm" jdbcType="INTEGER" property="enablevaluealarm" />
+    <result column="EnableValueAlarmReponse" jdbcType="INTEGER" property="enablevaluealarmreponse" />
+    <result column="RangeMinimum" jdbcType="VARCHAR" property="rangeminimum" />
+    <result column="RangeMaximum" jdbcType="VARCHAR" property="rangemaximum" />
+    <result column="UNIT" jdbcType="VARCHAR" property="unit" />
+    <result column="Default_Visible" jdbcType="VARCHAR" property="defaultVisible" />
+    <result column="data_sort" jdbcType="VARCHAR" property="dataSort" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, NAME, code, TYPE, MEMO, ID_DEVICE, ID_SERVICE_GROUP, DATA_TYPE, ID_FUNCTION, 
+    RATIO, InitValue, NormalValue, EnableAlarm, EnableValueAlarm, EnableValueAlarmReponse, 
+    RangeMinimum, RangeMaximum, UNIT, Default_Visible, data_sort
+  </sql>
+  <select id="select" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from services
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="delete" parameterType="java.lang.String">
+    delete from services
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wapwag.woss.modules.biz.entity.Services">
+    insert into services (ID, NAME, code, 
+      TYPE, MEMO, ID_DEVICE, 
+      ID_SERVICE_GROUP, DATA_TYPE, ID_FUNCTION, 
+      RATIO, InitValue, NormalValue, 
+      EnableAlarm, EnableValueAlarm, EnableValueAlarmReponse, 
+      RangeMinimum, RangeMaximum, UNIT, 
+      Default_Visible, data_sort)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{idDevice,jdbcType=VARCHAR}, 
+      #{idServiceGroup,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR}, #{idFunction,jdbcType=VARCHAR}, 
+      #{ratio,jdbcType=DECIMAL}, #{initvalue,jdbcType=VARCHAR}, #{normalvalue,jdbcType=VARCHAR}, 
+      #{enablealarm,jdbcType=INTEGER}, #{enablevaluealarm,jdbcType=INTEGER}, #{enablevaluealarmreponse,jdbcType=INTEGER}, 
+      #{rangeminimum,jdbcType=VARCHAR}, #{rangemaximum,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{defaultVisible,jdbcType=VARCHAR}, #{dataSort,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wapwag.woss.modules.biz.entity.Services">
+    insert into services
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="memo != null">
+        MEMO,
+      </if>
+      <if test="idDevice != null">
+        ID_DEVICE,
+      </if>
+      <if test="idServiceGroup != null">
+        ID_SERVICE_GROUP,
+      </if>
+      <if test="dataType != null">
+        DATA_TYPE,
+      </if>
+      <if test="idFunction != null">
+        ID_FUNCTION,
+      </if>
+      <if test="ratio != null">
+        RATIO,
+      </if>
+      <if test="initvalue != null">
+        InitValue,
+      </if>
+      <if test="normalvalue != null">
+        NormalValue,
+      </if>
+      <if test="enablealarm != null">
+        EnableAlarm,
+      </if>
+      <if test="enablevaluealarm != null">
+        EnableValueAlarm,
+      </if>
+      <if test="enablevaluealarmreponse != null">
+        EnableValueAlarmReponse,
+      </if>
+      <if test="rangeminimum != null">
+        RangeMinimum,
+      </if>
+      <if test="rangemaximum != null">
+        RangeMaximum,
+      </if>
+      <if test="unit != null">
+        UNIT,
+      </if>
+      <if test="defaultVisible != null">
+        Default_Visible,
+      </if>
+      <if test="dataSort != null">
+        data_sort,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="idDevice != null">
+        #{idDevice,jdbcType=VARCHAR},
+      </if>
+      <if test="idServiceGroup != null">
+        #{idServiceGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null">
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="idFunction != null">
+        #{idFunction,jdbcType=VARCHAR},
+      </if>
+      <if test="ratio != null">
+        #{ratio,jdbcType=DECIMAL},
+      </if>
+      <if test="initvalue != null">
+        #{initvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="normalvalue != null">
+        #{normalvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="enablealarm != null">
+        #{enablealarm,jdbcType=INTEGER},
+      </if>
+      <if test="enablevaluealarm != null">
+        #{enablevaluealarm,jdbcType=INTEGER},
+      </if>
+      <if test="enablevaluealarmreponse != null">
+        #{enablevaluealarmreponse,jdbcType=INTEGER},
+      </if>
+      <if test="rangeminimum != null">
+        #{rangeminimum,jdbcType=VARCHAR},
+      </if>
+      <if test="rangemaximum != null">
+        #{rangemaximum,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null">
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultVisible != null">
+        #{defaultVisible,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSort != null">
+        #{dataSort,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wapwag.woss.modules.biz.entity.Services">
+    update services
+    <set>
+      <if test="name != null">
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        MEMO = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="idDevice != null">
+        ID_DEVICE = #{idDevice,jdbcType=VARCHAR},
+      </if>
+      <if test="idServiceGroup != null">
+        ID_SERVICE_GROUP = #{idServiceGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null">
+        DATA_TYPE = #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="idFunction != null">
+        ID_FUNCTION = #{idFunction,jdbcType=VARCHAR},
+      </if>
+      <if test="ratio != null">
+        RATIO = #{ratio,jdbcType=DECIMAL},
+      </if>
+      <if test="initvalue != null">
+        InitValue = #{initvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="normalvalue != null">
+        NormalValue = #{normalvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="enablealarm != null">
+        EnableAlarm = #{enablealarm,jdbcType=INTEGER},
+      </if>
+      <if test="enablevaluealarm != null">
+        EnableValueAlarm = #{enablevaluealarm,jdbcType=INTEGER},
+      </if>
+      <if test="enablevaluealarmreponse != null">
+        EnableValueAlarmReponse = #{enablevaluealarmreponse,jdbcType=INTEGER},
+      </if>
+      <if test="rangeminimum != null">
+        RangeMinimum = #{rangeminimum,jdbcType=VARCHAR},
+      </if>
+      <if test="rangemaximum != null">
+        RangeMaximum = #{rangemaximum,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null">
+        UNIT = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultVisible != null">
+        Default_Visible = #{defaultVisible,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSort != null">
+        data_sort = #{dataSort,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="update" parameterType="com.wapwag.woss.modules.biz.entity.Services">
+    update services
+    set NAME = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=VARCHAR},
+      MEMO = #{memo,jdbcType=VARCHAR},
+      ID_DEVICE = #{idDevice,jdbcType=VARCHAR},
+      ID_SERVICE_GROUP = #{idServiceGroup,jdbcType=VARCHAR},
+      DATA_TYPE = #{dataType,jdbcType=VARCHAR},
+      ID_FUNCTION = #{idFunction,jdbcType=VARCHAR},
+      RATIO = #{ratio,jdbcType=DECIMAL},
+      InitValue = #{initvalue,jdbcType=VARCHAR},
+      NormalValue = #{normalvalue,jdbcType=VARCHAR},
+      EnableAlarm = #{enablealarm,jdbcType=INTEGER},
+      EnableValueAlarm = #{enablevaluealarm,jdbcType=INTEGER},
+      EnableValueAlarmReponse = #{enablevaluealarmreponse,jdbcType=INTEGER},
+      RangeMinimum = #{rangeminimum,jdbcType=VARCHAR},
+      RangeMaximum = #{rangemaximum,jdbcType=VARCHAR},
+      UNIT = #{unit,jdbcType=VARCHAR},
+      Default_Visible = #{defaultVisible,jdbcType=VARCHAR},
+      data_sort = #{dataSort,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="getByDeviceAndFunName" resultMap="BaseResultMap">
+  	SELECT
+		s.*
+	FROM
+		services s
+		JOIN FUNCTION f ON f.id = s.ID_FUNCTION 
+	WHERE
+		s.ID_DEVICE = #{deviceId} 
+		AND f.NAME = #{funcName}
+  </select>
+</mapper>

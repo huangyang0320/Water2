@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.monitor.dao.PumpConfigurationMapper">
+
+    <resultMap type="com.wapwag.woss.modules.monitor.pumpNode.PumpNodeVO" id="phMap">
+        <id column="phId" property="id" />
+        <result column="phName" property="phName" />
+        <result column="phUrl" property="phUrl" />
+        <collection property="deviceInfo" ofType="com.wapwag.woss.modules.monitor.pumpNode.DeviceInfo">
+            <id column="deviceCode" property="id" />
+            <result column="devicePosition" property="devicePosition"/>
+            <result column="type" property="type"/>
+        </collection>
+    </resultMap>
+
+	<resultMap type="com.wapwag.woss.modules.monitor.pumpNode.PhNode" id="nodeMap">
+		<id column="nodeCode" property="nodeCode" />
+		<result column="nodeName" property="nodeName" />
+		<result column="nodeType" property="nodeType" />
+		<collection property="points" ofType="com.wapwag.woss.modules.monitor.pumpNode.DevicePoint">
+			<id column="id" property="id" />
+			<result column="deviceId" property="deviceId"/>
+			<result column="deviceLocation" property="deviceLocation"/>
+			<result column="pointName" property="pointName"/>
+			<result column="pointMemo" property="pointMemo"/>
+			<result column="pointUnit" property="pointUnit"/>
+		</collection>
+	</resultMap>
+
+	<select id="getDeviceInfo" resultMap="phMap">
+        SELECT
+			device.id_pump_house AS phId,/*设备位置id*/
+			ph.name AS phName,
+			concat(#{prefix},ppi.pump_url) AS phUrl,
+			device.id AS deviceCode,/*设备名牌*/
+			       device.TYPE AS type,
+			
+			CASE
+            WHEN device.LOCATION = 1 THEN
+                '一区'
+            WHEN device.LOCATION = 2 THEN
+                '二区'
+            WHEN device.LOCATION= 3 THEN '三区'
+            WHEN device.LOCATION= 4 THEN '四区'
+            WHEN device.LOCATION= 5 THEN '五区'
+            ELSE '水泵' END devicePosition
+		FROM
+			device device
+			LEFT JOIN pump_position_set pps ON pps.pump_id = device.id_pump_house
+			LEFT JOIN pump_position_info ppi ON ppi.id = pps.node_id
+			INNER JOIN pump_house ph ON ph.id=device.id_pump_house
+			where device.id_pump_house=#{phId} AND device.del_flag ='0' AND pps.belong_type='0'
+    </select>
+    
+    <select id="getPhPosition" resultType="com.wapwag.woss.modules.monitor.pumpNode.PumpPositionInfo">
+        SELECT
+            ppi.remote_ctrl_pos AS remoteCtrlPos,
+            ppi.inlet_pos AS inletPos,
+            ppi.outlet_pos AS outletPos,
+            ppi.device_name_pos AS deviceNamePos,
+            ppi.pump_pos AS pumpPos,
+            ppi.tank_pos AS tankPos
+        FROM
+            pump_position_info ppi
+        INNER JOIN pump_position_set pps ON pps.node_id = ppi.id
+        AND pps.pump_id = #{phId}
+        AND pps.belong_type = '0'
+    </select>
+    
+    <select id="getDefaultPumpPosition" resultType="com.wapwag.woss.modules.monitor.pumpNode.PumpPositionInfo">
+        SELECT
+            ppi.id AS 'id',
+            ppi.pump_name AS 'pumpName',
+            concat(#{prefix},ppi.pump_url) AS 'pumpUrl',
+            ppi.remote_ctrl_pos AS 'remoteCtrlPos',
+            ppi.inlet_pos AS 'inletPos',
+            ppi.outlet_pos AS 'outletPos',
+            ppi.device_name_pos AS 'deviceNamePos',
+            ppi.pump_pos AS 'pumpPos'
+        FROM
+            pump_position_info ppi
+		LIMIT 1
+    </select>
+    
+    <select id="getPhNode" resultMap="nodeMap">
+        SELECT
+            pns.node_code AS nodeCode,
+            pns.node_name AS nodeName,
+            pns.node_type AS nodeType,
+            pnp.device_id AS deviceId,
+            pnp.device_location AS deviceLocation,
+            pnp.point_name AS pointName,
+            pnp.point_memo AS pointMemo,
+            pnp.point_unit AS pointUnit
+        FROM
+          pump_node_point pnp
+        INNER JOIN pump_node_set pns ON pns.id = pnp.pump_node_set_id
+        WHERE
+          pnp.pump_house_id = #{phId} AND pnp.point_status = 0
+          ORDER BY pnp.point_name ASC
+    </select>
+    
+    <select id="getVideoInfo" resultType="com.wapwag.woss.modules.monitor.pumpNode.VideoInfo">
+        SELECT
+            video_no AS videoNo,
+            name AS videoName,
+            hkVideoDeviceId AS monitorIp
+        FROM
+            video_info WHERE pump_house_id = #{phId}
+    </select>
+
+	<select id="getServiceValues" resultType="com.wapwag.woss.modules.monitor.pumpNode.PumpService">
+		SELECT
+			temp.id_device,temp.id_service, s.name tag_name, s.unit, (temp.pv * case when ratio is null then 1 else ratio end) as pv, s.code
+		FROM
+			(SELECT
+				temp1.id_device,temp1.id_service, temp1.tag_name, temp1.pv
+			FROM
+				(SELECT
+				*
+			FROM
+				${dateNumber}
+			WHERE
+				date_time > DATE_SUB(NOW(), INTERVAL 15 Second)
+					AND id_device IN
+                    <foreach item="item" index="index" collection="idDevice" open="(" separator="," close=")">
+                      #{item.deviceId}
+                    </foreach>
+			ORDER BY date_time DESC) temp1
+			GROUP BY id_service) temp
+				JOIN
+			services s ON s.id = temp.id_service where s.code in
+            <foreach item="item" index="index" collection="code" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        ORDER BY s.data_sort ASC
+    </select>
+
+    <select id="getCtrlParms" resultType="com.wapwag.woss.modules.monitor.pumpNode.Point">
+		SELECT
+            ds.`name` AS pointName,
+            ds.code AS pointCode,
+            ds.unit AS pointUnit,
+            ds.control_status,
+            CASE
+            f.DATA_TYPE
+            WHEN 'bool' THEN
+            'bool'
+            WHEN 'word' THEN
+            'bool'
+            ELSE 'real'
+            END pointType
+        FROM
+            services ds
+            INNER JOIN device device ON device.id = ds.ID_DEVICE
+            AND ds.control_status = '1'
+            AND ds.node_display ='0'
+            AND device.id = #{deviceCode}
+            LEFT JOIN `function` f ON f.`NAME` = ds.`CODE`
+        GROUP BY
+            ds.`name`
+	</select>
+
+    <select id="getPointData" resultType="com.wapwag.woss.modules.monitor.pumpNode.PointDate">
+        SELECT
+            SUBSTRING_INDEX( a.id_service, '\\', - 1 ) pointCode,
+            IFNULL(
+        CASE
+            TRUNCATE ( pv * CASE WHEN ratio IS NULL THEN 1 ELSE ratio END, 2 )
+            WHEN '0.00' THEN
+            '0' ELSE TRUNCATE ( pv * CASE WHEN ratio IS NULL THEN 1 ELSE ratio END, 2 )
+            END,
+            '-'
+            ) pointValue
+        FROM
+            (
+        SELECT
+            *
+        FROM
+            ( SELECT * FROM ${tableName} WHERE ID_DEVICE = #{idDevice} AND date_time >= date_sub( now( ), INTERVAL 3 MINUTE )
+              <if test="idService !=null">
+              and ID_SERVICE in
+              <foreach item="idService" index="index" collection="idService" open="(" separator="," close=")">
+                  #{idService}
+              </foreach>
+              </if>
+             ORDER BY DATE_TIME DESC LIMIT 0,10000) a <!-- limt确保取最新一条数据 -->
+        GROUP BY
+            a.id_service
+            ) a
+            LEFT JOIN services s ON s.id = a.id_service;
+    </select>
+    
+    <select id="findDeviceCodeById" resultType="String">
+        SELECT
+          CODE
+        FROM
+            services
+        WHERE
+            ID_DEVICE in
+            <foreach item="item" index="index" collection="idDevice" open="(" separator="," close=")">
+                #{item.deviceId}
+            </foreach>
+            AND CODE LIKE ('%FrequencyOutput')
+    </select>
+    <select id="getPointRatio" resultType="com.wapwag.woss.modules.monitor.pumpNode.CtrlPoint">
+        SELECT
+            IFNULL(ratio,1) as ratio,
+            s.RangeMaximum AS maxData,
+            s.RangeMinimum AS minData,
+            s.Data_Type as dataType,
+            s.ID_DEVICE as deviceId,
+            s.ID_FUNCTION  functionId
+        FROM
+            device device
+        INNER JOIN services s ON s.ID_DEVICE = device.id
+        AND device.id = #{deviceId}
+        AND s.`code` = #{pointCode}
+        LIMIT 1
+    </select>
+    
+    <select id="getgwIdByDeviceId" resultType="com.wapwag.woss.modules.monitor.pumpNode.GwDevice">
+        SELECT GATEWAY_ID  as gateWayId , DEVICE_ID as deviceId   from gw_device  where DEVICE_ID =#{deviceId}
+    </select>
+    
+      <select id="getFunctionById" resultType="com.wapwag.woss.modules.monitor.pumpNode.CtrlPoint">
+        select id  as functionId ,data_type as dataType FROM `function` where id =#{functionId}
+    </select>
+    
+    <select id='getserviceMaxMin' resultType="com.wapwag.woss.modules.biz.entity.Services">
+	    SELECT
+			*
+		FROM
+			services
+		WHERE
+			node_display = 0
+		AND control_status = 1
+		AND ID_DEVICE = #{deviceId}
+		AND CODE = #{code}
+		AND RangeMinimum IS NOT NULL
+		AND RangeMaximum IS NOT NULL
+	</select>
+	
+     <select id="selectSysDictByType" resultType="com.wapwag.woss.modules.biz.entity.SysDict">
+        select
+          *
+        from sys_dict
+        <where>
+            type = #{type}
+            and del_flag = '0';
+        </where>
+    </select>
+    
+</mapper>

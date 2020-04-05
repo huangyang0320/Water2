@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.PumpDeviceRepairInfoDao">
+    
+	<sql id="pumpDeviceRepairInfoColumns">
+		a.breakdown_id AS "id",
+		a.project_id AS "project.id",
+		a.device_id AS "device.id",
+		a.pump_house_id AS "pumpHouse.id",
+		a.user_id AS "user.id",
+		a.repair_time AS "repairTime",
+		a.repair_content AS "repairContent",
+		a.accessories_xh AS "accessoriesXh",
+		a.fault_reason AS "faultReason",
+		a.solution AS "solution",
+		a.memo AS "memo",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		u5.name AS "user.name"
+	</sql>
+	
+	<sql id="pumpDeviceRepairInfoJoins">
+		LEFT JOIN sys_user u5 ON u5.id = a.user_id
+		JOIN component_repair_info r ON a.breakdown_id = r.breakdown_id
+	</sql>
+    
+	<select id="get" resultType="PumpDeviceRepairInfo">
+		SELECT 
+			<include refid="pumpDeviceRepairInfoColumns"/>
+		FROM pump_device_repair_info a
+		<include refid="pumpDeviceRepairInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PumpDeviceRepairInfo">
+		SELECT 
+			<include refid="pumpDeviceRepairInfoColumns"/>
+		FROM pump_device_repair_info a
+		<include refid="pumpDeviceRepairInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PumpDeviceRepairInfo">
+		SELECT 
+			<include refid="pumpDeviceRepairInfoColumns"/>
+		FROM pump_device_repair_info a
+		<include refid="pumpDeviceRepairInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO pump_device_repair_info(
+			breakdown_id,
+			project_id,
+			device_id,
+			pump_house_id,
+			user_id,
+			repair_time,
+			repair_content,
+			accessories_xh,
+			fault_reason,
+			solution,
+			memo,
+			createtime,
+			updatetime
+		) VALUES (
+			#{id},
+			#{project.id},
+			#{device.id},
+			#{pumpHouse.id},
+			#{user.id},
+			#{repairTime},
+			#{repairContent},
+			#{accessoriesXh},
+			#{faultReason},
+			#{solution},
+			#{memo},
+			#{createtime},
+			#{updatetime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE pump_device_repair_info SET 	
+			breakdown_id = #{id},
+			project_id = #{project.id},
+			device_id = #{device.id},
+			pump_house_id = #{pumpHouse.id},
+			user_id = #{user.id},
+			repair_time = #{repairTime},
+			repair_content = #{repairContent},
+			accessories_xh = #{accessoriesXh},
+			fault_reason = #{faultReason},
+			solution = #{solution},
+			memo = #{memo},
+			createtime = #{createtime},
+			updatetime = #{updatetime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM pump_device_repair_info
+		WHERE id = #{id}
+	</update>
+	<select id="getLastReplaceInfo" resultType="PumpDeviceRepairInfo">
+		SELECT 
+		<include refid="pumpDeviceRepairInfoColumns"/>
+		FROM pump_device_repair_info a
+		<include refid="pumpDeviceRepairInfoJoins"/>
+		WHERE
+			a.device_id = #{deviceId}
+		AND r.component_id = #{accessoriesXh}
+		AND a.is_replace = '1'
+		ORDER BY
+			a.repair_time DESC	
+	</select>
+</mapper>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.RegionalDao">
+    
+	<sql id="regionalColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.parent_id AS "parent.id",
+		a.parent_ids AS "parentIds",
+		a.type AS "type",
+		a.memo AS "memo",
+		a.longi AS "longi",
+		a.lati AS "lati",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="regionalJoins">
+	</sql>
+    
+	<select id="get" resultType="Regional">
+		SELECT 
+			<include refid="regionalColumns"/>
+		FROM regional a
+		<include refid="regionalJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Regional">
+		SELECT 
+			<include refid="regionalColumns"/>
+		FROM regional a
+		<include refid="regionalJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Regional">
+		SELECT 
+			<include refid="regionalColumns"/>
+		FROM regional a
+		<include refid="regionalJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO regional(
+			id,
+			name,
+			parent_id,
+			parent_ids,
+			type,
+			memo,
+			longi,
+			lati,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{name},
+			#{parent.id},
+			#{parentIds},
+			#{type},
+			#{memo},
+			#{longi},
+			#{lati},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE regional SET 	
+			name = #{name},
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds},
+			type = #{type},
+			memo = #{memo},
+			longi = #{longi},
+			lati = #{lati},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE regional SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

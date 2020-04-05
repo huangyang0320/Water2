@@ -1,0 +1,149 @@
+<style type="text/css">
+    #page-inner {
+        padding: 0 10px 10px 10px;
+    }
+    .panel {
+        border: none;
+    }
+    .panel-body {
+        padding: 6px 15px;
+    }
+    .no-padding {
+        padding: 0;
+    }
+    #running-compare, #startstop-compare, #ratedpower-compare {
+        height: 150px;
+    }
+    .pump-running-status {
+        overflow-x: hidden;
+        overflow-y: auto; 
+    }
+    .statusPump {
+        position: relative;
+        width: 100%;
+        height: 110px;
+        margin: 15px 0;
+        cursor: pointer;
+    }
+    .not-collected {
+        color: rgb(67, 95, 123);
+        line-height: 110px;
+        text-align: center;
+        background: #eee;
+    }
+    .statusPump:first-child {
+        margin-top: 0;
+    }
+    .statusPump:last-child {
+        margin-bottom: 0;
+    }
+    .statusPump .status-left {
+        width: 30%;
+        height: 100%;
+        padding: 15px 0;
+        text-align: center;
+        background: #cbcbcb;
+        float: left;
+    }
+    .statusPump .status-left img {
+        height: 80px;
+    }
+    .statusPump .status-right {
+        width: 70%;
+        height: 100%;
+        padding: 25px 0;
+        text-align: center;
+        background: #606872;
+        float: left;
+    }
+    .statusPump .status-right .pump-status {
+        font-size: 30px;
+    }
+    .statusPump .status-right .pump-name {
+        display: inline-block;
+        margin-top: 10px;
+        color: #fff;
+        font-size: 16px;
+    }
+    .running-status {
+        color: #16fb16;
+    }
+    .falut-status {
+        color: #f9211b;
+    }
+    .stop-status {
+        color: #2a2323;
+    }
+    /* media query 1920 x 1080 */
+    @media screen and (min-width: 1920px) {
+        #running-compare, #startstop-compare, #ratedpower-compare {
+            height: 240px;
+        }
+    }
+</style>
+<div id="page-inner">
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div id="selectedDevice"></div>
+            <input type="hidden" id="powerTimerFlag" value="1">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9 col-xs-9 no-padding">
+            <div class="panel panel-default">
+                <div class="col-md-4 col-xs-4">
+                    <div id="running-compare" style="background-color: #fff;"></div>
+                </div>
+                <div class="col-md-4 col-xs-4">
+                    <div id="startstop-compare" style="background-color: #fff;"></div>
+                </div>
+                <div class="col-md-4 col-xs-4">
+                    <div id="ratedpower-compare" style="background-color: #fff;"></div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-xs-12" style="margin-top:10px;">
+                <div class="panel panel-default">
+                    <ul id="myTab" class="nav nav-tabs">
+                       <li class="active"><a href="#realtime-power" data-toggle="tab">实时功率</a></li>
+                       <li><a href="#pump-frequency" data-toggle="tab">水泵频率</a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                       <div class="tab-pane fade in active" id="realtime-power">
+                            <div class="panel-body">
+                                <div class="col-md-12 col-sm-12 col-xs-12 no-padding">
+                                    <div id="realtime-power-chart" class="chart-height"></div>
+                                </div>
+                            </div>
+                       </div>
+                       <div class="tab-pane fade" id="pump-frequency">
+                            <div class="panel-body">
+                                <div class="col-md-12 col-sm-12 col-xs-12 no-padding">
+                                    <div id="pump-frequency-chart" class="chart-height"></div>
+                                </div>
+                            </div>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="pump-status-title">
+                        <span>水泵运行状态展示</span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="pumpRunStatus" class="pump-running-status">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /. ROW  -->
+</div>
+
+<!-- Script -->
+<script src="static/assets/js/realtimeMonitor/poweranalysisBak.js"></script>

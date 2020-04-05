@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.sys.dao.AttendanceDao">
+	<select id="getBeginTime" resultType="java.lang.String">
+		select eventTime from
+		attendance_record order by eventTime desc limit 0 , 1
+	</select>
+
+	<insert id="saveAccessRecord">
+		INSERT INTO attendance_record(
+		attRecordId,
+		personId,
+		personName,
+		cardNum,
+		departId,
+		departName,
+		acReaderId,
+		acReaderName,
+		doorId,
+		doorName,
+		controllerId,
+		controllerName,
+		eventTime,
+		eventType,
+		recordType,
+		attReaderName
+		) VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.attRecordId},
+			#{item.personId},
+			#{item.personName},
+			#{item.cardNum},
+			#{item.departId},
+			#{item.departName},
+			#{item.acReaderId},
+			#{item.acReaderName},
+			#{item.doorId},
+			#{item.doorName},
+			#{item.controllerId},
+			#{item.controllerName},
+			#{item.eventTime},
+			#{item.eventType},
+			#{item.recordType},
+			#{item.attReaderName}
+			)
+		</foreach>
+	</insert>
+	<select id="configInfos" resultType="com.wapwag.woss.common.hkthirdsdk.pojo.ConfigInfo">
+		select PARAM_NAME
+		paramName,PARAM_VALUE paramValue from sys_parameter
+	</select>
+	<select id="findList" resultType="com.wapwag.woss.modules.sys.entity.AttRecord">
+		SELECT
+		a.personName,
+		a.cardNum,
+		a.departName,
+		a.doorName,
+		a.eventTime,
+		a.controllerName
+		FROM attendance_record a
+		where
+		a.personName &lt;&gt; '' and
+		a.eventTime &gt; #{beginTime} and
+		a.eventTime &lt; #{endTime}
+		<if test="personName != null and personName != ''">
+			and a.personName like '%${personName}%'
+		</if>
+		order by a.eventTime desc
+	</select>
+	<select id="exportList" resultType="com.wapwag.woss.modules.sys.entity.AttRecord">
+		SELECT
+		a.personName,
+		a.cardNum,
+		a.departName,
+		a.doorName,
+		a.eventTime,
+		a.eventType
+		FROM attendance_record a
+		where
+		a.personName &lt;&gt; '' and
+		a.eventTime &gt; #{beginTime} and
+		a.eventTime &lt; #{endTime}
+		<if test="personName != null and personName != ''">
+			and a.personName like '%${personName}%'
+		</if>
+		order by a.eventTime desc
+		limit 0 ,#{exportMustNum}
+	</select>
+	<select id="countLoginUser" resultType="com.wapwag.woss.modules.sys.entity.AttRecord">
+		select count(personName) eventType, personName from (
+		select
+		substring(eventTime,1,10) eventTime,personName FROM attendance_record
+		a
+		where
+		a.personName &lt;&gt; '' and
+		a.eventTime &gt; #{beginTime} and
+		a.eventTime &lt; #{endTime}
+		<if test="personName != null and personName != ''">
+			and a.personName like '%${personName}%'
+		</if>
+		group by substring(eventTime,1,10) , personName
+		) vv group by
+		personName
+	</select>
+</mapper>

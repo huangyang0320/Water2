@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.sys.dao.DeviceDao">
+	<resultMap id="BaseResultMap" type="com.wapwag.woss.modules.sys.entity.PumpDevice">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="id_pump_house" property="pumpHouseId" jdbcType="VARCHAR" />
+		<result column="id_project" property="projectId" jdbcType="VARCHAR" />
+		<result column="date_manufacture" property="dateManufacture"
+			jdbcType="TIMESTAMP" />
+		<result column="date_purchase" property="datePurchase"
+			jdbcType="TIMESTAMP" />
+		<result column="purchase_amount" property="purchaseAmount"
+			jdbcType="DECIMAL" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="deviceArchive" type="com.wapwag.woss.modules.sys.entity.Archive">
+		<id column="device_id" property="id" jdbcType="VARCHAR" />
+		<result column="device_name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="id_pump_house" property="pumpHouseId" jdbcType="VARCHAR" />
+		<result column="date_manufacture" property="dateManufacture"
+			jdbcType="TIMESTAMP" />
+		<result column="date_purchase" property="datePurchase"
+			jdbcType="TIMESTAMP" />
+		<result column="purchase_amount" property="purchaseAmount"
+			jdbcType="DECIMAL" />
+		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+		<result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+		<collection property="projectList"
+			ofType="com.wapwag.woss.modules.sys.entity.Project">
+			<id column="project_id" property="projectId" jdbcType="VARCHAR" />
+			<result column="name" property="projectName" jdbcType="VARCHAR" />
+			<result column="region_id" property="regionId" jdbcType="VARCHAR" />
+			<result column="PROJECT_MANAGER" property="projectManager"
+				jdbcType="VARCHAR" />
+			<result column="ADDRESS" property="projectAddress" jdbcType="VARCHAR" />
+			<result column="MEMO" property="projectMemo" jdbcType="VARCHAR" />
+			<result column="SALESMAN" property="salesman" jdbcType="VARCHAR" />
+			<result column="CONTRACT_TYPE" property="contractType"
+				jdbcType="VARCHAR" />
+			<result column="BUYER_NAME" property="buyerName" jdbcType="VARCHAR" />
+			<result column="BUYER_CONTACTS_NAME" property="buyerContactsName"
+				jdbcType="VARCHAR" />
+			<result column="SIGN_DATE" property="signDate" jdbcType="TIMESTAMP" />
+			<result column="ARRIVAL_DATE" property="arrivalDate" jdbcType="TIMESTAMP" />
+			<result column="YJTS_DATE" property="yjtsDate" jdbcType="TIMESTAMP" />
+			<result column="HTQD_DW" property="htqdDw" jdbcType="VARCHAR" />
+		</collection>
+		<collection property="pumpList"
+			ofType="com.wapwag.woss.modules.sys.entity.PumpHouse">
+			<id column="id" property="pumpHouseId" jdbcType="VARCHAR" />
+			<result column="name" property="pumpHouseName" jdbcType="VARCHAR" />
+			<result column="address" property="pumpHouseAddress" jdbcType="VARCHAR" />
+
+			<result column="deviceManufacturers" property="deviceManufacturers" />
+			<result column="deviceManufacturersInformation" property="deviceManufacturersInformation" />
+			<result column="selfControlManufacturers" property="selfControlManufacturers" />
+			<result column="selfControlManufacturersInformation" property="selfControlManufacturersInformation" />
+			<result column="constructionSide" property="constructionSide" />
+			<result column="constructionSideInformation" property="constructionSideInformation" />
+			<result column="Construction" property="construction" />
+			<result column="constructionInformation" property="constructionInformation" />
+			<result column="property" property="property" />
+			<result column="propertyInformation" property="propertyInformation" />
+			<result column="cellName" property="cellName" />
+			<result column="cellAdress" property="cellAdress" />
+			<result column="handoverTime" property="handoverTime" />
+
+		</collection>
+		<collection property="setLabels"
+			ofType="com.wapwag.woss.modules.sys.entity.DeviceSetLabel">
+			<id column="id" jdbcType="VARCHAR" property="id" />
+			<result column="DEVICE_ID_S" jdbcType="VARCHAR" property="deviceId" />
+			<result column="EQUIPMENT_MODEL_NO" jdbcType="VARCHAR"
+				property="equipmentModelNo" />
+			<result column="PUPMP_MODEL_NO" jdbcType="VARCHAR" property="pupmpModelNo" />
+			<result column="SBEDGSLL_S" jdbcType="VARCHAR" property="sbedgsll" />
+			<result column="POWER_RATING" jdbcType="VARCHAR" property="powerRating" />
+			<result column="WLG_GG" jdbcType="VARCHAR" property="wlgGg" />
+			<result column="SHAPGE_SIZE" jdbcType="VARCHAR" property="shapgeSize" />
+			<result column="LLKZQ" jdbcType="VARCHAR" property="llkzq" />
+			<result column="QYG_GG" jdbcType="VARCHAR" property="qygGg" />
+			<result column="SX_GG" jdbcType="VARCHAR" property="sxGg" />
+			<result column="WEIGHT" jdbcType="VARCHAR" property="weight" />
+			<result column="ENVIRONMENTAL_TEMPERATURE" jdbcType="VARCHAR"
+				property="environmentalTemperature" />
+			<result column="PUMP_QUANTITY" jdbcType="VARCHAR" property="pumpQuantity" />
+			<result column="CABINET_MODEL_NO" jdbcType="VARCHAR" property="cabinetModelNo" />
+			<result column="POWER_VOLTAGE" jdbcType="VARCHAR" property="powerVoltage" />
+			<result column="SBEDGSYC_S" jdbcType="VARCHAR" property="sbedgsyc" />
+			<result column="TOTAL_POWER" jdbcType="VARCHAR" property="totalPower" />
+			<result column="ZYZZ_GG" jdbcType="VARCHAR" property="zyzzGg" />
+			<result column="SCBCQ" jdbcType="VARCHAR" property="scbcq" />
+			<result column="EX_FACTORY_DATE" jdbcType="DATE" property="exFactoryDate" />
+			<result column="ex_Factory_Time" jdbcType="DATE" property="exFactoryTime" />
+			<result column="FULL_DEVICE_XH" jdbcType="VARCHAR" property="fullDeviceXh" />
+			<result column="ZN_YINSHUI" jdbcType="VARCHAR" property="znYinshui" />
+			<result column="FB_XINGHAO" jdbcType="VARCHAR" property="fbXinghao" />
+			<result column="QT_GUIGE" jdbcType="VARCHAR" property="qtGuige" />
+			<result column="SL_KONGZHI" jdbcType="VARCHAR" property="slKongzhi" />
+			<result column="WY_BUCHANG" jdbcType="VARCHAR" property="wyBuchang" />
+		</collection>
+		<collection property="pumpLabels"
+			ofType="com.wapwag.woss.modules.sys.entity.DevicePumpLabel">
+			<id column="id" jdbcType="VARCHAR" property="id" />
+			<result column="DEVICE_ID_L" jdbcType="VARCHAR" property="deviceId" />
+			<result column="MODEL_NO_L" jdbcType="VARCHAR" property="modelNo" />
+			<result column="SBEDGSLL" jdbcType="VARCHAR" property="sbedgsll" />
+			<result column="RATED_POWER_L" jdbcType="VARCHAR" property="ratedPower" />
+			<result column="SBEDGSYC" jdbcType="VARCHAR" property="sbedgsyc" />
+			<result column="SPEED" jdbcType="VARCHAR" property="speed" />
+		</collection>
+		<collection property="electricalLabels"
+			ofType="com.wapwag.woss.modules.sys.entity.DeviceElectricalLabel">
+			<id column="ID" jdbcType="VARCHAR" property="id" />
+			<result column="DEVICE_ID_E" jdbcType="VARCHAR" property="deviceId" />
+			<result column="MODEL_NO_E" jdbcType="VARCHAR" property="modelNo" />
+			<result column="RATED_VOLTAGE" jdbcType="VARCHAR" property="ratedVoltage" />
+			<result column="RATED_POWER_E" jdbcType="VARCHAR" property="ratedPower" />
+			<result column="STANDARDS" jdbcType="VARCHAR" property="standards" />
+			<result column="CONTROL_QUANTITY" jdbcType="VARCHAR" property="controlQuantity" />
+			<result column="RATED_CURRENT" jdbcType="VARCHAR" property="ratedCurrent" />
+			<result column="RATED_FREQUENCY" jdbcType="VARCHAR" property="ratedFrequency" />
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		device_id,
+		device_name,
+		pump_house_id,
+		project_id,
+		date_manufacture,
+		date_purchase,
+		purchase_amount,
+		createtime, updatetime
+	</sql>
+
+	<select id="getArchiveByDevId" parameterType="String" resultMap="deviceArchive">
+		select
+		d.id as device_id,
+		d.name as device_name,
+		d.id_pump_house,
+		d.date_manufacture,
+		d.date_purchase,
+		d.purchase_amount,
+		d.createtime,
+		d.updatetime,
+		l.*,
+		l.DEVICE_ID as DEVICE_ID_L,
+		l.MODEL_NO as MODEL_NO_L,
+		l.RATED_POWER as RATED_POWER_L,
+		p.*,
+		p.id as project_id,
+		a.*,
+		DATE_FORMAT(a.EX_FACTORY_DATE,'%Y-%m-%d %H:%i:%s') as ex_Factory_Time,
+		a.PUPMP_MODEL_NO,
+		a.sbedgsyc as sbedgsyc_S,
+		a.DEVICE_ID as DEVICE_ID_S,
+		a.sbedgsll as sbedgsll_S,
+		e.*,
+		e.DEVICE_ID as DEVICE_ID_E,
+		e.RATED_POWER
+		as RATED_POWER_E,
+		aa.id AS "id",
+		aa.name AS "name",
+		aa.address AS
+		"address",
+		aa.device_manufacturers as deviceManufacturers,
+		aa.device_manufacturers_information as deviceManufacturersInformation,
+		aa.self_control_manufacturers as selfControlManufacturers,
+		aa.self_control_manufacturers_information as
+		selfControlManufacturersInformation,
+		aa.construction_side as
+		constructionSide,
+		aa.construction_side_information as
+		constructionSideInformation,
+		aa.Construction as construction,
+		aa.Construction_information as constructionInformation,
+		aa.property as
+		property,
+		aa.property_information as propertyInformation,
+		aa.cell_name
+		as cellName,
+		aa.cell_adress as cellAdress,
+		DATE_FORMAT(aa.handover_time,'%Y-%m-%d %H:%i:%s') as handoverTime,
+		e.MODEL_NO as MODEL_NO_E
+
+		from device d
+		left join project p on
+		d.id_project = p.id
+		left join pump_house aa on d.id_pump_house = aa.id
+		left join device_set_label a on d.id = a.device_id
+		left join
+		device_pump_label l on d.id = l.device_id
+		left join
+		device_electrical_label e on d.id = e.device_id
+		where d.id =
+		#{deviceId}
+	</select>
+	<select id="getAccessoriesByDevId"
+		resultType="com.wapwag.woss.modules.sys.entity.DeviceAccessories"
+		parameterType="java.lang.String">
+		select
+		ACCESSORIES_name as accessoriesName ,
+		ACCESSORIES_NO accessoriesNo,
+		ACCESSORIES_TYPE as accessoriesType,
+		count(ACCESSORIES_TYPE) as countNum
+		from device_accessories_info
+		where
+		device_id = #{deviceId}
+		group by
+		ACCESSORIES_name , ACCESSORIES_NO
+		,ACCESSORIES_TYPE
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from device
+		where device_id = #{deviceId,jdbcType=VARCHAR}
+	</select>
+	<select id="findList" resultType="com.wapwag.woss.modules.sys.entity.PumpDevice">
+		select
+		<include refid="Base_Column_List" />
+		from device
+	</select>
+
+	<select id="getDeviceByProjectId" parameterType="java.lang.String"
+		resultType="com.wapwag.woss.modules.sys.entity.PumpDevice">
+		select
+		d.id as deviceId,
+		d.name as deviceName
+		from device d
+		where d.id_project = #{projectId}
+		and d.id in
+		(select
+		distinct(authobject_id) from permission_info per where auth_type =
+		'DEVICE' and role_id in
+		(
+		SELECT role_id FROM sys_user_role role where
+		user_id = #{id}
+		))
+	</select>
+
+	<select id="getAreaList" resultType="com.wapwag.woss.modules.sys.entity.PumpDevice">
+		SELECT 
+	   	area.id AS deviceId, area.NAME AS deviceName
+		FROM
+		    project pi
+		        JOIN
+		    pump_house phi ON phi.id_project = pi.id
+		        JOIN
+		    device di ON di.ID_PUMP_HOUSE = phi.id
+		        JOIN
+		    services se ON se.ID_DEVICE = di.ID
+		        join regional area on area.id = pi.id_region
+		WHERE
+		    se.id IS NOT NULL
+		        AND di.ID IN (SELECT 
+		            AUTHOBJECT_ID
+		        FROM
+		            permission_info pi
+		        WHERE
+		            AUTH_TYPE = 'DEVICE'
+		                AND ROLE_ID IN (SELECT 
+		                    ROLE_ID
+		                FROM
+		                    sys_user_role
+		                WHERE
+		                    user_id = #{userId})
+		                OR ROLE_ID IN (SELECT 
+		                    role_id
+		                FROM
+		                    sys_office_role_new
+		                WHERE
+		                    office_id = (SELECT 
+		                            office_id
+		                        FROM
+		                            sys_user
+		                        WHERE
+		                            id = #{userId})))
+		        AND di.ID_PUMP_HOUSE IS NOT NULL
+		        AND di.del_flag = '0'
+		GROUP BY area.id
+	</select>
+
+	<select id="getPumpHouseByAreaId" parameterType="java.lang.String"
+		resultType="com.wapwag.woss.modules.sys.entity.PumpDevice">
+		select
+		d.id as deviceId ,
+		d.name as deviceName
+		from pump_house
+		d
+		where d.ID_REGION = #{id}
+	</select>
+	<select id="getDeviceIdByPumpId" parameterType="java.lang.String"
+		resultType="com.wapwag.woss.modules.sys.entity.PumpDevice">
+		select
+		d.id as deviceId ,
+		d.name as deviceName
+		from device
+		d
+		where d.ID_PUMP_HOUSE = #{pumpId}
+	</select>
+	<select id="getProjectByAreaId" parameterType="java.lang.String"
+		resultType="com.wapwag.woss.modules.sys.entity.PumpDevice">
+		SELECT 
+	   	pi.id AS id, pi.NAME AS deviceName
+		FROM
+		    project pi
+		        JOIN
+		    pump_house phi ON phi.id_project = pi.id
+		        JOIN
+		    device di ON di.ID_PUMP_HOUSE = phi.id
+		WHERE
+		    pi.id_region = #{areaId} 
+		        AND di.ID IN (SELECT 
+		            AUTHOBJECT_ID
+		        FROM
+		            permission_info pi
+		        WHERE
+		            AUTH_TYPE = 'DEVICE'
+		                AND ROLE_ID IN (SELECT 
+		                    ROLE_ID
+		                FROM
+		                    sys_user_role
+		                WHERE
+		                    user_id = #{userId})
+		                OR ROLE_ID IN (SELECT 
+		                    role_id
+		                FROM
+		                    sys_office_role_new
+		                WHERE
+		                    office_id = (SELECT 
+		                            office_id
+		                        FROM
+		                            sys_user
+		                        WHERE
+		                            id = #{userId})))
+		        AND di.ID_PUMP_HOUSE IS NOT NULL
+		        AND di.del_flag = '0'
+		GROUP BY pi.id
+	</select>
+	<select id="countPumpHouse" resultType="java.lang.String">
+		select count(id) from pump_house
+		where id in (
+		    select id_pump_house from device di where di.ID IN (SELECT 
+		            AUTHOBJECT_ID
+		        FROM
+		            permission_info pi
+		        WHERE
+		            AUTH_TYPE = 'DEVICE'
+		                AND ROLE_ID IN (SELECT 
+		                    ROLE_ID
+		                FROM
+		                    sys_user_role
+		                WHERE
+		                    user_id = #{id})
+		                OR ROLE_ID IN (SELECT 
+		                    role_id
+		                FROM
+		                    sys_office_role_new
+		                WHERE
+		                    office_id = (SELECT 
+		                            office_id
+		                        FROM
+		                            sys_user
+		                        WHERE
+		                            id = #{id})))
+		)
+		<if test="projectId != null and projectId != ''">
+			and id_project = #{projectId}
+		</if>
+		<if test="area != null and area != ''">
+			and ID_REGION = #{area}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and  name  like 
+			concat('%',#{pumpHouseName},'%')
+		</if>
+	</select>
+	<select id="pumpHouses" resultType="com.wapwag.woss.modules.sys.entity.PumpHouse">
+		select
+		aa.id AS "id",
+		aa.name AS "pumpHouseName",
+		aa.address AS "address",
+		aa.device_manufacturers as deviceManufacturers,
+		aa.device_manufacturers_information as deviceManufacturersInformation,
+		aa.self_control_manufacturers as selfControlManufacturers,
+		aa.self_control_manufacturers_information as
+		selfControlManufacturersInformation,
+		aa.construction_side as
+		constructionSide,
+		aa.construction_side_information as
+		constructionSideInformation,
+		aa.Construction as construction,
+		aa.Construction_information as constructionInformation,
+		aa.property as
+		property,
+		aa.property_information as propertyInformation,
+		aa.cell_name
+		as cellName,
+		aa.cell_adress as cellAdress,
+		j.name as projectId,
+		r.name as
+		areaId
+		from pump_house aa
+		left join regional r on r.id = aa.ID_REGION
+		left join project j on j.id = aa.id_project
+		where aa.id in (
+		    select id_pump_house from device di where di.ID IN (SELECT 
+		            AUTHOBJECT_ID
+		        FROM
+		            permission_info pi
+		        WHERE
+		            AUTH_TYPE = 'DEVICE'
+		                AND ROLE_ID IN (SELECT 
+		                    ROLE_ID
+		                FROM
+		                    sys_user_role
+		                WHERE
+		                    user_id = #{id})
+		                OR ROLE_ID IN (SELECT 
+		                    role_id
+		                FROM
+		                    sys_office_role_new
+		                WHERE
+		                    office_id = (SELECT 
+		                            office_id
+		                        FROM
+		                            sys_user
+		                        WHERE
+		                            id = #{id})))
+		)
+		<if test="projectId != null and projectId != ''">
+			and aa.id_project = #{projectId}
+		</if>
+		<if test="area != null and area != ''">
+			and aa.ID_REGION = #{area}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and  aa.name  like 
+			concat('%',#{pumpHouseName},'%')
+		</if>
+		limit #{minMun} , #{maxNum}
+	</select>
+	<select id="pumpCountArea" resultType="com.wapwag.woss.modules.sys.entity.Alarm">
+		select al.name as alarmId,count(al.name) as remarks from (
+		select
+		aa.id
+		,
+		r.name
+		from pump_house aa
+		join regional r on r.id = aa.ID_REGION
+		join project j on j.id = aa.id_project
+		join device d on d.id_pump_house = aa.id
+		where d.ID IN (SELECT 
+		            AUTHOBJECT_ID
+		        FROM
+		            permission_info pi
+		        WHERE
+		            AUTH_TYPE = 'DEVICE'
+		                AND ROLE_ID IN (SELECT 
+		                    ROLE_ID
+		                FROM
+		                    sys_user_role
+		                WHERE
+		                    user_id = #{id})
+		                OR ROLE_ID IN (SELECT 
+		                    role_id
+		                FROM
+		                    sys_office_role_new
+		                WHERE
+		                    office_id = (SELECT 
+		                            office_id
+		                        FROM
+		                            sys_user
+		                        WHERE
+		                            id = #{id})))
+		<if test="projectId != null and projectId != ''">
+			and aa.id_project = #{projectId}
+		</if>
+		<if test="areaId != null and areaId != ''">
+			and aa.ID_REGION = #{areaId}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and aa. name  like 
+			concat('%',#{pumpHouseName},'%')
+		</if>
+		GROUP BY aa.ID
+		) al group by al.name
+	</select>
+	<select id="pumpCountLocal" resultType="com.wapwag.woss.modules.sys.entity.Alarm">
+		select ds.label as alarmId, count(ds.label) as remarks from (
+		select d.LOCATION,dd.label from (
+		select case when LOCATION is null then '1' else LOCATION end LOCATION from device where id_pump_house in (
+		select id from pump_house
+		where 1 =1 
+		<if test="projectId != null and projectId != ''">
+			and id_project = #{projectId}
+		</if>
+		<if test="areaId != null and areaId != ''">
+			and ID_REGION = #{areaId}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and  name  like 
+			concat('%',#{pumpHouseName},'%')
+		</if>
+		) and ID IN (SELECT 
+		            AUTHOBJECT_ID
+		        FROM
+		            permission_info pi
+		        WHERE
+		            AUTH_TYPE = 'DEVICE'
+		                AND ROLE_ID IN (SELECT 
+		                    ROLE_ID
+		                FROM
+		                    sys_user_role
+		                WHERE
+		                    user_id = #{id})
+		                OR ROLE_ID IN (SELECT 
+		                    role_id
+		                FROM
+		                    sys_office_role_new
+		                WHERE
+		                    office_id = (SELECT 
+		                            office_id
+		                        FROM
+		                            sys_user
+		                        WHERE
+		                            id = #{id}))) ) d left join sys_dict dd on d.LOCATION =
+		dd.value where dd.type = 'device_location'
+		) ds group by ds.label
+
+	</select>
+</mapper>

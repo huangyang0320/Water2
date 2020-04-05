@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!--<title>合肥二次供水管理平台</title>-->
+        <!-- Bootstrap Styles-->
+        <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
+        <!-- FontAwesome Styles-->
+        <link href="static/assets/css/font-awesome.css" rel="stylesheet" />
+
+        <title>Title</title>
+        <style>
+            body {
+                font-size: 12px !important;
+                top: 120px;
+            }
+            #device-stat .list-group-item small {
+                float: right;
+                margin-right: 5px;
+            }
+
+            .device-overflow {
+                max-height: 250px;
+                overflow: visible;
+            }
+            .list-group a {
+                text-align: inherit;
+            }
+            .list-group a i {
+                float: left;
+                magrin-left: 20px;
+                line-height: 17px;
+            }
+            .list-group a span {
+                margin-left: 20px;
+                font-size: 12px;
+                color: #333;
+            }
+            #myCarousel .carousel-control{
+                width: 16px;
+                text-align: center;
+                display: none;
+            }
+            #myCarousel .left{
+               left: -15px;
+               background-image:none ;
+            }
+            #myCarousel .left:hover{
+                background-color: rgba(0, 0, 0, 0.2);
+            }
+            #myCarousel .right{
+                right: -14px;
+                background-image:none ;
+            }
+            #myCarousel .right:hover{
+                background-color: rgba(0, 0, 0, 0.2);
+            }
+            #myCarouselTwo .carousel-control{
+                width: 16px;
+                text-align: center;
+                display: none;
+            }
+            #myCarouselTwo .left{
+                left: -15px;
+                background-image:none ;
+            }
+            #myCarouselTwo .left:hover{
+                background-color: rgba(0, 0, 0, 0.2);
+            }
+            #myCarouselTwo .right{
+                right: -14px;
+                background-image:none ;
+            }
+            #myCarouselTwo .right:hover{
+                background-color: rgba(0, 0, 0, 0.2);
+            }
+            #myCarousel,myCarouselTwo{
+                display: none;
+            }
+            .list-group-li{
+                padding:5px 0 0 16px;
+            }
+            .pointListP{
+                border: 1px solid #ccc; border-top: 0; margin: 0px;padding: 10px
+            }
+            .pointListP:nth-child(1){
+                border: 1px solid #ccc;
+            }
+
+            /*门禁相关*/
+            .door-modal-body .doorImage{
+                width: 150px;
+                height: 200px;
+                margin: 20px auto 0;
+            }
+            .door-modal-body .doorImageOpen{
+                background: url(static/assets/img/entranceOpen.png) center no-repeat;
+                background-size: 52% 79%;
+                background-color: #000000;
+                width: 412px;
+                float: left;
+                margin-left: -16px;
+            }
+            .door-modal-body .doorImageClose{
+                background: url(static/assets/img/entranceClose.png) center no-repeat;
+                background-size: 52% 79%;
+                background-color: #000000;
+                width: 412px;
+                float: left;
+                margin-left: -16px;
+            }
+            .door-modal-body .doorCtr{
+                width: 112px;
+                height: 36px;
+                margin: 20px auto 0;
+                vertical-align: middle;
+                cursor: pointer;
+            }
+            .door-modal-body .doorCtr.doorOpen {
+                background: url(static/assets/img/doorOpen.png) center no-repeat;
+                background-size: 100% 100%;
+                background-size: 82% 72%;
+                margin-right: -16px;
+                margin-top: -30px;
+            }
+            .door-modal-body .doorCtr.doorClose {
+                background: url(static/assets/img/doorClose.png) center no-repeat;
+                background-size: 100% 100%;
+                background-size: 82% 72%;
+                margin-right: -16px;
+                margin-top: -30px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid" style="top:100px">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="list-group" id="device-title">
+                        <li class="list-group-item">泵房名称：<span id="title0"></span></li>
+                        <li class="list-group-item">告警信息：<span id="showWarnInfo"></span><span id="clickHa" style="cursor:pointer">&nbsp;&nbsp;更多...</span></li>
+                        <li class="list-group-item">泵房地址：<span id="title2"></span></li>
+                        <!--<li class="list-group-item">....</li>-->
+                    </ul>
+                </div>
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#device-info" data-toggle="tab">泵房信息</a>
+                        </li>
+                        <li>
+                            <a href="#device-pic" data-toggle="tab">设备图片</a>
+                        </li>
+                        <li>
+                            <a href="#device-stat" data-toggle="tab">设备状态</a>
+                        </li>
+                        <li>
+                            <a href="#device-guard" data-toggle="tab">视频监控</a>
+                        </li>
+                        <!-- <li>
+                             <a id="pumpbandpic" href="#device-pumpbandpic" data-toggle="tab">泵机带图</a>
+                         </li>-->
+                       <!--<li>
+                            <a href="#device-zk" data-toggle="tab">门禁信息</a>
+                        </li>-->
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="device-info">
+                            <div class="list-group">
+                                <div id="myCarousel2" class="carousel slide" data-interval="90000000">
+                                    <!-- 轮播（Carousel）项目 -->
+                                    <div class="carousel-inner">
+
+                                        <div class="item active">
+                                        <ul class="list-group" id="pumpHouseInfo" style="margin-bottom: 0px">
+
+                                            <li class="list-group-li">运维方：<span id="constructionSide"></span></li>
+                                            <li class="list-group-li">运维方联系方式：<span id="constructionSideInformation"></span></li>
+                                            <li class="list-group-li">物业方：<span id="property"></span></li>
+                                            <li class="list-group-li">物业方联系方式：<span id="propertyInformation"></span></li>
+                                            <li class="list-group-li">施工方：<span id="construction"></span></li>
+                                            <li class="list-group-li">施工方联系方式：<span id="constructionInformation"></span></li>
+                                            <li class="list-group-li">自控改造厂家：<span id="selfControlManufacturers"></span></li>
+                                            <li class="list-group-li">自控改造厂家联系方式：<span id="selfControlManufacturersInformation"></span></li>
+                                            <li class="list-group-li">设备厂家：<span id="deviceManufacturers"></span></li>
+                                            <li class="list-group-li">设备厂家联系方式：<span id="deviceManufacturersInformation"></span></li>
+                                            <li class="list-group-li">移交时间：<span id="handoverTime"></span></li>
+
+
+                                        <!--<li class="list-group-li">设备名称：高科技无敌设备</li>
+                                        <li class="list-group-li">设备编号：0000000000000</li>
+                                        <li class="list-group-li">设备最新数据：</li>
+                                        <li class="list-group-item pre-scrollable" style="width: 100%;height: 176px">
+                                        <p>设备编号：0000000000000</p>
+                                        <p>设备编号：0000000000000</p>
+                                        <p>设备编号：0000000000000</p>
+                                        <p>设备编号：0000000000000</p>
+                                        <p>设备编号：0000000000000</p>
+                                        <p>设备编号：0000000000000</p>
+                                        <p>设备编号：0000000000000</p>
+                                        </li>-->
+                                        </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- 轮播（Carousel）导航 -->
+                                   <!-- <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>-->
+                                </div>
+                        </div>
+                        </div>
+                        <div class="tab-pane fade in active" id="device-pic">
+                            <img style="width:410px;height:250px" src="static/assets/img/default.png">
+                        </div>
+                        <div class="tab-pane fade device-overflow" id="device-stat">
+                            <div class="list-group">
+                                <div id="pointLoading" style="width: 100%; height: 254px; text-align: center;padding: 100px 0px;">
+                                    <img width="50px" width="" src="static/assets/img/loading.gif" alt="">
+                                </div>
+                                <div id="myCarousel" class="carousel slide" data-interval="90000000">
+                                    <!-- 轮播（Carousel）项目 -->
+                                    <div class="carousel-inner">
+
+                                        <!--<div class="item active">-->
+                                           <!--<ul class="list-group" style="margin-bottom: 0px">-->
+                                               <!--<li class="list-group-li">设备名称：高科技无敌设备</li>-->
+                                               <!--<li class="list-group-li">设备编号：0000000000000</li>-->
+                                               <!--<li class="list-group-li">设备最新数据：</li>-->
+                                               <!--<li class="list-group-item pre-scrollable" style="width: 100%;height: 176px">-->
+                                                    <!--<p>设备编号：0000000000000</p>-->
+                                                    <!--<p>设备编号：0000000000000</p>-->
+                                                    <!--<p>设备编号：0000000000000</p>-->
+                                                    <!--<p>设备编号：0000000000000</p>-->
+                                                    <!--<p>设备编号：0000000000000</p>-->
+                                                    <!--<p>设备编号：0000000000000</p>-->
+                                                    <!--<p>设备编号：0000000000000</p>-->
+                                               <!--</li>-->
+                                           <!--</ul>-->
+                                        <!--</div>-->
+                                    </div>
+
+                                    <!-- 轮播（Carousel）导航 -->
+                                    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade device-overflow" id="device-guard" >
+                            <div class="alert alert-success" id="noVideo" style="display:none" role="alert">当前泵房暂无可用视频监控.</div>
+                            <ul class="list-group">
+                <!--                <li class="list-group-item door_state">门禁开关：未能获取到门禁状态，点击重新获取</li>
+                                <li class="list-group-item">视频监控</li>-->
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade device-overflow" id="device-pumpbandpic">
+                            <div class="list-group">
+                                <div id="pointLoadingTwo" style="width: 100%; height: 254px; text-align: center;padding: 100px 0px;">
+                                    <img width="50px" width="" src="static/assets/img/loading.gif" alt="">
+                                </div>
+                                <div id="myCarouselTwo" class="carousel slide" data-interval="90000000">
+                                    <!-- 轮播（Carousel）项目 -->
+                                    <div class="carousel-inner">
+
+                                    </div>
+
+                                    <!-- 轮播（Carousel）导航 -->
+                                    <a class="left carousel-control" href="#myCarouselTwo" role="button" data-slide="prev">
+                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="right carousel-control" href="#myCarouselTwo" role="button" data-slide="next">
+                                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!--门禁-->
+                        <!--<div class="tab-pane fade" id="device-zk">
+                                <ul class="list-group">
+                                    <div class="modal-body door-modal-body"  id="doorModalBody">
+
+                                    </div>
+                                   &lt;!&ndash; <div class="tab-pane fade in active" id="zk-pic">
+                                        <img style="width:410px;height:250px" src="static/assets/img/default.png">
+                                    </div>&ndash;&gt;
+                                </ul>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display:none">
+            <ul id="sample">
+                <li class="list-group-item">
+                    <a class="btn btn-default btn-block">
+                        <i class="glyphicon glyphicon-facetime-video"></i>
+                        <span></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- jQuery Js -->
+        <script src="static/assets/js/jquery-1.10.2.js"></script>
+        <!-- Bootstrap Js -->
+        <script src="static/assets/js/bootstrap.min.js"></script>
+        <script src="static/assets/js/date_time.js"></script>
+        <script src="static/assets/js/Highcharts-4.2.3/highcharts.js"></script>
+        <!-- Lhgdialog Js -->
+        <script src="static/assets/js/lhgdialog/lhgdialog.min.js?skin=iblue"></script>
+        <script>
+            var DIALOG_DATA_UPDATE, DIALOG_INTERVAL, DIALOG_DATA_UPDATE_TWO;
+
+            $(function () {
+                $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+                    var userStatus = jqxhr ? jqxhr.getAllResponseHeaders() : null;
+                    if (userStatus
+                            && userStatus!== ""
+                            && userStatus.indexOf("x-user-status: logout") > -1) {
+                        parent.window.location = parent.ROOT_PATH + "/login.html";
+                    }
+                });
+
+
+
+                $("#clickHa").click(function(){
+
+                        $.dialog({
+                                 id: 'SCADA_Page1',
+                                 title: '告警信息列表',
+                                 content: 'url:/HYWater/warn.html?flag=1',
+                                 width: 1024,
+                                 height: 400,
+                                max: false,
+                                min: false,
+                                 resize: true,
+                                 fixed: false
+                             });
+                });
+
+
+                var pumpHouse = parent.GLOBAL_PUMP_MSG_MAP;
+
+                var video = pumpHouse["videoInfoList"] ? pumpHouse["videoInfoList"] : [];
+
+                var $subtitle = $("#device-title").find(".list-group-item");
+                var $devicePic = $("#device-pic");
+
+                if (pumpHouse["allPicUrl"] && $.trim(pumpHouse["allPicUrl"] != "") && pumpHouse["allPicUrl"] != "static/assets/img/default.png") {
+                    $devicePic.find("img").prop("src", pumpHouse["allPicUrl"]);
+                    //$devicePic.find("img").prop("src", "static/assets/img/default.png");
+                    $devicePic.attr("onclick", "parent.showPic('" + pumpHouse["allPicUrl"] + "')");
+                    //$devicePic.attr("onclick", "parent.showPic('static/assets/img/default.png')");
+                } else {
+                    pumpHouse["allPicUrl"] = "static/assets/img/default.png";
+                    $devicePic.attr("onclick", "parent.showPic('" + pumpHouse["allPicUrl"] + "')");
+                    //$devicePic.attr("onclick", "parent.showPic('static/assets/img/default.png')");
+                }
+                console.log(pumpHouse);
+               /* $($subtitle[0]).text("泵房编号：" + pumpHouse["pumpHouseId"]);*/
+                /*$($subtitle[0]).text("泵房名称：" + pumpHouse["pumpHouseName"]);
+                $($subtitle[1]).text("泵房地址：" + pumpHouse["address"]);
+                $($subtitle[2]).text("告警信息：" + "停机报警");*/
+
+                $("#title0").html(pumpHouse["pumpHouseName"]);
+                $("#showWarnInfo").html("停机报警");
+                $("#title2").html(pumpHouse["address"]);
+                $("#showWarnInfo").css("background-color","yellow");
+
+
+
+                //泵房 详情数据
+                $("#deviceManufacturers").html(pumpHouse["deviceManufacturers"]);
+                $("#deviceManufacturersInformation").html(pumpHouse["deviceManufacturersInformation"]);
+                $("#selfControlManufacturers").html(pumpHouse["selfControlManufacturers"]);
+                $("#selfControlManufacturersInformation").html(pumpHouse["selfControlManufacturersInformation"]);
+                $("#constructionSide").html(pumpHouse["constructionSide"]);
+                $("#constructionSideInformation").html(pumpHouse["constructionSideInformation"]);
+                $("#construction").html(pumpHouse["construction"]);
+                $("#constructionInformation").html(pumpHouse["constructionInformation"]);
+                $("#property").html(pumpHouse["property"]);
+                $("#propertyInformation").html(pumpHouse["propertyInformation"]);
+                $("#handoverTime").html(pumpHouse["handoverTime"]);
+
+
+                $("#pumpHouseInfo").html();
+
+
+
+                var $noVideo = $("#noVideo");
+                $noVideo.hide();
+                if (video.length > 0) {
+                    for (var i = 0; i < video.length; i++) {
+                        if (video[i]) {
+                            var $videoButton = $("#sample")
+                                    .find(".list-group-item")
+                                    .clone(true).find("a");
+                            $videoButton.attr("href", "javascript:parent.showVideo('" + video[i].hkVideoDeviceId + "')");
+                            $videoButton.find("span").text(video[i].name);
+                            $("#device-guard").find(".list-group").append($videoButton);
+                        }
+                    }
+                } else {
+                    $noVideo.slideDown();
+                }
+                var $deviceData = $("#myCarousel").find(".carousel-inner");
+                $("#myCarousel").hide();
+                $("#pointLoading").show();
+                $deviceData.empty();
+                DIALOG_DATA_UPDATE = function () {
+                    $.ajax({
+                        type:"POST",
+                        contentType: 'application/json',
+                        url: parent.CONTEXT_PATH + '/monitor/statistic/getPointInfoListByDeviceIds',
+                        datatype:"JSON",
+                        data: JSON.stringify({
+                            pumpHouseId: pumpHouse.pumpHouseId
+                        }),
+                        success:function (res) {
+                            $("#pointLoading").hide();
+                            var strDevice, deviceStatus, statusBtn, ponitStr;
+                            if( res.length>1){
+                                $('#myCarousel').find('.carousel-control').show();
+                            }else{
+                                $('#myCarousel').find('.carousel-control').hide();
+                            }
+                            for(var i = 0 ; i < res.length ; i++){
+                                if(res[i].deviceStatus == '0' ){
+                                    deviceStatus  =  "离线";
+                                }
+                                if(res[i].deviceStatus == '1' ){
+                                    deviceStatus  =  "在线";
+                                }
+                                if (i ==0){
+                                    statusBtn = "active"
+                                }else {
+                                    statusBtn = ""
+                                }
+                                strDevice = $('<div class="item '+ statusBtn +'">' +
+                                    ' <ul class="list-group" style="margin-bottom: 0px">' +
+                                    '<li class="list-group-li">设备名称：' + res[i].deviceName + '</li>' +
+                                    '<li class="list-group-li">设备编号：' + res[i].deviceId + '</li>' +
+                                    '<li class="list-group-li">设备状态：' + deviceStatus + '</li>' +
+                                    '<li class="list-group-li">设备最新数据：</li>' +
+                                    '<li id="pointList" class="list-group-item pre-scrollable" style="width: 100%;height: 152px;border-bottom: 1px #ccc solid;">' +
+                                    '</li></ul></div>')
+                                if(res[i].pointList){
+                                    res[i].pointList.map(function (val) {
+                                        var value = val.pointValue
+                                        if(val.unit){
+                                            value += " "+val.unit
+                                        }
+
+                                       if(val.pointName.indexOf("PLC电源故障")>0 || val.pointName.indexOf("PLC电源故障")>0 ||
+                                            val.pointName.indexOf("变频器故障")>0 || val.pointName.indexOf("报警")>0 ||
+                                           val.pointName.indexOf("报警")>0 ||
+                                            val.pointName.indexOf("箱液位报警")>0){
+                                           var imgUrl= value>0?"static/assets/img/alarm.png":"static/assets/img/unAlarm.png" ;
+                                            ponitStr = '<p class="pointListP">'+ val.pointName +'：<span style="float: right"><img src='+imgUrl+'></span></p>'
+
+                                        }else  if(val.pointName.indexOf("潜污泵")>0 || val.pointName.indexOf("电源急停")>0 || val.pointName.indexOf("门禁状态")>0 ||
+                                            val.pointName.indexOf("变频运行")>0 || val.pointName.indexOf("电动阀打开")>0 || val.pointName.indexOf("运行模式")>0){
+                                            var imgUrl= value>0?"static/assets/img/run.png":"static/assets/img/unRun.png" ;
+                                            ponitStr = '<p class="pointListP">'+ val.pointName +'：<span style="float: right"><img src='+imgUrl+'></span></p>'
+
+                                        }else{
+                                            ponitStr = '<p class="pointListP">'+ val.pointName +'：<span style="float: right">'+ value +'</span></p>'
+                                        }
+
+                                        strDevice.find('#pointList').append(ponitStr);
+                                    })
+                                }else{
+                                    ponitStr = '<div style="width: 100%;height: 100%;text-align: center;padding-top: 60px;box-sizing: border-box">暂无数据</div>'
+                                    strDevice.find('#pointList').append(ponitStr);
+                                }
+                                $deviceData.append(strDevice);
+                            }
+                            $("#myCarousel").show();
+                        }
+                    })
+                };
+                var $pumpBandPic = $("#myCarouselTwo").find(".carousel-inner");
+                $("#myCarouselTwo").hide();
+                $("#pointLoadingTwo").show();
+                DIALOG_DATA_UPDATE_TWO = function () {
+                    $pumpBandPic.empty();
+                    $.ajax({
+                        type:"POST",
+                        contentType: 'application/json',
+                        url: parent.CONTEXT_PATH + '/monitor/statistic/getPumpRunTimeByDeviceIds',
+                        datatype:"JSON",
+                        data: JSON.stringify({
+                            pumpHouseId: pumpHouse.pumpHouseId
+                        }),
+                        success:function (res) {
+                            $("#pointLoadingTwo").hide();
+                            var strDevice, deviceStatus, statusBtn, picStr;
+                            if( res.length>1){
+                                $('#myCarouselTwo').find('.carousel-control').show();
+                            }else{
+                                $('#myCarouselTwo').find('.carousel-control').hide();
+                            }
+                            for(var i = 0 ; i < res.length ; i++){
+                                if(res[i].deviceStatus == '0' ){
+                                    deviceStatus  =  "离线";
+                                }
+                                if(res[i].deviceStatus == '1' ){
+                                    deviceStatus  =  "在线";
+                                }
+                                if (i == 0){
+                                    statusBtn = "active"
+                                }else {
+                                    statusBtn = ""
+                                }
+                                strDevice = $('<div class="item '+ statusBtn +'">' +
+                                    '<ul class="list-group" style="margin-bottom: 0px">' +
+                                    '<li class="list-group-li">设备名称：' + res[i].deviceName + '</li>' +
+                                    '<li class="list-group-li">设备编号：' + res[i].deviceId + '</li>' +
+                                    '<li class="list-group-li">设备状态：' + deviceStatus + '</li>' +
+                                    '<li id="bandDiagram" class="list-group-item pre-scrollable" style="width: 100%;height: 152px; padding: 10px 30px 0 0">' +
+                                    '</li></ul></div>')
+                                if(res[i].datas){
+                                    var dataMsg = res[i].datas;
+                                    var divObject = strDevice.find('#bandDiagram');
+                                    showChar(dataMsg, divObject);
+                                }else{
+                                    picStr = '<div style="width: 100%;height: 100%;text-align: center;padding-top: 60px;box-sizing: border-box">暂无数据</div>'
+                                    strDevice.find('#bandDiagram').append(picStr);
+                                }
+                                $pumpBandPic.append(strDevice);
+                            }
+                            $("#myCarouselTwo").show();
+                        }
+                    })
+                };
+                DIALOG_DATA_UPDATE();
+                $("#pumpbandpic").click(function () {
+                    $("#pointLoadingTwo").show();
+                    DIALOG_DATA_UPDATE_TWO();
+                })
+                // DIALOG_INTERVAL = setInterval(function () {
+                //     DIALOG_DATA_UPDATE();
+                // }, 5000);
+            });
+
+            function doClean() {
+                if (DIALOG_INTERVAL) {
+                    clearInterval(DIALOG_INTERVAL);
+                }
+            }
+
+            function showChar(dataMsg, divObj){
+                divObj.highcharts({
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: null
+                    },
+                    xAxis: {
+                        type: 'category',
+                        categories: ['1#', '2#', '3#', '4#', '5#', '6#', '7#', '8#'],
+                    },
+                    yAxis: {
+                        lineWidth: 1,
+                        title: {
+                            text: ''
+                        },
+                        min: 0,
+                        crosshair: true, //准线
+                        tickInterval: 60,
+                        //minTickInterval: 60 //最小刻度范围
+                        max: 1440,
+                        labels: {
+                            formatter: function () {
+                                return this.value/60+'时';
+                            }
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        bar: {
+                            stacking: 'normal',//normal
+                            borderWidth: 0
+                        }
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            var time = -(this.series.name.split(' ')[1] - 24*60);
+                            var hours = parseInt(time/60);
+                            var minute = time%60;
+                            return hours + '时' + minute + '分';
+                        }
+                    },
+                    series: dataMsg,
+                    credits: {
+                        enabled: false//不显示highCharts版权信息
+                    }
+                });
+
+            }
+
+            /*门禁*/
+            /**
+             * 获取门禁信息
+             */
+            getDeviceDoorInfo();
+            function getDeviceDoorInfo() {
+                var v =new Object();
+                v.status=1;
+                v.name="门禁001";
+                var doorClass = "", doorClassMsg = "doorImageOpen", btnClass = "doorOpen", doorCtr = "0";
+                $('#deviceDoor').show();
+                $('#doorModalBody').html('');
+                if(v.length>1) doorClass = "doorCtr-outMore";
+                //res.map(function (v) {
+                    if(v.status == 0){
+                        doorClassMsg = "doorImageClose";
+                        btnClass = "doorClose";
+                        doorCtr = "1"
+                    }
+                    var str = $(' <div class="doorCtr-out '+doorClass+'">\n' +
+                        '                    <p>门禁名称：'+ v.name +'</p>\n' +
+                        '                    <div class="doorCtr '+ btnClass +'" doorToStatus="'+doorCtr+'" uuid="'+ v.uuid +'" onclick="doorCtr(this)"></div>\n' +
+                        '                    <div class="doorImage '+ doorClassMsg +'" id="doorImage"></div>\n' +
+                        '                </div>')
+                    $('#doorModalBody').append(str);
+                //})
+
+
+               /*
+                $.ajax({
+                    type:"POST",
+                    url: CONTEXT_PATH+'/monitor/configuration/entranceGuard',
+                    async: false,
+                    datatype:"JSON",
+                    data:{pumpId: GLOBAL_SELECT_DEVICE.pumpHouseId},
+                    success: function (res) {
+                        if(res.length > 0){
+                            var doorClass = "", doorClassMsg = "doorImageOpen", btnClass = "doorOpen", doorCtr = "0";
+                            $('#deviceDoor').show();
+                            $('#doorModalBody').html('');
+                            if(res.length>1) doorClass = "doorCtr-outMore";
+                            res.map(function (v) {
+                                if(v.status == 0){
+                                    doorClassMsg = "doorImageClose";
+                                    btnClass = "doorClose";
+                                    doorCtr = "1"
+                                }
+                                var str = $(' <div class="doorCtr-out '+doorClass+'">\n' +
+                                    '                    <p>门禁名称：'+ v.name +'</p>\n' +
+                                    '                    <div class="doorImage '+ doorClassMsg +'" id="doorImage"></div>\n' +
+                                    '                    <div class="doorCtr '+ btnClass +'" doorToStatus="'+doorCtr+'" uuid="'+ v.uuid +'" onclick="doorCtr(this)"></div>\n' +
+                                    '                </div>')
+                                $('#doorModalBody').append(str);
+                            })
+                        }else{
+                            //$('#deviceDoor').hide();
+
+                            var res =new Object();
+                            res.status=0;
+                            res.name="门禁001";
+                            var doorClass = "", doorClassMsg = "doorImageOpen", btnClass = "doorOpen", doorCtr = "0";
+                            $('#deviceDoor').show();
+                            $('#doorModalBody').html('');
+                            if(res.length>1) doorClass = "doorCtr-outMore";
+                            res.map(function (v) {
+                                alert(v.status);
+                                if(v.status == 0){
+                                    doorClassMsg = "doorImageClose";
+                                    btnClass = "doorClose";
+                                    doorCtr = "1"
+                                }
+                                var str = $(' <div class="doorCtr-out '+doorClass+'">\n' +
+                                    '                    <p>门禁名称：'+ v.name +'</p>\n' +
+                                    '                    <div class="doorImage '+ doorClassMsg +'" id="doorImage"></div>\n' +
+                                    '                    <div class="doorCtr '+ btnClass +'" doorToStatus="'+doorCtr+'" uuid="'+ v.uuid +'" onclick="doorCtr(this)"></div>\n' +
+                                    '                </div>')
+                                $('#doorModalBody').append(str);
+                            })
+                        }
+                    }
+                })*/
+            }
+
+            /**
+             * 弹出门禁信息
+             */
+            function showDoor() {
+                $('#myModalForDoor').modal('show');
+            }
+
+
+            /**
+             * 门禁下控
+             */
+            function doorCtr(self) {
+                var doorToStatus = $(self).attr('doorToStatus');
+                            if(doorToStatus == 0){
+                                $(self).attr('doorToStatus', 1);
+                                $(self).addClass('doorClose').removeClass('doorOpen')
+                                $(self).parent().find('.doorImage').addClass('doorImageClose').removeClass('doorImageOpen')
+                            }else{
+                                $(self).attr('doorToStatus', 0);
+                                $(self).addClass('doorOpen').removeClass('doorClose')
+                                $(self).parent().find('.doorImage').addClass('doorImageOpen').removeClass('doorImageClose')
+                            }
+                            // openAlertModel("myModalAlert" , '请求成功！');
+
+
+                 /*var doorToStatus = $(self).attr('doorToStatus');
+                var uuid = $(self).attr('uuid');
+                let deviceId = $('#lowerCTitle').attr('device')
+                // LOADING.show();
+                $.ajax({
+                    type: "POST",
+                    url: CONTEXT_PATH + '/monitor/configuration/remoteCtrl',
+                    async: false,
+                    contentType: 'application/json',
+                    datatype: "JSON",
+                    data: JSON.stringify({
+                        deviceId: uuid,
+                        pointCode: 'DoorAccess',
+                        pointValue:  doorToStatus ,
+                    }),
+                    success: function (response) {
+                        // LOADING.hide();
+                        if (response.status == 'complete') {
+                            if(doorToStatus == 0){
+                                $(self).attr('doorToStatus', 1);
+                                $(self).addClass('doorClose').removeClass('doorOpen')
+                                $(self).parent().find('.doorImage').addClass('doorImageClose').removeClass('doorImageOpen')
+                            }else{
+                                $(self).attr('doorToStatus', 0);
+                                $(self).addClass('doorOpen').removeClass('doorClose')
+                                $(self).parent().find('.doorImage').addClass('doorImageOpen').removeClass('doorImageClose')
+                            }
+                            // openAlertModel("myModalAlert" , '请求成功！');
+                        }
+                        if(response.status == 'error'){
+                            openAlertModel("myModalAlert" , response.errorMessage);
+                        }
+                    },
+                    error:function () {
+                        LOADING.hide();
+                        openAlertModel("myModalAlert" , '请求失败！');
+                    }
+                })
+*/
+            }
+
+        </script>
+    </body>
+</html>

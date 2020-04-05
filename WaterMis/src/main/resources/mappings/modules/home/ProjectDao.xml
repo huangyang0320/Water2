@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.home.dao.ProjectDao">
+
+	<resultMap id="BaseResultMap"
+		type="com.wapwag.woss.modules.home.entity.ProjectInfo">
+		<id column="project_id" property="projectId" jdbcType="VARCHAR" />
+		<result column="PROJECT_NAME" property="projectName" jdbcType="VARCHAR" />
+		<result column="PROJECT_MANAGER" property="projectManager"
+			jdbcType="VARCHAR" />
+		<result column="PROJECT_ADDRESS" property="projectAddress"
+			jdbcType="VARCHAR" />
+		<result column="PROJECT_MEMO" property="projectMemo" jdbcType="VARCHAR" />
+		<result column="SALESMAN" property="salesman" jdbcType="VARCHAR" />
+		<result column="CONTRACT_TYPE" property="contractType"
+			jdbcType="VARCHAR" />
+		<result column="BUYER_NAME" property="buyerName" jdbcType="VARCHAR" />
+		<result column="BUYER_CONTACTS_NAME" property="buyerContactsName"
+			jdbcType="VARCHAR" />
+		<result column="SIGN_DATE" property="signDate" jdbcType="TIMESTAMP" />
+		<result column="ARRIVAL_DATE" property="arrivalDate" jdbcType="TIMESTAMP" />
+		<result column="YJTS_DATE" property="yjtsDate" jdbcType="TIMESTAMP" />
+		<result column="HTQD_DW" property="htqdDw" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="findProjectByRegion" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		select id, name,ID_REGION pid from project
+		WHERE ID_REGION IN
+		(
+		<foreach collection="regionalTreeInfo" item="item" separator=",">
+			#{item.id}
+		</foreach>
+		) group by id
+	</select>
+
+	<select id="findTypeByRegion" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+	    SELECT  * from (
+		SELECT
+		CONCAT(ID_REGION, "--", region_type) id,
+		CASE
+		WHEN region_type = 1 THEN
+		'城区'
+		WHEN region_type = 2 THEN
+		'农村'
+		WHEN region_type = 3 THEN
+		'山区'
+		END NAME,
+		ID_REGION pid
+		FROM
+		project
+		WHERE
+		region_type IS NOT NULL
+		AND id IN (
+		SELECT
+		pi.id
+		FROM
+		regional ri
+		LEFT JOIN project pi ON pi.ID_REGION = ri.id
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.region_type IS NOT NULL
+		GROUP BY
+		pi.id
+		) ) t
+		GROUP BY
+			t.id
+	</select>
+
+	<select id="findProjectByType" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		select id ,`NAME` name ,CONCAT(ID_REGION ,"--", region_type) pid from
+		project where ID_REGION in
+		(
+		<foreach collection="regionTypeDto" item="item" separator=",">
+			#{item.regionId}
+		</foreach>
+		)
+		and
+		region_type in (
+		<foreach collection="regionTypeDto" item="item" separator=",">
+			#{item.regionType}
+		</foreach>
+		) group by id
+	</select>
+
+	<select id="findTypeByCompany" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		select * from (
+		SELECT
+		CONCAT(company_node ,"--", region_type) id,
+		CASE
+		WHEN region_type = 1 THEN
+		'城区'
+		WHEN region_type = 2 THEN
+		'农村'
+		WHEN region_type = 3 THEN
+		'山区'
+		END NAME,
+		company_node pid
+		FROM
+		project
+		WHERE
+		company_node IN
+		(
+		<foreach collection="companyTreeInfo" item="item" separator=",">
+			#{item.id}
+		</foreach>
+		) and region_type is NOT NULL
+		) t
+		GROUP BY t.id
+	</select>
+
+	<select id="findTypeByWaterDepart" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		select * from  (
+		SELECT
+		CONCAT(water_depart_orgNode, "--", region_type) id,
+		CASE
+		WHEN region_type = 1 THEN
+		'城区'
+		WHEN region_type = 2 THEN
+		'农村'
+		WHEN region_type = 3 THEN
+		'山区'
+		END NAME,
+		water_depart_orgNode pid
+		FROM
+		project
+		WHERE
+		region_type IS NOT NULL
+		AND id IN (
+		SELECT
+		pi.id
+		FROM
+		project pi
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN sys_office o ON o.id = pi.water_depart_orgNode
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.water_depart_orgNode IS NOT NULL
+		AND pi.region_type IS NOT NULL
+		GROUP BY
+		pi.id
+		) ) t
+		GROUP BY
+		t.id
+	</select>
+
+	<select id="findTypeByRegionAndVedio" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		select  * from ( 
+		SELECT
+		CONCAT(
+		p.ID_REGION,
+		"--",
+		p.region_type
+		) id,
+		CASE
+		WHEN p.region_type = 1 THEN
+		'城区'
+		WHEN p.region_type = 2 THEN
+		'农村'
+		WHEN p.region_type = 3 THEN
+		'山区'
+		END NAME,
+		p.ID_REGION pid,
+		v.id vid
+		FROM
+		project p
+		LEFT JOIN pump_house h ON p.id = h.id_project
+		LEFT JOIN video_info v ON v.pump_house_id = h.id
+		WHERE
+		p.region_type IS NOT NULL
+		AND v.id IS NOT NULL
+		AND p.id IN (
+		SELECT
+		pi.id
+		FROM
+		regional ri
+		LEFT JOIN project pi ON pi.ID_REGION = ri.id
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN video_info v ON v.pump_house_id = phi.id
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.region_type IS NOT NULL
+		AND v.id IS NOT NULL
+		GROUP BY
+		pi.id
+		) ) t
+		GROUP BY
+		t.id
+	</select>
+
+	<select id="findTypeByCompanyAndVideo" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+		select * from (
+		SELECT
+		CONCAT(company_node ,"--", p.region_type) id,
+		CASE
+		WHEN p.region_type = 1 THEN
+		'城区'
+		WHEN p.region_type = 2 THEN
+		'农村'
+		WHEN p.region_type = 3 THEN
+		'山区'
+		END NAME,
+		company_node pid
+		FROM
+		project p LEFT JOIN pump_house h on p.id = h.id_project
+		LEFT JOIN video_info v on v.pump_house_id = h.id
+		WHERE
+		company_node IN
+		(
+		<foreach collection="companyTreeInfo" item="item" separator=",">
+			#{item.id}
+		</foreach>
+		) and p.region_type is NOT NULL and v.id is not null
+		) t
+		GROUP BY t.id
+	</select>
+
+	<select id="findTypeByWaterDepartAndVideo" resultType="com.wapwag.woss.modules.biz.entity.TreeInfo">
+	    select * from (
+		SELECT
+		CONCAT(
+		water_depart_orgNode,
+		"--",
+		p.region_type
+		) id,
+		CASE
+		WHEN p.region_type = 1 THEN
+		'城区'
+		WHEN p.region_type = 2 THEN
+		'农村'
+		WHEN p.region_type = 3 THEN
+		'山区'
+		END NAME,
+		water_depart_orgNode pid
+		FROM
+		project p
+		LEFT JOIN pump_house h ON p.id = h.id_project
+		LEFT JOIN video_info v ON v.pump_house_id = h.id
+		WHERE
+		p.region_type IS NOT NULL
+		AND v.id IS NOT NULL
+		AND p.water_depart_orgNode is not null
+		AND p.water_depart_orgNode IN (
+		SELECT
+		o.id
+		FROM
+		project pi
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		LEFT JOIN sys_office o ON o.id = pi.water_depart_orgNode
+		LEFT JOIN video_info v ON v.pump_house_id = phi.id
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		AND pi.water_depart_orgNode IS NOT NULL
+		AND v.id IS NOT NULL
+		AND pi.region_type IS NOT NULL
+		GROUP BY
+		pi.water_depart_orgNode
+		) ) t GROUP BY t.id
+	</select>
+
+</mapper>
