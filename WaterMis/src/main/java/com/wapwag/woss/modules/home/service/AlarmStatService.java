@@ -127,11 +127,10 @@ public class AlarmStatService {
 	
 	/**
 	 * 首页告警列表
-	 * @param userId
 	 * @return
 	 */
-	public List<AlarmStat> getAlarmDetail(String userId) {
-		return alarmStatMapper.getAlarmDetail(userId);
+	public List<AlarmStat> getAlarmDetail(AlarmStat alarmStat) {
+		return alarmStatMapper.getAlarmDetail(alarmStat);
 	}
 	
 	/**
@@ -145,9 +144,9 @@ public class AlarmStatService {
 
 	public String indexConfig(AlarmStat info) {
 		String id = info.getId();
-		info.setDeviceId(id.split("_")[0]);
-		info.setStartDate(id.split("_")[2]);
-		info.setDeviceName(id.split("_")[1]);
+		info.setDeviceId(id.split("__")[0]);
+		info.setStartDate(id.split("__")[2]);
+		info.setDeviceName(id.split("__")[1]);
 		int result = alarmStatMapper.indexConfig(info); 
 		return "Success";
 	}

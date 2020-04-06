@@ -24,7 +24,35 @@ public class QryObject {
 	private String areaId;
 	private int subIndex;
 	private String keyword;
-	
+
+	private String phId;
+	private String pumpHouseName;
+	private String areaCode;
+
+	public String getPumpHouseName() {
+		return pumpHouseName;
+	}
+
+	public void setPumpHouseName(String pumpHouseName) {
+		this.pumpHouseName = pumpHouseName;
+	}
+
+	public String getPhId() {
+		return phId;
+	}
+
+	public void setPhId(String phId) {
+		this.phId = phId;
+	}
+
+	public String getAreaCode() {
+		return areaCode;
+	}
+
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
+	}
+
 	public int getSubIndex() {
 		return subIndex;
 	}

@@ -98,17 +98,25 @@
         <span class="closeTips" onclick="window.parent.window.closeTips()" title="关闭" style="    color: #fff;">X</span>
     </div>
     <div class="panel-heading" style=" text-align:center">
-        <form name="maintenance" id="maintenance" onsubmit="return false;">
+        <form name="alarmForm" id="alarmForm">
             <div class="query-parameter" style=" text-align:center" >
-                <label>泵房名称 : </label>
-                <input id="pName" class="device-id form-control input-text2" style="display: table-column;width: 20%">
-                <label>告警内容 : </label>
-                <input id="userName" class="device-id form-control input-text2" style="display: table-column;width: 20%">
-                <label>告警等级 : </label>
-                <select id="project" class="device-id form-control input-text2" style="display: table-column;width: 20%">
+                <label>区域名称 : </label>
+                <select id="areaCode" name="areaCode" class="device-id form-control input-text2" style="display: table-column;width: 11%">
                 </select>
-                <button id="query" type="button"  class="btn btn-primary query-btn">查 询</button>
-                <button id="all" type="button"  class="btn btn-primary query-btn">全部忽略</button>
+                <label>泵房名称 : </label>
+                <input id="pumpHouseName" name="pumpHouseName" class="device-id form-control input-text2" style="display: table-column;width: 13%">
+                <label>告警内容 : </label>
+                <input id="alarmInfo" name="alarmInfo" class="device-id form-control input-text2" style="display: table-column;width: 13%">
+                <label>告警等级 : </label>
+                <select id="alarmLevel" name ="alarmLevel" class="device-id form-control input-text2" style="display: table-column;width: 13%">
+                    <option value="">全部</option>
+                    <option value="1">一级</option>
+                    <option value="2">二级</option>
+                    <option value="3">三级</option>
+                    <option value="4">四级</option>
+                </select>
+                <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
+                <button id="all" type="button" onclick="ignoreAll()"  class="btn btn-primary query-btn">全部忽略</button>
             </div>
         </form>
     </div>
@@ -139,16 +147,23 @@
 </div>
     <!-- jQuery Js -->
     <script src="static/assets/js/jquery-1.10.2.js"></script>
+    <script src="static/assets/js/jquery-form.js"></script>
     <script src="static/assets/js/scroll.js"></script>
     <!--&lt;!&ndash; Bootstrap Js &ndash;&gt;-->
     <script src="static/assets/js/bootstrap.min.js"></script>
     <script>
         $(function () {
-
+            qryAreaList();
             getAlarmList();
             if(getPar("flag")==1){
                 $(".alarmTitle").css("display","none");
             }
+
+            //查询事件
+            $("#query").click(function(){
+                getAlarmList();
+
+            });
 
         })
         function getPar(par){
@@ -168,50 +183,58 @@
             }
             return get_par;
         }
+     function getAlarmList() {
+         //  $.get(parent.CONTEXT_PATH + '/alarmStatController/indexAlarm', function(data) {
+         $("#alarmForm").ajaxSubmit({
+             type: 'POST',
+             url: parent.CONTEXT_PATH + '/alarmStatController/indexAlarm',
+             dataType: 'json',
+             success: function (data) {
+                 if (data && data.length > 0) {
+                     $('.alarm-body ul').html('');
+                     $('#alarmBodyNoMsg').hide();
+                     $.each(data, function (i, item) {
+                         var ht;
+                         var dealData = JSON.stringify(item);
+                         if (item.ticketId) {
+                             ht = "<span onclick='alertErrors()' class='btn btn-xs btn-primary'>创建工单</span>"
+                         } else {
+                             ht = "<span onclick='createWorkOrder(this)'  data = '" + dealData + "' class='btn btn-xs btn-info'>创建工单</span>"
+                         }
+                         console.log(item);
+                         var $li = '<li name="' + checStr(item.phId) + '">';
+                         $li += '<span style="width: 15%;color: #847979">' + item.startDate + '</span>';
+                         $li += '<span style="width: 15%;color: #847979" onclick="modalConfig(this)" name="' + item.phId + '">' + item.phName + '</span>';
+                         $li += '<span style="width: 12%;color: #847979">' + checStr(item.deviceId) + '</span>';
+                         $li += '<span style="width: 14%;color: #847979">' + checStr(item.alarmInfo) + '</span>';
+                         $li += '<span style="width: 9%;"><span style="width: 5%;background-color: #fff141">' + checStr(item.alarmLevel) + '</span></span>';
+                         $li += '<span style="width: 15%;color: #847979">' + checStr(item.endDate) + '</span>';
+                         $li += '<span style="width: 20%;color: #847979">'
+                             + '<span onclick="answer(this);" class="btn btn-xs btn-info" name="' + item.alarDescription + '" alarmReason = "' + item.alarmReason + '">解决方案</span>'
+                           /*  + '&nbsp;'
+                             + '<span onclick="affirm(this);" class="btn btn-xs btn-info" name="' + item.id + '">确认</span>'*/
+                             + '&nbsp;'
+                             + '<span onclick="ignore(this);" class="btn btn-xs btn-info" name="' + item.id + '">忽略</span>'
+                             + '<span onclick="ignoreAll(this);" style="display: none" class="btn btn-xs btn-info ignoreAll" name="' + item.id + '">忽略</span>'
+                             + '&nbsp;'
+                             + ht
+                             + '</span>';
+                         $li += '</li>';
+                         $('.alarm-body ul').append($li);
+                     });
 
-        function getAlarmList() {
-            $.get(parent.CONTEXT_PATH + '/alarmStatController/indexAlarm', function(data) {
-                if(data && data.length>0){
-                    $('.alarm-body ul').html('');
-                    $('#alarmBodyNoMsg').hide();
-                    $.each(data, function(i, item) {
-                        var ht;
-                        var dealData = JSON.stringify(item);
-                        if(item.ticketId){
-                            ht="<span onclick='alertErrors()' class='btn btn-xs btn-primary'>创建工单</span>"
-                        }else {
-                            ht="<span onclick='createWorkOrder(this)'  data = '"+ dealData+ "' class='btn btn-xs btn-info'>创建工单</span>"
-                        }
-                        console.log(item);
-                        var $li = '<li name="'+checStr(item.phId)+'">';
-                        $li += '<span style="width: 15%;color: #847979">' + item.startDate +'</span>';
-                        $li += '<span style="width: 15%;color: #847979" onclick="modalConfig(this)" name="'+item.phId+'">'+ item.phName +'</span>';
-                        $li += '<span style="width: 12%;color: #847979">'+ checStr(item.deviceId) +'</span>';
-                        $li += '<span style="width: 14%;color: #847979">'+ checStr(item.alarmInfo) +'</span>';
-                        $li += '<span style="width: 9%;"><span style="width: 5%;background-color: #fff141">'+ checStr(item.alarmLevel) +'</span></span>';
-                        $li += '<span style="width: 15%;color: #847979">'+ checStr(item.endDate) +'</span>';
-                        $li += '<span style="width: 20%;color: #847979">'
-                            +'<span onclick="answer(this);" class="btn btn-xs btn-info" name="'+ item.alarDescription +'" alarmReason = "'+ item.alarmReason+'">解决方案</span>'
-                            +'&nbsp;'
-                            +'<span onclick="affirm(this);" class="btn btn-xs btn-info" name="'+item.id+'">确认</span>'
-                            +'&nbsp;'
-                            + '<span onclick="ignore(this);" class="btn btn-xs btn-info" name="'+item.id+'">忽略</span>'
-                            +'&nbsp;'
-                            + ht
-                            +'</span>';
-                        $li += '</li>';
-                        $('.alarm-body ul').append($li);
-                    });
+                     $('.alarm-body').myScroll({
+                         speed: 80, //数值越大，速度越慢
+                         rowHeight: 30 //li的高度
+                     });
+                 } else {
+                     $('.alarm-body ul').html("<div style='text-align: center;color:red'>无告警数据...</div>");
+                     $('#alarmBodyNoMsg').show()
+                 }
+             }
+         });
+     }
 
-                    $('.alarm-body').myScroll({
-                        speed: 80, //数值越大，速度越慢
-                        rowHeight: 30 //li的高度
-                    });
-                }else{
-                    $('#alarmBodyNoMsg').show()
-                }
-            });
-        };
         function modalConfig(phId) {
         	phId = $(phId).attr('name');
         	
@@ -243,6 +266,25 @@
                 window.parent.window.alarmIgnore(item,obj);
             }
         }
+        function ignoreAll(){
+            //获取单个忽略的所有对象，循环触发单个忽略
+
+            var delFlag=false;
+            if(confirm('确定要忽略此条告警吗？')) {
+                $(".ignoreAll").each(function (i, obj) {
+                    var item = $(obj).attr('name');
+                    window.parent.window.alarmIgnoreAll(item, obj);
+                    delFlag = true;
+                });
+                if (delFlag) {
+                    window.parent.openAlertModel("myModalAlert", "忽略成功")
+                }
+            }
+
+
+
+        }
+
         function answer(obj){
         	var item = $(obj).attr('name');
             var alarmReason = $(obj).attr('alarmReason');
@@ -266,12 +308,41 @@
         function createWorkOrder(self) {
             var data = $(self).attr('data');
             var sdata =  JSON.parse(data);
+            //打开创建工单页面
             window.parent.window.queryWhetherWorker(sdata.deviceId);
+            //工单页面赋值
             window.parent.window.myModalWorkOrder(sdata);
         }
         function alertErrors() {
             window.parent.window.alertError();
         }
+
+        function qryAreaList(){
+            $("#areaCode").empty();
+            $("#areaCode").append("<option value = ''>全部</option>");
+            jQuery.ajax( {
+                type : 'POST',
+                contentType : 'application/json',
+                url : parent.CONTEXT_PATH +'/device/getAllAreas?'+ Math.random(),
+                dataType : 'json',
+                success : function(data){
+                    if(undefined == data){
+                        return;
+                    }else{
+                        $("#areaCode").empty();
+                        $("#areaCode").append("<option value = ''>全部</option>");
+                        $.each(data, function(i, item) {
+
+                            $("#areaCode").append("<option value = '" + item.deviceId + "'> "+item.deviceName  + "</option>");
+                        })
+                    }
+                },
+                error : function(data)
+                {
+                }
+            });
+        }
+
     </script>
 </body>
 </html>

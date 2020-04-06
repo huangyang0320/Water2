@@ -119,6 +119,9 @@ function initBootTable(url){
         queryParams: queryParams,
         pageSize: 20,
         pageNumber: 1,
+        sortable: true,
+        //排序方式
+        sortOrder: "desc",//排序
         sidePagination: 'server',
         pagination: true,//是否分页
         showColumns: true,//列选择按钮
@@ -164,7 +167,8 @@ function initBootTable(url){
         },*/{
             field: 'currentStatusName',
             title: '当前工单状态',
-            align: 'center'
+            align: 'center',
+            sortable : true
         },/*{
             field: 'currentUser',
             title: '当前操作人',
@@ -176,7 +180,8 @@ function initBootTable(url){
         },*/{
             field: 'pumpName',
             title: '泵房名称',
-            align: 'center'
+            align: 'center',
+            sortable : true
         },{
             field: 'deviceName',
             title: '设备名称',
@@ -192,7 +197,8 @@ function initBootTable(url){
         },{
             field: 'createDate',
             title: '工单创建时间',
-            align: 'center'
+            align: 'center',
+            sortable : true
         },{
             field: 'operateSatus',
             title: '操作',
@@ -305,9 +311,23 @@ function queryParams(params) {
     if(startEndTime!=""){
         startEndTime = startEndTime+" 23:59:59";
     }
+
+    var sortName="";
+    if(params.sortName=='pumpName'){
+        sortName = "p.name";
+    }else if (params.sortName=='currentStatusName'){
+        sortName = "t.status";
+    } else if (params.sortName=='createDate'){
+        sortName = "t.create_Date";
+    }
+    // console.log(params)
     var temp = {
         pageSize: params.pageSize,   //页面大小
         pageNumber: params.pageNumber,  //页码
+        limit : params.limit,
+        offset : params.offset,
+        sortName : sortName,
+        sortOrder : params.sortOrder,
         ticketType: ticketType,
         pumpName: pumpName,
         title: alarmContent,

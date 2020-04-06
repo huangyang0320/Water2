@@ -6,6 +6,9 @@ import com.wapwag.woss.common.persistence.DataEntity;
 import java.util.Date;
 
 public class TicketDto extends DataEntity<TicketDto> {
+    private String sortName;
+    private String sortOrder;
+
     private String ticketId;
     private String ticketType;
     private String ticketTypeName;
@@ -49,6 +52,8 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     private String approveOpinion;//处理结果及其意见
     private String approveOperation;//处理类型 同意不同意
+
+
 
     public String getTicketId() {
         return ticketId;
@@ -352,5 +357,21 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setStartEndTime(String startEndTime) {
         this.startEndTime = startEndTime;
+    }
+
+    public String getSortName() {
+        return sortName;
+    }
+
+    public void setSortName(String sortName) {
+        this.sortName = sortName;
+    }
+
+    public String getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(String sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }

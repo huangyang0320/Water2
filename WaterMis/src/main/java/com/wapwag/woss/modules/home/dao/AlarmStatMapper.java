@@ -52,7 +52,7 @@ public interface AlarmStatMapper {
 
 	List<AlarmStat> statTime(QryObject paraMap);
 
-	List<AlarmStat> getAlarmDetail(String userId);
+	List<AlarmStat> getAlarmDetail(AlarmStat alarmStat);
 	
 	String countAlarms(String userId);
 

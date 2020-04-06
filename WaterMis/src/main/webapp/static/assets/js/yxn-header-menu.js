@@ -999,9 +999,29 @@ function alarmIgnore(id,delObj) {
         });
     	$(delObj).parent().parent().remove();
         showErrorMsgVideo("忽略成功");
-    	//openAlertModel("myModalAlert" , "忽略成功")
+    	openAlertModel("myModalAlert" , "忽略成功")
     });
 }
+
+function alarmIgnoreAll(id,delObj) {
+    var configMsg = {
+        "id": id,
+        "alarmType": "2"   //1：确认，2：忽略
+    };
+    $.post(CONTEXT_PATH + '/alarmStatController/indexConfig',configMsg, function(data) {
+        $.post(CONTEXT_PATH + "/alarmStatController/indexAlarmSize", function (result) {
+            if (!isNaN(result) && Number(result) >= 0) {
+                $("#showWarnDialog").find("span").text(result);
+            }else{
+                $("#showWarnDialog").find("span").text('');
+            }
+        });
+        $(delObj).parent().parent().remove();
+        //showErrorMsgVideo("忽略成功");
+        //openAlertModel("myModalAlert" , "忽略成功")
+    });
+}
+
 
 function alarmConfirm() {
 	var confirmReason = jQuery.base64.encode($("#confirmReason").val());
@@ -1266,7 +1286,8 @@ function queryMaintenanceWorkerDept() {
 }
 
 function queryWhetherWorker(deviceId) {
-    var url = CONTEXT_PATH+"/alarmStatController/queryWhetherWorker?"+ Math.random();
+    $('#myWorkModal').modal('show');
+    /*var url = CONTEXT_PATH+"/alarmStatController/queryWhetherWorker?"+ Math.random();
     jQuery.ajax({
         type : 'POST',
         contentType : 'application/json',
@@ -1283,7 +1304,7 @@ function queryWhetherWorker(deviceId) {
                 openAlertModel("myModalAlert" , data.message);
             }
         }
-    });
+    });*/
 }
 
 function refresh() {

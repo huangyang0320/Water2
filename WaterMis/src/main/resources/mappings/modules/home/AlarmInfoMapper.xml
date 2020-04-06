@@ -98,6 +98,12 @@
 					)
 						and (start_date >= substring(now(),1,10)  or end_date >= substring(now(),1,10))
 					and alarm_status = '1' and confirm_status = '0'
+					<if test="pumpHouseName != null and pumpHouseName != ''">
+						and dl.name like CONCAT('%',#{pumpHouseName},'%')
+					</if>
+					<if test="areaCode != null and areaCode != ''">
+						and dl.ID_REGION = #{areaCode}
+					</if>
 				) as s
 				where
 				NOT EXISTS (
@@ -124,7 +130,7 @@
 
 	<select id="getAlarmDetail" resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
 		SELECT 
-	    concat(ALARM.device_code,'_',ALARM.function_name,'_',date_format(ALARM.start_date,'%Y-%m-%d %H:%i:%s')) as id,
+	    concat(ALARM.device_code,'__',ALARM.function_name,'__',date_format(ALARM.start_date,'%Y-%m-%d %H:%i:%s')) as id,
 		longi,lati,
 		DL.name phName,
 		DL.id phId,
@@ -167,7 +173,23 @@
 			GROUP BY authobject_id
 		)
 	    and (start_date &gt; substring(now(),1,10)  or end_date &gt; substring(now(),1,10))
-		and alarm_status = '1' and confirm_status = '0' group by id order by start_date desc
+		and alarm_status = '1' and confirm_status = '0'
+
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+
+
+		<if test="alarmLevel != null and alarmLevel != ''">
+			and alarm_level= #{alarmLevel}
+		</if>
+		group by id order by start_date desc
 		limit 20
 	</select>
 	
@@ -199,6 +221,12 @@
 		)
 	    and (start_date &gt; substring(now(),1,10)  or end_date &gt; substring(now(),1,10))
 		and alarm_status = '1' and confirm_status = '0'
+		<!--<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>-->
 	</select>
 	
 	<select id="selectListPage" resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
@@ -259,6 +287,12 @@
 		<if test="type != null and type != ''">
 		    and atd.alarm_level = #{type}
 		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
 		ORDER BY ALARM.END_DATE desc limit #{pageNumber},#{pageSize}
 	</select>
 	
@@ -318,6 +352,12 @@
 		<if test="type != null and type != ''">
 		    and atd.alarm_level = #{type}
 		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
 		ORDER BY ALARM.END_DATE desc 
 	</select>
 	
@@ -360,6 +400,14 @@
 		<if test="type != null and type != ''">
 		    and atd.alarm_level = #{type}
 		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
+
+
 	</select>
 	
 	<select id="statLevel" resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
@@ -406,6 +454,12 @@
 		<if test="type != null and type != ''">
 		    and atd.alarm_level = #{type}
 		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
 		group by alarm_level
 	</select>
 	
@@ -448,6 +502,12 @@
 		</if>
 		<if test="type != null and type != ''">
 		    and atd.alarm_level = #{type}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
 		</if>
 		group by alarm_type
 		
@@ -492,6 +552,12 @@
 		<if test="type != null and type != ''">
 		    and atd.alarm_level = #{type}
 		</if>
+			<if test="pumpHouseName != null and pumpHouseName != ''">
+				and dl.name like CONCAT('%',#{pumpHouseName},'%')
+			</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
 		group by subString(end_date,1,10)
 	</select>
 	
@@ -532,6 +598,12 @@
 		        type = 'device_location') ds ON ds.value = d.LOCATION
 	    where a.device_code = #{deviceId} and a.function_name = #{deviceName}
 	        and a.start_date = #{startDate}
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and p.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and p.ID_REGION = #{areaCode}
+		</if>
 	    limit 1
 	</select>
 

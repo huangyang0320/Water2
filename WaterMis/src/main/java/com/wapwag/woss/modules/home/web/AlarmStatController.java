@@ -134,10 +134,10 @@ public class AlarmStatController {
 	 */
 	@ResponseBody
 	@RequestMapping("/indexAlarm")
-	@ApiOperation(value = "告警时间统计", httpMethod = "POST",response = AlarmStat.class ,notes = "")
-	public List<AlarmStat> getAlarmDetail(User user) {
-
-		List<AlarmStat> list = alarmService.getAlarmDetail(user.getUserId());
+	@ApiOperation(value = "首页点击告警数显示的告警列表信息", httpMethod = "POST",response = AlarmStat.class ,notes = "")
+	public List<AlarmStat> getAlarmDetail(AlarmStat alarmStat,User user) {
+		alarmStat.setUserId(user.getUserId());
+		List<AlarmStat> list = alarmService.getAlarmDetail(alarmStat);
 		return list;
 	}
 	
@@ -175,7 +175,6 @@ public class AlarmStatController {
 	/**
 	 * 查看一个告警根据
 	 * @param info
-	 * @param user
 	 * @return
 	 */
 	@ResponseBody

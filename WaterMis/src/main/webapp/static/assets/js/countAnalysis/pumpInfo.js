@@ -140,12 +140,12 @@ $(function(){
                align: 'center'
            },{
                field: 'constructionSide',
-               title: '建设方',
+               title: '运维方',
                visible:false,
                align: 'center'
            },{
                field: 'constructionSideInformation',
-               title: '10.61.98.65',
+               title: '运维方联系方式',
                visible:false,
                align: 'center'
            },{

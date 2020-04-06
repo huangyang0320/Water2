@@ -139,7 +139,7 @@
                 <div class="col-md-12">
                     <ul class="list-group" id="device-title">
                         <li class="list-group-item">泵房名称：<span id="title0"></span></li>
-                        <li class="list-group-item">告警信息：<span id="showWarnInfo"></span><span id="clickHa" style="cursor:pointer">&nbsp;&nbsp;更多...</span></li>
+                        <li class="list-group-item">告警信息：<span id="showWarnInfo"></span><span id="clickHa" class="alarmMore" style="cursor:pointer">&nbsp;&nbsp;更多...</span></li>
                         <li class="list-group-item">泵房地址：<span id="title2"></span></li>
                         <!--<li class="list-group-item">....</li>-->
                     </ul>
@@ -376,9 +376,26 @@
                 $($subtitle[2]).text("告警信息：" + "停机报警");*/
 
                 $("#title0").html(pumpHouse["pumpHouseName"]);
-                $("#showWarnInfo").html("停机报警");
                 $("#title2").html(pumpHouse["address"]);
-                $("#showWarnInfo").css("background-color","yellow");
+              /*  $.ajax({
+                    type:"POST",
+                    async : false,
+                    contentType : 'application/json;charset=utf-8',
+                    url: parent.CONTEXT_PATH + '/alarmStatController/indexAlarm',
+                    datatype:"JSON",
+                    data: JSON.stringify({
+                        "pumpHouseName": pumpHouse["pumpHouseName"]
+                    }),*/
+                 $.get(parent.CONTEXT_PATH + '/alarmStatController/indexAlarm?pumpHouseName='+pumpHouse["pumpHouseName"], function(data) {
+                        if (data && data.length > 0) {
+                            $("#showWarnInfo").html(data[0].alarmInfo);
+                            $("#showWarnInfo").css("background-color","yellow");
+
+                        }else{
+                            $("#showWarnInfo").html("无...");
+                            $(".alarmMore").hide();
+                        }
+                });
 
 
 

@@ -120,6 +120,9 @@ function initBootTable(url){
         queryParams: queryParams,
         pageSize: 20,
         pageNumber: 1,
+        sortable: true,
+        //排序方式
+        sortOrder: "desc",//排序
         sidePagination: 'server',
         pagination: true,//是否分页
         showColumns: true,//列选择按钮
@@ -285,9 +288,22 @@ function queryParams(params) {
     if(startBeginTime!=""){
         startBeginTime = startBeginTime+" 23:59:59";
     }
+
+    var sortName="";
+    if(params.sortName=='pumpName'){
+        sortName = "p.name";
+    }else if (params.sortName=='allHandleUser'){
+        sortName = "u.name";
+    } else if (params.sortName=='createDate'){
+        sortName = "t.create_Date";
+    }
     var temp = {
         pageSize: params.pageSize,   //页面大小
         pageNumber: params.pageNumber,  //页码
+        limit : params.limit,
+        offset : params.offset,
+        sortName : sortName,
+        sortOrder : params.sortOrder,
         ticketType: ticketType,
         pumpName: pumpName,
         title: alarmContent,

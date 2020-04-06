@@ -24,9 +24,13 @@
                 <div class="panel-heading">
                     <form id="alermCount">
                         <div class="query-parameter">
-                            <label>模糊查询 : </label>
-                            <input id="keyword" placeholder="泵房名称/设备编号/报警内容" name="keyword" class="device-id form-control input-text4">
+                           <!-- <label>模糊查询 : </label>-->
+                            <input type="hidden" id="keyword" placeholder="泵房名称/设备编号/报警内容" name="keyword" class="device-id form-control input-text4">
+                            <label>区域名称 : </label>
+                            <select id="areaCode" name="areaCode" class="device-id form-control input-text2">
                             </select>
+                            <label>泵房名称 : </label>
+                            <input type="text" id="pumpHouseName" name="pumpHouseName" class="device-id form-control input-text2">
                             <label>起止时间 : </label>
                             <input id ="beginTime" name="beginTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-begin timepicker">-
                             <input id="endTime" name="endTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-end timepicker">

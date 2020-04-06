@@ -39,6 +39,27 @@ public class AlarmStat {
 	private String alarmCode;
 	private String ticketId;
 
+	private String areaCode;
+	private String pumpHouseName;
+	private String userId;
+
+
+	public String getPumpHouseName() {
+		return pumpHouseName;
+	}
+
+	public void setPumpHouseName(String pumpHouseName) {
+		this.pumpHouseName = pumpHouseName;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
 	public String getAlarmTime() {
 		return alarmTime;
 	}
@@ -221,5 +242,13 @@ public class AlarmStat {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getAreaCode() {
+		return areaCode;
+	}
+
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
 	}
 }

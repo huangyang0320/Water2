@@ -7,12 +7,43 @@ var alarmPage = "1";
 var alarm_higth = 1;
 var ischeck = false;
 var url = CONTEXT_PATH+"/alarmStatController/alarmList?'+ Math.random()";
+
+function qryAreaList(){
+    $("#areaCode").empty();
+    $("#areaCode").append("<option value = ''>全部</option>");
+    jQuery.ajax( {
+        type : 'POST',
+        contentType : 'application/json',
+        url : CONTEXT_PATH+'/device/getAllAreas?'+ Math.random(),
+        dataType : 'json',
+        success : function(data){
+            if(undefined == data){
+                return;
+            }else{
+                $("#areaCode").empty();
+                $("#areaCode").append("<option value = ''>全部</option>");
+                $.each(data, function(i, item) {
+
+                    $("#areaCode").append("<option value = '" + item.deviceId + "'> "+item.deviceName  + "</option>");
+                })
+            }
+        },
+        error : function(data)
+        {
+        }
+    });
+}
+
+
 $(function(){
 	alarmInitCount = 0;
 	//初始化时间
 	initTime();
 	//默认查询告警信息
     initBootTable(url);
+
+
+    qryAreaList();
     
     //查询事件
     $("#query").click(function(){
@@ -305,6 +336,8 @@ $(function(){
        pageSize: params.pageSize,   //页面大小
        pageNumber: params.pageNumber,  //页码
        keyword: keyword,
+       areaCode: $("#areaCode").val(),
+       pumpHouseName: $("#pumpHouseName").val(),
        beginTime: $("#beginTime").val(),
        type:type,
        endTime: $("#endTime").val(),

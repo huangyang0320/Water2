@@ -446,7 +446,16 @@
         <if test="startEndTime !=null and startEndTime!='' " >
             and t.start_time <![CDATA[ <= ]]> #{startEndTime}
         </if>
-        order by t.create_Date desc
+        <if test="sortName !=null and sortName!='' " >
+            order by ${sortName} ${sortOrder}
+        </if>
+
+        <if test="sortName ==null or sortName =='' " >
+            order by t.create_Date desc
+        </if>
+
+
+
 
     </select>
 
@@ -534,7 +543,13 @@
             and t.start_time <![CDATA[ <= ]]> #{startEndTime}
         </if>
         group by t.ticket_id
-        order by t.create_Date desc
+        <if test="sortName !=null and sortName!='' " >
+            order by ${sortName} ${sortOrder}
+        </if>
+
+        <if test="sortName ==null or sortName =='' " >
+            order by t.create_Date desc
+        </if>
 
 
 

@@ -86,6 +86,8 @@ public class TicketController {
         if(StringUtils.isBlank(ticketDto.getHandleUserId())){
             ticketDto.setHandleUserId(user.getUserId());
         }
+        String sortName = request.getParameter("sortName");
+        String sortOrder = request.getParameter("sortOrder");
 
         Page<TicketDto> pages = ticketService.findPage(new Page<TicketDto>(request, response), ticketDto);
         BootPage bootPage = new BootPage();
@@ -105,6 +107,8 @@ public class TicketController {
             ticketDto.setHandleUserId(user.getUserId());
         }
 
+        String sortName = request.getParameter("sortName");
+        String sortOrder = request.getParameter("sortOrder");
         Page<TicketDto> pages = ticketService.findAllListPage(new Page<TicketDto>(request, response), ticketDto);
         BootPage bootPage = new BootPage();
         bootPage.setTotal(pages.getCount());
