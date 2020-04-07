@@ -33,24 +33,31 @@
                             <input type="text" id="pumpHouseName" name="pumpHouseName" class="device-id form-control input-text2">
                             <label>设备名称 : </label>
                             <input type="text" id="deviceName" name="deviceName" class="device-id form-control input-text2">
+                            <label>起止时间 : </label>
+                            <input id ="beginTime" name="beginTime" type="text" value="" readonly class="device-id form-control input-text2 warn-time-begin timepicker">
+                            <label>-</label>
+                            <input id="endTime" name="endTime" type="text" value="" readonly class="device-id form-control input-text2 warn-time-end timepicker">
+
+
+
+                            </div>
+                        <div class="query-parameter">
                             <label>告警内容 : </label>
                             <input type="text" id="alarmInfo" name="alarmInfo" class="device-id form-control input-text2">
-                            <label>告警时长(h) : </label>
-                            <input type="text" id="startAlarmTime" name="startAlarmTime" class="device-id form-control input-text2" onkeyup="value=value.replace(/[^\d.]/g,'')">-
-                            <input type="text" id="endAlarmTime" name="endAlarmTime" class="device-id form-control input-text2" onkeyup="value=value.replace(/[^\d.]/g,'')">
-                        </div>
-                        <div class="query-parameter">
+
                             <label>告警等级 : </label>
-                            <select id="type" name="type" class="device-id form-control input-small">
+                            <select id="type" name="type" class="device-id form-control input-text2">
                                 <option value="">全部</option>
                                 <option value="1">一级</option>
                                 <option value="2">二级</option>
                                 <option value="3">三级</option>
                                 <option value="4">四级</option>
                             </select>
-                            <label>起止时间 : </label>
-                            <input id ="beginTime" name="beginTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-begin timepicker">-
-                            <input id="endTime" name="endTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-end timepicker">
+                            <label>告警时长 : </label>
+                            <input type="text" id="startAlarmTime" name="startAlarmTime" class="device-id form-control input-text2" onkeyup="value=value.replace(/[^\d.]/g,'')">-
+                            <input type="text" id="endAlarmTime" name="endAlarmTime" class="device-id form-control input-text2" onkeyup="value=value.replace(/[^\d.]/g,'')">
+
+
                             <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
                         </div>
                    </form>
