@@ -46,6 +46,9 @@
   	<if test="projectId != null and projectId != ''">
   		and p.project_id = #{projectId}
   	</if>
+      <if test="phId != null and phId != ''">
+          and d.id = #{phId}
+      </if>
   	<if test="userId != null and userId != ''">
   		and p.user_id in 
   		(select s.id from sys_user s where s.name like  '%${userId}%' or no like '%${userId}%')

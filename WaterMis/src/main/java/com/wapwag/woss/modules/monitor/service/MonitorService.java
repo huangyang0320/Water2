@@ -14,6 +14,7 @@ import com.wapwag.woss.modules.home.dao.VideoDao;
 import com.wapwag.woss.modules.home.entity.RunTimeDTO;
 import com.wapwag.woss.modules.home.entity.RunTimeVO;
 import com.wapwag.woss.modules.home.entity.VideoInfo;
+import com.wapwag.woss.modules.home.service.AlarmStatService;
 import com.wapwag.woss.modules.home.service.PumpRunTimeService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,10 @@ public class MonitorService {
 
     private final DeviceDao deviceDao;
     private final ServicesDao servicesDao;
+
+	@Autowired
+	private AlarmStatService alarmService;
+
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static final String PATH = PropUtils.getPropertiesString("application.properties", "configuration");
     @Autowired

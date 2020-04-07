@@ -1,6 +1,7 @@
 package com.wapwag.woss.modules.home.entity;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -42,6 +43,7 @@ public class AlarmStat {
 	private String areaCode;
 	private String pumpHouseName;
 	private String userId;
+	private List<String> phIdList;
 
 
 	public String getPumpHouseName() {
@@ -250,5 +252,13 @@ public class AlarmStat {
 
 	public void setAreaCode(String areaCode) {
 		this.areaCode = areaCode;
+	}
+
+	public List<String> getPhIdList() {
+		return phIdList;
+	}
+
+	public void setPhIdList(List<String> phIdList) {
+		this.phIdList = phIdList;
 	}
 }

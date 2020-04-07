@@ -79,7 +79,7 @@ public class PumpDeviceController {
 		PumpDeviceRepair pumpDeviceRepair = new PumpDeviceRepair();
 		pumpDeviceRepair.setUserId(StringUtils.getQryMsg(qryObject.getUserName()));
 		pumpDeviceRepair.setProjectId(qryObject.getProjectId());
-
+		pumpDeviceRepair.setPhId(qryObject.getPhId());
 		pumpDeviceRepair.setUserName(user.getUserId());
 
 		BootPage bootPage = new BootPage();

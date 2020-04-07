@@ -175,6 +175,14 @@
 	    and (start_date &gt; substring(now(),1,10)  or end_date &gt; substring(now(),1,10))
 		and alarm_status = '1' and confirm_status = '0'
 
+		<if test="phIdList != null and phIdList.size() > 0 ">
+		and dl.id in
+			<foreach collection="phIdList"  item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+
+
 		<if test="areaCode != null and areaCode != ''">
 			and dl.ID_REGION = #{areaCode}
 		</if>

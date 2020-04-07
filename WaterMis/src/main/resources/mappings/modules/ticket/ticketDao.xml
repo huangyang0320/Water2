@@ -747,6 +747,9 @@
     <!--泵房list-->
     <select id="getPumpList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketComDto">
         select id ,`NAME` name,ADDRESS address from pump_house
+        <if test="projectId !=null and projectId!='' " >
+            where id_project = #{projectId}
+        </if>
     </select>
 <!--设备list-->
     <select id="getDeviceList" parameterType="java.lang.String"  resultType="com.wapwag.woss.modules.ticket.Entity.TicketComDto">

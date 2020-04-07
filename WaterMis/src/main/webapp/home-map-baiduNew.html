@@ -122,7 +122,7 @@
 <script type="text/javascript">
     var MAP, selectDevice, showAllPumpHouse, console, showPic, showVideo, showSummary, showSummaryDelay, DIALOG_REQUEST;
 
-    var color = new Array("#09aa05","#aa0608","#1e33aa","#aa7163","#aa682b","#0d21aa");
+    var color = new Array("#d60f16","#d60f16","#d60f16","#d60f16","#d60f16","#d60f16");
     //标注区域边界
     function setArea(areaName,color){
         MAP.enableScrollWheelZoom(true);
@@ -136,7 +136,7 @@
                     strokeWeight: 3,
                     strokeOpacity:0,
                     strokeColor: color,
-                    fillColor:color,
+                    fillColor:'#0000',
                     fillOpacity:.15,
                     strokeStyle:"solid",
                     enableClicking:!1
@@ -330,7 +330,16 @@
     function callRefreshInit(pump) {
         MAP.clearOverlays();
         var map = MAP;
-        if(pump.pumpHouseStatus == 1){
+
+        var phIdList = []
+        window.pumpList.map(function (v) {
+            phIdList.push(v.pumpHouseId);
+        })
+
+        getAlarmByPumpIds(phIdList);
+        if(isInArray(alarmList, pump.pumpHouseId)){
+            var mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
+        }else if(pump.pumpHouseStatus == 1){
             var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
         }else{
             var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
@@ -486,7 +495,26 @@ function toAreaPump(point) {
 
 
 }
-
+var alarmList = [];
+function getAlarmByPumpIds(phIdList){
+    //获取告警的泵房 集合
+    $.ajax({
+        type: 'POST',
+        async:false,
+        contentType: 'application/json',
+        url: CONTEXT_PATH + '/alarmStatController/getAlarmByPumpIds',
+        data: JSON.stringify({phIdList:phIdList}) ,
+        dataType: 'JSON',
+        //traditional : true,
+        success: function (data) {
+            if(data!=null && data.length){
+                for (var i in data) {
+                    alarmList.push(data[i].phId)
+                }
+            }
+        }
+    })
+}
 /**
  *  展示所有泵房
  */
@@ -502,8 +530,14 @@ function showAllPumphouses() {
     window.pumpList.map(function (v) {
         allPumpArray.push(v.pumpHouseId);
     })
+
+    getAlarmByPumpIds(allPumpArray);
+
+
+
     $.ajax({
         type: 'POST',
+        async:false,
         contentType: 'application/json',
         url: CONTEXT_PATH + '/monitor/statistic/pumpOnlineStat',
         data: JSON.stringify(allPumpArray) ,
@@ -521,7 +555,9 @@ function showAllPumphouses() {
                     "deviceManufacturersInformation":v.deviceManufacturersInformation,
                     "propertyInformation":v.propertyInformation
                 };
-                if(isInArray(res, v.pumpHouseId)){
+                if(isInArray(alarmList, v.pumpHouseId)){
+                    var mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
+                }else if(isInArray(res, v.pumpHouseId)){
                     var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
                 }else{
                     var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
@@ -530,7 +566,7 @@ function showAllPumphouses() {
             })
 
             $.post("/HYWater/config/getMapPoint", function(result) {
-                MAP.centerAndZoom(new BMap.Point(result.longi, result.lati), result.level);
+                MAP.centerAndZoom(new BMap.Point(result.longi, result.lati), 11);
             });
             LOADING.hide();
 
@@ -547,14 +583,20 @@ function showAllPumphouses() {
 }
 
 function areaMapClick(areaId) {
-    var allPumpArray = []
+    var allPumpArray = [];
         window.pumpList.map(function (v) {
             if(areaId==v.pId){
                 allPumpArray.push(v.pumpHouseId);
             }
         })
+
+    getAlarmByPumpIds(allPumpArray);
+
+
+    //获取
     $.ajax({
         type: 'POST',
+        async:false,
         contentType: 'application/json',
         url: CONTEXT_PATH + '/monitor/statistic/pumpOnlineStat',
         data: JSON.stringify(allPumpArray) ,
@@ -573,10 +615,12 @@ function areaMapClick(areaId) {
                         "deviceManufacturersInformation":v.deviceManufacturersInformation,
                         "propertyInformation":v.propertyInformation
                     };
-                    if(isInArray(res, v.pumpHouseId)){
-                        var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
-                    }else{
+                    if(isInArray(alarmList, v.pumpHouseId)){
+                        var mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
+                    }else if(isInArray(res, v.pumpHouseId)){
                         var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
+                    }else{
+                        var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
                     }
                     addMarker(pointM, pumpHouse, mapPicUrl);
 

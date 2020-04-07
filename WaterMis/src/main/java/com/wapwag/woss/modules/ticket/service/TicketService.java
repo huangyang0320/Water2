@@ -316,8 +316,8 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         return ticketDao.getTicketLogList(ticketId);
     }
 
-    public List<TicketComDto> getPumpList(){
-        return ticketDao.getPumpList();
+    public List<TicketComDto> getPumpList( String projectId){
+        return ticketDao.getPumpList(projectId);
     }
 
    public  List<TicketComDto> getDeviceList(String id){

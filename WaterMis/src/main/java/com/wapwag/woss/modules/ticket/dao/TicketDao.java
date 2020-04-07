@@ -99,7 +99,7 @@ public interface TicketDao  extends CrudDao<TicketDto> {
 
     List<TicketLogDto> getTicketLogList(@Param("ticketId") String ticketId);
 
-    List<TicketComDto> getPumpList();
+    List<TicketComDto> getPumpList(@Param("projectId") String projectId);
 
     List<TicketComDto> getDeviceList(@Param("id") String id);
 

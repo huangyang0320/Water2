@@ -169,8 +169,8 @@ public class TicketController {
     @RequestMapping("/getPumpList")
     @ResponseBody
     @ApiOperation(value = "获取泵房集合", httpMethod = "POST", response = TicketComDto.class )
-    public Object getPumpList(){
-        return ticketService.getPumpList();
+    public Object getPumpList(@RequestParam(value = "projectId" ,required = false) String projectId){
+        return ticketService.getPumpList(projectId);
     }
 
     @RequestMapping("/getDeviceList")
