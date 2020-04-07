@@ -189,7 +189,14 @@
 		<if test="alarmLevel != null and alarmLevel != ''">
 			and alarm_level= #{alarmLevel}
 		</if>
-		group by id order by start_date desc
+		group by id
+		<if test="sortName !=null and sortName!='' " >
+			order by ${sortName} ${sortOrder}
+		</if>
+
+		<if test="sortName ==null or sortName =='' " >
+			order by start_date desc
+		</if>
 		limit 20
 	</select>
 	
@@ -293,7 +300,26 @@
 		<if test="areaCode != null and areaCode != ''">
 			and dl.ID_REGION = #{areaCode}
 		</if>
-		ORDER BY ALARM.END_DATE desc limit #{pageNumber},#{pageSize}
+		<if test="deviceName != null and deviceName != ''">
+			and D.name like CONCAT('%',#{deviceName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+		<if test="startAlarmTime != null and startAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ >= ]]> #{startAlarmTime}
+		</if>
+		<if test="endAlarmTime != null and endAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ <= ]]> #{endAlarmTime}
+		</if>
+		<if test="sortName !=null and sortName!='' " >
+			order by ${sortName} ${sortOrder}
+		</if>
+
+		<if test="sortName ==null or sortName =='' " >
+			ORDER BY ALARM.END_DATE desc
+		</if>
+		limit #{pageNumber},#{pageSize}
 	</select>
 	
 	<select id="expSelectListPage" resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
@@ -406,7 +432,18 @@
 		<if test="areaCode != null and areaCode != ''">
 			and dl.ID_REGION = #{areaCode}
 		</if>
-
+		<if test="deviceName != null and deviceName != ''">
+			and D.name like CONCAT('%',#{deviceName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+		<if test="startAlarmTime != null and startAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ >= ]]> #{startAlarmTime}
+		</if>
+		<if test="endAlarmTime != null and endAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ <= ]]> #{endAlarmTime}
+		</if>
 
 	</select>
 	
@@ -460,6 +497,18 @@
 		<if test="areaCode != null and areaCode != ''">
 			and dl.ID_REGION = #{areaCode}
 		</if>
+		<if test="deviceName != null and deviceName != ''">
+			and D.name like CONCAT('%',#{deviceName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+		<if test="startAlarmTime != null and startAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ >= ]]> #{startAlarmTime}
+		</if>
+		<if test="endAlarmTime != null and endAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ <= ]]> #{endAlarmTime}
+		</if>
 		group by alarm_level
 	</select>
 	
@@ -508,6 +557,18 @@
 		</if>
 		<if test="areaCode != null and areaCode != ''">
 			and dl.ID_REGION = #{areaCode}
+		</if>
+		<if test="deviceName != null and deviceName != ''">
+			and D.name like CONCAT('%',#{deviceName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+		<if test="startAlarmTime != null and startAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ >= ]]> #{startAlarmTime}
+		</if>
+		<if test="endAlarmTime != null and endAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ <= ]]> #{endAlarmTime}
 		</if>
 		group by alarm_type
 		
@@ -558,6 +619,18 @@
 		<if test="areaCode != null and areaCode != ''">
 			and dl.ID_REGION = #{areaCode}
 		</if>
+		<if test="deviceName != null and deviceName != ''">
+			and D.name like CONCAT('%',#{deviceName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+			<if test="startAlarmTime != null and startAlarmTime != ''">
+				and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ >= ]]> #{startAlarmTime}
+			</if>
+			<if test="endAlarmTime != null and endAlarmTime != ''">
+				and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ <= ]]> #{endAlarmTime}
+			</if>
 		group by subString(end_date,1,10)
 	</select>
 	

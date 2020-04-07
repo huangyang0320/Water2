@@ -43,6 +43,9 @@ public class AlarmStat {
 	private String pumpHouseName;
 	private String userId;
 
+	private String sortName;
+	private String sortOrder;
+
 
 	public String getPumpHouseName() {
 		return pumpHouseName;
@@ -250,5 +253,21 @@ public class AlarmStat {
 
 	public void setAreaCode(String areaCode) {
 		this.areaCode = areaCode;
+	}
+
+	public String getSortName() {
+		return sortName;
+	}
+
+	public void setSortName(String sortName) {
+		this.sortName = sortName;
+	}
+
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 }
