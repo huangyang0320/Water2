@@ -120,8 +120,7 @@ function initBootTable(url){
         queryParams: queryParams,
         pageSize: 20,
         pageNumber: 1,
-        sortable: true,
-        //排序方式
+        sortName: "createDate",//排序字段
         sortOrder: "desc",//排序
         sidePagination: 'server',
         pagination: true,//是否分页
@@ -152,15 +151,18 @@ function initBootTable(url){
         columns: [{
             field: 'deviceCode',
             title: '工单编号',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },{
             field: 'ticketTypeName',
             title: '工单类型',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },{
             field: 'title',
             title: '工单内容',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },/*{
             field: 'currentNodeName',
             title: '当前节点名称',
@@ -168,7 +170,8 @@ function initBootTable(url){
         },*/{
             field: 'currentStatusName',
             title: '当前工单状态',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },/*{
             field: 'currentUser',
             title: '当前操作人',
@@ -185,11 +188,13 @@ function initBootTable(url){
         },{
             field: 'deviceName',
             title: '设备名称',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },{
             field: 'address',
             title: '泵房地址',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },{
             field: 'allHandleUser',
             title: '待处理人',
@@ -292,10 +297,22 @@ function queryParams(params) {
     var sortName="";
     if(params.sortName=='pumpName'){
         sortName = "p.name";
-    }else if (params.sortName=='allHandleUser'){
+    } else if (params.sortName=='allHandleUser'){
         sortName = "u.name";
     } else if (params.sortName=='createDate'){
         sortName = "t.create_Date";
+    } else if (params.sortName=='currentStatusName'){
+        sortName = "t.status";
+    }  else if (params.sortName=='deviceCode'){
+        sortName = "t.device_code";
+    } else if (params.sortName=='ticketTypeName'){
+        sortName = "t.ticket_type"
+    } else if (params.sortName=='title'){
+        sortName = "t.title"
+    } else if (params.sortName=='deviceName'){
+        sortName = "de.NAME"
+    } else if (params.sortName=='address'){
+        sortName = "t.address"
     }
     var temp = {
         pageSize: params.pageSize,   //页面大小

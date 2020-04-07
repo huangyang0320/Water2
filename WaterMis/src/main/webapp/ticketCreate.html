@@ -49,8 +49,8 @@
                             <div class="form-group">
                                 <label for="workType">工单类型</label>
                                 <select class="form-control" id="workType" onchange="onChangType()" name="workType">
-                                    <option value="2">巡检工单</option>
-                                    <option value="3">维保工单</option>
+                                    <option value="2">巡检</option>
+                                    <option value="3">维保</option>
                                 </select>
 
                                 <!-- <select class="form-control" id="workType" name="workType">
@@ -62,10 +62,11 @@
                             <div class="form-group">
 
                                 <label for="alarmContent">工单名称</label>
-                                <select class="form-control" id="alarmContent" name="alarmContent">
+                                <input type="text" class="form-control" readonly id="alarmContent" name="alarmContent">
+                                <!--<select class="form-control" id="alarmContent" name="alarmContent">
                                     <option value="维保水泵">维保水泵</option>
                                     <option value="清洗水箱">清洗水箱</option>
-                                </select>
+                                </select>-->
 
                             </div>
                         </div>

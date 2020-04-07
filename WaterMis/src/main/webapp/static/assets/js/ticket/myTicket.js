@@ -119,8 +119,7 @@ function initBootTable(url){
         queryParams: queryParams,
         pageSize: 20,
         pageNumber: 1,
-        sortable: true,
-        //排序方式
+        sortName: "createDate",//根据什么排序
         sortOrder: "desc",//排序
         sidePagination: 'server',
         pagination: true,//是否分页
@@ -151,15 +150,18 @@ function initBootTable(url){
         columns: [{
             field: 'deviceCode',
             title: '工单编号',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },{
             field: 'ticketTypeName',
             title: '工单类型',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },{
             field: 'title',
             title: '工单内容',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },/*{
             field: 'currentNodeName',
             title: '当前节点名称',
@@ -168,7 +170,8 @@ function initBootTable(url){
             field: 'currentStatusName',
             title: '当前工单状态',
             align: 'center',
-            sortable : true
+            sortable : true,
+            sortable: true
         },/*{
             field: 'currentUser',
             title: '当前操作人',
@@ -181,11 +184,13 @@ function initBootTable(url){
             field: 'pumpName',
             title: '泵房名称',
             align: 'center',
-            sortable : true
+            sortable : true,
+            sortable: true
         },{
             field: 'deviceName',
             title: '设备名称',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },/*{
             field: 'ticketLevel',
             title: '故障等级',
@@ -193,12 +198,14 @@ function initBootTable(url){
         },*/{
             field: 'address',
             title: '泵房地址',
-            align: 'center'
+            align: 'center',
+            sortable: true
         },{
             field: 'createDate',
             title: '工单创建时间',
             align: 'center',
-            sortable : true
+            sortable : true,
+            sortable: true
         },{
             field: 'operateSatus',
             title: '操作',
@@ -315,10 +322,20 @@ function queryParams(params) {
     var sortName="";
     if(params.sortName=='pumpName'){
         sortName = "p.name";
-    }else if (params.sortName=='currentStatusName'){
+    } else if (params.sortName=='currentStatusName'){
         sortName = "t.status";
     } else if (params.sortName=='createDate'){
         sortName = "t.create_Date";
+    } else if (params.sortName=='deviceCode'){
+        sortName = "t.device_code";
+    } else if (params.sortName=='ticketTypeName'){
+        sortName = "t.ticket_type"
+    } else if (params.sortName=='title'){
+        sortName = "t.title"
+    } else if (params.sortName=='deviceName'){
+        sortName = "de.NAME"
+    } else if (params.sortName=='address'){
+        sortName = "t.address"
     }
     // console.log(params)
     var temp = {
