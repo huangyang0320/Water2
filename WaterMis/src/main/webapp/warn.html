@@ -118,6 +118,9 @@
                 <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
                 <button id="all" type="button" onclick="ignoreAll()"  class="btn btn-primary query-btn">全部忽略</button>
             </div>
+            <input id="sortName" name="sortName" type="hidden"/>
+            <input id="sortOrder" name="sortOrder" type="hidden"/>
+            <input id="sortOrderChange" type="hidden" value="desc"/>
         </form>
     </div>
     <div class="content">
@@ -125,12 +128,12 @@
             <div class="alarm-head">
                 <ul>
                     <li>
-                        <span style="width: 15%;font-weight: 500;">开始时间</span>
-                        <span style="width: 15%;font-weight: 500;">泵房名称</span>
-                        <span style="width: 10%;font-weight: 500;">设备编号</span>
-                        <span style="width: 15%;font-weight: 500;">告警内容</span>
-                        <span style="width: 7%;font-weight: 500;">告警等级</span>
-                        <span style="width: 12%;font-weight: 500;">最近报警</span>
+                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('ALARM.START_DATE')">开始时间</span>
+                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('DL.name')">泵房名称</span>
+                        <span style="width: 10%;font-weight: 500;" onclick="sortOrderData('D.id')">设备编号</span>
+                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('ATD.FUNCTION_REMARKS')">告警内容</span>
+                        <span style="width: 7%;font-weight: 500;" onclick="sortOrderData('alarm_level')">告警等级</span>
+                        <span style="width: 12%;font-weight: 500;" onclick="sortOrderData('ALARM.END_DATE')">最近报警</span>
                         <span style="width: 20%;font-weight: 500;">操作</span>
 
                     </li>
@@ -183,6 +186,17 @@
             }
             return get_par;
         }
+     function sortOrderData(sortName){
+            $("#sortName").val(sortName);
+            if($("#sortOrderChange").val()=="desc"){
+                $("#sortOrderChange").val("asc")
+                $("#sortOrder").val("desc");
+            }else{
+                $("#sortOrderChange").val("desc")
+                $("#sortOrder").val("asc");
+            }
+           getAlarmList();
+     }
      function getAlarmList() {
          //  $.get(parent.CONTEXT_PATH + '/alarmStatController/indexAlarm', function(data) {
          $("#alarmForm").ajaxSubmit({
@@ -342,7 +356,44 @@
                 }
             });
         }
-
+       /* /!*
+47     *
+48     *,compare比较函数
+49     *这里使用匿名函数解决闭包问题
+50     *
+51     * *!/
+            window.onload=function() {
+                    var bjuge = false;
+                     var body = document.getElementsByTagName("tbody")[0];
+                     var th = document.getElementsByTagName("th");//为什么点击事件没有发生呢
+                    for (var k = 1; k < 5; k++) {
+                                th[k].onclick =function(k){
+                                        return function () {
+                                            var temp = new Array(4);
+                                            for (var i = 0; i < 4; i++) {
+                                                     temp[i] = body.children[i].getElementsByTagName("td")[k].innerText;
+                                                }
+                                            function compare2(value1, value2) {
+                                                     return value1 - value2;
+                                                 }
+                                             if (bjuge == true) {
+                                                    temp = temp.sort(compare2);
+                                                    bjuge = false;
+                                                 } else {
+                                                     temp = temp.reverse(temp.sort(compare2));
+                                                     bjuge = true;
+                                                 }
+                                            for (var m = 0; m < 4; m++) {
+                                                    for (var j = 0; j < 4; j++) {
+                                                            if (body.children[j].getElementsByTagName("td")[k].innerText == temp[m]) {
+                                                                    body.children[m].parentNode.insertBefore(body.children[j], body.children[m]);
+                                                                 }
+                                                         }
+                                                 }
+                                         }
+                                 }(k)
+                         }
+                 }*/
     </script>
 </body>
 </html>

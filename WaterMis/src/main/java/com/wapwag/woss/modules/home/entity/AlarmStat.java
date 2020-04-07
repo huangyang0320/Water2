@@ -45,6 +45,9 @@ public class AlarmStat {
 	private String userId;
 	private List<String> phIdList;
 
+	private String sortName;
+	private String sortOrder;
+
 
 	public String getPumpHouseName() {
 		return pumpHouseName;
@@ -252,6 +255,22 @@ public class AlarmStat {
 
 	public void setAreaCode(String areaCode) {
 		this.areaCode = areaCode;
+	}
+
+	public String getSortName() {
+		return sortName;
+	}
+
+	public void setSortName(String sortName) {
+		this.sortName = sortName;
+	}
+
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 
 	public List<String> getPhIdList() {

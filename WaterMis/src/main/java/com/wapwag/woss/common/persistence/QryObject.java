@@ -10,6 +10,10 @@ public class QryObject {
 	private int pageNumber;
 	private int pageSize;
 	private String deviceId;
+	private String deviceName;
+	private String alarmInfo;
+	private String startAlarmTime;
+	private String endAlarmTime;
 	private String projectId;
 	private String projectName;
 	private String userId;
@@ -28,6 +32,9 @@ public class QryObject {
 	private String phId;
 	private String pumpHouseName;
 	private String areaCode;
+
+	private String sortName;
+	private String sortOrder;
 
 	public String getPumpHouseName() {
 		return pumpHouseName;
@@ -176,5 +183,53 @@ public class QryObject {
 	}
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
+	}
+
+	public String getDeviceName() {
+		return deviceName;
+	}
+
+	public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
+	}
+
+	public String getAlarmInfo() {
+		return alarmInfo;
+	}
+
+	public void setAlarmInfo(String alarmInfo) {
+		this.alarmInfo = alarmInfo;
+	}
+
+	public String getStartAlarmTime() {
+		return startAlarmTime;
+	}
+
+	public void setStartAlarmTime(String startAlarmTime) {
+		this.startAlarmTime = startAlarmTime;
+	}
+
+	public String getEndAlarmTime() {
+		return endAlarmTime;
+	}
+
+	public void setEndAlarmTime(String endAlarmTime) {
+		this.endAlarmTime = endAlarmTime;
+	}
+
+	public String getSortName() {
+		return sortName;
+	}
+
+	public void setSortName(String sortName) {
+		this.sortName = sortName;
+	}
+
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 }

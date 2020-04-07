@@ -221,6 +221,8 @@ $(function(){
            pageSize:20,
            pageNumber:1,
            sidePagination:'server',
+            sortName:"endDate",
+            sortOrder:"desc",
            pagination: true,//是否分页
            showColumns: true,//列选择按钮
            minimumCountColumns:2,
@@ -249,40 +251,47 @@ $(function(){
            columns: [{
                field: 'phName',
                title: '泵房名称',
-               align: 'center'
+               align: 'center',
+               sortable: true
            },{
                field: 'deviceName',
                title: '设备名称',
-               align: 'center'
+               align: 'center',
+               sortable: true
            }/*,{
                field: 'deviceId',
                title: '设备编号',
                align: 'center'
            }*/,{
                field: 'alarmInfo',
-               title: '报警内容',
-               align: 'center'
+               title: '告警内容',
+               align: 'center',
+               sortable: true
            },{
                field: 'alarmTime',
                title: '告警时长(h)',
-               align: 'center'
+               align: 'center',
+               sortable: true
            },{
                field: 'alarmLevel',
                title: '告警等级',
-               align: 'center'
+               align: 'center',
+               sortable: true
            },{
                field: 'startDate',
                title: '开始时间',
-               align: 'center'
+               align: 'center',
+               sortable: true
            },{
                field: 'endDate',
                title: '结束时间',
-               align: 'center'
-           },{
+               align: 'center',
+               sortable: true
+           },/*{
                field: 'confirmStat',
                title: '告警确认状态',
                align: 'center'
-           },{
+           },*/{
                field: 'createWorkOrder',
                title: '创建工单',
                align: 'center',
@@ -329,6 +338,23 @@ $(function(){
             ischeck = false;
 		}
 	   alertType = '1';
+
+       var sortName="";
+       if(params.sortName=='phName'){
+           sortName = "DL.name";
+       } else if (params.sortName=='deviceName'){
+           sortName = "D.name";
+       } else if (params.sortName=='alarmInfo'){
+           sortName = "ATD.FUNCTION_REMARKS";
+       } else if (params.sortName=='alarmTime'){
+           sortName = "TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)";
+       } else if (params.sortName=='alarmLevel'){
+           sortName = "alarm_level"
+       } else if (params.sortName=='startDate'){
+           sortName = "ALARM.START_DATE"
+       } else if (params.sortName=='endDate'){
+           sortName = "ALARM.END_DATE"
+       }
 	 //配置参数
      var keyword = jQuery.base64.encode($("#keyword").val());
      var type = $("#type").val();
@@ -342,7 +368,13 @@ $(function(){
        type:type,
        endTime: $("#endTime").val(),
        exportType:exportType,
-       exportMustNum:EXPORT_MUST_NUM
+       exportMustNum:EXPORT_MUST_NUM,
+       deviceName:$("#deviceName").val(),
+         alarmInfo:$("#alarmInfo").val(),
+         startAlarmTime:$("#startAlarmTime").val(),
+         endAlarmTime:$("#endAlarmTime").val(),
+         sortName:sortName,
+         sortOrder:params.sortOrder
  	};
  	 exportType='0';
      return temp;

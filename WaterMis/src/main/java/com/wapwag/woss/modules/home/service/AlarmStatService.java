@@ -46,7 +46,12 @@ public class AlarmStatService {
 	private String workOrderUrl;
 
 	public boolean insertAlarmSendStatus(List<AlarmSendStatus> list){
-		return alarmStatMapper.insertAlarmSendStatus(list)>0;
+		if(list!=null&&list.size()>0){
+			return alarmStatMapper.insertAlarmSendStatus(list)>0;
+		}else{
+			return false;
+		}
+
 	}
 
 	public boolean updateAlarmSendStatusByAlarmStatisticsId(List<AlarmSendStatus> list){
