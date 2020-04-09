@@ -653,12 +653,12 @@ function initRealtimeData(){
             html += "</tr>";
             if(info.type == "ftMP" || info.type == "ftAC" || info.type == "ftMF"
             	|| info.type == "ftT" || info.type == "ftTL" || info.type == "ftWQ" || info.type == "ftEE"){
-                $("#realtimeTbody1").append(html);
+                $("#realtimeTbody1").append(html);//曲线参数
             }else if(info.type == "ftPS" || info.type == "ftRS" || info.type == "ftVS"
             	|| info.type == "ftA"){
-            	$("#realtimeTbody3").append(html);
+            	$("#realtimeTbody3").append(html);//状态参数
             }else if(info.type == "ftSP"){
-            	$("#realtimeTbody2").append(html);
+            	$("#realtimeTbody2").append(html); //设置参数
             }
         }
     }

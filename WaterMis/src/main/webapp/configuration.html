@@ -1244,27 +1244,27 @@ function setSvg(reloading) {
         var box_status=window.openend_tankinvalve.pv==1?"打开":"关闭";
         if(conctolParams.phName=="金海龙韵"){
 
-            var v={x:960,y:380};
+            var v={x:940,y:350};
             setRect(v,"control")
             setText(v, '直供水阀门:'+box_status,"control");
             setImage('static/assets/img/fmY.png', '35', '35', 940, 360);
 
-            var v1={x:1095,y:283};
-            setRect({x:1095,y:283},"control")
+            var v1={x:1115,y:283};
+            setRect({x:1115,y:283},"control")
             setText(v1, '水箱阀门:'+z_status,"control")
             setImage('static/assets/img/fmY.png', '35', '35', 1093, 258);
 
         }else if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号" ){
 
-            var v={x:940,y:195};
+            var v={x:1150,y:250};
             setRect(v,"control")
             setText(v, '直供水阀门:'+box_status,"control");
-           setImage('static/assets/img/fmY.png', '35', '35', 940, 175);
+           setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
 
-            var v1={x:1140,y:80};
-            setRect({x:1140,y:80},"control")
+            var v1={x:1060,y:180};
+            setRect({x:1060,y:180},"control")
             setText(v1, '水箱阀门:'+z_status,"control")
-            setImage('static/assets/img/fmY.png', '35', '35', 1140, 80);
+            setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
 
         }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府"){
 
