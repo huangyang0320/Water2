@@ -270,7 +270,10 @@
                 })
             }
         };
+
+        //默认触发一个设备的点击事件
         callRefresh();
+
         initAreaBtn(GLOBAL_REGION_LIST);
     };
     function initAreaBtn(areaList) {
@@ -452,6 +455,9 @@
                 })
             }
         })
+
+        //默认展示所有泵房的 分布
+        showAllPumphouses();
     }
 
 function doClean() {
@@ -566,7 +572,9 @@ function showAllPumphouses() {
             })
 
             $.post("/HYWater/config/getMapPoint", function(result) {
-                MAP.centerAndZoom(new BMap.Point(result.longi, result.lati), 11);
+                //MAP.centerAndZoom(new BMap.Point(result.longi, result.lati), 13);
+                //118.434261,31.264748
+                MAP.centerAndZoom(new BMap.Point(118.384261,31.314748), 13);
             });
             LOADING.hide();
 
