@@ -325,7 +325,7 @@
 </div>
 <!--泵房基本信息-->
 <div class="row" style="margin: 0px;height: 12%; width:100%; color: #3056aa; position: absolute;" id="111">
-<div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false" style="top:74px;left: 13px">
+<div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false" style="top:74px;left: 13px;z-index: 0">
     <div class="modal-dialog" role="document" style="width: 230px;">
         <div class="modal-content" style="background-color: rgba(39, 90, 182, 0.9);">
           <!--  <div style="background-color: #127ed4;border-radius: 5px;">
@@ -1268,7 +1268,7 @@ function setSvg(reloading) {
 
         }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府"){
 
-            var v={x:1080,y:265};
+            var v={x:1110,y:288};
             setRect(v,"control")
             setText(v, '直供水阀门:'+box_status,"control");
            setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
