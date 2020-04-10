@@ -670,6 +670,7 @@ function getConfigurantionData(type){
             window.openend_tankinvalve;//水箱阀门
             window.level_tank=[];//水箱液位
             window.pressure_szjs=[];//进口压力
+            window.setValue=[];//上下限 值
 
             window.conctolData = [];
             if(res){
@@ -700,6 +701,11 @@ function getConfigurantionData(type){
                     }
                     if(v.code.indexOf('openend_tankinvalve') >= 0){
                         openend_tankinvalve=v;
+                    }
+                    console.log(3333333333333333333333333)
+                    if(v.tagName.indexOf("水箱液位上限值") >= 0 || v.tagName.indexOf("水箱液位下限值") >= 0 ||
+                        v.tagName.indexOf("爆管流量设定值") >= 0 || v.tagName.indexOf("压力超限设定值") >= 0){
+                        window.setValue.push(v);
                     }
 
 
@@ -1775,7 +1781,7 @@ function showDiv(deviceId,deviceName,code,dateType){
             if (undefined == data || data==null) {
                 return;
             } else {
-                var markLine = baseLine(code);
+                var markLine = baseLine(deviceId,code);
                 setEcharts(data.xData,data.yData,dateType,markLine);
 
             }
@@ -1786,11 +1792,21 @@ function showDiv(deviceId,deviceName,code,dateType){
     });
 
 }
-function baseLine(type){
+function baseLine(deviceId,type){
+
     var markLine={};
-
-
     if(type.indexOf('level_tank')>=0){
+        var level_tank_highwset=0;
+        var level_tank_lowset=0;
+        window.setValue.map(function (val) {
+            if (val.tagName.indexOf("水箱液位上限值") >= 0 && deviceId==val.idDevice) {
+                level_tank_highwset = val.pv;
+            }
+            if (val.tagName.indexOf("水箱液位下限值") >= 0 && deviceId==val.idDevice) {
+                level_tank_lowset = val.pv;
+            }
+        })
+
         markLine ={
             silent: true,
                 lineStyle: {
@@ -1800,9 +1816,9 @@ function baseLine(type){
             },
             data: [
                 {
-                    yAxis: 0.2
+                    yAxis: level_tank_lowset
                 },{
-                    yAxis: 1.9
+                    yAxis: level_tank_highwset
                 }
             ],
             label: {
@@ -1810,9 +1826,9 @@ function baseLine(type){
                     {
                         formatter:function(e){
                            if(e.value==0.2){
-                               return '0.2\n下限'
+                               return level_tank_lowset+'\n下限'
                            }else  if(e.value==1.9){
-                               return '1.9\n上限'
+                               return level_tank_highwset+'\n上限'
                            }
 
                         }
@@ -1822,6 +1838,14 @@ function baseLine(type){
 
         return markLine;
     }else if(type.indexOf('pressure_outwater')>=0){
+
+        var flow_burstset=0;
+        window.setValue.map(function (val) {
+            if (val.tagName.indexOf("压力超限设定值") >= 0  && deviceId==val.idDevice) {
+                flow_burstset = val.pv;
+            }
+        })
+
         markLine ={
             silent: true,
             lineStyle: {
@@ -1831,13 +1855,13 @@ function baseLine(type){
             },
             data: [
                 {
-                    yAxis: 0.65
+                    yAxis: flow_burstset
                 }
             ],
             label: {
                 normal:
                     {
-                        formatter:'0.65\n阈值'
+                        formatter: flow_burstset+'\n阈值'
                     }
             }
         }

@@ -28,6 +28,9 @@ public interface PumpConfigurationMapper {
 
     List<PumpService> getServiceValues(@Param("dateNumber")String dateNumber, @Param("idDevice")List<DeviceInfo> idDevice, @Param("code")List<String> code);
 
+    List<PumpService> getServiceSetValues(@Param("idDevice")List<DeviceInfo> idDevice, @Param("code")List<String> code);
+
+
     List<Point> getCtrlParms(String deviceCode);
 
     List<PointDate> getPointData(@Param("tableName")String tableName,@Param("idDevice")String deviceCode,@Param("idService") List<String> idService);
@@ -35,14 +38,14 @@ public interface PumpConfigurationMapper {
     List<String> findDeviceCodeById(@Param("idDevice")List<DeviceInfo> idDevice);
 
     CtrlPoint getPointRatio(@Param("deviceId") String deviceId, @Param("pointCode") String pointCode);
-    
+
     List<GwDevice> getgwIdByDeviceId(@Param("deviceId") String deviceId);
-    
+
     CtrlPoint getFunctionById(@Param("functionId") String functionId);
 
     //兼容泸州下空
 	Services getserviceMaxMin(@Param("deviceId") String deviceId, @Param("code") String code);
 
 	List<SysDict> selectSysDictByType(String type);
-    
+
 }

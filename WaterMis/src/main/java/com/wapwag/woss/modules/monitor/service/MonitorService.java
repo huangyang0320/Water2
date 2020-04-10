@@ -49,10 +49,10 @@ public class MonitorService {
         this.deviceDao = deviceDao;
         this.servicesDao = servicesDao;
     }
-    
+
     @Autowired
     private PumpHouseDao pumpHouseDao;
-    
+
     @Autowired
     private VideoDao videoDao;
 
@@ -64,7 +64,7 @@ public class MonitorService {
         resultMap.put("realTimeData", deviceDao.findDeviceRealTimeData(deviceId, dimen,StringUtils.getTodayTable()));
         return resultMap;
     }
-    
+
     public List<Device> mapRealDetail(String pumpHouseId){
     	return deviceDao.mapRealDetail(pumpHouseId,StringUtils.getTodayTable());
     }
@@ -86,7 +86,7 @@ public class MonitorService {
                                                             String endDate) {
         return deviceDao.findDiffDeviceConsumeSpecial(deviceIndexs, dimen, startDate, endDate);
     }
-    
+
     public List<Map<String, Object>> getLatestDeviceData(String deviceId, String serviceId) {
         DateTime now = DateTime.now();
         String startDate = now.plusHours(-1).toString(DATE_FORMAT);
@@ -108,7 +108,7 @@ public class MonitorService {
 	public List<Device> mapOnlineStat(String deviceId) {
 		return deviceDao.mapOnlineStat(deviceId,StringUtils.getTodayTable());
 	}
-	
+
 	/*public String pumpOnlineStat(List<String> pumpId){
 		List<DevicePumpHoseDto> deviceByPumpHouse = deviceDao.findDeviceByPumpHoseId(pumpId);
 		List<String> deviceId =  deviceDao.pumpOnlineStat(deviceByPumpHouse,StringUtils.getTodayTable());
@@ -133,7 +133,7 @@ public class MonitorService {
 		}
 		return pumpHouseList;
 		*/
-		
+
 		Map<String, String> pumpStatus = PumpDevStatusTask.ALL_PUMP_STATS();
 		List<String> result = new ArrayList<>();
 		for(String pump : pumpId){
@@ -143,7 +143,7 @@ public class MonitorService {
 		}
 		return JSON.toJSONString(result);
 	}
-	
+
 	/**
 	 * 根据泵房ID返回相关信息
 	 * @return
@@ -198,7 +198,7 @@ public class MonitorService {
 		List<DeviceInfo> deviceInfoList = deviceDao.findDeviceListByPumpHouse(pumpHouseId);
 		pumpHouseInfo.setDeviceInfolist(deviceInfoList);
 		pumpHouseInfo.setPumpHouseStatus("0");
-		
+
 		/**
 		if(!deviceInfoList.isEmpty()){
 			for (DeviceInfo deviceInfo: deviceInfoList) {
@@ -211,13 +211,13 @@ public class MonitorService {
 			}
 		}
 		*/
-		
+
 		if(!"".equals( PumpDevStatusTask.ONE_PUMP_STATS(pumpHouseId))){
 			pumpHouseInfo.setPumpHouseStatus("1");
 		}
         return pumpHouseInfo;
     }
-    
+
     /**
      * 请求设备的实时测点数据  过慢 拆分接口
      * @param pumpHouseId
@@ -290,7 +290,7 @@ public class MonitorService {
  		}
  		return deviceInfoList;
      }
-    
+
 	public List<ChartSeriesDto> queryDeviceHistory(String deviceIds, String functionCodes, String dimen, String startDate,
 			String endDate, String addOnDate) {
 		List<ChartSeriesDto> returnObj = new ArrayList<ChartSeriesDto>();
@@ -329,7 +329,7 @@ public class MonitorService {
 						ChartSeriesDto charDto = new ChartSeriesDto();
 						String dateTab = addTime>0?getTimeLab(hisDto)+"-":"";
 						String nuit = StringUtils.isEmpty(servicesList.get(0).getUnit())?"":"("+servicesList.get(0).getUnit()+")";
-						charDto.setName(device.getProjectInfo().getProjectName()+"-"+device.getDeviceName()+"-"+dateTab+servicesList.get(0).getName()+nuit);
+						charDto.setName(device.getPumpName()+"-"+device.getDeviceName()+"-"+dateTab+servicesList.get(0).getName()+nuit);
 						charDto.setData(values);
 						returnObj.add(charDto);
 					}

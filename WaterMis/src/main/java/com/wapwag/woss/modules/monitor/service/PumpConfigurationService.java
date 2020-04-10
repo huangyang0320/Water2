@@ -79,10 +79,10 @@ import com.wapwag.woss.modules.sys.service.CountService;
 @Service
 @Transactional(rollbackFor = Exception.class, readOnly = true)
 public class PumpConfigurationService {
-	
+
 	private static Logger log = LoggerFactory.getLogger(EnergyService.class);
 
-	
+
     /**远程上传文件的服务器地址 */
     public static final String IMAGE_URL = PropUtils.getPropertiesString("application.properties", "remote.images.url");
     /**数据库 */
@@ -93,34 +93,34 @@ public class PumpConfigurationService {
    // private static final String downUrl = "https://www.cloud4water.com/down/jsonParam";
    // private static final String newDownUrl = "http://47.100.198.103:8089/down/jsonParam";
    // private static final String newDownUrl = "http://127.0.0.1:8089/down/jsonParam";
-    
+
     @Value(value = "${newDownUrl}")
     private String newDownUrl;
 
     private static final String PH_DEFAULT_URL = "theme/images/zt20180615162421.jpg";
-    
-    
+
+
     @Autowired
     private UserDao userDao;
-    
+
     @Autowired
     private  HttpAPIService httpAPIService;
-    
+
     @Autowired
     private PumpConfigurationMapper pumpConfigurationMapper;
-    
+
     @Autowired
     private DeviceDao deviceDao;
-    
+
     @Autowired
     private AccessDeviceDao accessDeviceDao;
-    
+
     @Autowired
     private CountService countService;
-    
+
     @Autowired
     private FunctionService functionService;
-    
+
     @Transactional(readOnly = false)
     public String getPumpNode(String phId) {
         CurDevicePos curDevicePos = new CurDevicePos();
@@ -153,7 +153,7 @@ public class PumpConfigurationService {
 
         List<String> outletPos = Arrays.asList(pumpPosition.getOutletPos().split(";"));
         List<Poi> outletPosi = strToList(outletPos);
-        
+
         List<String> tankPos = Arrays.asList(pumpPosition.getTankPos().split(";"));
         List<Poi> tankPosi = strToList(tankPos);
 
@@ -231,11 +231,11 @@ public class PumpConfigurationService {
 			}
 		} catch (Exception e) {
 		}
-        
+
         data=gson.toJson(pumpNodeVO);
         return data;
     }
-    
+
     private List<Poi> strToList(List<String> strList ){
         List<Poi> listPoi = new ArrayList<Poi>();
         for (String item : strList) {
@@ -256,7 +256,7 @@ public class PumpConfigurationService {
         String tableName = SV + time.substring(0, 8);
         return tableName;
     }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public String getServiceValues(String phId ){
         String tableName = PumpConfigurationService.createTableName();
@@ -283,13 +283,18 @@ public class PumpConfigurationService {
             code.add("error_pump12");//
             code.add("error_pump11");//
 
-
-
+            /**
+             * 设定值
+             */
+            code.add("level_tank_highwset");
+            code.add("level_tank_lowset");
+            code.add("flow_burstset");
+            code.add("pressure_alarmset");
 
 
 
             code.add("openend_directvalve");//直供水电动阀打开
-            code.add("openend_tankinvalve");//水箱电动阀打开
+          code.add("openend_tankinvalve");//水箱电动阀打开
 
             code.add("pressure_szjs1");//总进水 压力
             code.add("pressure_szjs2");//总进水 压力
@@ -337,10 +342,10 @@ public class PumpConfigurationService {
 
         CtrlPoint ctrlPoint = pumpConfigurationMapper.getPointRatio(deviceId, pointCode);
         if (ctrlPoint==null||ctrlPoint.getDeviceId()==null)return fail(CTRL_ERROR_NULL);
-        
+
         //folat 存在为空的情况 从  大点表再次确认
         CtrlPoint function = pumpConfigurationMapper.getFunctionById(ctrlPoint.getFunctionId());
-        
+
         if("Float".equals(ctrlPoint.getDataType()) || "uint".equals(function.getDataType())){//只有曲线参数进行 最大 最小值校验
         	Float inputValue = Float.valueOf(ctrlDTO.getPointValue());
         	if (ctrlPoint.getMaxData() != null && ctrlPoint.getMinData() != null
@@ -392,7 +397,7 @@ public class PumpConfigurationService {
 //                }
 //            }
         } else {
-        	if(!PointEnum.getPointEnumKeyByType("1").contains(pointCode)&& 
+        	if(!PointEnum.getPointEnumKeyByType("1").contains(pointCode)&&
         			!PointEnum.getPointEnumKeyByType("2").contains(pointCode)&&
         			!PointEnum.getPointEnumKeyByType("3").contains(pointCode)){
         		return  fail(CTRL_ERROR_NULL);
@@ -426,7 +431,7 @@ public class PumpConfigurationService {
 
         return fail(CTRL_ERROR);
     }
-    
+
     public HttpResult newRemoteCtrlByGW(String deviceId, String pointCode,Integer pointValue) {
     	Map<String, Object> map = new HashMap<String,Object>();
     	//直接 原测点 下控
@@ -461,7 +466,7 @@ public class PumpConfigurationService {
     							log.info("下控复位结果："+httpResult);
     	    	    		} catch (Exception e) {
     	    	    			log.error("下控复位结果异常",e);
-    	    	    		}    	                
+    	    	    		}
     	                }
     			}
     		}
@@ -469,7 +474,7 @@ public class PumpConfigurationService {
     	return httpResult;
 	}
 	/**
-     * 
+     *
      * @param deviceId
      * @param pointCode
      * @param pointValue  除以倍率后的结果
@@ -489,7 +494,7 @@ public class PumpConfigurationService {
 				}
 			}
     	}
-    	//第二种  测点 直接下控 
+    	//第二种  测点 直接下控
     	if(PointEnum.getPointEnumKeyByType("2").contains(pointCode) ||
     			PointEnum.getPointEnumKeyByType("3").contains(pointCode)){
     		Map<String, Object> mapCode = new HashMap<String,Object>();
@@ -552,7 +557,7 @@ public class PumpConfigurationService {
     							log.info("下控复位结果："+httpResult);
     	    	    		} catch (Exception e) {
     	    	    			log.error("下控复位结果异常",e);
-    	    	    		}    	                
+    	    	    		}
     	                }
     			}
     		}
@@ -732,7 +737,7 @@ public class PumpConfigurationService {
             return setValue;
         }
     }
-    
+
     public RestResult<String> controalDoor(CtrlDTO ctrlDTO,String userId,String delFlag) throws IOException {
         //判断是否有权限pointCode，deviceId是否为空
         if (ctrlDTO.getDeviceId() == null || !hasPermissionCtrl(userId,delFlag)) return fail(CTRL_FORBIDDEN);
@@ -741,7 +746,7 @@ public class PumpConfigurationService {
         if("1".equals(msg))return fail(CTRL_NULL_DOOR);
         return success(msg);
     }
-    
+
 	/**
 	 * 下控测点
 	 * @param ctrlDTO
@@ -753,7 +758,7 @@ public class PumpConfigurationService {
     	if(!hasPermissionCtrl){return fail(CTRL_FORBIDDEN);}
     	Services getserviceMaxMin = pumpConfigurationMapper.getserviceMaxMin(ctrlDTO.getDeviceId(), ctrlDTO.getPointCode());
     	if(getserviceMaxMin!=null){
-    		if(!(Double.parseDouble(getserviceMaxMin.getRangeminimum()) <= Double.parseDouble(ctrlDTO.getPointValue()) 
+    		if(!(Double.parseDouble(getserviceMaxMin.getRangeminimum()) <= Double.parseDouble(ctrlDTO.getPointValue())
     				&& Double.parseDouble(ctrlDTO.getPointValue())<= Double.parseDouble(getserviceMaxMin.getRangemaximum()))){
     			return fail(CTRL_INVALID_VALUE);
     		}
@@ -794,10 +799,10 @@ public class PumpConfigurationService {
         }
         return fail(CTRL_ERROR);
 	}
-    
+
     public List<SysDict> selectSysDictByType(String type){
         if (StringUtils.isEmpty(type)) return null;
         return pumpConfigurationMapper.selectSysDictByType(type);
     }
-   
+
 }

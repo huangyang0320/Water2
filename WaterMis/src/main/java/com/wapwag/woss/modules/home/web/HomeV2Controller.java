@@ -190,6 +190,9 @@ public class HomeV2Controller {
     @ResponseBody
     @RequestMapping(value = "/getCurrentDataByDeviceIdAndCode/{deviceId:.+}/data/{code}")
     public Map<String,Object> getCurrentDataByDeviceIdAndCode(@PathVariable("deviceId") String deviceId,@PathVariable("code") String code, User user){
+        //获取对应的 设定值
+
+
         return homeV2Service.getCurrentDataByDeviceIdAndCode(deviceId,code);
     }
 
