@@ -28,7 +28,7 @@ public interface PumpConfigurationMapper {
 
     List<PumpService> getServiceValues(@Param("dateNumber")String dateNumber, @Param("idDevice")List<DeviceInfo> idDevice, @Param("code")List<String> code);
 
-    List<PumpService> getServiceSetValues(@Param("idDevice")List<DeviceInfo> idDevice, @Param("code")List<String> code);
+    List<PumpService> getServiceSetValues(@Param("idDevice")List<String> idDevice, @Param("code")List<String> code);
 
 
     List<Point> getCtrlParms(String deviceCode);

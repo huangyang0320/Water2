@@ -111,13 +111,16 @@
 
     <select id="getServiceSetValues" resultType="com.wapwag.woss.modules.monitor.pumpNode.PumpService">
         SELECT
-        temp1.id_device,temp1.id_service, temp1.tag_name, temp1.pv
+        temp1.id_device idDevice,temp1.id_service idService, temp1.FUNCTION_MEMO tagName, s.code,temp1.pv
         FROM
-        (select * from services
-        AND id_device = #{item.deviceId} ) temp1
-        GROUP BY id_service) temp
+        (select * from service_values_current where
+        id_device in
+        <foreach item="item" index="index" collection="idDevice" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+         ) temp1
         JOIN
-        services s ON s.id = temp.id_service where s.code in
+        services s ON s.id = temp1.id_service where s.code in
         <foreach item="item" index="index" collection="code" open="(" separator="," close=")">
             #{item}
         </foreach>

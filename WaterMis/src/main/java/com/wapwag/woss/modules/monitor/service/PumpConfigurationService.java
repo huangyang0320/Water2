@@ -257,6 +257,25 @@ public class PumpConfigurationService {
         return tableName;
     }
 
+    public String getServiceSetValues(PumpService pumpService){
+        List<DeviceInfo> idDevice = deviceDao.findDeviceListByPumpHouse(pumpService.getPhId());
+        if(idDevice!=null && idDevice.size()>0){
+            List<String> deviceIds=new ArrayList<>();
+            for(DeviceInfo d:idDevice){
+                deviceIds.add(d.getDeviceId());
+            }
+            pumpService.setDeviceList(deviceIds);
+        }
+        List<PumpService> format =pumpConfigurationMapper.getServiceSetValues(pumpService.getDeviceList(),pumpService.getCodeList());
+        for(PumpService pump : format){
+            if(pump.getPv()!=null&&pump.getPv().length()>4){
+                pump.setPv(pump.getPv().substring(0,5));
+            }
+        }
+        String data=new Gson().toJson(format);
+        return data;
+    }
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public String getServiceValues(String phId ){
         String tableName = PumpConfigurationService.createTableName();

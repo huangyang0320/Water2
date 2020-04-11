@@ -283,6 +283,8 @@
 <link href="static/assets/css/bootstrapSwitch.css" rel="stylesheet" />
 <script src="static/assets/js/bootstrapSwitch.js"></script>
 
+
+
 <div class="row" style="margin: 0px;height: 12%; width:100%; color: #3056aa; position: absolute;display: none" id="msgAll">
   <!--  <div class="col-md-3">
         <div  id="pumpName" style="min-width: 260px; padding: 20px 0 0 20px;font-size: 14px">泵房名称：...</div>
@@ -663,6 +665,7 @@ function getConfigurantionData(type){
         data:{phid: GLOBAL_SELECT_DEVICE.pumpHouseId},
         success: function (res) {
             LOADING.hide();
+            getServiceSetValues(GLOBAL_SELECT_DEVICE.pumpHouseId);
             window.FrequencyOutput = {};
             window.runPump = {};
 
@@ -670,7 +673,7 @@ function getConfigurantionData(type){
             window.openend_tankinvalve;//水箱阀门
             window.level_tank=[];//水箱液位
             window.pressure_szjs=[];//进口压力
-            window.setValue=[];//上下限 值
+
 
             window.conctolData = [];
             if(res){
@@ -703,10 +706,10 @@ function getConfigurantionData(type){
                         openend_tankinvalve=v;
                     }
                     console.log(3333333333333333333333333)
-                    if(v.tagName.indexOf("水箱液位上限值") >= 0 || v.tagName.indexOf("水箱液位下限值") >= 0 ||
+                   /* if(v.tagName.indexOf("水箱液位上限值") >= 0 || v.tagName.indexOf("水箱液位下限值") >= 0 ||
                         v.tagName.indexOf("爆管流量设定值") >= 0 || v.tagName.indexOf("压力超限设定值") >= 0){
                         window.setValue.push(v);
-                    }
+                    }*/
 
 
                 })
@@ -1774,6 +1777,7 @@ function showDiv(deviceId,deviceName,code,dateType){
     $("#titleContent").html(deviceName+"("+dateType+")");
     jQuery.ajax({
         type : 'POST',
+        async: false,
         contentType : 'application/json',
         url : 'a' + '/homeV2/getCurrentDataByDeviceIdAndCode/'+deviceId+"/data/"+code,
         dataType : 'json',
@@ -1792,10 +1796,41 @@ function showDiv(deviceId,deviceName,code,dateType){
     });
 
 }
+//获取设定值
+function getServiceSetValues(phId){
+    var codeList=[];
+    codeList.push("level_tank_highwset");
+    codeList.push("level_tank_lowset");
+    codeList.push("flow_burstset");
+    codeList.push("pressure_alarmset");
+    $.ajax({
+        type:"POST",
+        async: false,
+        contentType: 'application/json',
+        datatype: "JSON",
+        url: CONTEXT_PATH+'/monitor/configuration/getServiceSetValues',
+        data:JSON.stringify({phId: phId,codeList:codeList}),
+        success: function (res) {
+            window.setValue=[];//上下限 值
+            if(res){
+                res.map(function (v) {
+                    if(v.tagName.indexOf("水箱液位上限值") >= 0 || v.tagName.indexOf("水箱液位下限值") >= 0 ||
+                         v.tagName.indexOf("爆管流量设定值") >= 0 || v.tagName.indexOf("压力超限设定值") >= 0){
+                         window.setValue.push(v);
+                     }
+                })
+            }
+        }
+    })
+}
+
 function baseLine(deviceId,type){
 
     var markLine={};
+    var codeList=[];
     if(type.indexOf('level_tank')>=0){
+
+
         var level_tank_highwset=0;
         var level_tank_lowset=0;
         window.setValue.map(function (val) {
@@ -1825,9 +1860,9 @@ function baseLine(deviceId,type){
                 normal:
                     {
                         formatter:function(e){
-                           if(e.value==0.2){
+                           if(e.value==level_tank_lowset){
                                return level_tank_lowset+'\n下限'
-                           }else  if(e.value==1.9){
+                           }else  if(e.value==level_tank_highwset){
                                return level_tank_highwset+'\n上限'
                            }
 
@@ -1838,11 +1873,10 @@ function baseLine(deviceId,type){
 
         return markLine;
     }else if(type.indexOf('pressure_outwater')>=0){
-
-        var flow_burstset=0;
+        var pressure_alarmset=0;
         window.setValue.map(function (val) {
             if (val.tagName.indexOf("压力超限设定值") >= 0  && deviceId==val.idDevice) {
-                flow_burstset = val.pv;
+                pressure_alarmset = val.pv;
             }
         })
 
@@ -1855,13 +1889,13 @@ function baseLine(deviceId,type){
             },
             data: [
                 {
-                    yAxis: flow_burstset
+                    yAxis: pressure_alarmset
                 }
             ],
             label: {
                 normal:
                     {
-                        formatter: flow_burstset+'\n阈值'
+                        formatter: pressure_alarmset+'\n阈值'
                     }
             }
         }

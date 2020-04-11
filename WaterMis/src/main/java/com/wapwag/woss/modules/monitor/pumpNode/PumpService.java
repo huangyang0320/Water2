@@ -1,5 +1,7 @@
 package com.wapwag.woss.modules.monitor.pumpNode;
 
+import java.util.List;
+
 /**
  * @author zx
  * @since 2018/5/22
@@ -11,6 +13,10 @@ public class PumpService {
 	private String unit;//单位
     private String pv;//值
 	private String code;
+
+	private String phId;
+	private List<String> codeList;
+	private List<String> deviceList;
 
 	public String getIdDevice() {
 		return idDevice;
@@ -58,5 +64,30 @@ public class PumpService {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+
+	public String getPhId() {
+		return phId;
+	}
+
+	public void setPhId(String phId) {
+		this.phId = phId;
+	}
+
+	public List<String> getDeviceList() {
+		return deviceList;
+	}
+
+	public void setDeviceList(List<String> deviceList) {
+		this.deviceList = deviceList;
+	}
+
+	public List<String> getCodeList() {
+		return codeList;
+	}
+
+	public void setCodeList(List<String> codeList) {
+		this.codeList = codeList;
 	}
 }
