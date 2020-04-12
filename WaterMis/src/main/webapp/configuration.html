@@ -1801,8 +1801,10 @@ function getServiceSetValues(phId){
     var codeList=[];
     codeList.push("level_tank_highwset");
     codeList.push("level_tank_lowset");
-    codeList.push("flow_burstset");
-    codeList.push("pressure_alarmset");
+    codeList.push("flow_burstset");//爆管流量
+    codeList.push("pressure_alarmset");//报警压力
+    codeList.push("pressure_outset");//设定压力
+    codeList.push("pressurein_lowset");//进水压力下限
     $.ajax({
         type:"POST",
         async: false,
@@ -1814,10 +1816,11 @@ function getServiceSetValues(phId){
             window.setValue=[];//上下限 值
             if(res){
                 res.map(function (v) {
-                    if(v.tagName.indexOf("水箱液位上限值") >= 0 || v.tagName.indexOf("水箱液位下限值") >= 0 ||
-                         v.tagName.indexOf("爆管流量设定值") >= 0 || v.tagName.indexOf("压力超限设定值") >= 0){
-                         window.setValue.push(v);
-                     }
+                    if(v.tagName.indexOf("液位上限") >= 0 || v.tagName.indexOf("液位下限") >= 0 ||
+                        v.tagName.indexOf("爆管流量") >= 0 || v.tagName.indexOf("进水压力下限") >= 0 ||
+                        v.tagName.indexOf("报警压力") >= 0 || v.tagName.indexOf("设定压力") >= 0){
+                        window.setValue.push(v);
+                    }
                 })
             }
         }
@@ -1834,10 +1837,10 @@ function baseLine(deviceId,type){
         var level_tank_highwset=0;
         var level_tank_lowset=0;
         window.setValue.map(function (val) {
-            if (val.tagName.indexOf("水箱液位上限值") >= 0 && deviceId==val.idDevice) {
+            if (val.tagName.indexOf("液位上限") >= 0 && deviceId==val.idDevice) {
                 level_tank_highwset = val.pv;
             }
-            if (val.tagName.indexOf("水箱液位下限值") >= 0 && deviceId==val.idDevice) {
+            if (val.tagName.indexOf("液位下限") >= 0 && deviceId==val.idDevice) {
                 level_tank_lowset = val.pv;
             }
         })
@@ -1873,9 +1876,13 @@ function baseLine(deviceId,type){
 
         return markLine;
     }else if(type.indexOf('pressure_outwater')>=0){
+        var pressure_outset=0
         var pressure_alarmset=0;
         window.setValue.map(function (val) {
-            if (val.tagName.indexOf("压力超限设定值") >= 0  && deviceId==val.idDevice) {
+            if (val.tagName.indexOf("设定压力") >= 0  && deviceId==val.idDevice) {
+                pressure_outset = val.pv;
+            }
+            if (val.tagName.indexOf("报警压力") >= 0  && deviceId==val.idDevice) {
                 pressure_alarmset = val.pv;
             }
         })
@@ -1889,13 +1896,50 @@ function baseLine(deviceId,type){
             },
             data: [
                 {
+                    yAxis: pressure_outset
+                },{
                     yAxis: pressure_alarmset
                 }
             ],
             label: {
                 normal:
                     {
-                        formatter: pressure_alarmset+'\n阈值'
+                        formatter:function(e){
+                            if(e.value==pressure_outset){
+                                return pressure_outset+'\n设定'
+                            }else  if(e.value==pressure_alarmset){
+                                return pressure_alarmset+'\n报警'
+                            }
+
+                        }
+                    }
+            }
+        }
+        return markLine;
+    }else if(type.indexOf('pressure_szjs')>=0){
+        var pressure_szjs=0;
+        window.setValue.map(function (val) {
+            if (val.tagName.indexOf("进水压力下限") >= 0  && deviceId==val.idDevice) {
+                pressure_szjs = val.pv;
+            }
+        })
+
+        markLine ={
+            silent: true,
+            lineStyle: {
+                normal: {
+                    color: '#01fef9'                   // 这儿设置安全基线颜色
+                }
+            },
+            data: [
+                {
+                    yAxis: pressure_szjs
+                }
+            ],
+            label: {
+                normal:
+                    {
+                        formatter: pressure_szjs+'\n下限'
                     }
             }
         }
