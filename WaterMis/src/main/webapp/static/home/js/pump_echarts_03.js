@@ -14,7 +14,7 @@ function getPumpData_03() {
 			if (undefined == data || data.length < 1) {
 				return;
 			} else {
-				var xData=getEveryDay();
+				var xData=last12Month().sort();
 				var yDataAlarm=[];
 				var yDataMaintenance=[];
 				var yDataWork=[];
@@ -27,19 +27,19 @@ function getPumpData_03() {
 
 				if(undefined != data.alarm && data.alarm.length>0){
 					for(var i=0;i<(data.alarm).length;i++){
-						alarmMap.put((data.alarm[i].name).substring(8,10),((data.alarm[i]).memo));
+						alarmMap.put((data.alarm[i].name),((data.alarm[i]).memo));
 					}
 				}
 
 				if(undefined != data.maintenance && data.maintenance.length>0){
 					for(var i=0;i<(data.maintenance).length;i++){
-						maintenanceMap.put((data.maintenance[i].name).substring(8,10),(data.maintenance[i].memo));
+						maintenanceMap.put((data.maintenance[i].name),(data.maintenance[i].memo));
 					}
 				}
 
 				if(undefined != data.work && data.work.length>0){
 					for(var i=0;i<(data.work).length;i++){
-						workMap.put((data.work[i].name).substring(8,10),(data.work[i].memo));
+						workMap.put((data.work[i].name),(data.work[i].memo));
 					}
 				}
 

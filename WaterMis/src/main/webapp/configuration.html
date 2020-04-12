@@ -2050,8 +2050,14 @@ function setEcharts(xData,yData,dateType,markLine){
 
         ]
     };
+if(dateType.indexOf("液位")>=0){
+    option.yAxis.max=2;
+}else if(dateType.indexOf("进口压力")>=0){
+    option.yAxis.max=0.5;
+}else if(dateType.indexOf("出口压力")>=0){
+    option.yAxis.max=1.5;
+}
 
-    option.yAxis.max=2.2;
 
 
     // 使用刚指定的配置项和数据显示图表。

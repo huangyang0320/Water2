@@ -2,6 +2,7 @@ package com.wapwag.woss.modules.home.web;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.wapwag.woss.common.utils.DateUtils;
 import com.wapwag.woss.modules.biz.entity.Device;
 import com.wapwag.woss.modules.home.entity.User;
 import com.wapwag.woss.modules.home.service.HomeV2Service;
@@ -120,7 +121,13 @@ public class HomeV2Controller {
     @ResponseBody
     @RequestMapping(value = "/getUseWaterHourAnalysis")
     public Map<String,List<String>> getUseWaterHourAnalysis(User user){
-        return homeV2Service.getUseWaterHourAnalysis();
+        String cTime= DateUtils.getDate("yyyy-MM-dd HH").substring(11,13);//当前日期
+        if(Integer.parseInt(cTime)>0 && Integer.parseInt(cTime)<7){
+            return homeV2Service.getUseWaterHourAnalysisNew();
+        }else{
+            return homeV2Service.getUseWaterHourAnalysis();
+        }
+
     }
 
     /**
