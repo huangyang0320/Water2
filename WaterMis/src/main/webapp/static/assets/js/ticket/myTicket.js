@@ -235,7 +235,7 @@ function operateFormatter(value, row, index) {
     if(row.status==5){
         return "完成";
     }else {
-        return ['<button type="button" onclick="ticketHandle(\''+row.ticketId+'\')"  class="jumpWork btn btn-primary">'+row.currentStatusName+'</button>'].join('');
+        return ['<button type="button" onclick="ticketHandle(\''+row.ticketId+'\',\''+row.status+'\')"  class="jumpWork btn btn-primary">'+row.currentStatusName+'</button>'].join('');
     };
 
 }
@@ -256,11 +256,11 @@ function signIn(ticketId){
 
 
 
-function ticketHandle(ticketId){
+function ticketHandle(ticketId,status){
     $.dialog({
         id: 'ticket-habdle',
         title: '工单处理',
-        content: 'url:ticketHandle.html?ticketId=' + ticketId + '&rnd=' + new Date().getTime(),
+        content: 'url:ticketHandle.html?ticketId=' + ticketId+"&status="+status+ '&rnd=' + new Date().getTime(),
         width: 1200,
         height: 500,
         fixed: true,

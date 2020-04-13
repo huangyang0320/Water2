@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.ticket.dao.TicketPartsDao">
+
+  <resultMap id="BaseResultMap" type="com.wapwag.woss.modules.ticket.Entity.TicketParts">
+	<result column="ID" jdbcType="VARCHAR" property="id" />
+	<result column="TICKET_ID" jdbcType="VARCHAR" property="ticketId" />
+	<result column="NAME" jdbcType="VARCHAR" property="name" />
+	<result column="TYPE" jdbcType="VARCHAR" property="type" />
+	<result column="NUMS" jdbcType="VARCHAR" property="nums" />
+	<result column="PRICE" jdbcType="VARCHAR" property="price" />
+	<result column="create_by" jdbcType="VARCHAR" property="createUser" />
+	<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	<result column="update_by" jdbcType="VARCHAR" property="updateUser" />
+	<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	<result column="delete_flag" jdbcType="CHAR" property="deleteFlag" />
+	<result column="delete_by" jdbcType="VARCHAR" property="deleteUser" />
+	<result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
+  </resultMap>
+  
+  <insert id="add" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketParts">
+    insert into ticket_parts
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="ticketId != null">
+        TICKET_ID,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="nums != null">
+        NUMS,
+      </if>
+      <if test="price != null">
+        PRICE,
+      </if>
+      <if test="createUser != null">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag,
+      </if>
+      <if test="deleteUser != null">
+        delete_by,
+      </if>
+      <if test="deleteTime != null">
+        delete_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketId != null">
+        #{ticketId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="nums != null">
+        #{nums,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=CHAR},
+      </if>
+      <if test="deleteUser != null">
+        #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketParts">
+    update ticket_parts
+    <trim prefix="set" suffixOverrides=",">
+      <if test="ticketId != null">
+        TICKET_ID=#{ticketId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        NAME=#{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        TYPE=#{type,jdbcType=VARCHAR},
+      </if>
+      <if test="nums != null">
+        NUMS=#{nums,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        PRICE=#{price,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_by=#{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time=#{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_by=#{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time=#{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag=#{deleteFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteUser != null">
+        delete_by=#{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        delete_time=#{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    WHERE ID=#{id}
+  </update>
+  <select id="findList" resultMap="BaseResultMap">
+    select
+        id,
+        ticket_id,
+        NAME,
+        TYPE,
+        NUMS,
+        PRICE,
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        delete_flag,
+        delete_by,
+        delete_time
+    from ticket_parts
+    <where>
+      delete_flag = '0'
+      <if test="ticketId !=null and ticketId!='' " >
+        and ticket_id = #{ticketId}
+      </if>
+    </where>
+  </select>
+</mapper>
