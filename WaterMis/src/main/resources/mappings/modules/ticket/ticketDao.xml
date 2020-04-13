@@ -8,8 +8,9 @@
         LEFT JOIN sys_user uu ON uu.office_id=o.id
         where o.del_flag='0'  and uu.isFlag='1' ORDER BY sort asc
     </select>
-<!--根据部门Id获取负责人-->
-    <select id="getUserIdByDeptId" resultType="java.lang.String"  parameterType="java.lang.String">
+
+    <!--根据部门Id获取部门下的所有人-->
+    <select id="getUserListByDeptId" resultType="java.lang.String"  parameterType="java.lang.String">
         select uu.ID from sys_office o
         LEFT JOIN sys_user uu ON uu.office_id=o.id
         where o.del_flag='0'  and uu.isFlag='1'
@@ -691,7 +692,7 @@
         WHEN t.`status` = '1' THEN
         '新建'
         WHEN t.`status` = '2' THEN
-        '待接单'
+        '待分发'
         WHEN t.`status` = '3' THEN
         '处理中'
         WHEN t.`status` = '4' THEN
@@ -702,7 +703,8 @@
         ) currentStatusName,
         t.biz_id bizId,
         de.`NAME` deviceName,
-        p.`NAME` pumpName
+        p.`NAME` pumpName,
+        t.dept_id deptId
         FROM
         ticket t
         LEFT JOIN device de ON de.ID = t.device_code
@@ -731,7 +733,7 @@
         WHEN t.`status` = '1' THEN
         '新建'
         WHEN t.`status` = '2' THEN
-        '待接单'
+        '待分发'
         WHEN t.`status` = '3' THEN
         '处理中'
         WHEN t.`status` = '4' THEN

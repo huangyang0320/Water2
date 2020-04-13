@@ -45,7 +45,8 @@ function getTicketInfo(ticketId){
             $("#alarmReason").val(data.ticketReason);
             $("#planContent").val(data.ticketDescription);
             $("#status").val(data.status);
-
+            //初始话部门对应的处理人 列表
+            getApprovalUserList(data.deptId);
             $("#buttonId").html("分发");
 
             //非告警工单  去掉不要的信息
@@ -56,7 +57,21 @@ function getTicketInfo(ticketId){
     });
 }
 
-
+function getApprovalUserList(deptId){
+    var url =CONTEXT_PATH+"/ticket/getUserListByDeptId/"+deptId+"?"+ Math.random();
+    jQuery.ajax({
+        type : 'POST',
+        contentType : 'application/json',
+        url : url,
+        dataType : 'json',
+        success : function(data) {
+            $("#approvalById").html("");
+            $.each(data, function (i, item) {
+                jQuery("#approvalById").append("<option value="+ item.id+">"+ item.name+"</option>");
+            });
+        }
+    });
+}
 
 
 function approval(){
