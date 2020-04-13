@@ -670,7 +670,7 @@ function getLeftMenuData() {
                                 continue;
                             }
                             $li = $("<li class='parent-menu'></li>");
-                            $li.append($("<a class=\"dropdown-toggle\"></a>"));
+                            $li.append($("<a class=\"dropdown-toggle\" title=\""+menu["title"]+"\"></a>"));
                             $li.find("a").append($("<i class='fa'></i>").addClass(menu["icon"]));
 
                             // $li.find("a").append(menu["title"]);

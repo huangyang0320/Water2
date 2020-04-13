@@ -635,7 +635,7 @@ ul.dropdown-menu.dropdown-messages li a div {
 .right-menu {
     display: none;
     position: absolute;
-    width: 276px;
+    width: 200px;
     height: auto;
     background-color: rgba(39, 90, 182, 0.9);
     right: 5px;
