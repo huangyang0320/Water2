@@ -133,9 +133,10 @@ function getTicketLogList(ticketId){
                         approveOpinion=data[i].approveOpinion;
                     }
 
+                    var nodeId=data[i].nodeId==undefined?"":"环节名:"+data[i].nodeId;
                     html+="<div class=\"col-md-11\">\n" +
                         "                            <div class=\"form-group\">\n" +
-                        "                                <label for=\"approveOpinion\">"+ data[i].createDate +"|"+data[i].ticketLogName+"</label>\n" +
+                        "                                <label for=\"approveOpinion\">操作时间:"+ data[i].createDate +"|操作人:"+data[i].ticketLogName+"|"+nodeId+"</label>\n" +
                         "                                <textarea class=\"form-control\" rows=\"3\" readonly >"+approveOpinion+"</textarea>\n" +
                         "                            </div>\n" +
                         "                        </div>"
