@@ -49,6 +49,8 @@ public class TicketDto extends DataEntity<TicketDto> {
     private String handleUserId;//待处理人;
     private String allHandleUser;//所有处理人
 
+    private String mgName;//部门负责人姓名
+
 
     private String approveOpinion;//处理结果及其意见
     private String approveOperation;//处理类型 同意不同意
@@ -373,5 +375,13 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setSortOrder(String sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public String getMgName() {
+        return mgName;
+    }
+
+    public void setMgName(String mgName) {
+        this.mgName = mgName;
     }
 }

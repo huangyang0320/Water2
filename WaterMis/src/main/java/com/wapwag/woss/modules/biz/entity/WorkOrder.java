@@ -28,6 +28,7 @@ public class WorkOrder {
     private String deptId;
     private String userId;
     private String userName;
+    private String mgName;//部门负责人
 
 
 
@@ -190,5 +191,13 @@ public class WorkOrder {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getMgName() {
+        return mgName;
+    }
+
+    public void setMgName(String mgName) {
+        this.mgName = mgName;
     }
 }

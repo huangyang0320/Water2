@@ -230,7 +230,7 @@ function initBootTable(url){
 function operateFormatter(value, row, index) {
     //status: 2 待接单   3处理中  4审核中  5完成
     if(row.status==2){
-        return ['<button type="button" onclick="signIn(\''+row.ticketId+'\')" class="btn btn-warning">待接单</button>'].join('');
+        return ['<button type="button" onclick="ticketDistribute(\''+row.ticketId+'\')" class="btn btn-warning">待分发</button>'].join('');
     }
     if(row.status==5){
         return "完成";
@@ -254,6 +254,28 @@ function signIn(ticketId){
     });
 }
 
+function ticketDistribute(ticketId){
+    $.dialog({
+        id: 'ticket-habdle',
+        title: '工单分发',
+        content: 'url:ticketDistribute.html?ticketId=' + ticketId + '&rnd=' + new Date().getTime(),
+        width: 1200,
+        height: 500,
+        fixed: true,
+        max: true,
+        min: false,
+        resize: false,
+        lock: true,
+        top:120,
+        background: '#000',
+        opacity: 0.65,
+        ok: false,
+        drag: false,
+        close : function() {
+            $("#query").click();
+        }
+    });
+}
 
 
 function ticketHandle(ticketId){

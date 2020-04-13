@@ -4,7 +4,17 @@
 
 
     <select id="getDeptList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
-        select id deptId,`name` deptName from sys_office where del_flag='0' ORDER BY sort asc
+        select o.id deptId,o.`name` deptName,uu.`name` mgName from sys_office o
+        LEFT JOIN sys_user uu ON uu.office_id=o.id
+        where o.del_flag='0'  and uu.isFlag='1' ORDER BY sort asc
+    </select>
+<!--根据部门Id获取负责人-->
+    <select id="getUserIdByDeptId" resultType="java.lang.String"  parameterType="java.lang.String">
+        select uu.ID from sys_office o
+        LEFT JOIN sys_user uu ON uu.office_id=o.id
+        where o.del_flag='0'  and uu.isFlag='1'
+        and o.id=#{deptId}
+        ORDER BY sort asc
     </select>
 
     <select id="getUserListByDeptId" parameterType="java.lang.String" resultType="com.wapwag.woss.modules.sys.entity.User">

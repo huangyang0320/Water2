@@ -216,6 +216,7 @@ public class TicketController {
             t.setTicketReason(workOrder.getAlarmReason());
             t.setTicketDescription(workOrder.getPlanContent());
             t.setDeptId(workOrder.getDeptId());
+            t.setMgName(workOrder.getMgName());
         } catch (ParseException e) {
             e.printStackTrace();
         }

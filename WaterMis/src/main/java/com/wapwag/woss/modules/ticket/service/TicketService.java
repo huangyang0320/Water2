@@ -34,6 +34,10 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         return ticketDao.getDeptList();
     }
 
+    public List<String> getUserIdByDeptId(String deptId){
+        return ticketDao.getUserIdByDeptId(deptId);
+    }
+
     /**
      * 创建工单
      * @param ticketDto
@@ -60,15 +64,19 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         if("告警工单".equals(ticketDto.getTicketType())){
             this.updateAlarmTicketByDeviceIdAndStartTime(ticketDto);
         }
+
+        //需求变更，发给部门负责人
+        //根据部门ID获取负责人
+        List<String> userList= this.getUserIdByDeptId(ticketDto.getDeptId());
         //代办（部门下的人多能看到，状态为在签收）
         //1.先获取部门下有效所有人
-            List<User> userList = this.getUserListByDeptId(ticketDto.getDeptId());
+           // List<User> userList = this.getUserListByDeptId(ticketDto.getDeptId());
         //2.把人员插入代办表
-            if(userList!=null && userList.size()>0){
+           if(userList!=null && userList.size()>0){
                 TicketToDoDto ticketToDoDto=null;
-                for(User u:userList){
-                    //status :0代办  1签收
-                    ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketId,"","0",u.getId(),"1",new Date(),new Date(),ticketDto.getUpdateBy(),ticketDto.getCreateBy());
+                for(String userId:userList){
+                    //status :0待分发  1签收
+                    ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketId,"","0",userId,"1",new Date(),new Date(),ticketDto.getUpdateBy(),ticketDto.getCreateBy());
                     this.insertTicketToDo(ticketToDoDto);
                     result.put("code","201");
                     result.put("status","success");
@@ -76,7 +84,7 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
                 }
             }else{
                 result.put("code","3001");
-                result.put("message","该部门下没有配置人员，请重新选择部门");
+                result.put("message","该部门下没有配置负责人员，请联系管理员!");
                 throw new ServiceException(result.toJSONString());
             }
 
