@@ -47,6 +47,8 @@ public class AlarmStat {
 
 	private String sortName;
 	private String sortOrder;
+	private String functionName;
+	private String alarmSetValue;
 
 
 	public String getPumpHouseName() {
@@ -279,5 +281,21 @@ public class AlarmStat {
 
 	public void setPhIdList(List<String> phIdList) {
 		this.phIdList = phIdList;
+	}
+
+	public String getFunctionName() {
+		return functionName;
+	}
+
+	public void setFunctionName(String functionName) {
+		this.functionName = functionName;
+	}
+
+	public String getAlarmSetValue() {
+		return alarmSetValue;
+	}
+
+	public void setAlarmSetValue(String alarmSetValue) {
+		this.alarmSetValue = alarmSetValue;
 	}
 }

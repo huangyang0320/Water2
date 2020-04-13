@@ -977,14 +977,14 @@
 	</select>
 
 	<select id="countAlarmTimesStat" resultType="com.wapwag.woss.modules.biz.entity.Device">
-		select ss.alarm as
+		select DATE_FORMAT(ss.alarm,'%Y-%m') as
 		name,count(ss.alarm) as memo from (
 		select
 		DATE_FORMAT(alarm.start_date,'%Y-%m-%d') as alarm
 		from
 		alarm_statistics alarm
 		where
-		alarm.start_date &gt;= subString(now(),1,7)
+		alarm.start_date &gt;= subString(now(),1,4)
 		<if test="'user' == type">
 		    and device_code IN (
 			SELECT 
@@ -1008,10 +1008,10 @@
 		order
 		by
 		alarm.start_date desc
-		) ss group by ss.alarm
+		) ss group by DATE_FORMAT(ss.alarm,'%Y-%m')
 	</select>
 	<select id="countMaintenanceTrend" resultType="com.wapwag.woss.modules.biz.entity.Device">
-		select ss.alarm as
+		select DATE_FORMAT(ss.alarm,'%Y-%m') as
 		name,count(ss.alarm) as memo from (
 		select
 		DATE_FORMAT(alarm.repair_time,'%Y-%m-%d') as alarm
@@ -1019,7 +1019,7 @@
 		pump_device_repair_info alarm
 		where
 		alarm.repair_time &gt;=
-		subString(now(),1,7)
+		subString(now(),1,4)
 		and device_id IN (
 			SELECT 
 				authobject_id
@@ -1036,11 +1036,11 @@
 		)
 		order by alarm.repair_time desc
 		) ss group by
-		ss.alarm
+		DATE_FORMAT(ss.alarm,'%Y-%m')
 	</select>
 
 	<select id="countMaintenanceTrendDev" resultType="com.wapwag.woss.modules.biz.entity.Device">
-		select ss.alarm as
+		select DATE_FORMAT(ss.alarm,'%Y-%m') as
 		name,count(ss.alarm) as memo from (
 		select
 		DATE_FORMAT(alarm.repair_time,'%Y-%m-%d') as alarm
@@ -1048,11 +1048,11 @@
 		pump_device_repair_info alarm
 		where
 		alarm.repair_time &gt;=
-		subString(now(),1,7)
+		subString(now(),1,4)
 		and device_id  = #{devId}
 		order by alarm.repair_time desc
 		) ss group by
-		ss.alarm
+		DATE_FORMAT(ss.alarm,'%Y-%m')
 	</select>
 	
 	<select id="statisticEleByLocation" resultType="com.wapwag.woss.modules.biz.entity.Device">

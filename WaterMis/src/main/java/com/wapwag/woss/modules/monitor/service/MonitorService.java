@@ -324,7 +324,11 @@ public class MonitorService {
 							hisDto.setEndDate(DateUtils.getCurrentMonthLastDay(hisDto.getEndDate()));
 						}
 
-						List<ServiceValueDto> list = deviceDao.findHistoryDataByDto(hisDto);
+						if("minute".equals(hisDto.getDimen())) {
+							String tableName = PumpConfigurationService.createTableName();
+							hisDto.setTableName(tableName);
+						}
+						List<ServiceValueDto> list =deviceDao.findHistoryDataByDto(hisDto);
 						List<Double> values = disposeValue(list, hisDto);
 						ChartSeriesDto charDto = new ChartSeriesDto();
 						String dateTab = addTime>0?getTimeLab(hisDto)+"-":"";
@@ -351,6 +355,8 @@ public class MonitorService {
 			dimenFlag = Calendar.HOUR;
 		}else if("hour".equals(hisDto.getDimen())){
 			dimenFlag = Calendar.MINUTE;
+		}else if("minute".equals(hisDto.getDimen())){
+			dimenFlag = Calendar.SECOND;
 		}
 		for(ServiceValueDto dto:list) {
 			while(calendar.getTime().before(dto.getQueryDate())) {

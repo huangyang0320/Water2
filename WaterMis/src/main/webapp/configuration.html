@@ -1251,7 +1251,7 @@ function setSvg(reloading) {
         var conctolParams = window.conctolParam;
         var z_status=window.openend_directvalve.pv==1?"打开":"关闭";
         var box_status=window.openend_tankinvalve.pv==1?"打开":"关闭";
-        if(conctolParams.phName=="金海龙韵"){
+       /* if(conctolParams.phName=="金海龙韵"){
 
             var v={x:940,y:350};
             setRect(v,"control")
@@ -1263,29 +1263,29 @@ function setSvg(reloading) {
             setText(v1, '水箱阀门:'+z_status,"control")
             setImage('static/assets/img/fmY.png', '35', '35', 1093, 258);
 
-        }else if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号" ){
+        }else */if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
 
-            var v={x:1150,y:250};
+            var v={x:890,y:280};
             setRect(v,"control")
             setText(v, '直供水阀门:'+box_status,"control");
-           setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
+            //setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
 
-            var v1={x:1060,y:180};
-            setRect({x:1060,y:180},"control")
+            var v1={x:890,y:220};
+            setRect({x:890,y:220},"control")
             setText(v1, '水箱阀门:'+z_status,"control")
-            setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
+            // setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
 
-        }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府"){
+        }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
 
-            var v={x:1110,y:288};
+            var v={x:1210,y:250};
             setRect(v,"control")
             setText(v, '直供水阀门:'+box_status,"control");
-           setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
+          // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
 
-            var v1={x:980,y:165};
-            setRect({x:980,y:165},"control")
+            var v1={x:1090,y:165};
+            setRect({x:1090,y:165},"control")
             setText(v1, '水箱阀门:'+z_status,"control")
-            setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
+           // setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
 
         }
         return false;
@@ -1801,8 +1801,10 @@ function getServiceSetValues(phId){
     var codeList=[];
     codeList.push("level_tank_highwset");
     codeList.push("level_tank_lowset");
-    codeList.push("flow_burstset");
-    codeList.push("pressure_alarmset");
+    codeList.push("flow_burstset");//爆管流量
+    codeList.push("pressure_alarmset");//报警压力
+    codeList.push("pressure_outset");//设定压力
+    codeList.push("pressurein_lowset");//进水压力下限
     $.ajax({
         type:"POST",
         async: false,
@@ -1814,10 +1816,11 @@ function getServiceSetValues(phId){
             window.setValue=[];//上下限 值
             if(res){
                 res.map(function (v) {
-                    if(v.tagName.indexOf("水箱液位上限值") >= 0 || v.tagName.indexOf("水箱液位下限值") >= 0 ||
-                         v.tagName.indexOf("爆管流量设定值") >= 0 || v.tagName.indexOf("压力超限设定值") >= 0){
-                         window.setValue.push(v);
-                     }
+                    if(v.tagName.indexOf("液位上限") >= 0 || v.tagName.indexOf("液位下限") >= 0 ||
+                        v.tagName.indexOf("爆管流量") >= 0 || v.tagName.indexOf("进水压力下限") >= 0 ||
+                        v.tagName.indexOf("报警压力") >= 0 || v.tagName.indexOf("设定压力") >= 0){
+                        window.setValue.push(v);
+                    }
                 })
             }
         }
@@ -1834,10 +1837,10 @@ function baseLine(deviceId,type){
         var level_tank_highwset=0;
         var level_tank_lowset=0;
         window.setValue.map(function (val) {
-            if (val.tagName.indexOf("水箱液位上限值") >= 0 && deviceId==val.idDevice) {
+            if (val.tagName.indexOf("液位上限") >= 0 && deviceId==val.idDevice) {
                 level_tank_highwset = val.pv;
             }
-            if (val.tagName.indexOf("水箱液位下限值") >= 0 && deviceId==val.idDevice) {
+            if (val.tagName.indexOf("液位下限") >= 0 && deviceId==val.idDevice) {
                 level_tank_lowset = val.pv;
             }
         })
@@ -1873,9 +1876,13 @@ function baseLine(deviceId,type){
 
         return markLine;
     }else if(type.indexOf('pressure_outwater')>=0){
+        var pressure_outset=0
         var pressure_alarmset=0;
         window.setValue.map(function (val) {
-            if (val.tagName.indexOf("压力超限设定值") >= 0  && deviceId==val.idDevice) {
+            if (val.tagName.indexOf("设定压力") >= 0  && deviceId==val.idDevice) {
+                pressure_outset = val.pv;
+            }
+            if (val.tagName.indexOf("报警压力") >= 0  && deviceId==val.idDevice) {
                 pressure_alarmset = val.pv;
             }
         })
@@ -1889,13 +1896,50 @@ function baseLine(deviceId,type){
             },
             data: [
                 {
+                    yAxis: pressure_outset
+                },{
                     yAxis: pressure_alarmset
                 }
             ],
             label: {
                 normal:
                     {
-                        formatter: pressure_alarmset+'\n阈值'
+                        formatter:function(e){
+                            if(e.value==pressure_outset){
+                                return pressure_outset+'\n设定'
+                            }else  if(e.value==pressure_alarmset){
+                                return pressure_alarmset+'\n报警'
+                            }
+
+                        }
+                    }
+            }
+        }
+        return markLine;
+    }else if(type.indexOf('pressure_szjs')>=0){
+        var pressure_szjs=0;
+        window.setValue.map(function (val) {
+            if (val.tagName.indexOf("进水压力下限") >= 0  && deviceId==val.idDevice) {
+                pressure_szjs = val.pv;
+            }
+        })
+
+        markLine ={
+            silent: true,
+            lineStyle: {
+                normal: {
+                    color: '#01fef9'                   // 这儿设置安全基线颜色
+                }
+            },
+            data: [
+                {
+                    yAxis: pressure_szjs
+                }
+            ],
+            label: {
+                normal:
+                    {
+                        formatter: pressure_szjs+'\n下限'
                     }
             }
         }
@@ -2006,8 +2050,14 @@ function setEcharts(xData,yData,dateType,markLine){
 
         ]
     };
+if(dateType.indexOf("液位")>=0){
+    option.yAxis.max=2;
+}else if(dateType.indexOf("进口压力")>=0){
+    option.yAxis.max=0.5;
+}else if(dateType.indexOf("出口压力")>=0){
+    option.yAxis.max=1.6;
+}
 
-    option.yAxis.max=2.2;
 
 
     // 使用刚指定的配置项和数据显示图表。

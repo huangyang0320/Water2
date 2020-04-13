@@ -240,6 +240,77 @@ public class HomeV2Service {
     }
 
 
+    public Map<String,List<String>> getUseWaterHourAnalysisNew(){
+        String tableName="service_values_summary";
+        String formatDate="'%Y-%m-%d %H'";
+        String cTime= DateUtils.getDate("yyyy-MM-dd HH").substring(11,13);//当前日期
+
+        Map<String,List<String>> resutMap= new HashMap<>();
+        if(Integer.parseInt(cTime)>0 && Integer.parseInt(cTime)<7){
+            String startTime= DateUtils.getLastDay("yyyy-MM-dd",-2)+" 07";//前天日期
+            String endTime=DateUtils.getLastDay("yyyy-MM-dd",-1)+" 07";;//昨天前日期
+            List<HomeDTO> listData = homeV2Dao.getUseWaterThAnalysis(startTime,endTime,tableName,formatDate);
+            //历史
+            List<HomeDTO> useWaterHourHis=null;
+            List<HomeDTO> usePowerHourHis=null;
+            List<HomeDTO> useAvgPowerHourHis=null;
+
+            if(listData!=null && listData.size()>0){
+                useWaterHourHis =new ArrayList<>();
+                usePowerHourHis =new ArrayList<>();
+                useAvgPowerHourHis =new ArrayList<>();
+                for(HomeDTO dto: listData){
+                    //历史  前天7点到昨天6点
+                    if("m3".equals(dto.getUnit())){
+                        dto.setPv(FNUM_3.format(Float.valueOf(dto.getPv())));
+                        useWaterHourHis.add(dto);
+                    }
+                    if("kWh".equals(dto.getUnit())){
+                        dto.setPv(FNUM_3.format(Float.valueOf(dto.getPv())));
+                        usePowerHourHis.add(dto);
+                    }
+                }
+                endTime = DateUtils.getDate("yyyy-MM-dd")+" 06";
+
+                LinkedHashMap<String,String> xMap = FullZero.getDefaultYHour(startTime,endTime);
+                List<String> xData=xMap.keySet().stream().collect(Collectors.toList());
+
+                resutMap.put("xData", xData);
+                resutMap.put("useWaterHis", FullZero.getHourFullZero(startTime,endTime,useWaterHourHis));
+                resutMap.put("usePowerHis",FullZero.getHourFullZero(startTime,endTime,usePowerHourHis));
+                resutMap.put("useAvgPowerHis",FullZero.getHourFullZero(startTime,endTime,useAvgPowerHourHis));
+            }
+
+            //实时
+            List<HomeDTO> useWaterHourReal=null;
+            List<HomeDTO> usePowerHourReal=null;
+            List<HomeDTO> useAvgPowerHourReal=null;
+            startTime= DateUtils.getLastDay("yyyy-MM-dd",-1)+" 07";//昨天前日期
+            endTime= DateUtils.getDate("yyyy-MM-dd HH");//当前日期
+            List<HomeDTO> listDataRead = homeV2Dao.getUseWaterThAnalysis(startTime,endTime,tableName,formatDate);
+            useWaterHourReal =new ArrayList<>();
+            usePowerHourReal =new ArrayList<>();
+
+            for(HomeDTO dto: listDataRead){
+                //实时：今天7点  到实时
+                    if("m3".equals(dto.getUnit())){
+                        dto.setPv(FNUM_3.format(Float.valueOf(dto.getPv())));
+                        useWaterHourReal.add(dto);
+                    }
+                    if("kWh".equals(dto.getUnit())){
+                        dto.setPv(FNUM_3.format(Float.valueOf(dto.getPv())));
+                        usePowerHourReal.add(dto);
+                    }
+            }
+            endTime = DateUtils.getDate("yyyy-MM-dd")+" 06";
+            resutMap.put("useWaterReal",FullZero.getHourFullZero(startTime,endTime,useWaterHourReal));
+            resutMap.put("usePowerReal",FullZero.getHourFullZero(startTime,endTime,usePowerHourReal));
+        }
+        return resutMap;
+    }
+
+
+
 
     /**
      * 近两月 统计

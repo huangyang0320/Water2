@@ -120,6 +120,7 @@
 </div>
 <!-- Baidu Map Js -->
 <script type="text/javascript">
+    var initMapFlag=false;
     var MAP, selectDevice, showAllPumpHouse, console, showPic, showVideo, showSummary, showSummaryDelay, DIALOG_REQUEST;
 
     var color = new Array("#d60f16","#d60f16","#d60f16","#d60f16","#d60f16","#d60f16");
@@ -457,7 +458,11 @@
         })
 
         //默认展示所有泵房的 分布
-        showAllPumphouses();
+        if(!initMapFlag){
+            initMapFlag=true;
+            showAllPumphouses();
+        }
+
     }
 
 function doClean() {

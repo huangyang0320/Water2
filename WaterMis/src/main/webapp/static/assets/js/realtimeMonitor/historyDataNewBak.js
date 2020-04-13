@@ -153,17 +153,25 @@ function initData() {
     //以下是为了解决  日历控件 出错（选择的时候年变成了不存在的年）
     var className = "hourtime";
     DATE_ADD_CONFIG(className);
-    var formDate = $(".form_datetime");
-    formDate.datetimepicker("remove");
+
 
     var $queryForm = $("#queryForm");
     var $timeDimen = $queryForm.find("input[name='dimen']");
 
     if(className.indexOf("hourtime") > -1) {// 时  日历控件直接进入到小时的选择页面
-        formDate.datetimepicker(DATE_CONFIG(1, 1, "yyyy-mm-dd hh")).val(currentDate.Format("yyyy-MM-dd HH"));
+        var formDate = $(".form_datetime");
+        formDate.datetimepicker("remove");
+        formDate.datetimepicker(DATE_CONFIG(1, 1, "yyyy-mm-dd hh")).val(currentDate.Format("yyyy-MM-dd hh"));
         formDate.datetimepicker("update");
         $timeDimen.val("hour");
     }
+/*    if(className.indexOf("minute") > -1) {// 时  日历控件直接进入到小时的选择页面
+        formDate.datetimepicker(DATE_CONFIG(0, 1, "yyyy-mm-dd hh:mm ss")).val(currentDate.Format("yyyy-MM-dd HH:mm ss"));
+        formDate.datetimepicker("update");
+        $timeDimen.val("minute");
+    }*/
+
+
 
 }
 var switchDevice=[];
@@ -221,7 +229,11 @@ function initQueryBox(currentDate) {
         var $startDate = $queryForm.find("input[name='startDate']");
         var $endDate = $queryForm.find("input[name='endDate']");
         var dateArray = [];
-        if ($timeDimen.val() == "hour") {
+
+
+        if ($timeDimen.val() == "minute") {
+            dateArray = new Date().getCurrentMinute($(this).val(), "yyyy-MM-dd HH:mm:ss");
+        } else if ($timeDimen.val() == "hour") {
             dateArray = new Date().getCurrentHour($(this).val(), "yyyy-MM-dd HH:mm:00");
         } else if ($timeDimen.val() == "day") {
             dateArray = new Date().getCurrentDay($(this).val(), "yyyy-MM-dd HH:00:00");
@@ -240,7 +252,7 @@ function initQueryBox(currentDate) {
         var endTime=$("#statisticDate").val().substring($("#statisticDate").val().length-2);
         if(startTime!="" && endTime!=""){
             var k =parseInt(endTime)-parseInt(startTime)
-            $queryForm.find("input[name='addOnDate']").val(k);
+            $queryForm.find("input[name='addOnDate']").val(1);
         }
         initChart()
     });
@@ -257,7 +269,7 @@ function initQueryBox(currentDate) {
         var endTime=$("#statisticDate").val().substring($("#statisticDate").val().length-2);
         if(startTime!="" && endTime!=""){
             var k =parseInt(endTime)-parseInt(startTime)
-            $queryForm.find("input[name='addOnDate']").val(k);
+            $queryForm.find("input[name='addOnDate']").val(1);
         }
 
         initChart();
@@ -281,7 +293,13 @@ function initQueryBox(currentDate) {
         var $queryForm = $("#queryForm");
         var $timeDimen = $queryForm.find("input[name='dimen']");
 
-        if(className.indexOf("hourtime") > -1){// 时
+
+        if(className.indexOf("minute") > -1){//分
+            formDate.datetimepicker("remove");
+            formDate.datetimepicker(DATE_CONFIG(0, 0, "yyyy-mm-dd hh:ii")).val(currentDate.Format("yyyy-MM-dd HH:mm"));
+            formDate.datetimepicker("update");
+            $timeDimen.val("minute");
+        }else if(className.indexOf("hourtime") > -1){// 时
             formDate.datetimepicker(DATE_CONFIG(1, 1, "yyyy-mm-dd hh")).val(currentDate.Format("yyyy-MM-dd HH"));
             formDate.datetimepicker("update");
             $timeDimen.val("hour");
@@ -293,6 +311,7 @@ function initQueryBox(currentDate) {
             formDate.datetimepicker(DATE_CONFIG(3, 3, "yyyy-mm")).val(currentDate.Format("yyyy-MM"));
             formDate.datetimepicker("update");
             $timeDimen.val("month");
+
 
         } else if(className.indexOf("yeartime") > -1){// 年
             formDate.datetimepicker(DATE_CONFIG(4, 4, "yyyy")).val(currentDate.Format("yyyy"));

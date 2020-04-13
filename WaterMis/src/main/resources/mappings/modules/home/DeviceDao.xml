@@ -51,7 +51,7 @@
 
 	<sql id="whereTimeDimen">
 		<choose>
-			<when test="dimen == 'hour'">
+			<when test="dimen == 'hour' or dimen == 'minute'">
 			<if test="tableName !=null and tableName !=''">
 				${tableName} sv
 			</if>

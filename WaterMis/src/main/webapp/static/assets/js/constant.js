@@ -165,6 +165,23 @@ var DATE_ADD_CONFIG = function (dimen) {
 
 var DEVICE_DIMEN = function (unit) {
     return {
+        "minute": {
+            categories: DATA_HOUR_CONFIG,
+            formatter: function () {
+                return this.value + '秒';
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true,
+                formatter: function () {
+                    var s = this.x + '秒' + '<br/>';
+                    $.each(this.points, function () {
+                        s +=  '<b>' + this.series.name + ' : ' + Highcharts.numberFormat(this.y, 3, null, null) + " " + unit + "</b><br/>";
+                    });
+                    return s;
+                }
+            }
+        },
         "hour": {
             categories: DATA_HOUR_CONFIG,
             formatter: function () {

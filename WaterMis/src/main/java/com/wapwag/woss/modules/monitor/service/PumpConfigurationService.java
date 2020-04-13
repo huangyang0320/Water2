@@ -258,9 +258,20 @@ public class PumpConfigurationService {
     }
 
     public String getServiceSetValues(PumpService pumpService){
-        List<DeviceInfo> idDevice = deviceDao.findDeviceListByPumpHouse(pumpService.getPhId());
+        List<DeviceInfo> idDevice=null;
+        List<String> deviceIds=new ArrayList<>();
+        //前台传泵房ID，通过泵房ID查询所有设备ID
+        if(org.apache.commons.lang3.StringUtils.isNotBlank(pumpService.getPhId())){
+            idDevice = deviceDao.findDeviceListByPumpHouse(pumpService.getPhId());
+        }
+        //前台直接传设备ID
+       /* if(org.apache.commons.lang3.StringUtils.isNotBlank(pumpService.getPhId())){
+            deviceIds.add(pumpService.getIdDevice());
+            pumpService.setDeviceList(deviceIds);
+        }*/
+
+
         if(idDevice!=null && idDevice.size()>0){
-            List<String> deviceIds=new ArrayList<>();
             for(DeviceInfo d:idDevice){
                 deviceIds.add(d.getDeviceId());
             }
@@ -307,13 +318,14 @@ public class PumpConfigurationService {
              */
             code.add("level_tank_highwset");
             code.add("level_tank_lowset");
-            code.add("flow_burstset");
-            code.add("pressure_alarmset");
-
+            code.add("flow_burstset");//爆管流量
+            code.add("pressure_alarmset");//报警压力
+            code.add("pressure_outset");//设定压力
+            code.add("pressurein_lowset");//进水压力下限
 
 
             code.add("openend_directvalve");//直供水电动阀打开
-          code.add("openend_tankinvalve");//水箱电动阀打开
+            code.add("openend_tankinvalve");//水箱电动阀打开
 
             code.add("pressure_szjs1");//总进水 压力
             code.add("pressure_szjs2");//总进水 压力

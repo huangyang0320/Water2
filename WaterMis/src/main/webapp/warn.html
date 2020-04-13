@@ -130,7 +130,7 @@
                     <li>
                         <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('ALARM.START_DATE')">开始时间</span>
                         <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('DL.name')">泵房名称</span>
-                        <span style="width: 10%;font-weight: 500;" onclick="sortOrderData('D.id')">设备编号</span>
+                        <span style="width: 10%;font-weight: 500;" onclick="sortOrderData('D.id')">设备名称</span>
                         <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('ATD.FUNCTION_REMARKS')">告警内容</span>
                         <span style="width: 7%;font-weight: 500;" onclick="sortOrderData('alarm_level')">告警等级</span>
                         <span style="width: 12%;font-weight: 500;" onclick="sortOrderData('ALARM.END_DATE')">最近报警</span>
@@ -207,6 +207,7 @@
                  if (data && data.length > 0) {
                      $('.alarm-body ul').html('');
                      $('#alarmBodyNoMsg').hide();
+                     window.deviceList=[];
                      $.each(data, function (i, item) {
                          var ht;
                          var dealData = JSON.stringify(item);
@@ -219,8 +220,8 @@
                          var $li = '<li name="' + checStr(item.phId) + '">';
                          $li += '<span style="width: 15%;color: #847979">' + item.startDate + '</span>';
                          $li += '<span style="width: 15%;color: #847979" onclick="modalConfig(this)" name="' + item.phId + '">' + item.phName + '</span>';
-                         $li += '<span style="width: 12%;color: #847979">' + checStr(item.deviceId) + '</span>';
-                         $li += '<span style="width: 14%;color: #847979">' + checStr(item.alarmInfo) + '</span>';
+                         $li += '<span style="width: 12%;color: #847979">' + checStr(item.deviceName) + '</span>';
+                         $li += '<span style="width: 14%;color: #847979" title="' + checStr(item.alarmInfo)+checStr(item.alarmSetValue)+'">' + checStr(item.alarmInfo)+alarmSetValue(item.alarmSetValue)+'</span>';
                          $li += '<span style="width: 9%;"><span style="width: 5%;background-color: #fff141">' + checStr(item.alarmLevel) + '</span></span>';
                          $li += '<span style="width: 15%;color: #847979">' + checStr(item.endDate) + '</span>';
                          $li += '<span style="width: 20%;color: #847979">'
@@ -235,6 +236,7 @@
                              + '</span>';
                          $li += '</li>';
                          $('.alarm-body ul').append($li);
+
                      });
 
                      $('.alarm-body').myScroll({
@@ -318,6 +320,16 @@
         		return str;
         	}
         }
+
+        function alarmSetValue(str){
+            if(undefined == str || null == str){
+                return "";
+            }else{
+                return "<img src='static/assets/img/alarm.png' style='height: 12px;width: 10px'><font color='red' style='font-size: 1px'>限值</font>";
+            }
+        }
+
+
         
         function createWorkOrder(self) {
             var data = $(self).attr('data');

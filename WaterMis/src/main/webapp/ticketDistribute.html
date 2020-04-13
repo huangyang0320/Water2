@@ -1,0 +1,186 @@
+
+    <!-- Bootstrap Styles-->
+    <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
+
+    <link href="static/assets/css/bootstrapValidator.min.css" rel="stylesheet" />
+    <!-- TABLE STYLES-->
+    <link href="static/assets/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+    <!-- FontAwesome Styles-->
+    <link href="static/assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- RightMenu Styles -->
+    <link href="static/assets/css/jquery-accordion-menu.css" rel="stylesheet" />
+    <!-- Datetimepicker Styles -->
+    <link href="static/assets/js/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <!-- iCheck Styles -->
+    <link href="static/assets/js/iCheck/iCheck.css" rel="stylesheet" />
+    <!-- ScrollBar Styles -->
+    <link href="static/assets/css/scrollBar.css" rel="stylesheet" />
+    <!-- Custom Styles-->
+    <link href="static/assets/css/custom-styles.css" rel="stylesheet" />
+    <!-- Ztrr Styles -->
+    <link href="static/ztree/css/demo.css" type="text/css" rel="stylesheet" >
+    <link href="static/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css" rel="stylesheet" >
+
+    <link rel="stylesheet" type="text/css" href="theme/css/load.css">
+    <style>
+        html, body{
+            min-width: 800px;
+            min-height: 550px;
+            overflow: visible;
+        }
+    </style>
+
+
+
+
+        <div class="modal-content">
+    <!--        <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">创建工单</h3>
+            </div>-->
+            <div class="modal-body" style="height:800px ;overflow-y: auto;overflow-x: hidden">
+                <form id="workOrder">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="workType">工单类型</label>
+                                <input type="text" class="form-control" readonly id="workType" name="workType"  placeholder="请输入">
+                                <input type="hidden" class="form-control" id="ticketId" name="ticketId"  placeholder="请输入">
+                                <input type="hidden" class="form-control" id="status" name="status"  placeholder="请输入">
+
+                                <!-- <select class="form-control" id="workType" name="workType">
+                                     <option value="1">告警工单</option>
+                                 </select>-->
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+
+                                <label for="alarmContent">工单名称</label>
+                                <input type="text" class="form-control" readonly id="alarmContent" name="alarmContent" placeholder="请输入">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <!--  <label for="taskSource">工单来源</label>  -->
+                                <input type="hidden" class="form-control" id="taskSource" name="taskSource" value="二供平台" placeholder="请输入">
+
+                                <label for="phName">泵房名称</label>
+                                <input type="text" class="form-control" readonly id="phName" name="phName" placeholder="请输入">
+
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="address">泵房地址</label>
+                                <input type="text" class="form-control" readonly id="address" name="address" placeholder="请输入">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="processName">所在设备</label>
+                                <input type="text" class="form-control" readonly id="processName" name="processName" placeholder="请输入">
+                                <input type="hidden"  class="form-control" readonly id="deviceId" name="deviceId" placeholder="请输入">
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="alarmStatus">告警状态</label>
+                                <input type="text" class="form-control" readonly id="alarmStatus" name="alarmStatus" value="待分发"  placeholder="请输入">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="alarmTimeAndAlarmLevel">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="processName">告警等级</label>
+                                <input type="text" class="form-control" readonly id="alarmLevel" name="alarmLevel" placeholder="请输入">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="alarmTime">告警时间</label>
+                                <input type="text" class="form-control" readonly id="alarmTime" name="alarmTime" placeholder="请输入">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="planStartTime">计划开始时间</label>
+                                <input id ="planStartTime" name="planStartTime" readonly type="text" value="" readonly style="background-color: white" class="planStartTime form-control timepicker">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="planEndTime">计划结束时间</label>
+                                <input id ="planEndTime" name="planEndTime" readonly type="text" value="" readonly style="background-color: white"  class="planEndTime form-control timepicker">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="form-group">
+                                <label for="alarmReason">告警原因</label>
+                                <textarea class="form-control" rows="3" id="alarmReason" name="alarmReason"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="form-group">
+                                <label for="planContent">解决方案</label>
+                                <textarea class="form-control" rows="3" id="planContent" name="planContent"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="ticketLogs">
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="form-group">
+                                <label for="approveOpinion">备注说明<font color="red">*</font></label>
+                                <textarea class="form-control" rows="3" id="approveOpinion" name="approveOpinion"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row" id="approveOperationKZ">
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="form-group">
+                                <label for="approvalById">处理人</label>
+                                <select class="form-control" id="approvalById" name="approvalById" >
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="frameElement.api.close()" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="approval()"><span id="buttonId"></span></button>
+            </div>
+        </div>
+    <script src="static/assets/js/jquery-1.10.2.js"></script>
+
+        <script src="static/assets/js/ticket/ticketDistribute.js"></script>

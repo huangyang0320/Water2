@@ -133,7 +133,9 @@
 	    concat(ALARM.device_code,'__',ALARM.function_name,'__',date_format(ALARM.start_date,'%Y-%m-%d %H:%i:%s')) as id,
 		longi,lati,
 		DL.name phName,
+		alarmSet.alarmSetValue,
 		DL.id phId,
+		atd.function_name functionName,
 		DL.ADDRESS address,
 		alarm.ticketId ticketId,
 		D.name deviceName,
@@ -157,7 +159,9 @@
 		device d ON d.id = alarm.device_code
 			JOIN
 		pump_house dl ON dl.id = d.id_pump_house
-	WHERE
+		left JOIN
+		getAlarmSetValue alarmSet ON alarmSet.idDevice=alarm.device_code and atd.function_name =alarmSet.functionName
+		WHERE
 		d.id IN (
 			SELECT 
 				authobject_id
