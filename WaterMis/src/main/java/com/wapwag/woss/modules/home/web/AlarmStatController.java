@@ -20,6 +20,8 @@ import com.wapwag.woss.modules.home.entity.User;
 import com.wapwag.woss.modules.home.service.AlarmStatService;
 import com.wapwag.woss.modules.sys.entity.BootPage;
 
+import javax.servlet.http.HttpServletRequest;
+
 /*
  * 告警统计
 @author gongll
@@ -126,7 +128,20 @@ public class AlarmStatController {
 		}
 		return list;
 	}
-	
+
+	/**
+	 * 告警当天统计
+	 * @param user
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getAlarmByPumpIds")
+	@ApiOperation(value = "根据泵房ids告警列表信息", httpMethod = "POST",response = AlarmStat.class ,notes = "")
+	public List<AlarmStat> getAlarmByPumpIds(@RequestBody AlarmStat alarmObj, User user) {
+		alarmObj.setUserId(user.getUserId());
+		List<AlarmStat> list = alarmService.getAlarmDetail(alarmObj);
+		return list;
+	}
 	/**
 	 * 告警时间统计
 	 * @param user
@@ -135,7 +150,7 @@ public class AlarmStatController {
 	@ResponseBody
 	@RequestMapping("/indexAlarm")
 	@ApiOperation(value = "首页点击告警数显示的告警列表信息", httpMethod = "POST",response = AlarmStat.class ,notes = "")
-	public List<AlarmStat> getAlarmDetail(AlarmStat alarmStat,User user) {
+	public List<AlarmStat> getAlarmDetail(AlarmStat alarmStat, User user, HttpServletRequest request) {
 		alarmStat.setUserId(user.getUserId());
 		List<AlarmStat> list = alarmService.getAlarmDetail(alarmStat);
 		return list;

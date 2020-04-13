@@ -32,6 +32,8 @@ public class PumpDeviceRepair extends DataEntity<PumpDeviceRepair> {
     
     private String memo;
 
+    private String phId;
+
     private String createtime;
 
     private String updatetime;
@@ -163,5 +165,12 @@ public class PumpDeviceRepair extends DataEntity<PumpDeviceRepair> {
 	public void setIsReplace(String isReplace) {
 		this.isReplace = isReplace;
 	}
-	
+
+    public String getPhId() {
+        return phId;
+    }
+
+    public void setPhId(String phId) {
+        this.phId = phId;
+    }
 }

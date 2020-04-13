@@ -20,6 +20,13 @@ public interface TicketDao  extends CrudDao<TicketDto> {
     List<TicketDto> getDeptList();
 
     /**
+     * 根据部门Id获取部门负责人
+     * @param deptId
+     * @return
+     */
+    List<String> getUserIdByDeptId(@Param("deptId") String deptId);
+
+    /**
      * 新增工单
      * @param ticket
      * @return
@@ -99,7 +106,7 @@ public interface TicketDao  extends CrudDao<TicketDto> {
 
     List<TicketLogDto> getTicketLogList(@Param("ticketId") String ticketId);
 
-    List<TicketComDto> getPumpList();
+    List<TicketComDto> getPumpList(@Param("projectId") String projectId);
 
     List<TicketComDto> getDeviceList(@Param("id") String id);
 

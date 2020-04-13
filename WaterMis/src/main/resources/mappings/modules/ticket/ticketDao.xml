@@ -4,11 +4,22 @@
 
 
     <select id="getDeptList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
-        select id deptId,`name` deptName from sys_office where del_flag='0' ORDER BY sort asc
+        select o.id deptId,o.`name` deptName,uu.`name` mgName from sys_office o
+        LEFT JOIN sys_user uu ON uu.office_id=o.id
+        where o.del_flag='0'  and uu.isFlag='1' ORDER BY sort asc
     </select>
 
+    <!--根据部门Id获取部门下的所有人-->
     <select id="getUserListByDeptId" parameterType="java.lang.String" resultType="com.wapwag.woss.modules.sys.entity.User">
        	select uu.`name`,uu.id from sys_user uu where uu.del_flag='0' and uu.office_id=#{deptId}
+    </select>
+    <!-- 根据部门id查询 部门负责人 -->
+    <select id="getUserIdByDeptId" resultType="java.lang.String"  parameterType="java.lang.String">
+        select uu.ID from sys_office o
+        LEFT JOIN sys_user uu ON uu.office_id=o.id
+        where o.del_flag='0'  and uu.isFlag='1'
+        and o.id=#{deptId}
+        ORDER BY sort asc
     </select>
 
 
@@ -681,7 +692,7 @@
         WHEN t.`status` = '1' THEN
         '新建'
         WHEN t.`status` = '2' THEN
-        '待接单'
+        '待分发'
         WHEN t.`status` = '3' THEN
         '处理中'
         WHEN t.`status` = '4' THEN
@@ -692,7 +703,8 @@
         ) currentStatusName,
         t.biz_id bizId,
         de.`NAME` deviceName,
-        p.`NAME` pumpName
+        p.`NAME` pumpName,
+        t.dept_id deptId
         FROM
         ticket t
         LEFT JOIN device de ON de.ID = t.device_code
@@ -715,13 +727,15 @@
 				u.`name` ticketLogName,
 				g.CREATE_Date createDate,
 				 t.`status` AS status,
+				 g.node_id nodeId,
+				 g.node_name nodeName,
         (
         CASE
 
         WHEN t.`status` = '1' THEN
         '新建'
         WHEN t.`status` = '2' THEN
-        '待接单'
+        '待分发'
         WHEN t.`status` = '3' THEN
         '处理中'
         WHEN t.`status` = '4' THEN
@@ -747,6 +761,9 @@
     <!--泵房list-->
     <select id="getPumpList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketComDto">
         select id ,`NAME` name,ADDRESS address from pump_house
+        <if test="projectId !=null and projectId!='' " >
+            where id_project = #{projectId}
+        </if>
     </select>
 <!--设备list-->
     <select id="getDeviceList" parameterType="java.lang.String"  resultType="com.wapwag.woss.modules.ticket.Entity.TicketComDto">

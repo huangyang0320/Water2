@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.wapwag.woss.modules.monitor.pumpNode.PumpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,6 +51,13 @@ public class PumpConfigurationController extends BaseController {
     public String getPumpNode(String phid, HttpServletResponse response) {
         String pumpNode=pumpConfigurationService.getPumpNode(phid);
         String req=renderString(response,pumpNode,"application/json");
+        return req;
+    }
+
+    @RequestMapping(value = {"getServiceSetValues"})
+    public String getServiceSetValues(@RequestBody PumpService pumpService, HttpServletResponse response){
+        String serviceValues= pumpConfigurationService.getServiceSetValues(pumpService);
+        String req=renderString(response,serviceValues,"application/json");
         return req;
     }
 

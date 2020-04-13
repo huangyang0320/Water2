@@ -41,7 +41,7 @@ public class MonitorV2Service {
         String startDate = now.plusHours(-1).toString(DATE_FORMAT);
         String endDate = now.toString(DATE_FORMAT);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        dbName = "service_values_"+sdf.format(new Date()); 
+        dbName = "service_values_"+sdf.format(new Date());
         return monitorV2Mapper.getLatestDeviceData(dbName, startDate, endDate, deviceId, serviceId);
     }
 
@@ -50,7 +50,7 @@ public class MonitorV2Service {
         String startDate = now.plusHours(-1).toString(DATE_FORMAT);
         String endDate = now.toString(DATE_FORMAT);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        dbName = "service_values_"+sdf.format(new Date()); 
+        dbName = "service_values_"+sdf.format(new Date());
         return monitorV2Mapper.getServiceData(dbName, startDate, endDate, deviceId, serviceIds);
     }
 
@@ -93,7 +93,8 @@ public class MonitorV2Service {
                         data.add(0.0);
                     }
                     String nuit = StringUtils.isEmpty(servicesList.get(0).getUnit())?"":"("+servicesList.get(0).getUnit()+")";
-                    dto.setName(device.getProjectInfo().getProjectName()+"-"+device.getDeviceName()+"-"+servicesList.get(0).getName()+nuit);
+                    //dto.setName(device.getProjectInfo().getProjectName()+"-"+device.getDeviceName()+"-"+servicesList.get(0).getName()+nuit);
+                    dto.setName(device.getPumpName()+"-"+device.getDeviceName()+"-"+servicesList.get(0).getName()+nuit);
                     dto.setData(data);
                     dto.setUnit(nuit);
 //                    if(i == 0){
@@ -106,7 +107,7 @@ public class MonitorV2Service {
         }
         return returnObj;
     }
-    
+
     public List<Map<String, Object>> getLatestDevicesData(String dbName, String deviceId) {
         DateTime now = DateTime.now();
         String startDate = now.plusHours(-1).toString(DATE_FORMAT);

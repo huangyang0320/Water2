@@ -12,6 +12,8 @@ public class DeviceInfo extends DataEntity<DeviceInfo> {
 
     private String deviceName;
 
+    private String pumpName;
+
     private String dateManufacture;
 
     private String datePurchase;
@@ -40,6 +42,14 @@ public class DeviceInfo extends DataEntity<DeviceInfo> {
 
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
+    }
+
+    public String getPumpName() {
+        return pumpName;
+    }
+
+    public void setPumpName(String pumpName) {
+        this.pumpName = pumpName;
     }
 
     public String getDateManufacture() {

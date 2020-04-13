@@ -16,7 +16,6 @@ var delObject = "";
      页面加载
      ***********************************************
      */
-
     // 计算page-wrapper的高度
     var calcHeight = function() {
         var top = $(".top-navbar").height();
@@ -658,14 +657,12 @@ function getLeftMenuData() {
                 $(this).fadeOut();
                 $(".right-menu").animate({top: '102px'}).show();
             });
-
             $.get(ROOT_PATH + "/static/assets/js/leftmenu-" + GLOBAL_LOGIN_USER["map"] + ".json", function (result) {
                 $(".sidebar-collapse").load("leftmenu.html", function() {
                     var $mainMenu, $li, $subMenu, $subMenuLi;
                     var menu, subMenu, subMenuItem;
 
                     $mainMenu = $("#header-menu-all");
-
                     if (result && result.length > 0) {
                         for (var i = 0; i < result.length; i++) {
                             menu = result[i];
@@ -675,7 +672,9 @@ function getLeftMenuData() {
                             $li = $("<li class='parent-menu'></li>");
                             $li.append($("<a class=\"dropdown-toggle\"></a>"));
                             $li.find("a").append($("<i class='fa'></i>").addClass(menu["icon"]));
-                            $li.find("a").append(menu["title"]);
+
+                            // $li.find("a").append(menu["title"]);
+
                            /* $li.find("a").append($("<span class='fa arrow'></span>"));*/
 
                             if (menu["url"]) {
@@ -706,7 +705,9 @@ function getLeftMenuData() {
                                         if (subMenuItem.hasOwnProperty("enabled") && subMenuItem["enabled"] == "false") {
                                             continue;
                                         }
-                                        $subMenuLi = $("<li style='float: left'></li>");
+                                        // $subMenuLi = $("<li style='float: left'></li>");
+                                        $subMenuLi = $("<li style=''></li>");
+
                                         $subMenuLi.append($("<a href='javascript:;'></a>"));
                                         if (subMenuItem["url"]) {
                                             $subMenuLi.find("a").attr("data-location", subMenuItem["url"] + ".html");
@@ -1186,6 +1187,7 @@ function myModalWorkOrder(row) {
 
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept();
+    console.log(1111111111111111111111111)
     $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
     $("#alarmTime").val(row.startDate);
     $("#phName").val(row.phName);
@@ -1279,11 +1281,21 @@ function queryMaintenanceWorkerDept() {
         success : function(data) {
             $("#deptId").html("");
             $.each(data, function (i, item) {
-                jQuery("#deptId").append("<option value="+ item.deptId+">"+ item.deptName+"</option>");
+                jQuery("#deptId").append("<option value="+ item.deptId+" mgName="+item.mgName+">"+ item.deptName+"</option>");
+                if(i==0){
+                    $("#mgName").val(item.mgName);
+                }
             });
         }
     });
 }
+
+function changerDept() {
+    $("#mgName").val(jQuery("#deptId option:selected").attr("mgName"));
+}
+
+
+
 
 function queryWhetherWorker(deviceId) {
     $('#myWorkModal').modal('show');

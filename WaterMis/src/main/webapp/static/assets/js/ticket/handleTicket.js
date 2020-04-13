@@ -50,9 +50,14 @@ function getTicketInfo(ticketId){
             $("#alarmReason").val(data.ticketReason);
             $("#planContent").val(data.ticketDescription);
             $("#status").val(data.status);
+            $("#deptId").val(data.deptId);
+
 
             $("#buttonId").html(data.currentStatusName);
             if(data.status==4){//增加审核操作
+                //隐藏退回按钮
+                $("#backButton").hide();
+
                 $("#buttonId").html("审核");
                 $("#approveOperationKZ").html("<div class=\"col-md-5\">\n" +
                     "                            <div class=\"form-group\">\n" +
@@ -78,17 +83,33 @@ function getTicketInfo(ticketId){
 
 
 
-function approval(){
+function approval(flag){
     var ticketId= $("#ticketId").val();
     var status= $("#status").val();
     var approveOpinion= $("#approveOpinion").val();
     var approveOperation=$("#approveOperation").val();
+    var deptId= $("#deptId").val();
     var json="";
-    if(approveOperation==""){
-        json={"ticketId":ticketId,"approveOpinion":approveOpinion};
+
+    //回退
+    if(flag==0){
+        json={"ticketId":ticketId,"approveOpinion":approveOpinion,"handleStatus":"02","deptId":deptId};
     }else{
-        json={"ticketId":ticketId,"approveOpinion":approveOpinion,"approveOperation":approveOperation};
+        //处理 前往待审核
+        if(approveOperation=="" || approveOperation==undefined){
+            //处理  发往待审核
+            json={"ticketId":ticketId,"approveOpinion":approveOpinion,"handleStatus":"03","deptId":deptId};
+        }else{
+            if(approveOperation=="N"){
+                json={"ticketId":ticketId,"approveOpinion":approveOpinion,"approveOperation":approveOperation,"handleStatus":"04","deptId":deptId};
+            }else if(approveOperation=="Y"){
+                json={"ticketId":ticketId,"approveOpinion":approveOpinion,"approveOperation":approveOperation,"handleStatus":"05","deptId":deptId};
+            }
+
+        }
     }
+
+
 
     if(approveOpinion==""){
         alert("处理结果不能为空!");
@@ -138,10 +159,10 @@ function getTicketLogList(ticketId){
                     }else{
                         approveOpinion=data[i].approveOpinion;
                     }
-
+                    var nodeId=data[i].nodeId==undefined?"":"环节名:"+data[i].nodeId;
                     html+="<div class=\"col-md-11\">\n" +
                         "                            <div class=\"form-group\">\n" +
-                        "                                <label for=\"approveOpinion\">"+ data[i].createDate +"|"+data[i].ticketLogName+"</label>\n" +
+                        "                                <label for=\"approveOpinion\">操作时间:"+ data[i].createDate +"|操作人:"+data[i].ticketLogName+"|"+nodeId+"</label>\n" +
                         "                                <textarea class=\"form-control\" rows=\"3\" readonly >"+approveOpinion+"</textarea>\n" +
                         "                            </div>\n" +
                         "                        </div>"

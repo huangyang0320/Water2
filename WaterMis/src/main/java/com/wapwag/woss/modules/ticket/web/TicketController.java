@@ -45,6 +45,13 @@ public class TicketController {
        return ticketService.getDeptList();
     }
 
+    @RequestMapping("/getUserListByDeptId/{deptId}")
+    @ResponseBody
+    @ApiOperation(value = "获取工单处理的部门集合", httpMethod = "POST", response =TicketDto.class , notes = "")
+    public Object getUserListByDeptId(@PathVariable(value = "deptId") String deptId) {
+        return ticketService.getUserListByDeptId(deptId);
+    }
+
     @RequestMapping("/createWorkOrder")
     @ResponseBody
     @ApiOperation(value = "创建工单", httpMethod = "POST", response =WorkOrder.class , notes = "封装工单表单数据")
@@ -126,7 +133,7 @@ public class TicketController {
         if(StringUtils.isBlank(userId)){
             userId = user.getUserId();
         }
-        return ticketService.signIn(ticketId,userId,"3");
+        return ticketService.signIn(ticketId,userId,"3","1");
     }
 
 
@@ -169,8 +176,8 @@ public class TicketController {
     @RequestMapping("/getPumpList")
     @ResponseBody
     @ApiOperation(value = "获取泵房集合", httpMethod = "POST", response = TicketComDto.class )
-    public Object getPumpList(){
-        return ticketService.getPumpList();
+    public Object getPumpList(@RequestParam(value = "projectId" ,required = false) String projectId){
+        return ticketService.getPumpList(projectId);
     }
 
     @RequestMapping("/getDeviceList")
@@ -216,6 +223,7 @@ public class TicketController {
             t.setTicketReason(workOrder.getAlarmReason());
             t.setTicketDescription(workOrder.getPlanContent());
             t.setDeptId(workOrder.getDeptId());
+            t.setMgName(workOrder.getMgName());
         } catch (ParseException e) {
             e.printStackTrace();
         }

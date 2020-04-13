@@ -30,6 +30,33 @@ Date.prototype.getCurrentDate = function () {
     return new Date();
 };
 
+
+/***
+ * 获得当前一小时的起止时间
+ */
+Date.prototype.getCurrentMinute = function (date, format) {
+    date = date.replace(/-/g, "/");
+    var startStop = [];
+    var currentDate = date ? new Date(date + ":00:00") : this.getCurrentDate();
+    var currentStartDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate(),
+        currentDate.getHours(),
+        currentDate.getMinutes(), 0);
+    var currentEndDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate(),
+        currentDate.getHours(),
+        currentDate.getMinutes(), 59);
+    startStop.push(currentStartDate.Format(format));
+    startStop.push(currentEndDate.Format(format));
+    return startStop;
+};
+
+
+
 /***
  * 获得当前一小时的起止时间
  */

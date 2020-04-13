@@ -6,6 +6,7 @@
 		type="com.wapwag.woss.modules.home.entity.DeviceInfo">
 		<id column="device_id" property="deviceId" jdbcType="VARCHAR" />
 		<result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+		<result column="pump_name" property="pumpName" jdbcType="VARCHAR" />
 		<result column="date_manufacture" property="dateManufacture"
 			jdbcType="TIMESTAMP" />
 		<result column="date_purchase" property="datePurchase"
@@ -50,13 +51,13 @@
 
 	<sql id="whereTimeDimen">
 		<choose>
-			<when test="dimen == 'hour'">
+			<when test="dimen == 'hour' or dimen == 'minute'">
 			<if test="tableName !=null and tableName !=''">
 				${tableName} sv
 			</if>
 			<if test="tableName == null or tableName ==''">
 				service_values_hour sv
-			</if>	
+			</if>
 			</when>
 			<when test="dimen == 'day'">
 				service_values_day sv
@@ -75,6 +76,7 @@
 		di.ID AS device_id,
 		di. NAME AS device_name,
 		pi.NAME as PROJECT_NAME,
+		phi.`NAME` pump_Name,
 		pi.ADDRESS as PROJECT_ADDRESS,
 		phi.ALL_PIC_URL,
 		vi.id AS video_id,

@@ -16,7 +16,7 @@
     }
     .device-status{
         padding: 20px 0px;
-        text-align: right;
+        text-align: right;pumpBaseInfo
     }
     .device-door{
         width: 60px;
@@ -283,6 +283,8 @@
 <link href="static/assets/css/bootstrapSwitch.css" rel="stylesheet" />
 <script src="static/assets/js/bootstrapSwitch.js"></script>
 
+
+
 <div class="row" style="margin: 0px;height: 12%; width:100%; color: #3056aa; position: absolute;display: none" id="msgAll">
   <!--  <div class="col-md-3">
         <div  id="pumpName" style="min-width: 260px; padding: 20px 0 0 20px;font-size: 14px">泵房名称：...</div>
@@ -319,20 +321,20 @@
 </div>
 
 
-<div class="row" id="svgContent" style="margin: 0px;height: 90%;background-color: #d8d8d8">
+<div class="row" id="svgContent" style="margin: 0px;height: 100%;background-color: #d8d8d8">
     <svg width="100%" height="100%" viewBox="0, 0, 1705, 797"  xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none slice" id="svgcfn">
     </svg>
 </div>
 <!--泵房基本信息-->
 <div class="row" style="margin: 0px;height: 12%; width:100%; color: #3056aa; position: absolute;" id="111">
-<div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false" style="top:74px;left: 13px">
+<div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false" style="top:74px;left: 50px;z-index: 0">
     <div class="modal-dialog" role="document" style="width: 230px;">
         <div class="modal-content" style="background-color: rgba(39, 90, 182, 0.9);">
           <!--  <div style="background-color: #127ed4;border-radius: 5px;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="titlePumpContent"> <span  id="a" style="font-size: 12px;font-weight: 500"></span> </h4>
             </div>-->
-            <div class="modal-body"  id="pumpDataInfo" style="width: 230px;height: 400px;text-align: left;color: rgba(244,244,244,0.73);overflow-y: auto">
+            <div class="modal-body"  id="pumpDataInfo" style="width: 230px;height: 650px;text-align: left;color: rgba(244,244,244,0.73);overflow-y: auto">
                 <ul id="pumpDataInfoUl"></ul>
             </div>
 
@@ -663,6 +665,7 @@ function getConfigurantionData(type){
         data:{phid: GLOBAL_SELECT_DEVICE.pumpHouseId},
         success: function (res) {
             LOADING.hide();
+            getServiceSetValues(GLOBAL_SELECT_DEVICE.pumpHouseId);
             window.FrequencyOutput = {};
             window.runPump = {};
 
@@ -670,6 +673,7 @@ function getConfigurantionData(type){
             window.openend_tankinvalve;//水箱阀门
             window.level_tank=[];//水箱液位
             window.pressure_szjs=[];//进口压力
+
 
             window.conctolData = [];
             if(res){
@@ -701,6 +705,11 @@ function getConfigurantionData(type){
                     if(v.code.indexOf('openend_tankinvalve') >= 0){
                         openend_tankinvalve=v;
                     }
+                    console.log(3333333333333333333333333)
+                   /* if(v.tagName.indexOf("水箱液位上限值") >= 0 || v.tagName.indexOf("水箱液位下限值") >= 0 ||
+                        v.tagName.indexOf("爆管流量设定值") >= 0 || v.tagName.indexOf("压力超限设定值") >= 0){
+                        window.setValue.push(v);
+                    }*/
 
 
                 })
@@ -1242,41 +1251,41 @@ function setSvg(reloading) {
         var conctolParams = window.conctolParam;
         var z_status=window.openend_directvalve.pv==1?"打开":"关闭";
         var box_status=window.openend_tankinvalve.pv==1?"打开":"关闭";
-        if(conctolParams.phName=="金海龙韵"){
+       /* if(conctolParams.phName=="金海龙韵"){
 
-            var v={x:960,y:380};
+            var v={x:940,y:350};
             setRect(v,"control")
             setText(v, '直供水阀门:'+box_status,"control");
             setImage('static/assets/img/fmY.png', '35', '35', 940, 360);
 
-            var v1={x:1095,y:283};
-            setRect({x:1095,y:283},"control")
+            var v1={x:1115,y:283};
+            setRect({x:1115,y:283},"control")
             setText(v1, '水箱阀门:'+z_status,"control")
             setImage('static/assets/img/fmY.png', '35', '35', 1093, 258);
 
-        }else if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号" ){
+        }else */if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
 
-            var v={x:940,y:195};
+            var v={x:890,y:280};
             setRect(v,"control")
             setText(v, '直供水阀门:'+box_status,"control");
-           setImage('static/assets/img/fmY.png', '35', '35', 940, 175);
+            //setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
 
-            var v1={x:1140,y:80};
-            setRect({x:1140,y:80},"control")
+            var v1={x:890,y:220};
+            setRect({x:890,y:220},"control")
             setText(v1, '水箱阀门:'+z_status,"control")
-            setImage('static/assets/img/fmY.png', '35', '35', 1140, 80);
+            // setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
 
-        }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府"){
+        }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
 
-            var v={x:1080,y:265};
+            var v={x:1210,y:250};
             setRect(v,"control")
             setText(v, '直供水阀门:'+box_status,"control");
-           setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
+          // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
 
-            var v1={x:980,y:165};
-            setRect({x:980,y:165},"control")
+            var v1={x:1090,y:165};
+            setRect({x:1090,y:165},"control")
             setText(v1, '水箱阀门:'+z_status,"control")
-            setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
+           // setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
 
         }
         return false;
@@ -1768,6 +1777,7 @@ function showDiv(deviceId,deviceName,code,dateType){
     $("#titleContent").html(deviceName+"("+dateType+")");
     jQuery.ajax({
         type : 'POST',
+        async: false,
         contentType : 'application/json',
         url : 'a' + '/homeV2/getCurrentDataByDeviceIdAndCode/'+deviceId+"/data/"+code,
         dataType : 'json',
@@ -1775,7 +1785,7 @@ function showDiv(deviceId,deviceName,code,dateType){
             if (undefined == data || data==null) {
                 return;
             } else {
-                var markLine = baseLine(code);
+                var markLine = baseLine(deviceId,code);
                 setEcharts(data.xData,data.yData,dateType,markLine);
 
             }
@@ -1786,11 +1796,55 @@ function showDiv(deviceId,deviceName,code,dateType){
     });
 
 }
-function baseLine(type){
+//获取设定值
+function getServiceSetValues(phId){
+    var codeList=[];
+    codeList.push("level_tank_highwset");
+    codeList.push("level_tank_lowset");
+    codeList.push("flow_burstset");//爆管流量
+    codeList.push("pressure_alarmset");//报警压力
+    codeList.push("pressure_outset");//设定压力
+    codeList.push("pressurein_lowset");//进水压力下限
+    $.ajax({
+        type:"POST",
+        async: false,
+        contentType: 'application/json',
+        datatype: "JSON",
+        url: CONTEXT_PATH+'/monitor/configuration/getServiceSetValues',
+        data:JSON.stringify({phId: phId,codeList:codeList}),
+        success: function (res) {
+            window.setValue=[];//上下限 值
+            if(res){
+                res.map(function (v) {
+                    if(v.tagName.indexOf("液位上限") >= 0 || v.tagName.indexOf("液位下限") >= 0 ||
+                        v.tagName.indexOf("爆管流量") >= 0 || v.tagName.indexOf("进水压力下限") >= 0 ||
+                        v.tagName.indexOf("报警压力") >= 0 || v.tagName.indexOf("设定压力") >= 0){
+                        window.setValue.push(v);
+                    }
+                })
+            }
+        }
+    })
+}
+
+function baseLine(deviceId,type){
+
     var markLine={};
-
-
+    var codeList=[];
     if(type.indexOf('level_tank')>=0){
+
+
+        var level_tank_highwset=0;
+        var level_tank_lowset=0;
+        window.setValue.map(function (val) {
+            if (val.tagName.indexOf("液位上限") >= 0 && deviceId==val.idDevice) {
+                level_tank_highwset = val.pv;
+            }
+            if (val.tagName.indexOf("液位下限") >= 0 && deviceId==val.idDevice) {
+                level_tank_lowset = val.pv;
+            }
+        })
+
         markLine ={
             silent: true,
                 lineStyle: {
@@ -1800,19 +1854,19 @@ function baseLine(type){
             },
             data: [
                 {
-                    yAxis: 0.2
+                    yAxis: level_tank_lowset
                 },{
-                    yAxis: 1.9
+                    yAxis: level_tank_highwset
                 }
             ],
             label: {
                 normal:
                     {
                         formatter:function(e){
-                           if(e.value==0.2){
-                               return '0.2\n下限'
-                           }else  if(e.value==1.9){
-                               return '1.9\n上限'
+                           if(e.value==level_tank_lowset){
+                               return level_tank_lowset+'\n下限'
+                           }else  if(e.value==level_tank_highwset){
+                               return level_tank_highwset+'\n上限'
                            }
 
                         }
@@ -1822,6 +1876,17 @@ function baseLine(type){
 
         return markLine;
     }else if(type.indexOf('pressure_outwater')>=0){
+        var pressure_outset=0
+        var pressure_alarmset=0;
+        window.setValue.map(function (val) {
+            if (val.tagName.indexOf("设定压力") >= 0  && deviceId==val.idDevice) {
+                pressure_outset = val.pv;
+            }
+            if (val.tagName.indexOf("报警压力") >= 0  && deviceId==val.idDevice) {
+                pressure_alarmset = val.pv;
+            }
+        })
+
         markLine ={
             silent: true,
             lineStyle: {
@@ -1831,13 +1896,50 @@ function baseLine(type){
             },
             data: [
                 {
-                    yAxis: 0.65
+                    yAxis: pressure_outset
+                },{
+                    yAxis: pressure_alarmset
                 }
             ],
             label: {
                 normal:
                     {
-                        formatter:'0.65\n阈值'
+                        formatter:function(e){
+                            if(e.value==pressure_outset){
+                                return pressure_outset+'\n设定'
+                            }else  if(e.value==pressure_alarmset){
+                                return pressure_alarmset+'\n报警'
+                            }
+
+                        }
+                    }
+            }
+        }
+        return markLine;
+    }else if(type.indexOf('pressure_szjs')>=0){
+        var pressure_szjs=0;
+        window.setValue.map(function (val) {
+            if (val.tagName.indexOf("进水压力下限") >= 0  && deviceId==val.idDevice) {
+                pressure_szjs = val.pv;
+            }
+        })
+
+        markLine ={
+            silent: true,
+            lineStyle: {
+                normal: {
+                    color: '#01fef9'                   // 这儿设置安全基线颜色
+                }
+            },
+            data: [
+                {
+                    yAxis: pressure_szjs
+                }
+            ],
+            label: {
+                normal:
+                    {
+                        formatter: pressure_szjs+'\n下限'
                     }
             }
         }
@@ -1948,8 +2050,14 @@ function setEcharts(xData,yData,dateType,markLine){
 
         ]
     };
+if(dateType.indexOf("液位")>=0){
+    option.yAxis.max=2;
+}else if(dateType.indexOf("进口压力")>=0){
+    option.yAxis.max=0.5;
+}else if(dateType.indexOf("出口压力")>=0){
+    option.yAxis.max=1.6;
+}
 
-    option.yAxis.max=2.2;
 
 
     // 使用刚指定的配置项和数据显示图表。

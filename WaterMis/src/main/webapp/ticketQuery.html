@@ -23,8 +23,10 @@
                 <div class="panel-heading">
                     <form id="alermCount">
                         <div class="query-parameter">
+                            <label>泵房名称 : </label>
+                            <input id="pumpName" placeholder="泵房名称" name="pumpName" class="device-id form-control input-text2">
                             <label>工单类型 : </label>
-                            <select id="ticketType" name="ticketType" class="device-id form-control input-small">
+                            <select id="ticketType" name="ticketType" class="device-id form-control input-text2">
                                 <option value="">全部工单</option>
                                 <option value="1">告警工单</option>
                                 <option value="2">维修工单</option>
@@ -50,9 +52,7 @@
                                 <option value="高水故障">高水故障</option>
                             </select>-->
                             <label>工单内容 : </label>
-                            <input id="alarmContent" placeholder="工单内容" name="alarmContent" class="device-id form-control input-text4">
-                            <label>泵房名称 : </label>
-                            <input id="pumpName" placeholder="泵房名称" name="pumpName" class="device-id form-control input-text4">
+                            <input id="alarmContent" placeholder="工单内容" name="alarmContent" class="device-id form-control input-text2">
                             <label>工单创建时间 : </label>
                             <input id ="createBeginTime" name="createBeginTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-begin timepicker">-
                             <input id="createEndTime" name="createEndTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-end timepicker">

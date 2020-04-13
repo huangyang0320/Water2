@@ -50,7 +50,17 @@ $(function(){
 			$("#project").empty();
 		}
 	});
+
+	$("#project").change(function(){
+		if('' != $("#project").val()){
+			getPumpList($("#project").val());
+		}else{
+			$("#phId").empty();
+		}
+	});
 });
+
+
 
 function initDetailQry(){
 	var projectId = $("#project").val();
@@ -273,13 +283,36 @@ function qryProjectList(areaId){
 				$.each(data, function(i, item) {
 					$("#project").append("<option value = '" + item.id + "'> "+item.deviceName  + "</option>");
 				})
+				getPumpList($("#project").val());
 			}
+
+
+
 			initBootTable(url);
 		},
 		error : function(data)
 		{
 		}
 	});
+
+	function getPumpList(project){
+		console.log("3333333333333333333");
+		var url = CONTEXT_PATH+"/ticket/getPumpList?"+ Math.random();
+		jQuery.ajax({
+			type : 'POST',
+			contentType : 'application/x-www-form-urlencoded',
+			url : url,
+			data: {projectId:project},
+			dataType : 'json',
+			success : function(data) {
+				$("#phId").html("");
+				for (var i = 0; i < data.length; i++) {
+					jQuery("#phId").append("<option value=" + data[i].id + ">" + data[i].name + "</option>");
+				}
+			}
+		});
+	}
+
 
 
 
@@ -339,6 +372,7 @@ function queryParams(params) {
       pageSize: params.pageSize,   //页面大小  
       pageNumber: params.pageNumber,  //页码  
       projectId: $("#project").val(),
+	  phId:$("#phId").val(),
 	  userName:userName,
       exportType:exportType,
       exportMustNum:EXPORT_MUST_NUM

@@ -45,23 +45,10 @@ function getTicketInfo(ticketId){
             $("#alarmReason").val(data.ticketReason);
             $("#planContent").val(data.ticketDescription);
             $("#status").val(data.status);
+            //初始话部门对应的处理人 列表
+            getApprovalUserList(data.deptId);
+            $("#buttonId").html("分发");
 
-            $("#buttonId").html(data.currentStatusName);
-            if(data.status==4){//增加审核操作
-                $("#buttonId").html("审核");
-                $("#approveOperationKZ").html("<div class=\"col-md-5\">\n" +
-                    "                            <div class=\"form-group\">\n" +
-                    "                                <label for=\"approveOperation\">审核:</label>\n" +
-                    "                                <select id=\"approveOperation\">\n" +
-                    "                                    <option value=\"\">请同选择审批结果</option>\n" +
-                    "                                    <option value=\"Y\">同意</option>\n" +
-                    "                                    <option value=\"N\">不同意</option>\n" +
-                    "                                </select>\n" +
-                    "                            </div>\n" +
-                    "                        </div>");
-            }else{
-                $("#buttonId").html(data.currentStatusName);
-            }
             //非告警工单  去掉不要的信息
             if(data.ticketType!=1){
                 $("#alarmTimeAndAlarmLevel").css("display","none");
@@ -70,20 +57,32 @@ function getTicketInfo(ticketId){
     });
 }
 
-
+function getApprovalUserList(deptId){
+    var url =CONTEXT_PATH+"/ticket/getUserListByDeptId/"+deptId+"?"+ Math.random();
+    jQuery.ajax({
+        type : 'POST',
+        contentType : 'application/json',
+        url : url,
+        dataType : 'json',
+        success : function(data) {
+            console.log(data);
+            $("#handleUserId").html("");
+            $.each(data, function (i, item) {
+                jQuery("#handleUserId").append("<option value="+ item.id+">"+ item.name+"</option>");
+            });
+        }
+    });
+}
 
 
 function approval(){
     var ticketId= $("#ticketId").val();
     var status= $("#status").val();
+    //var approvalById= $("#approvalById").val();
     var approveOpinion= $("#approveOpinion").val();
-    var approveOperation=$("#approveOperation").val();
-    var json="";
-    if(approveOperation==""){
-        json={"ticketId":ticketId,"approveOpinion":approveOpinion};
-    }else{
-        json={"ticketId":ticketId,"approveOpinion":approveOpinion,"approveOperation":approveOperation};
-    }
+    var handleUserId= $("#handleUserId").val();
+
+    var json={"ticketId":ticketId,"approveOpinion":approveOpinion,"handleStatus":"01","handleUserId":handleUserId,"handleUserId":handleUserId};//分配到人
 
     if(approveOpinion==""){
         alert("处理结果不能为空!");
