@@ -214,7 +214,7 @@ $(function(){
            url:url,
        	   cache:false,
        	   striped:true,
-           height:calcHeight() + 55,//设定高度，固定头部
+           // height:calcHeight() + 55,//设定高度，固定头部
            search: false,//是否搜索
            queryParamsType:'',
            queryParams:queryParams,
@@ -240,6 +240,11 @@ $(function(){
         	   if(alertType == '1'){
         		   alertType = '0';
         	   }
+        	   console.log($('#dataTables-example')[0].querySelector('thead').querySelectorAll('th'))
+               // let ths = $('#dataTables-example')[0].querySelector('thead').querySelectorAll('th')
+               // for(let i=0;i<ths.length;i++){
+               //     ths[i].setAttribute('data-sortable',true)
+               // }
            },
            onLoadError:function(data){
           	   LOADING.hide();

@@ -454,6 +454,7 @@
                             }else{
                                 $('#myCarousel').find('.carousel-control').hide();
                             }
+
                             for(var i = 0 ; i < res.length ; i++){
                                 if(res[i].deviceStatus == '0' ){
                                     deviceStatus  =  "离线";
@@ -468,11 +469,11 @@
                                 }
                                 strDevice = $('<div class="item '+ statusBtn +'">' +
                                     ' <ul class="list-group" style="margin-bottom: 0px">' +
-                                    '<li class="list-group-li">设备名称：' + res[i].deviceName + '</li>' +
+                                    // '<li class="list-group-li">设备名称：' + res[i].deviceName + '</li>' +
                                    /* '<li class="list-group-li">设备编号：' + res[i].deviceId + '</li>' +*/
-                                    '<li class="list-group-li">设备状态：' + deviceStatus + '</li>' +
-                                    '<li class="list-group-li">设备最新数据：</li>' +
-                                    '<li id="pointList" class="list-group-item pre-scrollable" style="width: 100%;height: 152px;border-bottom: 1px #ccc solid;">' +
+                                    // '<li class="list-group-li">连接状态：' + deviceStatus + '</li>' +
+                                    '<li class="list-group-li">设备名称：' + res[i].deviceName + '&nbsp;&nbsp;&nbsp;1连接状态：'+deviceStatus+'</li>' +
+                                    '<li id="pointList" class="list-group-item pre-scrollable" style="width: 100%;height: 200px;border-bottom: 1px #ccc solid;">' +
                                     '</li></ul></div>')
                                 if(res[i].pointList){
                                     res[i].pointList.map(function (val) {
@@ -480,21 +481,34 @@
                                         if(val.unit){
                                             value += " "+val.unit
                                         }
-
-                                       if(val.pointName.indexOf("PLC电源故障")>0 || val.pointName.indexOf("PLC电源故障")>0 ||
-                                            val.pointName.indexOf("变频器故障")>0 || val.pointName.indexOf("报警")>0 ||
+                                       if(
+                                           val.pointName.indexOf("故障")>0 ||
+                                           val.pointName.indexOf("PLC电源故障")>0 ||
+                                           val.pointName.indexOf("PLC电源故障")>0 ||
+                                           val.pointName.indexOf("变频器故障")>0 ||
                                            val.pointName.indexOf("报警")>0 ||
-                                            val.pointName.indexOf("箱液位报警")>0){
+                                           val.pointName.indexOf("报警")>0 ||
+                                           val.pointName.indexOf("箱液位报警")>0){
                                            var imgUrl= value>0?"static/assets/img/alarm.png":"static/assets/img/unAlarm.png" ;
-                                            ponitStr = '<p class="pointListP">'+ val.pointName +'：<span style="float: right"><img src='+imgUrl+'></span></p>'
+                                           ponitStr = '<p class="pointListP">'+ val.pointName +'：<span style="float: right"><img src='+imgUrl+'></span></p>'
 
-                                        }else  if(val.pointName.indexOf("潜污泵")>0 || val.pointName.indexOf("电源急停")>0 || val.pointName.indexOf("门禁状态")>0 ||
-                                            val.pointName.indexOf("变频运行")>0 || val.pointName.indexOf("电动阀打开")>0 || val.pointName.indexOf("运行模式")>0){
-                                            var imgUrl= value>0?"static/assets/img/run.png":"static/assets/img/unRun.png" ;
-                                            ponitStr = '<p class="pointListP">'+ val.pointName +'：<span style="float: right"><img src='+imgUrl+'></span></p>'
+                                       }else if(
+                                           val.pointName.indexOf("模式")>0 ||
+                                           val.pointName.indexOf("状态")>0 ||
+                                           val.pointName.indexOf("潜污泵")>0 ||
+                                           val.pointName.indexOf("电源急停")>0 ||
+                                           val.pointName.indexOf("门禁状态")>0 ||
+                                           val.pointName.indexOf("变频运行")>0 ||
+                                           val.pointName.indexOf("电动阀打开")>0 ||
+                                           val.pointName.indexOf("运行模式")>0
+                                       ){
+                                           // var imgUrl= value>0?"static/assets/img/run.png":"static/assets/img/unRun.png" ;
+                                           var imgUrl= value>0?"打开":"关闭" ;
+                                           //ponitStr = '<p class="pointListP">'+ val.pointName +'：<span style="float: right"><img src='+imgUrl+'></span></p>'
+                                           ponitStr = '<p class="pointListP">'+ val.pointName +'：<span style="float: right">'+imgUrl+'</span></p>'
 
-                                        }else{
-                                            ponitStr = '<p class="pointListP">'+ val.pointName +'：<span style="float: right">'+ value +'</span></p>'
+                                       }else{
+                                           ponitStr = '<p class="pointListP">'+ val.pointName +'：<span style="float: right">'+ value +'</span></p>'
                                         }
 
                                         strDevice.find('#pointList').append(ponitStr);

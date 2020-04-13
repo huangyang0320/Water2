@@ -10,12 +10,14 @@
     .input-small {
         width: 80px;
     }
+
     @media(min-width: 1920px){
         .columns.columns-right {
             right: -400px !important;
         }
     }
 </style>
+<link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
 
 <div id="page-inner">
     <div class="row">
@@ -73,7 +75,7 @@
                             <!-- Advanced Tables -->
                             <div class="col-md-9 col-xs-9" style="padding-left: 0;">
                                 <div class="table-responsive">
-                                    <table class="table table-hover" id="dataTables-example" data-reorderable-columns="true">
+                                    <table class="table table-hover" id="dataTables-example" data-reorderable-columns="true" data-sortable="true" data-sort-class="table-active">
                                     </table>
                                 </div>
                             </div>
