@@ -380,7 +380,8 @@
                             <div class="col-md-5">
                                 <div class="form-group">
                                     <label for="workType">工单类型</label>
-                                    <input type="text" class="form-control" readonly id="workType" name="workType" value="告警工单" placeholder="请输入">
+                                    <input type="text" class="form-control" readonly id="showWorkType" name="showWorkType" value="告警工单" placeholder="请输入">
+                                    <input type="hidden" id="workType" name="workType" value="1">
                                    <!-- <select class="form-control" id="workType" name="workType">
                                         <option value="1">告警工单</option>
                                     </select>-->
@@ -427,7 +428,7 @@
                                     <label for="alarmStatus">告警状态</label>
                                     <input type="text" class="form-control" readonly id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
                                     <!--2：待接单-->
-                                    <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="2"  placeholder="请输入">
+                                    <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="1"  placeholder="请输入">
 
                                 </div>
                             </div>

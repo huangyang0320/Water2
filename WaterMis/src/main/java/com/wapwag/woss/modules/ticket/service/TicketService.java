@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.wapwag.woss.common.persistence.Page;
 import com.wapwag.woss.common.service.CrudService;
 import com.wapwag.woss.common.service.ServiceException;
+import com.wapwag.woss.common.utils.DateUtils;
 import com.wapwag.woss.modules.sys.entity.User;
 import com.wapwag.woss.modules.ticket.Entity.TicketComDto;
 import com.wapwag.woss.modules.ticket.Entity.TicketDto;
 import com.wapwag.woss.modules.ticket.Entity.TicketLogDto;
 import com.wapwag.woss.modules.ticket.Entity.TicketToDoDto;
 import com.wapwag.woss.modules.ticket.dao.TicketDao;
+import com.wapwag.woss.modules.ticket.utils.NodeEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +48,9 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
     @Transactional(readOnly = false)
     public JSONObject createWorkOrder(TicketDto ticketDto) throws Exception {
         JSONObject result=new JSONObject();
-        String ticketId= UUID.randomUUID().toString();
+        //1,2,3
+        String uCode = ticketDto.getCreateBy().getId().length()>6?ticketDto.getCreateBy().getId().substring(0,6):ticketDto.getCreateBy().getId();
+        String ticketId= ticketDto.getTicketType()+"HY-"+ DateUtils.formatDateTimeByFormat(new Date(),"yyyy-MM-dd HH:mm:ss")+"-"+uCode;
         ticketDto.setTicketId(ticketId);
         ticketDto.setValidFlag("1");
         this.insertTicket(ticketDto);
@@ -61,7 +65,7 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         log.setUpdateDate(new Date());
         this.insertTicketLog(log);
         //关联告警表（特殊处理）
-        if("告警工单".equals(ticketDto.getTicketType())){
+        if("1".equals(ticketDto.getTicketType())){
             this.updateAlarmTicketByDeviceIdAndStartTime(ticketDto);
         }
 
@@ -75,8 +79,8 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
            if(userList!=null && userList.size()>0){
                 TicketToDoDto ticketToDoDto=null;
                 for(String userId:userList){
-                    //status :0待分发  1签收
-                    ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketId,"","0",userId,"1",new Date(),new Date(),ticketDto.getUpdateBy(),ticketDto.getCreateBy());
+                    //status :0待分发  1签收  (直接接受，不需要签收)
+                    ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketId,"","1",userId,"1",new Date(),new Date(),ticketDto.getUpdateBy(),ticketDto.getCreateBy());
                     this.insertTicketToDo(ticketToDoDto);
                     result.put("code","201");
                     result.put("status","success");
@@ -93,6 +97,13 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
 
     /**
      * 处理工单
+     *
+     *      * 01：分发业务到人修改为处理状态3、
+     *      * 02回退业务分子修改为待分发状态2、
+     *      * 03处理业务修改为待待审核状态4
+     *      * 04审核不同意业务修改为处理状态3
+     *      * 05审核同意业务修改为完成状态5
+     *
      * @param ticketDto
      * @return
      */
@@ -112,28 +123,48 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
             log.setUpdateBy(ticketDto.getUpdateBy());
             log.setUpdateDate(new Date());
 
-
-            if(StringUtils.isBlank(ticketDto.getApproveOperation())){//处理完成  发给  发起人 审核
+            // 01：分发业务到人修改为 待接单状态2、
+            if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("01")){
                 //工单为待审核 4  获取工单创建人的UserId
-                String createUserId = this.getTicketCreateUserIdByTicketId(ticketDto.getTicketId());
-                this.signIn(ticketDto.getTicketId(),createUserId,"4");
+                String handleUserId = ticketDto.getHandleUserId();
+                this.signIn(ticketDto.getTicketId(),handleUserId,"2","0");
+                log.setStatus("2");
+                log.setNodeId(NodeEnum.DISTRIBUTION.getValue());
+                log.setNodeId(NodeEnum.DISTRIBUTION.getName());
+            //退回（处理不了，退回给部门负责人）
+            //02回退业务分子修改为待分发状态1、
+            }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("02")){
+                //工单为待分发 1  获取工单部门负责人的UserId
+                List<String> mgUuer= this.getUserIdByDeptId(ticketDto.getDeptId());
+                this.signIn(ticketDto.getTicketId(),mgUuer.get(0),"1","1");
+                log.setStatus("1");
+                log.setNodeId(NodeEnum.SINGLE_BACK.getValue());
+                log.setNodeId(NodeEnum.SINGLE_BACK.getName());
+                //03处理业务修改为待审核状态4
+            }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("03")){
+                //工单为待审核 4  获取工单部门负责人的UserId
+                List<String> mgUuer= this.getUserIdByDeptId(ticketDto.getDeptId());
+                this.signIn(ticketDto.getTicketId(),mgUuer.get(0),"4","1");
                 log.setStatus("4");
-            }else{
-                //创建人审批 同意（工单为完成 5）
-                if("Y".equals(ticketDto.getApproveOperation())){
-                    ticketDto.setStatus("5");//完成
-                    this.updateTicketInfo(ticketDto);
-                    //清空历史待处理人
-                    boolean a=this.delTicketToDoByTicketId(ticketDto.getTicketId());
-                    log.setStatus("5");
-
-                }else{
-                    //不同意（工单未处理中 3）
-                    //获取工单最近处理人UserId
-                    String lastHandleUserId = this.getTicketLogLastUserIdByTicketId(ticketDto.getTicketId());
-                    this.signIn(ticketDto.getTicketId(),lastHandleUserId,"3");
-                    log.setStatus("3");
-                }
+                log.setNodeId(NodeEnum.HANDLE.getValue());
+                log.setNodeId(NodeEnum.HANDLE.getName());
+            }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("04")){
+                //04审核不同意业务修改为处理状态3
+                //获取工单最近处理人UserId
+                String lastHandleUserId = this.getTicketLogLastUserIdByTicketId(ticketDto.getTicketId());
+                this.signIn(ticketDto.getTicketId(),lastHandleUserId,"3","1");
+                log.setStatus("3");
+                log.setNodeId(NodeEnum.UN_AGREE.getValue());
+                log.setNodeId(NodeEnum.UN_AGREE.getName());
+            }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("05")){
+                //05审核同意业务修改为完成状态5
+                ticketDto.setStatus("5");//完成
+                this.updateTicketInfo(ticketDto);
+                //清空历史待处理人
+                boolean a=this.delTicketToDoByTicketId(ticketDto.getTicketId());
+                log.setStatus("5");
+                log.setNodeId(NodeEnum.AGREE.getValue());
+                log.setNodeId(NodeEnum.AGREE.getName());
             }
             this.insertTicketLog(log);
 
@@ -158,16 +189,15 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
      * @return
      */
     @Transactional(readOnly = false)
-    public boolean signIn(String ticketId,String userId,String status){
+    public boolean signIn(String ticketId,String userId,String status,String signInStatus){
         //必须是待签收状态 0,才能签收（否者已被他人签收）
         // to  do  ...
-
         //清空历史待处理人
         boolean a=this.delTicketToDoByTicketId(ticketId);
         User u=new User();
         u.setId(userId);
         //待插入当前  处理人
-        TicketToDoDto ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketId,"","1",userId,"1",new Date(),new Date(),u,u);
+        TicketToDoDto ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketId,"",signInStatus,userId,"1",new Date(),new Date(),u,u);
         boolean b= this.insertTicketToDo(ticketToDoDto);
         //修改工单状态
         TicketDto ticketDto=new TicketDto();

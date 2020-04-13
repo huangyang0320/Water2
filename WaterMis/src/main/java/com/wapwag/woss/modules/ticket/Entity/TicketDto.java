@@ -46,6 +46,14 @@ public class TicketDto extends DataEntity<TicketDto> {
     private String updateBySre;
 
     private String isMyHandle;//待处理标志
+    /**
+     * 01：分发业务到人修改为处理状态3、
+     * 02回退业务分子修改为待分发状态2、
+     * 03处理业务修改为待待审核状态4
+     * 04审核不同意业务修改为处理状态3
+     * 05审核同意业务修改为完成状态5
+     */
+    private String handleStatus;//待处状态（有页面传入，走不同的业务流程分支 01：分发业务到人修改为处理状态3、02回退业务分子修改为待分发状态2、03处理业务修改为待待审核状态4）
     private String handleUserId;//待处理人;
     private String allHandleUser;//所有处理人
 
@@ -383,5 +391,13 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setMgName(String mgName) {
         this.mgName = mgName;
+    }
+
+    public String getHandleStatus() {
+        return handleStatus;
+    }
+
+    public void setHandleStatus(String handleStatus) {
+        this.handleStatus = handleStatus;
     }
 }

@@ -1186,6 +1186,7 @@ function myModalWorkOrder(row) {
 
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept();
+    console.log(1111111111111111111111111)
     $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
     $("#alarmTime").val(row.startDate);
     $("#phName").val(row.phName);

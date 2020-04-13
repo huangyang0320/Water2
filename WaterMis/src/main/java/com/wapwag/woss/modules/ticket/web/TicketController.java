@@ -133,7 +133,7 @@ public class TicketController {
         if(StringUtils.isBlank(userId)){
             userId = user.getUserId();
         }
-        return ticketService.signIn(ticketId,userId,"3");
+        return ticketService.signIn(ticketId,userId,"3","1");
     }
 
 

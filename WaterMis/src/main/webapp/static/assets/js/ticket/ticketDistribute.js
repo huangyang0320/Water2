@@ -65,9 +65,10 @@ function getApprovalUserList(deptId){
         url : url,
         dataType : 'json',
         success : function(data) {
-            $("#approvalById").html("");
+            console.log(data);
+            $("#handleUserId").html("");
             $.each(data, function (i, item) {
-                jQuery("#approvalById").append("<option value="+ item.id+">"+ item.name+"</option>");
+                jQuery("#handleUserId").append("<option value="+ item.id+">"+ item.name+"</option>");
             });
         }
     });
@@ -77,14 +78,11 @@ function getApprovalUserList(deptId){
 function approval(){
     var ticketId= $("#ticketId").val();
     var status= $("#status").val();
+    //var approvalById= $("#approvalById").val();
     var approveOpinion= $("#approveOpinion").val();
-    var approveOperation=$("#approveOperation").val();
-    var json="";
-    if(approveOperation==""){
-        json={"ticketId":ticketId,"approveOpinion":approveOpinion};
-    }else{
-        json={"ticketId":ticketId,"approveOpinion":approveOpinion,"approveOperation":approveOperation};
-    }
+    var handleUserId= $("#handleUserId").val();
+
+    var json={"ticketId":ticketId,"approveOpinion":approveOpinion,"handleStatus":"01","handleUserId":handleUserId,"handleUserId":handleUserId};//分配到人
 
     if(approveOpinion==""){
         alert("处理结果不能为空!");

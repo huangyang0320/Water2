@@ -87,6 +87,8 @@
                                 <label for="processName">所在设备</label>
                                 <input type="text" class="form-control" readonly id="processName" name="processName" placeholder="请输入">
                                 <input type="hidden"  class="form-control" readonly id="deviceId" name="deviceId" placeholder="请输入">
+                                <input type="hidden"  id="deptId" name="deptId" placeholder="请输入">
+
 
                             </div>
 
@@ -168,7 +170,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" onclick="frameElement.api.close()" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="approval()"><span id="buttonId"></span></button>
+                <button type="button" class="btn btn-primary" onclick="approval(1)"><span id="buttonId"></span></button>
+                <button type="button" class="btn btn-primary" onclick="approval(0)"  id="backButton">退单</span></button>
             </div>
         </div>
     <script src="static/assets/js/jquery-1.10.2.js"></script>
