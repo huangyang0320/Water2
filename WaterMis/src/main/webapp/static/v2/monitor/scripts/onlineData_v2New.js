@@ -641,9 +641,11 @@ function initRealtimeData(){
                 	}
             	}else{
                 	if(value == 1){
-                		html += '<td><img src="static/assets/img/run.png" class="img-circle" /></td>'
-                	}else{
-                		html += '<td><img src="static/assets/img/unRun.png" class="img-circle" /></td>'
+                		// html += '<td><img src="static/assets/img/run.png" class="img-circle" /></td>'
+                        html += '<td>打开</td>'
+                    }else{
+                		// html += '<td><img src="static/assets/img/unRun.png" class="img-circle" /></td>'
+                        html += '<td>关闭</td>'
                 	}
             	}
             }else{

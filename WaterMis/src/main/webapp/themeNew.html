@@ -62,6 +62,9 @@
     }
     .huadong .notice_active li{list-style-type:none;height:5.3rem;overflow: hidden;}
     .notice_active ul{padding-left: 6px;}
+    .alltitle-one{
+        text-align: left;
+    }
 </style>
 
 <style>
@@ -113,14 +116,14 @@ var t = null;
                     <tr>
 
                         <td rowspan="2" width="10%"><img src="static/home/images/icon-05.png"  style="width: 70%"/></td>
-                        <td width="40%">
-                            <p class="alltitle-one">当月日均用水量：<span id="cureentDayAvg" style="color: #fff;">0</span></p>
+                        <td width="40%" >
+                            <p class="alltitle-one" style="white-space: nowrap">当月用水：<span id="cureentDayAvg" style="color: #fff;">0</span>/天</p>
                         </td>
 
 
                         <td rowspan="2" width="10%"><img src="static/home/images/icon-01.png" style="width: 70%"/></td>
                         <td width="40%">
-                            <p class="alltitle-one">同期日均用水量：<span id="lastYearAvg" style="color: #fff;">0</span></p>
+                            <p class="alltitle-one" style="white-space: nowrap">同期用水：<span id="lastYearAvg" style="color: #fff;">0</span>/天</p>
                         </td>
 
 
@@ -137,12 +140,12 @@ var t = null;
 
                     <tr>
                         <td>
-                            <p class="alltitle-one">当月单吨能耗：<span id="currentPower" style="color: #fff;">0</span></p>
+                            <p class="alltitle-one" style="white-space: nowrap">当月能效：<span id="currentPower" style="color: #fff;">0</span></p>
                         </td>
 
 
                         <td>
-                            <p class="alltitle-one">同期单吨能耗：<span id="lastYearPower" style="color: #fff;">0</span></p>
+                            <p class="alltitle-one" style="white-space: nowrap">同期能效：<span id="lastYearPower" style="color: #fff;">0</span></p>
                         </td>
 
 
@@ -163,12 +166,12 @@ var t = null;
 
                         <td rowspan="2" width="10%"><img src="static/home/images/icon-02.png"  style="width: 70%"/></td>
                         <td width="40%">
-                            <p class="alltitle-one">上月日均用水量：<span id="lastMonthAvg" style="color: #fff;">0</span></p>
+                            <p class="alltitle-one" style="white-space: nowrap">上月用水：<span id="lastMonthAvg" style="color: #fff;">0</span>/天</p>
                         </td>
 
                         <td rowspan="2" width="10%"><img src="static/home/images/icon-06.png"  style="width: 70%"/></td>
                         <td  width="40%">
-                            <p class="alltitle-one">同比增长率：
+                            <p class="alltitle-one" style="white-space: nowrap">同比：
 
                                 <img id="tb" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
                                 <span id="tRate" style="color: #fff;">0</span>
@@ -179,12 +182,12 @@ var t = null;
 
                     <tr>
                         <td>
-                            <p class="alltitle-one">上月单吨能耗：<span id="lastPower" style="color: #fff;">0</span></p>
+                            <p class="alltitle-one" style="white-space: nowrap">上月能效：<span id="lastPower" style="color: #fff;">0</span></p>
                         </td>
 
 
                         <td>
-                            <p class="alltitle-one">环比增长率：
+                            <p class="alltitle-one" style="white-space: nowrap">环比：
 
                                 <img id="hb" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
                                 <span id="hRate" style="color: #fff;">0</span>

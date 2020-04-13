@@ -76,6 +76,10 @@
             margin-right: 35px;
             font-size: 15px;
         }
+        #header-menu-all .dropdown-menu{
+            top: 0 !important;
+            left: 50px !important;
+        }
 
       /*  a {font-size:13px}
         a:link {color: blue; text-decoration:none;}!*未访问：蓝色、无下划线*!
@@ -167,10 +171,10 @@
         </nav>
 
 
-        <nav class="navbar navbar-default top-navbar" role="navigation" style="margin-top: 50px;">
-            <div id="header-menu" style="margin-left: 0px">
+<!--        <nav class="navbar navbar-default top-navbar" role="navigation" style="margin-top: 50px;">-->
+<!--            <div id="header-menu" style="margin-left: 0px">-->
 
-                <ul class="nav navbar-nav" id="header-menu-all" style="margin-bottom: -10px;">
+<!--                <ul class="nav navbar-nav" id="header-menu-all" style="margin-bottom: -10px;">-->
                     <!-- <li class="dropdown">
                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                              系统预览
@@ -186,10 +190,10 @@
                              <li><a href="#" onclick="showAlert()">主题页面</a></li>
                          </ul>
                      </li>-->
-                </ul>
+<!--                </ul>-->
 
-            </div>
-        </nav>
+<!--            </div>-->
+<!--        </nav>-->
 
         <!--/. NAV TOP  -->
         <nav class="navbar-default navbar-side" role="navigation" style="display: none">
@@ -201,9 +205,20 @@
         <!-- /. technicalSupport -->
         <!--<div class="technicalSupport">技术支持:上海XXXXXX智慧水务</div>-->
         <!-- /. NAV SIDE  -->
-        <div id="page-wrapper" style="margin-top: 40px">
 
+        <div style="width:100%;height:calc(100% - 60px);display: flex;margin-top: 60px;">
+            <nav class="navbar navbar-default top-navbar" role="navigation" style="width: 50px; height: 100%;min-width: 0;background-color: rgb(56,64,82);">
+                <div id="header-menu" style="margin-left: 0px">
+                    <ul class="nav navbar-nav" id="header-menu-all" style="margin-bottom: -10px;">
+                    </ul>
+                </div>
+            </nav>
+            <div id="page-wrapper" style="width: calc(100% - 50px);top:0;margin-left: 50px;margin-top:0px;"></div>
         </div>
+<!--        <div id="page-wrapper" style="margin-top: 40px"></div>-->
+
+
+
         <script>
             function closeVideo(){
                try {
