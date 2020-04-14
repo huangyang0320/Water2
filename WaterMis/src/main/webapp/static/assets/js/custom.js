@@ -626,12 +626,11 @@ function getLeftMenuData() {
             $("#deviceMenuRight").hide()
         });
 
-        // $(".showRightMenu").fadeIn();
+
         // load right menu
         $("#right-menu-list").load("rightmenu.html", function(){
             // initProjectTree();
             // 隐藏menu
-            $(".showRightMenu").css('display','none')
             $("#hideMenu").click(function(){
                 $(".right-menu").animate({top: '-580px'}, function(){
                     $(this).hide();
