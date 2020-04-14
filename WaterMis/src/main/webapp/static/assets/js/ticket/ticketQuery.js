@@ -131,7 +131,7 @@ function initBootTable(url){
         clickToSelect: true,
         showRefresh: false,//刷新按钮
         smartDisplay: true,
-        showExport: false,
+        showExport: true,
         exportDataType: 'all',
         rowStyle: rowStyle,
         onLoadSuccess:function(data){
@@ -149,7 +149,7 @@ function initBootTable(url){
         locale: "zh-CN",//中文支持
         detailView: true, //是否显示详情折叠
         columns: [{
-            field: 'deviceCode',
+            field: 'ticketId',
             title: '工单编号',
             align: 'center',
             sortable: true
@@ -289,9 +289,9 @@ function queryParams(params) {
         startBeginTime = startBeginTime+" 00:00:00";
     }
 
-    var startEndTime =$("#startBeginTime").val();
-    if(startBeginTime!=""){
-        startBeginTime = startBeginTime+" 23:59:59";
+    var startEndTime =$("#startEndTime").val();
+    if(startEndTime!=""){
+        startEndTime = startEndTime+" 23:59:59";
     }
 
     var sortName="";
