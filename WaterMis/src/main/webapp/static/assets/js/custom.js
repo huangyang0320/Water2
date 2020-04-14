@@ -957,8 +957,8 @@ function alarmIgnore(id,delObj) {
             	$("#showWarnDialog").find("span").text('');
             }
         });
-    	$(delObj).parent().parent().remove();
-        showErrorMsgVideo("忽略成功");
+    	// $(delObj).parent().parent().remove();
+        // showErrorMsgVideo("忽略成功");
     	//openAlertModel("myModalAlert" , "忽略成功")
     });
 }

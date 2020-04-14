@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>报警信息</title>
     <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
+
+<!--    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">-->
     <style type="text/css">
         body {
             margin: 0;
@@ -89,7 +92,14 @@
         .alarm-head span{
             font-weight: 700;
         }
+        #alarmtable{
+            max-height:200px;
+            overflow-y:auto;
+        }
     </style>
+<!--    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
+<!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>-->
+
 </head>
 <body>
 <div>
@@ -124,28 +134,29 @@
         </form>
     </div>
     <div class="content">
-        <div class="wrapper">
-            <div class="alarm-head">
-                <ul>
-                    <li>
-                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('ALARM.START_DATE')">开始时间</span>
-                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('DL.name')">泵房名称</span>
-                        <span style="width: 10%;font-weight: 500;" onclick="sortOrderData('D.id')">设备名称</span>
-                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('ATD.FUNCTION_REMARKS')">告警内容</span>
-                        <span style="width: 7%;font-weight: 500;" onclick="sortOrderData('alarm_level')">告警等级</span>
-                        <span style="width: 12%;font-weight: 500;" onclick="sortOrderData('ALARM.END_DATE')">最近报警</span>
-                        <span style="width: 20%;font-weight: 500;">操作</span>
+<!--        <div class="wrapper">-->
+<!--            <div class="alarm-head">-->
+<!--                <ul>-->
+<!--                    <li>-->
+<!--                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('ALARM.START_DATE')">开始时间</span>-->
+<!--                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('DL.name')">泵房名称</span>-->
+<!--                        <span style="width: 10%;font-weight: 500;" onclick="sortOrderData('D.id')">设备名称</span>-->
+<!--                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('ATD.FUNCTION_REMARKS')">告警内容</span>-->
+<!--                        <span style="width: 7%;font-weight: 500;" onclick="sortOrderData('alarm_level')">告警等级</span>-->
+<!--                        <span style="width: 12%;font-weight: 500;" onclick="sortOrderData('ALARM.END_DATE')">最近报警</span>-->
+<!--                        <span style="width: 20%;font-weight: 500;">操作</span>-->
 
-                    </li>
-                </ul>
-            </div>
-            <div class="alarm-body" style="position: relative">
-                <ul>
-                    <li style="height: 15px"></li>
-                </ul>
-                <div id="alarmBodyNoMsg" style="width: 100%;height: 100%; text-align: center;padding-top: 60px; position: absolute;top: 0px;left: 0;z-index: 999"> 暂无数据 </div>
-            </div>
-        </div>
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--            <div class="alarm-body" style="position: relative">-->
+<!--                <ul>-->
+<!--                    <li style="height: 15px"></li>-->
+<!--                </ul>-->
+<!--                <div id="alarmBodyNoMsg" style="width: 100%;height: 100%; text-align: center;padding-top: 60px; position: absolute;top: 0px;left: 0;z-index: 999"> 暂无数据 </div>-->
+<!--            </div>-->
+<!--        </div>-->
+        <div id="alarmtable"></div>
     </div>
 </div>
     <!-- jQuery Js -->
@@ -154,6 +165,7 @@
     <script src="static/assets/js/scroll.js"></script>
     <!--&lt;!&ndash; Bootstrap Js &ndash;&gt;-->
     <script src="static/assets/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
     <script>
         $(function () {
             qryAreaList();
@@ -205,47 +217,126 @@
              dataType: 'json',
              success: function (data) {
                  if (data && data.length > 0) {
-                     $('.alarm-body ul').html('');
-                     $('#alarmBodyNoMsg').hide();
-                     window.deviceList=[];
-                     $.each(data, function (i, item) {
-                         var ht;
-                         var dealData = JSON.stringify(item);
-                         if (item.ticketId) {
-                             ht = "<span onclick='alertErrors()' class='btn btn-xs btn-primary'>创建工单</span>"
-                         } else {
-                             ht = "<span onclick='createWorkOrder(this)'  data = '" + dealData + "' class='btn btn-xs btn-info'>创建工单</span>"
+                     // $('.alarm-body ul').html('');
+                     // $('#alarmBodyNoMsg').hide();
+                     // window.deviceList=[];
+                     // $.each(data, function (i, item) {
+                     //     var ht;
+                     //     var dealData = JSON.stringify(item);
+                     //     if (item.ticketId) {
+                     //         ht = "<span onclick='alertErrors()' class='btn btn-xs btn-primary'>创建工单</span>"
+                     //     } else {
+                     //         ht = "<span onclick='createWorkOrder(this)'  data = '" + dealData + "' class='btn btn-xs btn-info'>创建工单</span>"
+                     //     }
+                     //     console.log(item);
+                     //     var $li = '<li name="' + checStr(item.phId) + '">';
+                     //     $li += '<span style="width: 15%;color: #847979">' + item.startDate + '</span>';
+                     //     $li += '<span style="width: 15%;color: #847979" onclick="modalConfig(this)" name="' + item.phId + '">' + item.phName + '</span>';
+                     //     $li += '<span style="width: 12%;color: #847979">' + checStr(item.deviceName) + '</span>';
+                     //     $li += '<span style="width: 14%;color: #847979" title="' + checStr(item.alarmInfo)+checStr(item.alarmSetValue)+'">' + checStr(item.alarmInfo)+alarmSetValue(item.alarmSetValue)+'</span>';
+                     //     $li += '<span style="width: 9%;"><span style="width: 5%;background-color: #fff141">' + checStr(item.alarmLevel) + '</span></span>';
+                     //     $li += '<span style="width: 15%;color: #847979">' + checStr(item.endDate) + '</span>';
+                     //     $li += '<span style="width: 20%;color: #847979">'
+                     //         + '<span onclick="answer(this);" class="btn btn-xs btn-info" name="' + item.alarDescription + '" alarmReason = "' + item.alarmReason + '">解决方案</span>'
+                     //       /*  + '&nbsp;'
+                     //         + '<span onclick="affirm(this);" class="btn btn-xs btn-info" name="' + item.id + '">确认</span>'*/
+                     //         + '&nbsp;'
+                     //         + '<span onclick="ignore(this);" class="btn btn-xs btn-info" name="' + item.id + '">忽略</span>'
+                     //         + '<span onclick="ignoreAll(this);" style="display: none" class="btn btn-xs btn-info ignoreAll" name="' + item.id + '">忽略</span>'
+                     //         + '&nbsp;'
+                     //         + ht
+                     //         + '</span>';
+                     //     $li += '</li>';
+                     //     $('.alarm-body ul').append($li);
+                     // });
+                     //
+                     // $('.alarm-body').myScroll({
+                     //     speed: 80, //数值越大，速度越慢
+                     //     rowHeight: 30 //li的高度
+                     // });
+
+                     function addFunctionAlty(value, row, index) {
+                         let str = ''
+                         if(!row.ticketId){
+                             str = '<button id="createWorkOrder" type="button" class="btn btn-info">创建工单</button>'
+                         }else{
+                             str = '<button id="createWorkOrder" type="button" class="btn btn-warning">创建工单</button>'
                          }
-                         console.log(item);
-                         var $li = '<li name="' + checStr(item.phId) + '">';
-                         $li += '<span style="width: 15%;color: #847979">' + item.startDate + '</span>';
-                         $li += '<span style="width: 15%;color: #847979" onclick="modalConfig(this)" name="' + item.phId + '">' + item.phName + '</span>';
-                         $li += '<span style="width: 12%;color: #847979">' + checStr(item.deviceName) + '</span>';
-                         $li += '<span style="width: 14%;color: #847979" title="' + checStr(item.alarmInfo)+checStr(item.alarmSetValue)+'">' + checStr(item.alarmInfo)+alarmSetValue(item.alarmSetValue)+'</span>';
-                         $li += '<span style="width: 9%;"><span style="width: 5%;background-color: #fff141">' + checStr(item.alarmLevel) + '</span></span>';
-                         $li += '<span style="width: 15%;color: #847979">' + checStr(item.endDate) + '</span>';
-                         $li += '<span style="width: 20%;color: #847979">'
-                             + '<span onclick="answer(this);" class="btn btn-xs btn-info" name="' + item.alarDescription + '" alarmReason = "' + item.alarmReason + '">解决方案</span>'
-                           /*  + '&nbsp;'
-                             + '<span onclick="affirm(this);" class="btn btn-xs btn-info" name="' + item.id + '">确认</span>'*/
-                             + '&nbsp;'
-                             + '<span onclick="ignore(this);" class="btn btn-xs btn-info" name="' + item.id + '">忽略</span>'
-                             + '<span onclick="ignoreAll(this);" style="display: none" class="btn btn-xs btn-info ignoreAll" name="' + item.id + '">忽略</span>'
-                             + '&nbsp;'
-                             + ht
-                             + '</span>';
-                         $li += '</li>';
-                         $('.alarm-body ul').append($li);
-
-                     });
-
-                     $('.alarm-body').myScroll({
-                         speed: 80, //数值越大，速度越慢
-                         rowHeight: 30 //li的高度
-                     });
+                         return [
+                             '<button id="answer" type="button" class="btn btn-info">解决方案</button>',
+                             '<button id="ignore" type="button" class="btn btn-info">忽略</button>',
+                             str,
+                         ].join('');
+                     }
+                     window.operateEvents = {
+                         'click #answer': function (e, value, row, index) {
+                             console.log(e,value,row,index)
+                             answer(row)
+                         },
+                         'click #ignore': function (e, value, row, index) {
+                             console.log(e,value,row,index)
+                             ignore(row)
+                         },
+                         'click #createWorkOrder': function (e, value, row, index) {
+                             console.log(e,value,row,index)
+                             if(row.ticketId){
+                                 alertErrors(row)
+                             }else{
+                                 createWorkOrder(row)
+                             }
+                         }
+                     };
+                     let columns = [
+                         {
+                             field:'startDate',
+                             title:'开始时间',
+                             sortable:'true',
+                             width:220,
+                         },
+                         {
+                             field:'phName',
+                             title:'泵房名称',
+                             sortable:'true'
+                         },
+                         {
+                             field:'deviceName',
+                             title:'设备名称',
+                             sortable:'true'
+                         },
+                         {
+                             field:'alarmInfo',
+                             title:'告警内容',
+                             sortable:'true'
+                         },
+                         {
+                             field:'alarmLevel',
+                             title:'告警等级',
+                             sortable:'true'
+                         },
+                         {
+                             field:'endDate',
+                             title:'最近报警',
+                             sortable:'true',
+                             width:220,
+                         },
+                         {
+                             field: 'operate',
+                             title: '操作',
+                             width:300,
+                             events: operateEvents,//给按钮注册事件
+                             formatter: addFunctionAlty//表格中增加按钮  
+                         }
+                     ]
+                     $('#alarmtable').bootstrapTable({
+                         columns:columns,
+                         data:data,
+                         formatNoMatches: function () {  //没有匹配的结果
+                             return '无符合条件的记录';
+                         },
+                     })
                  } else {
-                     $('.alarm-body ul').html("<div style='text-align: center;color:red'>无告警数据...</div>");
-                     $('#alarmBodyNoMsg').show()
+                     // $('.alarm-body ul').html("<div style='text-align: center;color:red'>无告警数据...</div>");
+                     // $('#alarmBodyNoMsg').show()
                  }
              }
          });
@@ -277,9 +368,13 @@
         	window.parent.window.openAlarmConfirm(item,obj);
         }
         function ignore(obj){
-        	var item = $(obj).attr('name');
+        	// var item = $(obj).attr('name');
+            let item = obj.id
         	if(confirm('确定要忽略此条告警吗？')){
-                window.parent.window.alarmIgnore(item,obj);
+                window.parent.window.alarmIgnore(item);
+                setTimeout(()=>{
+                    getAlarmList()
+                },2000)
             }
         }
         function ignoreAll(){
@@ -302,8 +397,12 @@
         }
 
         function answer(obj){
-        	var item = $(obj).attr('name');
-            var alarmReason = $(obj).attr('alarmReason');
+            console.log('333333',obj)
+        	// var item = $(obj).attr('name');
+            // var alarmReason = $(obj).attr('alarmReason');
+
+            let item = obj.alarDescription
+            let alarmReason = obj.alarmReason
         	//console.log(item);
         	if(item != undefined){
                 // window.parent.window.openAlertModel("myModalAlert" , item)
@@ -332,8 +431,11 @@
 
         
         function createWorkOrder(self) {
-            var data = $(self).attr('data');
-            var sdata =  JSON.parse(data);
+            console.log(self)
+            // var data = $(self).attr('data');
+            // var sdata =  JSON.parse(data);
+
+            let sdata = self
             //打开创建工单页面
             window.parent.window.queryWhetherWorker(sdata.deviceId);
             //工单页面赋值
@@ -407,5 +509,6 @@
                          }
                  }*/
     </script>
+
 </body>
 </html>

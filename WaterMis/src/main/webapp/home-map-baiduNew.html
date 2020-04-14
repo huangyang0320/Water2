@@ -20,7 +20,7 @@
     }
 	.choose-bg {
         width: 450px;
-        height: 50px;
+        height: 70px;
         left: 50px;
         top: 36px;
     }
@@ -98,11 +98,19 @@
     <div class="container-bg choose-bg"></div>
 	<div class="container-choose choose-button">
         <!--<button class="btn btn-default" onclick="showSCADA()">SCADA</button>-->
-        <button class="btn btn-default" onclick="showAllPumphouses()">所有泵房</button>
-        <label>区域定位 : </label>
-        <select id="areaId" onchange="toAreaPump(this.value)">
+        <div>
+            <button class="btn btn-default" onclick="showAllPumphouses()">所有泵房</button>
+            <label>区域定位 : </label>
+            <select id="areaId" onchange="toAreaPump(this.value)">
 
-        </select>
+            </select>
+        </div>
+        <div style="display: flex;align-items: center;justify-content: space-around;color:#fff">
+            <p>总数：0</p>
+            <p>在线：0</p>
+            <p>离线：0</p>
+            <p>报警：0</p>
+        </div>
     </div>
     <div class="container-bg selectedDevice"></div>
     <div class="container-choose selectedDevice" id="selectedDevice"></div>
@@ -347,6 +355,7 @@
             var mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
         }else if(pump.pumpHouseStatus == 1){
             var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
+            // var mapPicUrl = ROOT_PATH + "/static/assets/img/people.png";
         }else{
             var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
         }
@@ -572,6 +581,8 @@ function showAllPumphouses() {
                     var mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
                 }else if(isInArray(res, v.pumpHouseId)){
                     var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
+                    // var mapPicUrl = ROOT_PATH + "/static/assets/img/people.png";
+
                 }else{
                     var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
                 }
@@ -634,6 +645,8 @@ function areaMapClick(areaId) {
                         var mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
                     }else if(isInArray(res, v.pumpHouseId)){
                         var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
+                        // var mapPicUrl = ROOT_PATH + "/static/assets/img/people.png";
+
                     }else{
                         var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
                     }

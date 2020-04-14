@@ -1057,7 +1057,7 @@ function wuhu_amp(data,subtext,unit,min,max){
                         show: true,
                         formatter: function (params) {
                             if(params.name=="镜湖区"){
-                                return params.name+" "+ params.value+unit;
+                                return '                         '+params.name+" "+ params.value+unit;
                             }
                             return params.name+"\n"+ params.value+unit;
                         },
