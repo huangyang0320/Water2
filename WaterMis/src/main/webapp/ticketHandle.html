@@ -29,6 +29,11 @@
             min-height: 550px;
             overflow: visible;
         }
+        .fixed-table-body {
+            overflow-x: auto;
+            overflow-y: auto;
+           /* height: 100%;*/
+        }
     </style>
 
 
@@ -183,8 +188,8 @@
                             </button>
                         </div>
                     </div>
-                    <div>
-                        <table class="table table-striped table-hover" id="reportTable"></table>
+                    <div style="height: 100px">
+                        <table class="table table-striped table-hover"  id="reportTable"></table>
                     </div>
 
                     <!--<div id="toolbarFj" class="btn-group">

@@ -124,16 +124,17 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 		legend: {
 			top:'0%',
 			data:xName,
+			// width:'35%',
 			textStyle: {
 				color: 'rgba(255,255,255,.5)',
 				fontSize:'12',
 			}
 		},
 		grid: {
-			left: '12',
-			top: '40',
-			right: '12',
-			bottom: '10',
+			left: '3%',
+			top: '30%',
+			right: '3%',
+			bottom: '3%',
 			containLabel: true
 		},
 
@@ -161,9 +162,6 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 			axisLine: {  show: false},
 			position: 'bottom',
 			offset: 0,
-
-
-
 		}],
 
 		yAxis: [{

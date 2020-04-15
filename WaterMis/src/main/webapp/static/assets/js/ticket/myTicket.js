@@ -148,7 +148,7 @@ function initBootTable(url){
         locale: "zh-CN",//中文支持
         detailView: true, //是否显示详情折叠
         columns: [{
-            field: 'deviceCode',
+            field: 'ticketId',
             title: '工单编号',
             align: 'center',
             sortable: true

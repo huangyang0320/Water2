@@ -625,6 +625,8 @@ function getLeftMenuData() {
         $("#page-wrapper").load("themeStatNew.html", function(){
             $("#deviceMenuRight").hide()
         });
+
+
         // load right menu
         $("#right-menu-list").load("rightmenu.html", function(){
             // initProjectTree();
@@ -955,8 +957,8 @@ function alarmIgnore(id,delObj) {
             	$("#showWarnDialog").find("span").text('');
             }
         });
-    	$(delObj).parent().parent().remove();
-        showErrorMsgVideo("忽略成功");
+    	// $(delObj).parent().parent().remove();
+        // showErrorMsgVideo("忽略成功");
     	//openAlertModel("myModalAlert" , "忽略成功")
     });
 }
