@@ -131,7 +131,7 @@ function initBootTable(url){
         clickToSelect: true,
         showRefresh: false,//刷新按钮
         smartDisplay: true,
-        showExport: false,
+        showExport: true,
         exportDataType: 'all',
         rowStyle: rowStyle,
         onLoadSuccess:function(data){
