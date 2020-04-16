@@ -367,6 +367,7 @@ function getPieData(type, sendData) {
         success: function(res) {
             if(res.minmax){
                 var minmax = res.minmax
+                console.log(1111111,minmax)
                 if(minmax.kwh_m3){
                     $('#energyanalysis_msg_kwh_m3').html("吨水耗电量最高："+ minmax.kwh_m3.maxName +  minmax.kwh_m3.maxVal )
                 }
@@ -374,7 +375,9 @@ function getPieData(type, sendData) {
                     $('#energyanalysis_msg_m3').html("产水量最高："+ minmax.m3.maxName + " 日均产水量为" + minmax.m3.maxVal )
                 }
                 if(minmax.kwh){
-                    $('#energyanalysis_msg_kwh').html("耗电量最少："+ minmax.kwh.maxName +  minmax.kwh.minVal + "度")
+                    // $('#energyanalysis_msg_kwh').html("耗电量最少："+ minmax.kwh.maxName +  minmax.kwh.minVal + "度")
+                    // $('#energyanalysis_msg_kwh').html("耗电量最少："+ minmax.kwh.minVal + "度")
+
                 }
             }
             if(res.count){

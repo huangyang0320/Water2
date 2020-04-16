@@ -98,14 +98,17 @@
     <div class="container-bg choose-bg"></div>
 	<div class="container-choose choose-button">
         <!--<button class="btn btn-default" onclick="showSCADA()">SCADA</button>-->
-        <button class="btn btn-default" onclick="showAllPumphouses()">所有泵房</button>
+        <button class="btn btn-default" onclick="showAllPumphouses()">所有泵房3</button>
         <label>区域定位 : </label>
         <select onchange="showAllPumphouses(this.value)">
             <option>请选择区域</option>
         </select>
     </div>
     <div class="container-bg selectedDevice"></div>
-    <div class="container-choose selectedDevice" id="selectedDevice"></div>
+    <div>
+        <div class="container-choose selectedDevice" id="selectedDevice"></div>
+        <div>12333</div>
+    </div>
     <div class="hoverInfo" id="pumpHouseSummary">
         <ul>
             <li>泵房编号：<span class="pumpHouseId"></span></li>

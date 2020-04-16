@@ -276,6 +276,28 @@
         /* display: inline-block; */
         /*margin-right: 15px;*/
     }
+    #pumpBaseInfoTurning{
+        position: fixed;
+        top: 74px;
+        left: 80px;
+        z-index: 10;
+        width:25px;
+        height:25px;
+        line-height: 25px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 5px;
+        background-color: rgba(39, 90, 182, 0.9);
+        font-size: 25px;
+        color: #fff;
+    }
+    #pumphouseName{
+        position: fixed;
+        top: 71px;
+        left: 588px;
+        color: #fff;
+        font-size: 24px;
+    }
 </style>
 <script type="text/javascript" src="static/home/js/echarts.min.js"></script>
 <link href="static/v2/assets/style/common/deviceConfiguration.css" rel="stylesheet" />
@@ -327,26 +349,39 @@
 </div>
 <!--泵房基本信息-->
 <div class="row" style="margin: 0px;height: 12%; width:100%; color: #3056aa; position: absolute;" id="111">
-<div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false" style="top:74px;left: 50px;z-index: 0">
-    <div class="modal-dialog" role="document" style="width: 230px;">
-        <div class="modal-content" style="background-color: rgba(39, 90, 182, 0.9);">
-          <!--  <div style="background-color: #127ed4;border-radius: 5px;">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="titlePumpContent"> <span  id="a" style="font-size: 12px;font-weight: 500"></span> </h4>
-            </div>-->
-            <div class="modal-body"  id="pumpDataInfo" style="width: 230px;height: 650px;text-align: left;color: rgba(244,244,244,0.73);overflow-y: auto">
-                <ul id="pumpDataInfoUl"></ul>
-            </div>
+    <div id="pumpBaseInfoTurning" onclick="onPumpBaseInfoTurningClick()">
+        <span id="pumpBaseInfoTurning1" style="display: none">+</span>
+        <span id="pumpBaseInfoTurning2">-</span>
+    </div>
+    <script>
+        function onPumpBaseInfoTurningClick() {
+            $('#pumpBaseInfo').toggle()
+            $('#pumpBaseInfoTurning1').toggle()
+            $('#pumpBaseInfoTurning2').toggle()
+        }
+    </script>
+    <div id="pumphouseName"></div>
+    <div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false"
+         style="top: 40px;left: 63px;z-index: 0">
+        <div class="modal-dialog" role="document" style="width: 230px;">
+            <div class="modal-content" style="background-color: rgba(39, 90, 182, 0.9);">
+              <!--  <div style="background-color: #127ed4;border-radius: 5px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="titlePumpContent"> <span  id="a" style="font-size: 12px;font-weight: 500"></span> </h4>
+                </div>-->
+                <div class="modal-body"  id="pumpDataInfo" style="width: 230px;text-align: left;color: rgba(244,244,244,0.73);overflow-y: auto">
+                    <ul id="pumpDataInfoUl"></ul>
+                </div>
 
+            </div>
         </div>
     </div>
-</div>
 </div>
 
 <div class="modal fade " id="showDataInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false" style="top:50px">
     <div id ="modalDialog" class="modal-dialog" role="document" style="width: 800px;">
         <div class="modal-content" >
-            <div class="modal-header" style="background-color: rgba(39, 90, 182, 0.9);border-radius: 5px;">
+            <div class="modal-header" style="background-color: rgba(39, 90, 182, 0.1);border-radius: 5px;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="titleContent"> <span  id="c" style="font-size: 12px;font-weight: 500"></span> </h4>
             </div>
@@ -461,7 +496,7 @@
     </div>
 </div>
 
-<div id="pumpDataUl_1" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+<div id="pumpDataUl_1" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(39,128,189,1)" >
 <ul id="pumpUl_1" style="margin-left: 10px"></ul>
 </div>
 <div id="pumpDataUl_2" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
@@ -959,6 +994,7 @@ function pumpBaseInfo(res){
     $('#pumpUl_4').html('')
 
     var conctolParams = window.conctolParam;
+    $('#pumphouseName').html(conctolParam.phName)
     $('#pumpDataInfoUl').append(' <div style="font-size: 14px;font-weight: 500;text-align:center;">'+conctolParam.phName+'</div><hr style="margin-top: 0px;margin-bottom: 0px;">')
 
     if(conctolParams.deviceInfo.length>0){
@@ -1052,7 +1088,7 @@ function setSvg(reloading) {
     var conctolPs = window.conctolParam
     var conctolDt = window.conctolData
     if(reloading){
-        $('#svgcfn').find('text[name="defult"]').html("")
+        $('#svgcfn').find('text[name="default"]').html("")
     }
 
     // 添加下控点
@@ -1079,11 +1115,11 @@ function setSvg(reloading) {
             conctolPs.curDevicePos.tankPos.map(function (v, i) {
                 if (!reloading) {
                     setCicle(v,conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位")
-                    setRect(v)
+                    setRect(v,conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位")
                 }
                 var val=window.level_tank[i];
                 if (val!=undefined && val.tagName == "水箱液位" ) {
-                    setText(v, '水箱液位：'+ val.pv +  val.unit);
+                    setText(v, '水箱液位：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位");
                 }
             })
         }
@@ -1095,11 +1131,11 @@ function setSvg(reloading) {
             conctolPs.curDevicePos.inletPos.map(function (v, i) {
                 if (!reloading) {
                     setCicle(v,conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力")
-                    setRect(v)
+                    setRect(v,conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力")
                 }
                 var val=window.pressure_szjs[i];
                 if (val!=undefined && (val.tagName == "进口压力" || val.tagName == "总进水压力") ) {
-                    setText(v, '进口压力：'+ val.pv +  val.unit);
+                    setText(v, '进口压力：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力");
                 }
             })
         }
@@ -1133,7 +1169,7 @@ function setSvg(reloading) {
         conctolPs.curDevicePos.outletPos.map(function (v, i) {
             if (!reloading) {
                 setCicle(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
-                setRect(v)
+                setRect(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
             }
             if(conctolPs.deviceInfo[i+1]){
                 var deviceId = conctolPs.deviceInfo[i+1].id
@@ -1148,7 +1184,7 @@ function setSvg(reloading) {
                         }
                     })
                 }
-                setText(v, '出口压力：' + outletPos.pv + outletPos.unit)
+                setText(v, '出口压力：' + outletPos.pv + outletPos.unit,'default',conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
             }
         })
     }
@@ -1263,7 +1299,8 @@ function setSvg(reloading) {
             setText(v1, '水箱阀门:'+z_status,"control")
             setImage('static/assets/img/fmY.png', '35', '35', 1093, 258);
 
-        }else */if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
+        }else */
+       if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
 
             var v={x:890,y:280};
             setRect(v,"control")
@@ -1301,7 +1338,7 @@ function setSvg(reloading) {
 function setCicle(v, type,code,dateType) {
     var circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
     if(type == "control"){
-        $(circle).html('<animate attributeType="CSS" attributeName="opacity" from="0.2" to="1" dur="1s" repeatCount="indefinite" />')
+        // $(circle).html('<animate attributeType="CSS" attributeName="opacity" from="0.2" to="1" dur="1s" repeatCount="indefinite" />')
         $(circle).attr('onclick', 'lowerControl('+v.deviceId +')')
         $(circle).css('cursor', 'pointer')
     }else{
@@ -1322,7 +1359,7 @@ function setCicle(v, type,code,dateType) {
 }
 
 // 定义文字背景
-function setRect(v, type) {
+function setRect(v, type,code,dateType) {
     var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
     if(type == "control"){
         var rectStr = $(rect).attr({
@@ -1338,6 +1375,10 @@ function setRect(v, type) {
             "fill-opacity":"0.3"
         })
     }else{
+        if(code && dateType){
+            $(rect).attr('onclick', 'showDiv("'+type.id+'","'+type.devicePosition+'","'+code+'","'+dateType+'")')
+            $(rect).css('cursor', 'pointer')
+        }
         var rectStr = $(rect).attr({
             x:  v.x - 20,
             y:  v.y + 10,
@@ -1355,8 +1396,8 @@ function setRect(v, type) {
 }
 
 // 定义文本内容
-function setText(v, keyVal, type){
-    var type = type || "defult"
+function setText(v, keyVal, type,type2,code,dateType){
+    var type = type || "default"
     var text = document.createElementNS("http://www.w3.org/2000/svg","text");
     if(type == "control") {
         var textStr = $(text).attr({
@@ -1372,13 +1413,17 @@ function setText(v, keyVal, type){
             fill:  "#fff",
         })
     }
-    if(type == "defult"){
+    if(type == "default"){
         var textStr = $(text).attr({
             x:  v.x - 10,
             y:  v.y  + 30,
             fill:  "#fff",
-            name:  "defult",
+            name:  "default",
         })
+        if(type2 && code && dateType){
+            $(text).attr('onclick', 'showDiv("'+type2.id+'","'+type2.devicePosition+'","'+code+'","'+dateType+'")')
+            $(text).css('cursor', 'pointer')
+        }
     }
 
     $(text).text(keyVal)

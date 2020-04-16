@@ -16,6 +16,7 @@
     .container-choose {
         position: absolute;
         text-align: center;
+        text-align: left;
         z-index: 2;
     }
 	.choose-bg {
@@ -93,6 +94,21 @@
     .hoverInfo ul li {
         list-style: none;
     }
+    .tagnotice{
+        position: absolute;
+        left: 300px;
+        top: 12px;
+        z-index: 2;
+        color: #fff;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+    }
+    .tagnoticeimg{
+        width:15px;
+        margin-left: 10px;
+        margin-right: 5px;
+    }
 </style>
 <div class="row">
     <div class="container-bg choose-bg"></div>
@@ -106,14 +122,24 @@
             </select>
         </div>
         <div style="display: flex;align-items: center;justify-content: space-around;color:#fff">
-            <p>总数：0</p>
-            <p>在线：0</p>
-            <p>离线：0</p>
-            <p>报警：0</p>
+            <p>总数：<span id="pumpnum1">0</span></p>
+            <p>在线：<span id="pumpnum2">0</span></p>
+            <p>离线：<span id="pumpnum3">0</span></p>
+            <p>报警：<span id="pumpnum4">0</span></p>
         </div>
     </div>
     <div class="container-bg selectedDevice"></div>
-    <div class="container-choose selectedDevice" id="selectedDevice"></div>
+    <div>
+        <div class="container-choose selectedDevice" id="selectedDevice"></div>
+        <div class='tagnotice'>
+            <img class="tagnoticeimg" src="static\assets\img\pump01.png"/>
+            <span>离线</span>
+            <img class="tagnoticeimg" src="static\assets\img\pump02.png"/>
+            <span>正常</span>
+            <img class="tagnoticeimg" src="static\assets\img\pump03.png"/>
+            <span>告警</span>
+        </div>
+    </div>
     <div class="hoverInfo" id="pumpHouseSummary">
         <ul>
             <li>泵房编号：<span class="pumpHouseId"></span></li>
@@ -184,11 +210,6 @@
             }
         ]
         MAP.setMapStyle({styleJson: myStyleJson });
-
-
-
-
-
 
         showPic = function (pic) {
             $.dialog({
@@ -285,6 +306,10 @@
         //默认触发一个设备的点击事件
         callRefresh();
 
+        // let timeInterval = setInterval(()=>{
+        //     callRefresh();
+        // },10000)
+
         initAreaBtn(GLOBAL_REGION_LIST);
     };
     function initAreaBtn(areaList) {
@@ -341,6 +366,8 @@
             }
         })
     }
+
+
     function callRefreshInit(pump) {
         MAP.clearOverlays();
         var map = MAP;
@@ -355,10 +382,10 @@
             var mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
         }else if(pump.pumpHouseStatus == 1){
             var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
-            // var mapPicUrl = ROOT_PATH + "/static/assets/img/people.png";
         }else{
             var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
         }
+
 
         var overlays = map.getOverlays();
         var pumpHouse = {
@@ -476,160 +503,95 @@
 
     }
 
-function doClean() {
-    var $deviceDialog = $("#deviceDialog");
-    if ($deviceDialog.length > 0) {
-        $deviceDialog[0].contentWindow.doClean();
+    function doClean() {
+        var $deviceDialog = $("#deviceDialog");
+        if ($deviceDialog.length > 0) {
+            $deviceDialog[0].contentWindow.doClean();
+        }
     }
-}
 
 
-var sendDataMapTree = {}
-sendDataMapTree.userId = GLOBAL_LOGIN_USER['userId'];
-sendDataMapTree.isSpread = false;
+    var sendDataMapTree = {}
+    sendDataMapTree.userId = GLOBAL_LOGIN_USER['userId'];
+    sendDataMapTree.isSpread = false;
 
-/**
- * 区域搜索
- */
-function toAreaPump(point) {
-   /* var areaPonit = JSON.parse(point)
-    // 平移地图到区域点
-    var pointthis = new BMap.Point(areaPonit.longi, areaPonit.lati);
-    MAP.setZoom(13); // 设置缩放级别
-    MAP.setCenter(pointthis);
-    MAP.panTo(pointthis);*/
-
-
-    //清理之前的渲染图层
-    MAP.clearOverlays();
-   var areaPonit = JSON.parse(point)
-    // 平移地图到区域点
-    var pointthis = new BMap.Point(areaPonit.longi, areaPonit.lati);
-    var areaId = areaPonit.areaId;
-
-    MAP.setZoom(12); // 设置缩放级别
-    MAP.setCenter(pointthis);
-    MAP.panTo(pointthis);
+    /**
+     * 区域搜索
+     */
+    function toAreaPump(point) {
+       /* var areaPonit = JSON.parse(point)
+        // 平移地图到区域点
+        var pointthis = new BMap.Point(areaPonit.longi, areaPonit.lati);
+        MAP.setZoom(13); // 设置缩放级别
+        MAP.setCenter(pointthis);
+        MAP.panTo(pointthis);*/
 
 
-    areaMapClick(areaId);
+        //清理之前的渲染图层
+        MAP.clearOverlays();
+       var areaPonit = JSON.parse(point)
+        // 平移地图到区域点
+        var pointthis = new BMap.Point(areaPonit.longi, areaPonit.lati);
+        var areaId = areaPonit.areaId;
+
+        MAP.setZoom(12); // 设置缩放级别
+        MAP.setCenter(pointthis);
+        MAP.panTo(pointthis);
+
+
+        areaMapClick(areaId);
 
 
 
-}
-var alarmList = [];
-function getAlarmByPumpIds(phIdList){
-    //获取告警的泵房 集合
-    $.ajax({
-        type: 'POST',
-        async:false,
-        contentType: 'application/json',
-        url: CONTEXT_PATH + '/alarmStatController/getAlarmByPumpIds',
-        data: JSON.stringify({phIdList:phIdList}) ,
-        dataType: 'JSON',
-        //traditional : true,
-        success: function (data) {
-            if(data!=null && data.length){
-                for (var i in data) {
-                    alarmList.push(data[i].phId)
+    }
+    var alarmList = [];
+    function getAlarmByPumpIds(phIdList){
+        //获取告警的泵房 集合
+        $.ajax({
+            type: 'POST',
+            async:false,
+            contentType: 'application/json',
+            url: CONTEXT_PATH + '/alarmStatController/getAlarmByPumpIds',
+            data: JSON.stringify({phIdList:phIdList}) ,
+            dataType: 'JSON',
+            //traditional : true,
+            success: function (data) {
+                if(data!=null && data.length){
+                    for (var i in data) {
+                        alarmList.push(data[i].phId)
+                    }
                 }
-            }
-        }
-    })
-}
-/**
- *  展示所有泵房
- */
-function showAllPumphouses() {
-    LOADING.show();
-    MAP.clearOverlays()
-    var content = "<iframe id='deviceDialog' width='400px' height='415px' frameborder='no' border='0' " +
-        "marginwidth='0' marginheight='0' scrolling='no' " +
-        "src='deviceDialog.html'></iframe>";
-    var infoWindow = new BMap.InfoWindow(content);
-    window.infoWindow = infoWindow;
-    var allPumpArray = []
-    window.pumpList.map(function (v) {
-        allPumpArray.push(v.pumpHouseId);
-    })
-
-    getAlarmByPumpIds(allPumpArray);
-
-
-
-    $.ajax({
-        type: 'POST',
-        async:false,
-        contentType: 'application/json',
-        url: CONTEXT_PATH + '/monitor/statistic/pumpOnlineStat',
-        data: JSON.stringify(allPumpArray) ,
-        dataType: 'JSON',
-        success: function (res) {
-            window.pumpList.map(function (v) {
-                var pointM = new BMap.Point(v.longi, v.lati);
-                var pumpHouse = {
-                    "pumpHouseId":v.pumpHouseId,
-                    "longi":v.longi,
-                    "lati":v.lati,
-                    "deviceId":v.id,
-                    "pumpHouseName":v.title,
-                    "address":v.address,
-                    "deviceManufacturersInformation":v.deviceManufacturersInformation,
-                    "propertyInformation":v.propertyInformation
-                };
-                if(isInArray(alarmList, v.pumpHouseId)){
-                    var mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
-                }else if(isInArray(res, v.pumpHouseId)){
-                    var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
-                    // var mapPicUrl = ROOT_PATH + "/static/assets/img/people.png";
-
-                }else{
-                    var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
-                }
-                addMarker(pointM, pumpHouse, mapPicUrl);
-            })
-
-            $.post("/HYWater/config/getMapPoint", function(result) {
-                //MAP.centerAndZoom(new BMap.Point(result.longi, result.lati), 13);
-                //118.434261,31.264748
-                MAP.centerAndZoom(new BMap.Point(118.384261,31.314748), 13);
-            });
-            LOADING.hide();
-
-
-            var k=0;
-            GLOBAL_REGION_LIST.map(function (val) {
-                if(val.pId && val.pId =="340200") {
-                    setArea(val["name"], color[k++])
-                }
-            })
-
-        }
-    })
-}
-
-function areaMapClick(areaId) {
-    var allPumpArray = [];
-        window.pumpList.map(function (v) {
-            if(areaId==v.pId){
-                allPumpArray.push(v.pumpHouseId);
             }
         })
+    }
+    /**
+     *  展示所有泵房
+     */
+    function showAllPumphouses() {
+        LOADING.show();
+        MAP.clearOverlays()
+        var content = "<iframe id='deviceDialog' width='400px' height='415px' frameborder='no' border='0' " +
+            "marginwidth='0' marginheight='0' scrolling='no' " +
+            "src='deviceDialog.html'></iframe>";
+        var infoWindow = new BMap.InfoWindow(content);
+        window.infoWindow = infoWindow;
+        var allPumpArray = []
+        window.pumpList.map(function (v) {
+            allPumpArray.push(v.pumpHouseId);
+        })
 
-    getAlarmByPumpIds(allPumpArray);
+        getAlarmByPumpIds(allPumpArray);
 
-
-    //获取
-    $.ajax({
-        type: 'POST',
-        async:false,
-        contentType: 'application/json',
-        url: CONTEXT_PATH + '/monitor/statistic/pumpOnlineStat',
-        data: JSON.stringify(allPumpArray) ,
-        dataType: 'JSON',
-        success: function (res) {
-            window.pumpList.map(function (v) {
-                if(areaId==v.pId){
+        $.ajax({
+            type: 'POST',
+            async:false,
+            contentType: 'application/json',
+            url: CONTEXT_PATH + '/monitor/statistic/pumpOnlineStat',
+            data: JSON.stringify(allPumpArray) ,
+            dataType: 'JSON',
+            success: function (res) {
+                let pumpnum1 = 0,pumpnum2 = 0,pumpnum3 = 0,pumpnum4 = 0
+                window.pumpList.map(function (v) {
                     var pointM = new BMap.Point(v.longi, v.lati);
                     var pumpHouse = {
                         "pumpHouseId":v.pumpHouseId,
@@ -643,124 +605,203 @@ function areaMapClick(areaId) {
                     };
                     if(isInArray(alarmList, v.pumpHouseId)){
                         var mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
+                        pumpnum4++
                     }else if(isInArray(res, v.pumpHouseId)){
                         var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
                         // var mapPicUrl = ROOT_PATH + "/static/assets/img/people.png";
+                        pumpnum2++
 
                     }else{
                         var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
+                        pumpnum3++
                     }
                     addMarker(pointM, pumpHouse, mapPicUrl);
+                })
+                pumpnum1 = pumpnum2 + pumpnum3 + pumpnum4
+                $('#pumpnum1').html(pumpnum1)
+                $('#pumpnum2').html(pumpnum2)
+                $('#pumpnum3').html(pumpnum3)
+                $('#pumpnum4').html(pumpnum4)
 
+                $.post("/HYWater/config/getMapPoint", function(result) {
+                    //MAP.centerAndZoom(new BMap.Point(result.longi, result.lati), 13);
+                    //118.434261,31.264748
+                    MAP.centerAndZoom(new BMap.Point(118.384261,31.314748), 13);
+                });
+                LOADING.hide();
 
+                var k=0;
+                GLOBAL_REGION_LIST.map(function (val) {
+                    if(val.pId && val.pId =="340200") {
+                        setArea(val["name"], color[k++])
+                    }
+                })
+
+            }
+        })
+    }
+
+    function areaMapClick(areaId) {
+        var allPumpArray = [];
+            window.pumpList.map(function (v) {
+                if(areaId==v.pId){
+                    allPumpArray.push(v.pumpHouseId);
                 }
-
             })
 
+        getAlarmByPumpIds(allPumpArray);
 
 
-            /*定位到经纬度所在的区域 */
-           /* $.post("/HYWater/config/getMapPoint", function(result) {
-                MAP.centerAndZoom(new BMap.Point(result.longi, result.lati), result.level);
-            });*/
-            LOADING.hide();
-        }
-    })
-}
-
-
-
-// 创建标注
-function addMarker(point, pumpHouse, mapPicUrl){
-    var marker = new BMap.Marker(point);
-    // 添加泵房图标
-    var myIcon = new BMap.Icon(mapPicUrl, new BMap.Size(60, 44), {
-        offset: new BMap.Size(24, 33),
-        imageOffset: new BMap.Size(0, 1)
-    });
-    var marker = new BMap.Marker(point, {icon: myIcon});
-    MAP.addOverlay(marker);
-    marker.id = pumpHouse.pumpHouseId;
-    marker.pumpHouse = pumpHouse;
-
-    marker.deviceDialogSummary = "<iframe id='deviceDialog' width='400px' height='215px' frameborder='no' border='0' " +
-        "marginwidth='0' marginheight='0' scrolling='no' " +
-        "src='deviceDialogSummary.html?" + pumpHouse["pumpHouseId"] + "'></iframe>";
-
-    marker.addEventListener("mouseover", function (event) {
-        var $wrapper = $("#wrapper");
-        var $pumpHouseSummary = $("#pumpHouseSummary");
-        var w1 = $wrapper.width();
-        var h1 = $wrapper.height();
-        var w2 = $pumpHouseSummary.width();
-        var h2 = $pumpHouseSummary.height();
-        var showX = event.clientX;
-        var showY = event.clientY;
-        if (showX >= (w1 - w2)) {
-            $pumpHouseSummary.css("left", (showX - w2 - 5) + "px");
-        } else {
-            $pumpHouseSummary.css("left", showX + "px");
-        }
-        if (showY >= (h1 - h2)) {
-            $pumpHouseSummary.css("top", (showY - h2 - 5) + "px");
-        } else {
-            $pumpHouseSummary.css("top", showY + "px");
-        }
-        $pumpHouseSummary.fadeIn().stop(true, true);
-        showSummary(this);
-    });
-
-    marker.addEventListener("mouseout", function () {
-        $("#pumpHouseSummary").hide();
-        if (showSummary && showSummaryDelay) {
-            if (DIALOG_REQUEST) {
-                DIALOG_REQUEST.abort();
-            }
-            clearTimeout(showSummaryDelay);
-        }
-    });
-
-    marker.addEventListener("click", function showWindowMap(e) {
-        LOADING.show();
-        $("#pumpHouseSummary").hide();
-        GLOBAL_PUMP_MSG_MAP = e.target.pumpHouse;
+        //获取
         $.ajax({
             type: 'POST',
+            async:false,
             contentType: 'application/json',
-            url: CONTEXT_PATH + '/monitor/statistic/findPumpHouseInfoById',
-            data: JSON.stringify({ pumpHouseId: GLOBAL_PUMP_MSG_MAP.pumpHouseId}) ,
+            url: CONTEXT_PATH + '/monitor/statistic/pumpOnlineStat',
+            data: JSON.stringify(allPumpArray) ,
             dataType: 'JSON',
             success: function (res) {
-                GLOBAL_PUMP_MSG_MAP = res;
-                if (showSummary && showSummaryDelay) {
-                    if (DIALOG_REQUEST) {
-                        DIALOG_REQUEST.abort();
+                let pumpnum1 = 0,pumpnum2 = 0,pumpnum3 = 0,pumpnum4=0;
+                window.pumpList.map(function (v) {
+                    if(areaId==v.pId){
+                        var pointM = new BMap.Point(v.longi, v.lati);
+                        var pumpHouse = {
+                            "pumpHouseId":v.pumpHouseId,
+                            "longi":v.longi,
+                            "lati":v.lati,
+                            "deviceId":v.id,
+                            "pumpHouseName":v.title,
+                            "address":v.address,
+                            "deviceManufacturersInformation":v.deviceManufacturersInformation,
+                            "propertyInformation":v.propertyInformation
+                        };
+                        let mapPicUrl = ''
+                        if(isInArray(alarmList, v.pumpHouseId)){
+                            mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
+                            pumpnum4++
+                        }else if(isInArray(res, v.pumpHouseId)){
+                            mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
+                            pumpnum2++
+                        }else{
+                            mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
+                            pumpnum3++
+                        }
+                        addMarker(pointM, pumpHouse, mapPicUrl);
                     }
-                    clearTimeout(showSummaryDelay);
-                }
-                MAP.setZoom(12); // 设置缩放级别
-                marker.openInfoWindow(window.infoWindow);
+                })
+                pumpnum1 = pumpnum4 + pumpnum2 + pumpnum3
+                $('#pumpnum1').html(pumpnum1)
+                $('#pumpnum2').html(pumpnum2)
+                $('#pumpnum3').html(pumpnum3)
+                $('#pumpnum4').html(pumpnum4)
+
+
+                /*定位到经纬度所在的区域 */
+               /* $.post("/HYWater/config/getMapPoint", function(result) {
+                    MAP.centerAndZoom(new BMap.Point(result.longi, result.lati), result.level);
+                });*/
                 LOADING.hide();
             }
         })
-    });
-
-    if($("#areaId").val()!="" && "请选择区域"!=$("#areaId").val() ){
-        var areaObj = $.parseJSON( $("#areaId").val() );
-        setArea(areaObj.areaName,color[3]);
     }
-}
+
+    // 创建标注
+    function addMarker(point, pumpHouse, mapPicUrl){
+        var marker = new BMap.Marker(point);
+        // 添加泵房图标
+        // var myIcon = new BMap.Icon(mapPicUrl, new BMap.Size(60, 44), {
+        //     offset: new BMap.Size(24, 33),
+        //     imageOffset: new BMap.Size(0, 1)
+        // });
+        var myIcon = new BMap.Icon(
+            mapPicUrl,
+            new BMap.Size(31, 44),
+            {
+                // offset: new BMap.Size(24, 33),
+                offset: new BMap.Size(0, 300),
+                imageOffset: new BMap.Size(0, 0),
+            }
+        );
+        var marker = new BMap.Marker(point, {icon: myIcon});
+        MAP.addOverlay(marker);
+        marker.id = pumpHouse.pumpHouseId;
+        marker.pumpHouse = pumpHouse;
+
+        marker.deviceDialogSummary = "<iframe id='deviceDialog' width='400px' height='215px' frameborder='no' border='0' " +
+            "marginwidth='0' marginheight='0' scrolling='no' " +
+            "src='deviceDialogSummary.html?" + pumpHouse["pumpHouseId"] + "'></iframe>";
+
+        marker.addEventListener("mouseover", function (event) {
+            var $wrapper = $("#wrapper");
+            var $pumpHouseSummary = $("#pumpHouseSummary");
+            var w1 = $wrapper.width();
+            var h1 = $wrapper.height();
+            var w2 = $pumpHouseSummary.width();
+            var h2 = $pumpHouseSummary.height();
+            var showX = event.clientX;
+            var showY = event.clientY;
+            if (showX >= (w1 - w2)) {
+                $pumpHouseSummary.css("left", (showX - w2 - 5) + "px");
+            } else {
+                $pumpHouseSummary.css("left", showX + "px");
+            }
+            if (showY >= (h1 - h2)) {
+                $pumpHouseSummary.css("top", (showY - h2 - 5) + "px");
+            } else {
+                $pumpHouseSummary.css("top", showY + "px");
+            }
+            $pumpHouseSummary.fadeIn().stop(true, true);
+            showSummary(this);
+        });
+
+        marker.addEventListener("mouseout", function () {
+            $("#pumpHouseSummary").hide();
+            if (showSummary && showSummaryDelay) {
+                if (DIALOG_REQUEST) {
+                    DIALOG_REQUEST.abort();
+                }
+                clearTimeout(showSummaryDelay);
+            }
+        });
+
+        marker.addEventListener("click", function showWindowMap(e) {
+            LOADING.show();
+            $("#pumpHouseSummary").hide();
+            GLOBAL_PUMP_MSG_MAP = e.target.pumpHouse;
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: CONTEXT_PATH + '/monitor/statistic/findPumpHouseInfoById',
+                data: JSON.stringify({ pumpHouseId: GLOBAL_PUMP_MSG_MAP.pumpHouseId}) ,
+                dataType: 'JSON',
+                success: function (res) {
+                    GLOBAL_PUMP_MSG_MAP = res;
+                    if (showSummary && showSummaryDelay) {
+                        if (DIALOG_REQUEST) {
+                            DIALOG_REQUEST.abort();
+                        }
+                        clearTimeout(showSummaryDelay);
+                    }
+                    MAP.setZoom(12); // 设置缩放级别
+                    marker.openInfoWindow(window.infoWindow);
+                    LOADING.hide();
+                }
+            })
+        });
+
+        if($("#areaId").val()!="" && "请选择区域"!=$("#areaId").val() ){
+            var areaObj = $.parseJSON( $("#areaId").val() );
+            setArea(areaObj.areaName,color[3]);
+        }
+    }
 
 
-
-
-/**
- * 切换右侧树回调
- */
-function defChoose(){
-    callRefresh();
-    initAreaBtn(GLOBAL_REGION_LIST);
-}
-
+    /**
+     * 切换右侧树回调
+     */
+    function defChoose(){
+        callRefresh();
+        initAreaBtn(GLOBAL_REGION_LIST);
+    }
 
 </script>
