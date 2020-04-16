@@ -496,7 +496,10 @@
     </div>
 </div>
 
-<div id="pumpDataUl_1" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(39,128,189,1)" >
+<div id="pumpDataUl_1"
+     style="
+border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);
+width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
 <ul id="pumpUl_1" style="margin-left: 10px"></ul>
 </div>
 <div id="pumpDataUl_2" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
@@ -1304,24 +1307,24 @@ function setSvg(reloading) {
 
             var v={x:890,y:280};
             setRect(v,"control")
-            setText(v, '直供水阀门:'+box_status,"control");
+            setText(v, '直供水阀门:'+z_status,"control");
             //setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
 
             var v1={x:890,y:220};
             setRect({x:890,y:220},"control")
-            setText(v1, '水箱阀门:'+z_status,"control")
+            setText(v1, '水箱阀门:'+box_status,"control")
             // setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
 
         }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
 
             var v={x:1210,y:250};
             setRect(v,"control")
-            setText(v, '直供水阀门:'+box_status,"control");
+            setText(v, '直供水阀门:'+z_status,"control");
           // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
 
             var v1={x:1090,y:165};
             setRect({x:1090,y:165},"control")
-            setText(v1, '水箱阀门:'+z_status,"control")
+            setText(v1, '水箱阀门:'+box_status,"control")
            // setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
 
         }

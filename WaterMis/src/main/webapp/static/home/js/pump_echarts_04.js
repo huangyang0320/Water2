@@ -54,10 +54,10 @@ function getPumpData_04_month(obj) {
 				return;
 			} else {
 				var xName=[];
-				xName.push("上月每天用水量(m3)");
-				xName.push("上月每天用电量(kWh)");
-				xName.push("当月每天用水量(m3)");
-				xName.push("当月每天用电量(kWh)");
+				xName.push("上月用水量(m3)");
+				xName.push("上月用电量(kWh)");
+				xName.push("当月用水量(m3)");
+				xName.push("当月用电量(kWh)");
 				var xData=data.xData;
 				var useWaterHis=data.useWaterHis;
 				var usePowerHis=data.usePowerHis;
@@ -86,10 +86,10 @@ function getPumpData_04_year(obj) {
 				return;
 			} else {
 				var xName=[];
-				xName.push("去年每月用水量(m3)");
-				xName.push("去年每月用电量(kWh)");
-				xName.push("今年每月用水量(m3)");
-				xName.push("今年每月用电量(kWh)");
+				xName.push("去年用水量(m3)");
+				xName.push("去年用电量(kWh)");
+				xName.push("今年用水量(m3)");
+				xName.push("今年用电量(kWh)");
 				var xData=data.xData;
 				var useWaterHis=data.useWaterHis;
 				var usePowerHis=data.usePowerHis;
