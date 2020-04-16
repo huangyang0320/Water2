@@ -494,22 +494,24 @@
             map.enableScrollWheelZoom();//启用滚轮放大缩小
         }
 
-        var k=0;
-        GLOBAL_REGION_LIST.map(function (val) {
-            console.log(val["name"]);
-            if(val["name"].indexOf(pumpHouse.pumpHouseName)>0){
-                GLOBAL_REGION_LIST.map(function (v) {
-                    if(v.id==val.pId) {
-                        setArea(v["name"], color[k++])
-                    }
-                })
-            }
-        })
+
 
         //默认展示所有泵房的 分布
         if(!initMapFlag){
             initMapFlag=true;
             showAllPumphouses();
+        }else{
+            var k=0;
+            GLOBAL_REGION_LIST.map(function (val) {
+                console.log(val["name"]);
+                if(val["name"].indexOf(pumpHouse.pumpHouseName)>0){
+                    GLOBAL_REGION_LIST.map(function (v) {
+                        if(v.id==val.pId) {
+                            setArea(v["name"], color[k++])
+                        }
+                    })
+                }
+            })
         }
 
     }
@@ -640,13 +642,13 @@
                     MAP.centerAndZoom(new BMap.Point(118.384261,31.314748), 13);
                 });
                 LOADING.hide();
-
-            /*    var k=0;
-                GLOBAL_REGION_LIST.map(function (val) {
-                    if(val.pId && val.pId =="340200") {
-                        setArea(val["name"], color[k++])
-                    }
-                })*/
+                //MAP.clearOverlays();
+                /*    var k=0;
+                    GLOBAL_REGION_LIST.map(function (val) {
+                        if(val.pId && val.pId =="340200") {
+                            setArea(val["name"], color[k++])
+                        }
+                    })*/
 
             }
         })
