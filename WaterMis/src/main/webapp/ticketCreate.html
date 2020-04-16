@@ -11,6 +11,9 @@
     <link href="static/assets/css/jquery-accordion-menu.css" rel="stylesheet" />
     <!-- Datetimepicker Styles -->
     <link href="static/assets/js/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+    <link href="static/assets/js/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
+
     <!-- iCheck Styles -->
     <link href="static/assets/js/iCheck/iCheck.css" rel="stylesheet" />
     <!-- ScrollBar Styles -->
@@ -48,7 +51,7 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="workType">工单类型</label>
-                                <select class="form-control" id="workType" onchange="onChangType()" name="workType">
+                                <select id="workType" onchange="onChangType()" name="workType" class="form-control">
                                     <option value="2">巡检</option>
                                     <option value="3">维保</option>
                                 </select>
@@ -57,6 +60,7 @@
                                      <option value="1">告警工单</option>
                                  </select>-->
                             </div>
+
                         </div>
                         <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
@@ -78,8 +82,9 @@
                                 <input type="hidden" class="form-control" id="taskSource" name="taskSource" value="二供平台" placeholder="请输入">
 
                                 <label for="phId">泵房名称</label>
-                                <select class="form-control" id="phId" name="phId" onchange="onChangPump()">
+                                <select class="selectpicker form-control" id="phId" onchange="onChangPump()" multiple data-live-search="true" title="请选择内容。。">
                                 </select>
+                                <input type="hidden" name="phId" id="phStr"/>
 
 
 
@@ -204,9 +209,11 @@
         </div>
     <script src="static/assets/js/jquery-1.10.2.js"></script>
     <script src="static/assets/js/jquery-form.js"></script>
+    <script src="static/assets/js/bootstrap.min.js"></script>
     <!-- Datetimepicker Js -->
     <script src="static/assets/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
     <script src="static/assets/js/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="static/assets/js/bootstrap-select/bootstrap-select.min.js"></script>
     <!-- Date util -->
     <script src="static/assets/js/date_time.js"></script>
     <script src="static/assets/js/ticket/createTicket.js"></script>

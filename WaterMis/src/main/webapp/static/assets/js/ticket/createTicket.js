@@ -16,6 +16,8 @@ getPumpList();
 queryMaintenanceWorkerDept();
 initCheck();
 
+$('#phId').selectpicker({});
+
 function getPumpList(){
     var url = CONTEXT_PATH+"/ticket/getPumpList?"+ Math.random();
     jQuery.ajax({
@@ -23,6 +25,7 @@ function getPumpList(){
         contentType : 'application/json',
         url : url,
         dataType : 'json',
+        async:false,
         success : function(data) {
             $("#phId").html("");
             $("#addressStr").html("");
@@ -43,9 +46,13 @@ function getPumpList(){
 
 function onChangPump(){
     var id=  $("#phId").val();
-    //选择对应的地址
-    $("#addressStr option[value='"+id+"']").attr("selected","selected");
-    $("#address").val($("#addressStr").find("option:selected").text());
+    if(id!=null && id!='' && id.length>1){
+        $("#address").val("安徽省芜湖市");
+    }else{
+        //选择对应的地址
+        $("#addressStr option[value='"+id+"']").attr("selected","selected");
+        $("#address").val($("#addressStr").find("option:selected").text());
+    }
     //加载对应的设备
     getDeviceList(id);
 
@@ -89,11 +96,19 @@ function queryMaintenanceWorkerDept() {
 }
 
 function createLxTicket(){
+    var id=  $("#phId").val();
+    var phId="";
+    for(var i=0;i<id.length;i++){
+        phId+=id[i]+","
+    }
+    phId=phId.substring(0,phId.length-1)
+    $("#phStr").val(phId);
     var _url = CONTEXT_PATH+"/ticket/createWorkOrder?"+ Math.random();
     $("#workOrder").ajaxSubmit( {
         type : 'POST',
         url : _url,
         dataType : 'json',
+        async:false,
         success : function(data){
             if(data.status == "success"){
                 frameElement.api.close();
@@ -118,7 +133,15 @@ function onChangType(){
 
 function setAlarmContent(){
     var text1=$("#workType option:selected").text();
-    var text2=$("#phId option:selected").text();
+    // 获取到下拉框说所有选中项
+    var checkParam = $('#phId').find('option:selected');
+    // 选中的文本值集合
+    var checkText = [];
+    for (var i=0;i<checkParam.length;i++) {
+        checkText.push(checkParam[i].textContent);
+    }
+    // 数组转字符串
+    var text2 = checkText.join(',');
     $("#alarmContent").val(text1+"-"+text2);
 }
 
