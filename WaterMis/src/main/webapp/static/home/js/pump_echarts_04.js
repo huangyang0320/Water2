@@ -22,10 +22,10 @@ function getPumpData_04_day(obj) {
 				return;
 			} else {
 				var xName=[];
-				xName.push("昨日每小时用水量(m3)");
-				xName.push("昨日每小时用电量(kWh)");
-				xName.push("今日每小时用水量(m3)");
-				xName.push("今日每小时用电量(kWh)");
+				xName.push("昨日用水量(m3)");
+				xName.push("昨日用电量(kWh)");
+				xName.push("今日用水量(m3)");
+				xName.push("今日用电量(kWh)");
 				var xData=data.xData;
 				var useWaterHis=data.useWaterHis;
 				var usePowerHis=data.usePowerHis;

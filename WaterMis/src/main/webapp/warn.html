@@ -216,7 +216,7 @@
              url: parent.CONTEXT_PATH + '/alarmStatController/indexAlarm',
              dataType: 'json',
              success: function (data) {
-                 if (data && data.length > 0) {
+                 // if (data && data.length > 0) {
                      // $('.alarm-body ul').html('');
                      // $('#alarmBodyNoMsg').hide();
                      // window.deviceList=[];
@@ -255,89 +255,90 @@
                      //     rowHeight: 30 //li的高度
                      // });
 
-                     function addFunctionAlty(value, row, index) {
-                         let str = ''
-                         if(!row.ticketId){
-                             str = '<button id="createWorkOrder" type="button" class="btn btn-info">创建工单</button>'
-                         }else{
-                             str = '<button id="createWorkOrder" type="button" class="btn btn-warning">创建工单</button>'
-                         }
-                         return [
-                             '<button id="answer" type="button" class="btn btn-info">解决方案</button>',
-                             '<button id="ignore" type="button" class="btn btn-info">忽略</button>',
-                             str,
-                         ].join('');
-                     }
-                     window.operateEvents = {
-                         'click #answer': function (e, value, row, index) {
-                             console.log(e,value,row,index)
-                             answer(row)
-                         },
-                         'click #ignore': function (e, value, row, index) {
-                             console.log(e,value,row,index)
-                             ignore(row)
-                         },
-                         'click #createWorkOrder': function (e, value, row, index) {
-                             console.log(e,value,row,index)
-                             if(row.ticketId){
-                                 alertErrors(row)
-                             }else{
-                                 createWorkOrder(row)
-                             }
-                         }
-                     };
-                     let columns = [
-                         {
-                             field:'startDate',
-                             title:'开始时间',
-                             sortable:'true',
-                             width:220,
-                         },
-                         {
-                             field:'phName',
-                             title:'泵房名称',
-                             sortable:'true'
-                         },
-                         {
-                             field:'deviceName',
-                             title:'设备名称',
-                             sortable:'true'
-                         },
-                         {
-                             field:'alarmInfo',
-                             title:'告警内容',
-                             sortable:'true'
-                         },
-                         {
-                             field:'alarmLevel',
-                             title:'告警等级',
-                             sortable:'true'
-                         },
-                         {
-                             field:'endDate',
-                             title:'最近报警',
-                             sortable:'true',
-                             width:220,
-                         },
-                         {
-                             field: 'operate',
-                             title: '操作',
-                             width:300,
-                             events: operateEvents,//给按钮注册事件
-                             formatter: addFunctionAlty//表格中增加按钮  
-                         }
-                     ]
-                     $('#alarmtable').bootstrapTable({
-                         columns:columns,
-                         data:data,
-                         formatNoMatches: function () {  //没有匹配的结果
-                             return '无符合条件的记录';
-                         },
-                     })
-                 } else {
+
+                 // } else {
                      // $('.alarm-body ul').html("<div style='text-align: center;color:red'>无告警数据...</div>");
                      // $('#alarmBodyNoMsg').show()
+                 // }
+                 function addFunctionAlty(value, row, index) {
+                     let str = ''
+                     if(!row.ticketId){
+                         str = '<button id="createWorkOrder" type="button" class="btn btn-info">创建工单</button>'
+                     }else{
+                         str = '<button id="createWorkOrder" type="button" class="btn btn-warning">创建工单</button>'
+                     }
+                     return [
+                         '<button id="answer" type="button" class="btn btn-info">解决方案</button>',
+                         '<button id="ignore" type="button" class="btn btn-info">忽略</button>',
+                         str,
+                     ].join('');
                  }
+                 window.operateEvents = {
+                     'click #answer': function (e, value, row, index) {
+                         console.log(e,value,row,index)
+                         answer(row)
+                     },
+                     'click #ignore': function (e, value, row, index) {
+                         console.log(e,value,row,index)
+                         ignore(row)
+                     },
+                     'click #createWorkOrder': function (e, value, row, index) {
+                         console.log(e,value,row,index)
+                         if(row.ticketId){
+                             alertErrors(row)
+                         }else{
+                             createWorkOrder(row)
+                         }
+                     }
+                 };
+                 let columns = [
+                     {
+                         field:'startDate',
+                         title:'开始时间',
+                         sortable:'true',
+                         width:220,
+                     },
+                     {
+                         field:'phName',
+                         title:'泵房名称',
+                         sortable:'true'
+                     },
+                     {
+                         field:'deviceName',
+                         title:'设备名称',
+                         sortable:'true'
+                     },
+                     {
+                         field:'alarmInfo',
+                         title:'告警内容',
+                         sortable:'true'
+                     },
+                     {
+                         field:'alarmLevel',
+                         title:'告警等级',
+                         sortable:'true'
+                     },
+                     {
+                         field:'endDate',
+                         title:'最近报警',
+                         sortable:'true',
+                         width:220,
+                     },
+                     {
+                         field: 'operate',
+                         title: '操作',
+                         width:300,
+                         events: operateEvents,//给按钮注册事件
+                         formatter: addFunctionAlty//表格中增加按钮  
+                     }
+                 ]
+                 $('#alarmtable').bootstrapTable({
+                     columns:columns,
+                     data:data,
+                     formatNoMatches: function () {  //没有匹配的结果
+                         return '暂时没有告警';
+                     },
+                 })
              }
          });
      }
