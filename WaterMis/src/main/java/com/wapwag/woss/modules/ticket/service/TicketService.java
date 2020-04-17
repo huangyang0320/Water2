@@ -50,7 +50,8 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         JSONObject result=new JSONObject();
         //1,2,3
         String uCode = ticketDto.getCreateBy().getId().length()>6?ticketDto.getCreateBy().getId().substring(0,6):ticketDto.getCreateBy().getId();
-        String ticketId= ticketDto.getTicketType()+"HY-"+ DateUtils.formatDateTimeByFormat(new Date(),"yyyy-MM-dd HH:mm:ss")+"-"+uCode;
+        String p=ticketDto.getTicketType().equals("1")?"GJ":(ticketDto.getTicketType().equals("2")?"XJ":"WB");
+        String ticketId= p+"-"+ DateUtils.formatDateTimeByFormat(new Date(),"yyyyMMddHHmmss")+"-"+uCode;
         ticketDto.setTicketId(ticketId);
         ticketDto.setValidFlag("1");
         this.insertTicket(ticketDto);

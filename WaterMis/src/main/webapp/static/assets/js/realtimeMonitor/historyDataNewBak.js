@@ -252,7 +252,7 @@ function initQueryBox(currentDate) {
         var endTime=$("#statisticDate").val().substring($("#statisticDate").val().length-2);
         if(startTime!="" && endTime!=""){
             var k =parseInt(endTime)-parseInt(startTime)
-            $queryForm.find("input[name='addOnDate']").val(1);
+            $queryForm.find("input[name='addOnDate']").val(k);
         }
         initChart()
     });
@@ -269,7 +269,7 @@ function initQueryBox(currentDate) {
         var endTime=$("#statisticDate").val().substring($("#statisticDate").val().length-2);
         if(startTime!="" && endTime!=""){
             var k =parseInt(endTime)-parseInt(startTime)
-            $queryForm.find("input[name='addOnDate']").val(1);
+            $queryForm.find("input[name='addOnDate']").val(k);
         }
 
         initChart();

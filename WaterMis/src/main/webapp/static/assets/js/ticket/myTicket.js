@@ -186,13 +186,13 @@ function initBootTable(url){
             align: 'center',
             sortable : true,
             cellStyle: formatTableUnit
-        },{
+        },/*{
             field: 'deviceName',
             title: '设备名称',
             align: 'center',
             sortable: true,
             cellStyle: formatTableUnit
-        },/*{
+        },*//*{
             field: 'ticketLevel',
             title: '故障等级',
             align: 'center'
