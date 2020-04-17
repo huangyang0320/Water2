@@ -18,6 +18,14 @@ var CONTEXT_PATH = ROOT_PATH + "/a";
     getTicketLogList(ticketId);
     getTicketInfo(ticketId);
 
+function showDevice(){
+    var type=$("#workType").val();
+    if(type=="巡检工单"){
+        $("#device").hide();
+    }else if(type=="维保工单"){
+        $("#device").show();
+    }
+}
 function getTicketInfo(ticketId){
     var url = CONTEXT_PATH+"/ticket/getTicketInfo?"+ Math.random();
     jQuery.ajax({
@@ -48,6 +56,8 @@ function getTicketInfo(ticketId){
             //初始话部门对应的处理人 列表
             getApprovalUserList(data.deptId);
             $("#buttonId").html("分发");
+
+            showDevice()
 
             //非告警工单  去掉不要的信息
             if(data.ticketType!=1){

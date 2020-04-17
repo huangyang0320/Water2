@@ -23,6 +23,14 @@ initDetails();
 
 showBtn();
 
+function showDevice(){
+    var type=$("#workType").val();
+    if(type=="巡检工单"){
+        $("#device").hide();
+    }else if(type=="维保工单"){
+        $("#device").show();
+    }
+}
 function getTicketInfo(ticketId){
     var url = CONTEXT_PATH+"/ticket/getTicketInfo?"+ Math.random();
     jQuery.ajax({
@@ -52,6 +60,7 @@ function getTicketInfo(ticketId){
             $("#status").val(data.status);
             $("#deptId").val(data.deptId);
 
+            showDevice()
 
             $("#buttonId").html(data.currentStatusName);
             if(data.status==4){//增加审核操作
