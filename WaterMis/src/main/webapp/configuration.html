@@ -497,10 +497,8 @@
 </div>
 
 <div id="pumpDataUl_1"
-     style="
-border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);
-width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
-<ul id="pumpUl_1" style="margin-left: 10px"></ul>
+     style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+    <ul id="pumpUl_1" style="margin-left: 10px"></ul>
 </div>
 <div id="pumpDataUl_2" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
     <ul id="pumpUl_2" style="margin-left: 10px"></ul>
@@ -743,7 +741,6 @@ function getConfigurantionData(type){
                     if(v.code.indexOf('openend_tankinvalve') >= 0){
                         openend_tankinvalve=v;
                     }
-                    console.log(3333333333333333333333333)
                    /* if(v.tagName.indexOf("水箱液位上限值") >= 0 || v.tagName.indexOf("水箱液位下限值") >= 0 ||
                         v.tagName.indexOf("爆管流量设定值") >= 0 || v.tagName.indexOf("压力超限设定值") >= 0){
                         window.setValue.push(v);
@@ -998,7 +995,7 @@ function pumpBaseInfo(res){
 
     var conctolParams = window.conctolParam;
     $('#pumphouseName').html(conctolParam.phName)
-    $('#pumpDataInfoUl').append(' <div style="font-size: 14px;font-weight: 500;text-align:center;">'+conctolParam.phName+'</div><hr style="margin-top: 0px;margin-bottom: 0px;">')
+    $('#pumpDataInfoUl').append('<div style="font-size: 14px;font-weight: 500;text-align:center;">'+conctolParam.phName+'</div><hr style="margin-top: 0px;margin-bottom: 0px;">')
 
     if(conctolParams.deviceInfo.length>0){
       /*  $('#pumpDataInfoUl').append(' <li class="list-li-item" style="font-size: 12px;font-weight: 500">'+"告警信息："+'<img src="'+"/HYWater/static/assets/img/alarmY.png"+'"px style="float:right;margin-top: 1px"></li><hr style="margin-top: 0px;margin-bottom: 0px;">')
@@ -1096,7 +1093,6 @@ function setSvg(reloading) {
 
     // 添加下控点
     if(!reloading){
-        console.log(222)
         if(conctolPs.curDevicePos && conctolPs.curDevicePos.remoteCtrlPos){
             conctolPs.curDevicePos.remoteCtrlPos.map(function (v, i) {
                 if(conctolPs.deviceInfo[i]){
@@ -1317,13 +1313,17 @@ function setSvg(reloading) {
 
         }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
 
-            var v={x:1210,y:250};
-            setRect(v,"control")
+            // var v={x:1210,y:250};
+           var v={x:1050,y:250};
+
+           setRect(v,"control")
             setText(v, '直供水阀门:'+z_status,"control");
           // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
 
-            var v1={x:1090,y:165};
-            setRect({x:1090,y:165},"control")
+            // var v1={x:1090,y:165};
+           var v1={x:1020,y:155};
+
+           setRect(v1,"control")
             setText(v1, '水箱阀门:'+box_status,"control")
            // setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
 
@@ -1830,6 +1830,7 @@ function showDiv(deviceId,deviceName,code,dateType){
         url : 'a' + '/homeV2/getCurrentDataByDeviceIdAndCode/'+deviceId+"/data/"+code,
         dataType : 'json',
         success : function(data) {
+            console.log('echarts',data)
             if (undefined == data || data==null) {
                 return;
             } else {
@@ -1998,6 +1999,9 @@ function baseLine(deviceId,type){
     return markLine;
 }
 function setEcharts(xData,yData,dateType,markLine){
+    console.log(markLine)
+    let max = (markLine.data[1].yAxis * 1.2).toFixed(1)
+    console.log(max)
     var myChart = echarts.init(document.getElementById('dataInfo'));
     option = {
         /*color:['#47d5a6'],*/
@@ -2060,7 +2064,8 @@ function setEcharts(xData,yData,dateType,markLine){
             boundaryGap: [0, '100%'],
             splitLine: {
                 show: false
-            }
+            },
+            max:max
         },
         visualMap: {
             show: false,
@@ -2098,13 +2103,13 @@ function setEcharts(xData,yData,dateType,markLine){
 
         ]
     };
-if(dateType.indexOf("液位")>=0){
-    option.yAxis.max=2;
-}else if(dateType.indexOf("进口压力")>=0){
-    option.yAxis.max=0.5;
-}else if(dateType.indexOf("出口压力")>=0){
-    option.yAxis.max=1.6;
-}
+// if(dateType.indexOf("液位")>=0){
+//     option.yAxis.max=2;
+// }else if(dateType.indexOf("进口压力")>=0){
+//     option.yAxis.max=0.5;
+// }else if(dateType.indexOf("出口压力")>=0){
+//     option.yAxis.max=1.6;
+// }
 
 
 
