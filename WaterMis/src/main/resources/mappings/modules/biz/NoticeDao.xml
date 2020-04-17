@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.NoticeDao">
+    
+	<sql id="noticeColumns">
+		a.id AS "id",
+		a.biz_id AS "bizId",
+		a.notice_status AS "noticeStatus",
+		a.notice_title AS "noticeTitle",
+		a.notice_type AS "noticeType",
+		a.notice_content AS "noticeContent",
+		a.notice_group_obj AS "noticeGroupObj",
+		a.notice_group_ref_id AS "noticeGroupRefId",
+		a.create_by AS "createBy.id",
+		a.create_time AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_time AS "updateDate",
+		a.delete_by AS "deleteBy.id",
+		a.delete_time AS "deleteDate",
+		a.delete_flag AS "delFlag"
+	</sql>
+	
+	<sql id="noticeJoins">
+	</sql>
+    
+	<select id="get" resultType="NoticeDto">
+		SELECT 
+			<include refid="noticeColumns"/>
+		FROM sys_notice a
+		<include refid="noticeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="NoticeDto">
+		SELECT 
+			<include refid="noticeColumns"/>
+		FROM sys_notice a
+		<include refid="noticeJoins"/>
+		<where>
+			a.delete_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="NoticeDto">
+		SELECT 
+			<include refid="noticeColumns"/>
+		FROM sys_notice a
+		<include refid="noticeJoins"/>
+		<where>
+			a.delete_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO sys_notice(
+			id,
+			biz_id,
+			notice_status,
+			notice_title,
+			notice_type,
+			notice_content,
+			notice_group_obj,
+			notice_group_ref_id,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			delete_by,
+            delete_time,
+			delete_flag
+		) VALUES (
+			#{id},
+			#{bizId},
+			#{noticeStatus},
+			#{noticeTitle},
+			#{noticeType},
+			#{noticeContent},
+			#{noticeGroupObj},
+			#{noticeGroupRefId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{deleteBy.id},
+			#{deleteDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE sys_notice SET
+			biz_id = #{bizId},
+			notice_status = #{noticeStatus},
+			notice_title = #{noticeTitle},
+			notice_type = #{noticeType},
+			notice_content = #{noticeContent},
+			notice_group_obj = #{noticeGroupObj},
+			notice_group_ref_id = #{noticeGroupRefId},
+			update_by = #{updateBy.id},
+			update_time = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE sys_notice SET
+			delete_flag = #{DEL_FLAG_DELETE},
+			delete_by = #{deleteBy.id},
+			delete_time = #{deleteDate}
+		WHERE id = #{id}
+	</update>
+
+</mapper>
