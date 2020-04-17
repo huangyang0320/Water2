@@ -17,6 +17,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.util.TextUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -124,22 +126,32 @@ public class TicketController {
         for(TicketDto l:list){
             String pumpId=l.getPumpId();
             String deviceCode = l.getDeviceCode();
-            List<String> pumpIdAry =Arrays.asList(pumpId.split(","));
-            String pumpStr="";
-            List<String> deviceCodeAry = Arrays.asList(deviceCode.split(","));
-            String deviceCodeStr="";
-            for(String pId:pumpIdAry){
-                String value = pumpMap.get(pId);
-                pumpStr+=value+",";
+            if(!TextUtils.isEmpty(pumpId)){
+                List<String> pumpIdAry =Arrays.asList(pumpId.split(","));
+                String pumpStr="";
+                for(String pId:pumpIdAry){
+                    String value = pumpMap.get(pId);
+                    pumpStr+=value+",";
+                }
+                if(!TextUtils.isEmpty(pumpStr)) {
+                    pumpStr = pumpStr.substring(0, pumpStr.length() - 1);
+                    l.setPumpName(pumpStr);
+                }
             }
-            pumpStr=pumpStr.substring(0,pumpStr.length()-1);
-            l.setPumpName(pumpStr);
-            for(String dId:deviceCodeAry){
-                String value = productMap.get(dId);
-                deviceCodeStr+=value+",";
+            if(!TextUtils.isEmpty(deviceCode)){
+                List<String> deviceCodeAry = Arrays.asList(deviceCode.split(","));
+                String deviceCodeStr="";
+
+                for(String dId:deviceCodeAry){
+                    String value = productMap.get(dId);
+                    deviceCodeStr+=value+",";
+                }
+                if(!TextUtils.isEmpty(deviceCodeStr)) {
+                    deviceCodeStr = deviceCodeStr.substring(0, deviceCodeStr.length() - 1);
+                    l.setDeviceName(deviceCodeStr);
+                }
             }
-            deviceCodeStr=deviceCodeStr.substring(0,deviceCodeStr.length()-1);
-            l.setDeviceName(deviceCodeStr);
+
         }
         BootPage bootPage = new BootPage();
         bootPage.setTotal(pages.getCount());
@@ -198,22 +210,31 @@ public class TicketController {
         }
         String pumpId=ticketInfo.getPumpId();
         String deviceCode = ticketInfo.getDeviceCode();
-        List<String> pumpIdAry =Arrays.asList(pumpId.split(","));
-        String pumpStr="";
-        List<String> deviceCodeAry = Arrays.asList(deviceCode.split(","));
-        String deviceCodeStr="";
-        for(String pId:pumpIdAry){
-            String value = pumpMap.get(pId);
-            pumpStr+=value+",";
+        if(!TextUtils.isEmpty(pumpId)){
+            List<String> pumpIdAry =Arrays.asList(pumpId.split(","));
+            String pumpStr="";
+            for(String pId:pumpIdAry){
+                String value = pumpMap.get(pId);
+                pumpStr+=value+",";
+            }
+            if(!TextUtils.isEmpty(pumpStr)){
+                pumpStr=pumpStr.substring(0,pumpStr.length()-1);
+                ticketInfo.setPumpName(pumpStr);
+            }
         }
-        pumpStr=pumpStr.substring(0,pumpStr.length()-1);
-        ticketInfo.setPumpName(pumpStr);
-        for(String dId:deviceCodeAry){
-            String value = productMap.get(dId);
-            deviceCodeStr+=value+",";
+
+        if(!TextUtils.isEmpty(deviceCode)){
+            List<String> deviceCodeAry = Arrays.asList(deviceCode.split(","));
+            String deviceCodeStr="";
+            for(String dId:deviceCodeAry){
+                String value = productMap.get(dId);
+                deviceCodeStr+=value+",";
+            }
+            if(!TextUtils.isEmpty(deviceCodeStr)) {
+                deviceCodeStr = deviceCodeStr.substring(0, deviceCodeStr.length() - 1);
+                ticketInfo.setDeviceName(deviceCodeStr);
+            }
         }
-        deviceCodeStr=deviceCodeStr.substring(0,deviceCodeStr.length()-1);
-        ticketInfo.setDeviceName(deviceCodeStr);
         return  ticketInfo;
     }
 
