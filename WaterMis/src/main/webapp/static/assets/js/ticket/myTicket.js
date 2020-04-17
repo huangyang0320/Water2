@@ -130,7 +130,7 @@ function initBootTable(url){
         clickToSelect: true,
         showRefresh: false,//刷新按钮
         smartDisplay: true,
-        showExport: false,
+        showExport: true,
         exportDataType: 'all',
         rowStyle: rowStyle,
         onLoadSuccess:function(data){
@@ -148,7 +148,7 @@ function initBootTable(url){
         locale: "zh-CN",//中文支持
         detailView: true, //是否显示详情折叠
         columns: [{
-            field: 'deviceCode',
+            field: 'ticketId',
             title: '工单编号',
             align: 'center',
             sortable: true
@@ -238,7 +238,7 @@ function operateFormatter(value, row, index) {
     if(row.status==5){
         return "完成";
     }else {
-        return ['<button type="button" onclick="ticketHandle(\''+row.ticketId+'\')"  class="jumpWork btn btn-primary">'+row.currentStatusName+'</button>'].join('');
+        return ['<button type="button" onclick="ticketHandle(\''+row.ticketId+'\',\''+row.status+'\')"  class="jumpWork btn btn-primary">'+row.currentStatusName+'</button>'].join('');
     };
 
 }
@@ -281,11 +281,11 @@ function ticketDistribute(ticketId){
 }
 
 
-function ticketHandle(ticketId){
+function ticketHandle(ticketId,status){
     $.dialog({
         id: 'ticket-habdle',
         title: '工单处理',
-        content: 'url:ticketHandle.html?ticketId=' + ticketId + '&rnd=' + new Date().getTime(),
+        content: 'url:ticketHandle.html?ticketId=' + ticketId+"&status="+status+ '&rnd=' + new Date().getTime(),
         width: 1200,
         height: 500,
         fixed: true,

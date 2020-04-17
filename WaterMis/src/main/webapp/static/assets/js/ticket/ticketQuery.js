@@ -112,28 +112,26 @@ function initBootTable(url){
     });
     $('#dataTables-example').bootstrapTable({
         url: url,
-        cache: false,
-        striped: true,
-        height: calcHeight() + 55,//设定高度，固定头部
+        cache:false,
+        striped:true,
+        height:calcHeight()+55,//设定高度，固定头部
         search: false,//是否搜索
-        queryParamsType: '',
-        queryParams: queryParams,
-        pageSize: 20,
-        pageNumber: 1,
-        sortName: "createDate",//排序字段
-        sortOrder: "desc",//排序
-        sidePagination: 'server',
+        queryParamsType:'',
+        queryParams:queryParams,
+        pageSize:20,
+        pageNumber:1,
+        sidePagination:'server',
         pagination: true,//是否分页
         showColumns: true,//列选择按钮
-        minimumCountColumns: 2,
-        pageList: [20,30,50,100],
+        minimumCountColumns:2,
+        pageList:[20,30,50,100],
         searchOnEnterKey: false,//回车搜索
-        clickToSelect: true,
+        clickToSelect:true,
         showRefresh: false,//刷新按钮
-        smartDisplay: true,
-        showExport: false,
-        exportDataType: 'all',
-        rowStyle: rowStyle,
+        showColumns: true,//列选择按钮
+        smartDisplay:true,
+        showExport:true,
+        exportDataType:'all',
         onLoadSuccess:function(data){
             LOADING.hide();
             total = data.total;
@@ -149,7 +147,7 @@ function initBootTable(url){
         locale: "zh-CN",//中文支持
         detailView: true, //是否显示详情折叠
         columns: [{
-            field: 'deviceCode',
+            field: 'ticketId',
             title: '工单编号',
             align: 'center',
             sortable: true
@@ -289,9 +287,9 @@ function queryParams(params) {
         startBeginTime = startBeginTime+" 00:00:00";
     }
 
-    var startEndTime =$("#startBeginTime").val();
-    if(startBeginTime!=""){
-        startBeginTime = startBeginTime+" 23:59:59";
+    var startEndTime =$("#startEndTime").val();
+    if(startEndTime!=""){
+        startEndTime = startEndTime+" 23:59:59";
     }
 
     var sortName="";

@@ -426,8 +426,16 @@
                                     .find(".list-group-item")
                                     .clone(true).find("a");
                             $videoButton.attr("href", "javascript:parent.showVideo('" + video[i].hkVideoDeviceId + "')");
-                            $videoButton.find("span").text(video[i].name);
+                            $videoButton.find("span").text(video[i].name+" 实时");
+
+                            var $videoButtonHis = $("#sample")
+                                .find(".list-group-item")
+                                .clone(true).find("a");
+                            $videoButtonHis.attr("href", "javascript:parent.showVideoHis('" + video[i].hkVideoDeviceId + "')");
+                            $videoButtonHis.find("span").text(video[i].name+" 历史");
+
                             $("#device-guard").find(".list-group").append($videoButton);
+                            $("#device-guard").find(".list-group").append($videoButtonHis);
                         }
                     }
                 } else {

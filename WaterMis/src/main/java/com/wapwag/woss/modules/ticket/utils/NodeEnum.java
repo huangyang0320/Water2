@@ -11,8 +11,8 @@ public enum NodeEnum {
     DISTRIBUTION("01", "分发"),
     SINGLE_BACK("02", "退单"),
     HANDLE("03", "处理"),
-    UN_AGREE("04", "不同意"),
-    AGREE("05", "同意");
+    UN_AGREE("04", "审批不同意"),
+    AGREE("05", "审批同意");
 
     String value;
     String name;

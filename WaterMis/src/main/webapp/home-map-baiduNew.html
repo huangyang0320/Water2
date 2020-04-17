@@ -167,11 +167,22 @@
             // MAP.clearOverlays();        //清除地图覆盖物
             var count = rs.boundaries.length; //行政区域的点有多少个
             for(var i = 0; i < count; i++){
+
+              /* var ply = new BMap.Polygon(rs.boundaries[i],
+                    {strokeWeight: 1, //设置多边形边线线粗
+
+                        strokeOpacity: 0, //设置多边形边线透明度0-1
+                        StrokeStyle: "dashed", //设置多边形边线样式为实线或虚线，取值 solid 或 dashed
+
+                        strokeColor: "#ff0000", //设置多边形边线颜色
+
+                    }); //建立多边形覆盖物*/
+
                 var ply = new BMap.Polygon(rs.boundaries[i], {
-                    strokeWeight: 3,
+                    strokeWeight: 1,
                     strokeOpacity:0,
                     strokeColor: color,
-                    fillColor:'#0000',
+                    fillColor:'',
                     fillOpacity:.15,
                     strokeStyle:"solid",
                     enableClicking:!1
@@ -237,13 +248,6 @@
         };
 
         showVideo = function (video) {
-
-
-         /*   var url = 'videoBaidu.html?videoNo=' + video + '&rnd=' + new Date().getTime();  //要打开的网页地址
-            var features = "height=500, width=800, top=100, left=100, toolbar=no, menubar=no,scrollbars=no,resizable=no, location=no, status=no";  //设置新窗口的特性//动态生成一个超链接
-            //document.write('<a href="c.biancheng.net" target="newW">切换到C语言中文网首页</a>');
-            var me = window.open(url, new Date().getTime(), features);  //打开新窗口
-*/
             $.dialog({
                 id: 'device-video',
                 title: '泵房视频',
@@ -271,6 +275,36 @@
                 }]*/
             });
         };
+
+        showVideoHis = function (video) {
+            $.dialog({
+                id: 'device-video-his',
+                title: '泵房视频',
+                content: 'url:videoBaidu1.html?videoNo=' + video + '&rnd=' + new Date().getTime(),
+                width: 900,
+                height: 460,
+                top:110,
+                left:304,
+                fixed: true,
+                max: true,
+                min: false,
+                resize: false,
+                lock: true,
+                background: '#000',
+                opacity:1,
+                ok: false,
+                drag: false
+                /*,
+                button: [{
+                    name: '云镜控制',
+                    callback: function() {
+                        this.iframe.contentWindow.toggleBtn();
+                        return false;
+                    }
+                }]*/
+            });
+        };
+
 
         showSummary = function (marker) {
             var pumpHouse = marker.pumpHouse;
@@ -483,22 +517,24 @@
             map.enableScrollWheelZoom();//启用滚轮放大缩小
         }
 
-        var k=0;
-        GLOBAL_REGION_LIST.map(function (val) {
-            console.log(val["name"]);
-            if(val["name"].indexOf(pumpHouse.pumpHouseName)>0){
-                GLOBAL_REGION_LIST.map(function (v) {
-                    if(v.id==val.pId) {
-                        setArea(v["name"], color[k++])
-                    }
-                })
-            }
-        })
+
 
         //默认展示所有泵房的 分布
         if(!initMapFlag){
             initMapFlag=true;
             showAllPumphouses();
+        }else{
+            var k=0;
+            GLOBAL_REGION_LIST.map(function (val) {
+                console.log(val["name"]);
+                if(val["name"].indexOf(pumpHouse.pumpHouseName)>0){
+                    GLOBAL_REGION_LIST.map(function (v) {
+                        if(v.id==val.pId) {
+                            setArea(v["name"], color[k++])
+                        }
+                    })
+                }
+            })
         }
 
     }
@@ -629,13 +665,13 @@
                     MAP.centerAndZoom(new BMap.Point(118.384261,31.314748), 13);
                 });
                 LOADING.hide();
-
-                var k=0;
-                GLOBAL_REGION_LIST.map(function (val) {
-                    if(val.pId && val.pId =="340200") {
-                        setArea(val["name"], color[k++])
-                    }
-                })
+                //MAP.clearOverlays();
+                /*    var k=0;
+                    GLOBAL_REGION_LIST.map(function (val) {
+                        if(val.pId && val.pId =="340200") {
+                            setArea(val["name"], color[k++])
+                        }
+                    })*/
 
             }
         })
