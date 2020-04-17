@@ -1809,7 +1809,6 @@ $('#showDataInfo').on('hide.bs.modal', function () {
 
 
 
-
 /**
  * 下控弹窗
  */
@@ -1819,10 +1818,11 @@ function showDiv(deviceId,deviceName,code,dateType){
     lastOnClickParams.deviceName=deviceName;
     lastOnClickParams.code=code;
     lastOnClickParams.dateType=dateType;
-
+    $('#showDataInfo').css('display','none')
     $('#showDataInfo').modal('show');
 
     $("#titleContent").html(deviceName+"("+dateType+")");
+    clearEcharts()
     jQuery.ajax({
         type : 'POST',
         async: false,
@@ -1998,10 +1998,20 @@ function baseLine(deviceId,type){
     }
     return markLine;
 }
+function clearEcharts() {
+    var myChart = echarts.init(document.getElementById('dataInfo'));
+    myChart.clear()
+    // $('#dataInfo').html('加載中')
+}
 function setEcharts(xData,yData,dateType,markLine){
-    console.log(markLine)
-    let max = (markLine.data[1].yAxis * 1.2).toFixed(1)
-    console.log(max)
+    console.log('markline',markLine)
+    let max = 0
+    if(markLine.data[1]){
+        max = (markLine.data[1].yAxis * 1.2).toFixed(1)
+    }else{
+        // 進口壓力寫死
+        max = 0.5
+    }
     var myChart = echarts.init(document.getElementById('dataInfo'));
     option = {
         /*color:['#47d5a6'],*/
@@ -2079,13 +2089,14 @@ function setEcharts(xData,yData,dateType,markLine){
                     gt: 0.2,
                     lte: 1.9,          //这儿设置基线上下颜色区分 基线下面为绿色
                     color: '#45d60c'
-                }, {
-
+                },
+                {
                     gt: 1.9,          //这儿设置基线上下颜色区分 基线上面为红色
                     color: '#d60f16'
-                }]
+                }
+            ]
         },
-       dataZoom: [{
+        dataZoom: [{
             startValue: '00:00:00'
         }, {
             type: 'inside'
@@ -2095,12 +2106,9 @@ function setEcharts(xData,yData,dateType,markLine){
                 name:dateType,
                 type:'line',
                 symbol: 'none',
-           /*     areaStyle: {normal: {}},*/
                 data:yData,
                 markLine: markLine
-
             }
-
         ]
     };
 // if(dateType.indexOf("液位")>=0){
@@ -2114,7 +2122,7 @@ function setEcharts(xData,yData,dateType,markLine){
 
 
     // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
+    myChart.setOption(option,true);
     window.addEventListener("resize",function(){
         myChart.resize();
     });
