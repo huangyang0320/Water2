@@ -82,7 +82,7 @@
                                 <input type="hidden" class="form-control" id="taskSource" name="taskSource" value="二供平台" placeholder="请输入">
 
                                 <label for="phId">泵房名称</label>
-                                <select class="selectpicker form-control" id="phId" onchange="onChangPump()" multiple data-live-search="true" title="请选择内容。。">
+                                <select class="selectpicker form-control" id="phId" onchange="onChangPump()" multiple data-live-search="true" title="请选择泵房">
                                 </select>
                                 <input type="hidden" name="phId" id="phStr"/>
 
@@ -118,28 +118,6 @@
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-group">
-                                        <label for="alarmStatus">当前状态</label>
-                                        <input type="text" class="form-control" readonly  id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
-                                <!--2：待接单-->
-                                <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="1"  placeholder="请输入">
-
-                                <!--<label for="processName">告警等级</label>
-                                <input type="text" class="form-control"  id="alarmLevel" name="alarmLevel" placeholder="请输入">-->
-                            </div>
-                        </div>
-                        <div class="col-md-5 col-md-offset-1">
-                            <div class="form-group">
-                                <label for="deviceId">所在设备</label>
-                               <!-- <input type="text" class="form-control"  id="processName" name="processName" placeholder="请输入">
-                                <input type="hidden"  class="form-control"  id="deviceId" name="deviceId" placeholder="请输入">-->
-                                <select class="form-control" id="deviceId" name="deviceId">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-5">
-                            <div class="form-group">
                                 <label for="planStartTime">计划开始时间</label>
                                 <input id ="planStartTime" name="planStartTime" readonly type="text" value=""  style="background-color: white" class="planStartTime form-control timepicker">
                             </div>
@@ -148,6 +126,29 @@
                             <div class="form-group">
                                 <label for="planEndTime">计划结束时间</label>
                                 <input id ="planEndTime" name="planEndTime" readonly type="text" value=""  style="background-color: white"  class="planEndTime form-control timepicker">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="alarmStatus">当前状态</label>
+                                <input type="text" class="form-control" readonly  id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
+                                <!--2：待接单-->
+                                <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="1"  placeholder="请输入">
+
+                                <!--<label for="processName">告警等级</label>
+                                <input type="text" class="form-control"  id="alarmLevel" name="alarmLevel" placeholder="请输入">-->
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1" id="device">
+                            <div class="form-group">
+                                <label for="deviceId">所在设备</label>
+                                <!-- <input type="text" class="form-control"  id="processName" name="processName" placeholder="请输入">
+                                 <input type="hidden"  class="form-control"  id="deviceId" name="deviceId" placeholder="请输入">-->
+                                <select class="selectpicker form-control" id="deviceId" multiple data-live-search="true" title="请选择所在设备">
+                                </select>
+                                <input type="hidden" name="deviceId" id="deviceStr"/>
                             </div>
                         </div>
                     </div>
