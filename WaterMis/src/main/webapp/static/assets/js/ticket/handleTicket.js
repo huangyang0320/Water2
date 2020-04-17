@@ -478,18 +478,28 @@ function initDetails(){
         //数据来源的网址
         url:CONTEXT_PATH+'/ticketParts/getTicketPartsList?ticketId='+ticketId+"&"+Math.random(),
         method: 'post',
+        height:'300',
         editable:true,//开启编辑模式
         clickToSelect: true,
-        showPaginationSwitch:true, //显示分页切换按钮
+        showPaginationSwitch:false, //显示分页切换按钮
         search: false,  //显示检索框
         showRefresh: false,  //显示刷新按钮
         showToggle:false, //显示切换按钮来切换列表/卡片视图
         pagination: true,
-        pageList:  [20,30,50,100],
-        pageSize:20,
+        pageList:  [10],
+        pageSize:10,
         pageNumber:1,
-        columns: [{checkbox: true},
-            {field:"type",edit:{
+        formatShowingRows:function(){
+            return ''
+        },
+        formatNoMatches:function(){
+            return '点击上方‘添加’按钮录入配件'
+        },
+        columns: [
+            {checkbox: true},
+            {
+                field:"type",
+                edit:{
                     type:'select',//下拉框
                     //数据来源地址
                     //url:'user/getUser.htm',
@@ -499,20 +509,31 @@ function initDetails(){
                     onSelect:function(val,rec){
                         console.log(val,rec);
                     }
-                },title:"类型",align:"center",width:"200px"},
-            {field:"name",edit:{
-                    type:'select',//下拉框
-                    //数据来源地址
-                    //url:'user/getUser.htm',
+                },
+                title:"类型",
+                align:"center",
+                width:"200px"
+            },
+            {
+                field:"name",
+                edit:{
+                    type:'select',
                     data:[{id:1,text:'水泵装置1'},{id:2,text:'水泵装置2'}],
                     valueField:'id',
                     textField:'text',
                     onSelect:function(val,rec){
                         console.log(val,rec);
                     }
-                },title:"名称",align:"center",width:"200px"},
-
-            {field:"nums",title:"数量",align:"center",edit: {
+                },
+                title:"名称",
+                align:"center",
+                width:"200px"
+            },
+            {
+                field:"nums",
+                title:"数量",
+                align:"center",
+                edit: {
                     type: 'text',
                     title: '数量',
                     validate: function (v) {
@@ -520,8 +541,13 @@ function initDetails(){
                         var age = parseInt(v);
                         if (age <= 0) return '数量必须是正整数';
                     }
-                }},
-            {field:"price",title:"单价",align:"center",edit: {
+                }
+            },
+            {
+                field:"price",
+                title:"单价",
+                align:"center",
+                edit: {
                     type: 'text',
                     title: '单价',
                     validate: function (v) {
@@ -529,27 +555,24 @@ function initDetails(){
                         var price = parseFloat(v);
                         if (price <= 0) return '数量必须是正数';
                     }
-                }}
+                }
+            }
         ],
         onClickCell: function(field, value, row, $element) {
             $element.attr('contenteditable', true);
             $element.blur(function() {
                 let index = $element.parent().data('index');
                 let tdValue = $element.html();
-
                 saveDataTable(index, field, tdValue);
             })
         }
     });
     $('#addRowbtn').click(function(){
         var count = $('#reportTable').bootstrapTable('getData').length;
-        $('#reportTable').bootstrapTable('insertRow',{index:count,row: {
-                id: '',
-                type: '',
-                name: '',
-                nums: '',
-                price: ''
-            }});
+        $('#reportTable').bootstrapTable(
+            'insertRow',
+            {index:count,row: {id: '',type: '', name: '', nums: '', price: ''}}
+        );
     });
 
 

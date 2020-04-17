@@ -10,22 +10,373 @@
             overflow-y: hidden;
         }
     </style>
+    <script type="text/javascript" src="static/assets/login/js/jquery-1.8.2.js"></script>
 </head>
 
 <body>
 
-<img id="sample" style="display: none">
-<!-- jQuery Js -->
-<script src="static/assets/js/jquery-1.10.2.js"></script>
-<script>
-    $(function() {
-        var imgUrl = location.search.replace("?", "");
-        var $devicePic = $("#sample").clone();
-        $devicePic.prop("src", imgUrl);
-        $devicePic.css({width: "504px", height: "414px", display: ""});
-        $("body").append($devicePic);
-    });
-</script>
+<!--<img id="sample" style="display: none">-->
+<!--&lt;!&ndash; jQuery Js &ndash;&gt;-->
+<!--<script src="static/assets/js/jquery-1.10.2.js"></script>-->
+<!--<script>-->
+<!--    $(function() {-->
+<!--        var imgUrl = location.search.replace("?", "");-->
+<!--        var $devicePic = $("#sample").clone();-->
+<!--        $devicePic.prop("src", imgUrl);-->
+<!--        $devicePic.css({width: "504px", height: "414px", display: ""});-->
+<!--        $("body").append($devicePic);-->
+<!--    });-->
+<!--</script>-->
 
+<svg width="100%" height="100%" viewBox="0, 0, 1705, 797"  xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none slice" id="svgcfn">
+</svg>
+<script>
+    let pumpHouseId = location.search.replace("?", "")
+    var svrStr = $('#svgcfn')
+    getConfigurantionParam()
+
+    // 获取图片名称
+    function getConfigurantionParam(){
+        $.ajax({
+            type:"POST",
+            url: parent.CONTEXT_PATH+'/monitor/configuration/getPumpNode',
+            async: false,
+            datatype:"JSON",
+            data:{phid: pumpHouseId},
+            success: function (res) {
+                console.log('获取图片名称和url地址',res)
+                setImage(res.phUrl, '1705', '797')
+                window.conctolParam = res
+                if(res.Identification == "1"){
+                    getConfigurantionData(false)
+                }
+            }
+        })
+    }
+    // 定义图片
+    function setImage(src, w, h, DX, DY) {
+        var dX = DX || '0', dY = DY || '0';
+        var image = document.createElementNS("http://www.w3.org/2000/svg","image");
+        var imageStr = $(image).attr({
+            width: w,
+            height: h,
+            href: src,
+            x: dX,
+            y: dY,
+        })
+        svrStr.append(imageStr);
+    }
+
+    /**
+     * 获取设备测点数据
+     */
+    function getConfigurantionData(){
+        $.ajax({
+            type:"POST",
+            url: parent.CONTEXT_PATH+'/monitor/configuration/getServiceValues',
+            async: false,
+            datatype:"JSON",
+            data:{phid: pumpHouseId},
+            success: function (res) {
+               console.log('获取设备检测点数据',res)
+                if(res){
+                    window.FrequencyOutput = {};
+                    window.runPump = {};
+                    window.openend_directvalve;//直供水阀门
+                    window.openend_tankinvalve;//水箱阀门
+                    window.level_tank=[];//水箱液位
+                    window.pressure_szjs=[];//进口压力
+
+                    window.conctolData = [];
+                    res.map(function (v) {
+                        if(v.tagName.indexOf("进口压力") >= 0 || v.tagName.indexOf("总进水压力") >= 0){
+                            window.pressure_szjs.push(v);
+                        }
+                        if(v.tagName.indexOf("出口压力") >= 0 || v.tagName.indexOf("出水压力") >= 0){
+                            v.tagName = "出口压力";
+                        }
+                        if(v.tagName.indexOf("水箱液位") >= 0){
+                            v.tagName = "水箱液位";
+                            window.level_tank.push(v);
+                        }
+                        if(v.tagName == "进口压力" || v.tagName == "出口压力" || v.tagName == "水箱液位" ){
+                            window.conctolData.push(v);
+                        }
+                        if(v.code.indexOf('sewagepump_run') >= 0){
+                            if(!window.FrequencyOutput[v.idDevice]) window.FrequencyOutput[v.idDevice] = [];
+                            window.FrequencyOutput[v.idDevice].push(v);
+                        }
+                        if(v.code.indexOf('run_pump') >= 0){
+                            if(!window.runPump[v.idDevice]) window.runPump[v.idDevice] = [];
+                            window.runPump[v.idDevice].push(v);
+                        }
+                        if(v.code.indexOf('openend_directvalve') >= 0){
+                            openend_directvalve=v;
+                        }
+                        if(v.code.indexOf('openend_tankinvalve') >= 0){
+                            openend_tankinvalve=v;
+                        }
+                    })
+                    setSvg();
+                }
+            }
+        })
+    }
+    function setSvg() {
+        var conctolPs = window.conctolParam
+        var conctolDt = window.conctolData
+
+
+        if(conctolPs.curDevicePos && conctolPs.curDevicePos.remoteCtrlPos){
+            conctolPs.curDevicePos.remoteCtrlPos.map(function (v, i) {
+                if(conctolPs.deviceInfo[i]){
+                    v.deviceId = conctolPs.deviceInfo[i].id
+                    setCicle(v, "control")
+                    setRect(v, "control")
+                    var devicePosition =  conctolPs.deviceInfo[i].devicePosition
+                    if( devicePosition!= "" && devicePosition != "undefined" &&devicePosition != "null" ){
+                        /* setText(v, conctolPs.deviceInfo[i].devicePosition, "control")*/
+                        setText(v, "门禁", "control")
+                    }
+                }
+            })
+        }
+
+
+        if(conctolPs.deviceInfo[0].isWaterTank == 1){//水箱设备只展示水箱液位 可能存在多个
+            if(conctolPs.curDevicePos && window.level_tank){
+                conctolPs.curDevicePos.tankPos.map(function (v, i) {
+                    setCicle(v,conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位")
+                    setRect(v,conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位")
+                    var val=window.level_tank[i];
+                    if (val!=undefined && val.tagName == "水箱液位" ) {
+                        setText(v, '水箱液位：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位");
+                    }
+                })
+            }
+        }
+
+
+        if(conctolPs.deviceInfo[0].isWaterTank == 1){//非水箱只展示 进口压力
+            if(conctolPs.curDevicePos && window.pressure_szjs){
+                conctolPs.curDevicePos.inletPos.map(function (v, i) {
+                    setCicle(v,conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力")
+                    setRect(v,conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力")
+                    var val=window.pressure_szjs[i];
+                    if (val!=undefined && (val.tagName == "进口压力" || val.tagName == "总进水压力") ) {
+                        setText(v, '进口压力：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力");
+                    }
+                })
+            }
+        }
+        // 添加出口压力点
+        if(conctolPs.curDevicePos && conctolPs.curDevicePos.outletPos) {
+            conctolPs.curDevicePos.outletPos.map(function (v, i) {
+                setCicle(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+                setRect(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+                if(conctolPs.deviceInfo[i+1]){
+                    var deviceId = conctolPs.deviceInfo[i+1].id
+                    var outletPos = {
+                        pv: '...',
+                        unit: 'Mpa',
+                    }
+                    if (conctolDt) {
+                        conctolDt.map(function (val) {
+                            if (deviceId == val.idDevice && (val.tagName == "出口压力" || val.tagName == "出水压力")) {
+                                outletPos = val
+                            }
+                        })
+                    }
+                    setText(v, '出口压力：' + outletPos.pv + outletPos.unit,'default',conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+                }
+            })
+        }
+        // 添加设备点
+
+        if(conctolPs.curDevicePos && conctolPs.curDevicePos.deviceNamePos) {
+            conctolPs.curDevicePos.deviceNamePos.map(function (v, i) {
+                if(conctolPs.deviceInfo[i]) setText(v, '设备：'+ conctolPs.deviceInfo[i].devicePosition, 'device')
+            })
+        }
+
+        // 添加泵风扇
+        var k=0;
+        if(conctolPs.curDevicePos && conctolPs.curDevicePos.pumpPos) {
+            conctolPs.curDevicePos.pumpPos.map(function (v, i) {
+
+                v.map(function (va, j) {
+                    if(conctolPs.deviceInfo[i+1] && window.runPump[conctolPs.deviceInfo[i+1].id] !=undefined) {
+                        if(j<=2){
+                            var val=window.runPump[conctolPs.deviceInfo[i+1].id][j];
+                            if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
+                                setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
+                            }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
+                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                            }
+                            // setDiv(va,"pumpDataUl_1");
+                        }else if(j<6){
+                            if(j==3){
+                                i++;
+                                k=0;
+                            }
+                            var val=window.runPump[conctolPs.deviceInfo[i+1].id][k];
+                            if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
+                                setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
+                            }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
+                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                            }
+                            // setDiv(va,"pumpDataUl_2");
+                            k++;
+                        }else if(j<9){
+                            if(j==6){
+                                i++;
+                                k=0;
+                            }
+                            var val=window.runPump[conctolPs.deviceInfo[i+1].id][k];
+                            if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
+                                setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
+                            }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
+                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                            }
+                            // setDiv(va,"pumpDataUl_3");
+                            k++;
+                        }
+                        else if(j<12){
+                            if(j==9){
+                                i++;
+                                k=0;
+                            }
+                            var val=window.runPump[conctolPs.deviceInfo[i+1].id][k];
+                            if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
+                                setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
+                            }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
+                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                            }
+                            // setDiv(va,"pumpDataUl_4");
+                            k++;
+                        }
+
+                    }
+                })
+
+            })
+        }
+
+
+        // 添加阀门
+        var conctolParams = window.conctolParam;
+        var z_status=window.openend_directvalve.pv==1?"打开":"关闭";
+        var box_status=window.openend_tankinvalve.pv==1?"打开":"关闭";
+        if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
+            var v={x:890,y:280};
+            setRect(v,"control")
+            setText(v, '直供水阀门:'+z_status,"control");
+            var v1={x:890,y:220};
+            setRect({x:890,y:220},"control")
+            setText(v1, '水箱阀门:'+box_status,"control")
+        }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
+            var v={x:1210,y:250};
+            setRect(v,"control")
+            setText(v, '直供水阀门:'+z_status,"control");
+            var v1={x:1090,y:165};
+            setRect({x:1090,y:165},"control")
+            setText(v1, '水箱阀门:'+box_status,"control")
+        }
+    }
+    // 定义圆点
+    function setCicle(v, type,code,dateType) {
+        var circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        if(type == "control"){
+            // $(circle).html('<animate attributeType="CSS" attributeName="opacity" from="0.2" to="1" dur="1s" repeatCount="indefinite" />')
+            $(circle).attr('onclick', 'lowerControl('+v.deviceId +')')
+            $(circle).css('cursor', 'pointer')
+        }else{
+            if(type!=undefined){
+                $(circle).attr('onclick', 'showDiv("'+type.id+'","'+type.devicePosition+'","'+code+'","'+dateType+'")')
+                // $(circle).attr('onmouseout', 'hideDiv("'+type.id+'")')
+                $(circle).css('cursor', 'pointer')
+            }
+
+        }
+        var circleStr = $(circle).attr({
+            cx:  v.x,
+            cy:  v.y,
+            r:  '8',
+            fill: "#0ee1ff"
+        })
+        svrStr.append(circleStr);
+    }
+    // 定义文字背景
+    function setRect(v, type,code,dateType) {
+        var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+        if(type == "control"){
+            var rectStr = $(rect).attr({
+                x:  v.x + 10,
+                y:  v.y - 30,
+                rx:  '5',
+                ry:  '5',
+                width: "120",
+                height: "30",
+                fill: "##5461",
+                stroke:"#fff",
+                "stroke-width": '1',
+                "fill-opacity":"0.3"
+            })
+        }else{
+            if(code && dateType){
+                $(rect).attr('onclick', 'showDiv("'+type.id+'","'+type.devicePosition+'","'+code+'","'+dateType+'")')
+                $(rect).css('cursor', 'pointer')
+            }
+            var rectStr = $(rect).attr({
+                x:  v.x - 20,
+                y:  v.y + 10,
+                rx:  '5',
+                ry:  '5',
+                width: "150",
+                height: "30",
+                fill: "##5461",
+                stroke:"#fff",
+                "stroke-width": '1',
+                "fill-opacity":"0.3"
+            })
+        }
+        svrStr.append(rectStr);
+    }
+    // 定义文本内容
+    function setText(v, keyVal, type,type2,code,dateType){
+        var type = type || "default"
+        var text = document.createElementNS("http://www.w3.org/2000/svg","text");
+        if(type == "control") {
+            var textStr = $(text).attr({
+                x: v.x + 18,
+                y: v.y - 10,
+                fill: "#fff",
+            })
+        }
+        if(type == "device"){
+            var textStr = $(text).attr({
+                x:  v.x - 10,
+                y:  v.y ,
+                fill:  "#fff",
+            })
+        }
+        if(type == "default"){
+            var textStr = $(text).attr({
+                x:  v.x - 10,
+                y:  v.y  + 30,
+                fill:  "#fff",
+                name:  "default",
+            })
+            if(type2 && code && dateType){
+                $(text).attr('onclick', 'showDiv("'+type2.id+'","'+type2.devicePosition+'","'+code+'","'+dateType+'")')
+                $(text).css('cursor', 'pointer')
+            }
+        }
+
+        $(text).text(keyVal)
+        svrStr.append(textStr);
+    }
+
+</script>
 </body>
 </html>
