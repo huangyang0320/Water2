@@ -33,4 +33,6 @@ public interface DeviceDao extends CrudDao<PumpDevice> {
 	List<Alarm> pumpCountLocal(PumpHouse info);
 
 	List<PumpDevice> getDeviceIdByPumpId(String pumpId);
+
+	List<PumpHouse> findPumpHouse(PumpHouse pumpHouse);
 }

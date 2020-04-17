@@ -15,7 +15,7 @@ var CONTEXT_PATH = ROOT_PATH + "/a";
 
    var ticketId= GetQueryiframe("ticketId");
    var status= GetQueryiframe("status");
-
+   var flag=1;
     getTicketLogList(ticketId);
     getTicketInfo(ticketId);
 
@@ -23,6 +23,14 @@ initDetails();
 
 showBtn();
 
+function showDevice(){
+    var type=$("#workType").val();
+    if(type=="巡检工单"){
+        $("#device").hide();
+    }else if(type=="维保工单"){
+        $("#device").show();
+    }
+}
 function getTicketInfo(ticketId){
     var url = CONTEXT_PATH+"/ticket/getTicketInfo?"+ Math.random();
     jQuery.ajax({
@@ -52,6 +60,7 @@ function getTicketInfo(ticketId){
             $("#status").val(data.status);
             $("#deptId").val(data.deptId);
 
+            showDevice()
 
             $("#buttonId").html(data.currentStatusName);
             if(data.status==4){//增加审核操作
@@ -70,7 +79,7 @@ function getTicketInfo(ticketId){
                     "                            </div>\n" +
                     "                        </div>");
             }else{
-                $("#buttonId").html(data.currentStatusName);
+                $("#buttonId").html("处理");
             }
             //非告警工单  去掉不要的信息
             if(data.ticketType!=1){
@@ -83,59 +92,84 @@ function getTicketInfo(ticketId){
 
 
 
-function approval(flag){
-    var ticketId= $("#ticketId").val();
-    var status= $("#status").val();
-    var approveOpinion= $("#approveOpinion").val();
-    var approveOperation=$("#approveOperation").val();
-    var deptId= $("#deptId").val();
-    var json="";
+function approval(flag2){
+    var status = $("#status").val();
+    var approveOpinion = $("#approveOpinion").val();
+
+    if (approveOpinion == "") {
+        $('#alertShowMessage').html('处理结果不能为空!!!');
+        $('#alertShow').modal('show');
+        return false;
+    }
+    if (status == 4 && $("#approveOperation").val() == "") {审核结果不能为空
+        $('#alertShowMessage').html('审核结果不能为空!!!');
+        $('#alertShow').modal('show');
+        return false;
+    }
+    var str="";
+    if(flag2=="1"){
+        str = $("#buttonId").html();
+    }else{
+        str="退单"
+    }
+    this.flag=flag2
+    $('#alertWorkMessage').html("确认要"+str+"工单?");
+    $('#alertWork').modal('show');
+}
+
+function clickOk(){
+    var ticketId = $("#ticketId").val();
+    var approveOpinion = $("#approveOpinion").val();
+    var approveOperation = $("#approveOperation").val();
+    var deptId = $("#deptId").val();
+    var json = "";
 
     //回退
-    if(flag==0){
-        json={"ticketId":ticketId,"approveOpinion":approveOpinion,"handleStatus":"02","deptId":deptId};
-    }else{
+    if (flag == 0) {
+        json = {"ticketId": ticketId, "approveOpinion": approveOpinion, "handleStatus": "02", "deptId": deptId};
+    } else {
         //处理 前往待审核
-        if(approveOperation=="" || approveOperation==undefined){
+        if (approveOperation == "" || approveOperation == undefined) {
             //处理  发往待审核
-            json={"ticketId":ticketId,"approveOpinion":approveOpinion,"handleStatus":"03","deptId":deptId};
-        }else{
-            if(approveOperation=="N"){
-                json={"ticketId":ticketId,"approveOpinion":approveOpinion,"approveOperation":approveOperation,"handleStatus":"04","deptId":deptId};
-            }else if(approveOperation=="Y"){
-                json={"ticketId":ticketId,"approveOpinion":approveOpinion,"approveOperation":approveOperation,"handleStatus":"05","deptId":deptId};
+            json = {"ticketId": ticketId, "approveOpinion": approveOpinion, "handleStatus": "03", "deptId": deptId};
+        } else {
+            if (approveOperation == "N") {
+                json = {
+                    "ticketId": ticketId,
+                    "approveOpinion": approveOpinion,
+                    "approveOperation": approveOperation,
+                    "handleStatus": "04",
+                    "deptId": deptId
+                };
+            } else if (approveOperation == "Y") {
+                json = {
+                    "ticketId": ticketId,
+                    "approveOpinion": approveOpinion,
+                    "approveOperation": approveOperation,
+                    "handleStatus": "05",
+                    "deptId": deptId
+                };
             }
 
         }
     }
 
-
-
-    if(approveOpinion==""){
-        alert("处理结果不能为空!");
-        return false;
-    }if(status==4 && $("#approveOperation").val()==""){
-            alert("审核结果不能为空!");
-            return false;
-    }else{
-        var url = CONTEXT_PATH+"/ticket/handleWorkOrder?"+ Math.random();
-        jQuery.ajax({
-            type : 'POST',
-            contentType : 'application/json',
-            url : url,
-            dataType : 'json',
-            data:  JSON.stringify(json),
-            success : function(data) {
-                if(data.status == "success"){
-                    frameElement.api.close();
-                    alert(data.message);
-                }else{
-                    alert(data.message);
-                }
+    var url = CONTEXT_PATH + "/ticket/handleWorkOrder?" + Math.random();
+    jQuery.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: url,
+        dataType: 'json',
+        data: JSON.stringify(json),
+        success: function (data) {
+            if (data.status == "success") {
+                frameElement.api.close();
+                alert(data.message);
+            } else {
+                alert(data.message);
             }
-        });
-    }
-
+        }
+    });
 }
 
 

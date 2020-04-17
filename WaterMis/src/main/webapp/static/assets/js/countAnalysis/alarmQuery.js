@@ -319,7 +319,10 @@ $(function(){
 
 	function operateFormatter(value, row, index) {
 		    if(row.ticketId){
-                return ['<button type="button" onclick="alertError()"  class="btn btn-warning">创建工单</button>'].join('');
+              //  return ['<button type="button" onclick="alertError()"  class="btn btn-warning">创建工单</button>'].join('');
+
+                return ['<span style="    display: inline-block;padding: 6px 12px; margin-bottom: 0;border: 1px solid transparent;border-radius: 4px;font-size: 14px;" class=" btn-warning">已创建工单</span>'].join('');
+
             }else {
                 return ['<button type="button"  class="jumpWork btn btn-primary">创建工单</button>'].join('');
             };

@@ -1,17 +1,24 @@
 package com.wapwag.woss.modules.ticket.web;
 
 import com.wapwag.woss.common.persistence.Page;
+import com.wapwag.woss.modules.biz.entity.ProductComponent;
 import com.wapwag.woss.modules.biz.entity.WorkOrder;
 import com.wapwag.woss.modules.home.entity.User;
 import com.wapwag.woss.modules.sys.entity.BootPage;
+import com.wapwag.woss.modules.sys.entity.PumpHouse;
+import com.wapwag.woss.modules.sys.service.PumpDeviceService;
+import com.wapwag.woss.modules.ticket.Entity.ProductComponentData;
 import com.wapwag.woss.modules.ticket.Entity.TicketComDto;
 import com.wapwag.woss.modules.ticket.Entity.TicketDto;
+import com.wapwag.woss.modules.ticket.service.ProductComponentService;
 import com.wapwag.woss.modules.ticket.service.TicketService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.util.TextUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
-
+import java.util.*;
 
 
 /**
@@ -37,6 +42,13 @@ public class TicketController {
 
     @Autowired
     private TicketService ticketService;
+
+    @Autowired
+    private PumpDeviceService deviceService;
+
+    @Autowired
+    private ProductComponentService productComponentService;
+
 
     @RequestMapping("/getDept")
     @ResponseBody
@@ -97,6 +109,50 @@ public class TicketController {
         String sortOrder = request.getParameter("sortOrder");
 
         Page<TicketDto> pages = ticketService.findPage(new Page<TicketDto>(request, response), ticketDto);
+
+        //循环给对应的泵房,设备设置值
+        List<TicketDto> list = pages.getList();
+        List<PumpHouse> pumpList = deviceService.findPumpHouse(null);
+        List<ProductComponentData> productList = productComponentService.findAllList();
+        Map<String,String> pumpMap=new HashMap<String,String>();
+        Map<String,String> productMap=new HashMap<String,String>();
+        for(PumpHouse pump:pumpList){
+            pumpMap.put(pump.getPumpHouseId(),pump.getPumpHouseName());
+        }
+        for(ProductComponentData product:productList){
+            productMap.put(product.getId(),product.getComponentName());
+        }
+
+        for(TicketDto l:list){
+            String pumpId=l.getPumpId();
+            String deviceCode = l.getDeviceCode();
+            if(!TextUtils.isEmpty(pumpId)){
+                List<String> pumpIdAry =Arrays.asList(pumpId.split(","));
+                String pumpStr="";
+                for(String pId:pumpIdAry){
+                    String value = pumpMap.get(pId);
+                    pumpStr+=value+",";
+                }
+                if(!TextUtils.isEmpty(pumpStr)) {
+                    pumpStr = pumpStr.substring(0, pumpStr.length() - 1);
+                    l.setPumpName(pumpStr);
+                }
+            }
+            if(!TextUtils.isEmpty(deviceCode)){
+                List<String> deviceCodeAry = Arrays.asList(deviceCode.split(","));
+                String deviceCodeStr="";
+
+                for(String dId:deviceCodeAry){
+                    String value = productMap.get(dId);
+                    deviceCodeStr+=value+",";
+                }
+                if(!TextUtils.isEmpty(deviceCodeStr)) {
+                    deviceCodeStr = deviceCodeStr.substring(0, deviceCodeStr.length() - 1);
+                    l.setDeviceName(deviceCodeStr);
+                }
+            }
+
+        }
         BootPage bootPage = new BootPage();
         bootPage.setTotal(pages.getCount());
         bootPage.setRows(pages.getList());
@@ -141,7 +197,45 @@ public class TicketController {
     @ResponseBody
     @ApiOperation(value = "获取工单", httpMethod = "POST", response =WorkOrder.class , notes = "根据ticketI获取工单数据")
     public Object getTicketInfo(@RequestParam(value = "ticketId")String ticketId){
-        return  ticketService.getTicketInfo(ticketId);
+        TicketDto ticketInfo = ticketService.getTicketInfo(ticketId);
+        List<PumpHouse> pumpList = deviceService.findPumpHouse(null);
+        List<ProductComponentData> productList = productComponentService.findAllList();
+        Map<String,String> pumpMap=new HashMap<String,String>();
+        Map<String,String> productMap=new HashMap<String,String>();
+        for(PumpHouse pump:pumpList){
+            pumpMap.put(pump.getPumpHouseId(),pump.getPumpHouseName());
+        }
+        for(ProductComponentData product:productList){
+            productMap.put(product.getId(),product.getComponentName());
+        }
+        String pumpId=ticketInfo.getPumpId();
+        String deviceCode = ticketInfo.getDeviceCode();
+        if(!TextUtils.isEmpty(pumpId)){
+            List<String> pumpIdAry =Arrays.asList(pumpId.split(","));
+            String pumpStr="";
+            for(String pId:pumpIdAry){
+                String value = pumpMap.get(pId);
+                pumpStr+=value+",";
+            }
+            if(!TextUtils.isEmpty(pumpStr)){
+                pumpStr=pumpStr.substring(0,pumpStr.length()-1);
+                ticketInfo.setPumpName(pumpStr);
+            }
+        }
+
+        if(!TextUtils.isEmpty(deviceCode)){
+            List<String> deviceCodeAry = Arrays.asList(deviceCode.split(","));
+            String deviceCodeStr="";
+            for(String dId:deviceCodeAry){
+                String value = productMap.get(dId);
+                deviceCodeStr+=value+",";
+            }
+            if(!TextUtils.isEmpty(deviceCodeStr)) {
+                deviceCodeStr = deviceCodeStr.substring(0, deviceCodeStr.length() - 1);
+                ticketInfo.setDeviceName(deviceCodeStr);
+            }
+        }
+        return  ticketInfo;
     }
 
     @RequestMapping("/getTicketLogList")

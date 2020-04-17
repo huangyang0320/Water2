@@ -381,6 +381,22 @@
 			concat('%',#{pumpHouseName},'%')
 		</if>
 	</select>
+
+	<select id="findPumpHouse" resultType="com.wapwag.woss.modules.sys.entity.PumpHouse">
+		select
+			id as pumpHouseId,
+			name as pumpHouseName,
+			address as pumpHouseAddress,
+			memo as memo
+		from pump_house
+		<where>
+			1=1
+			<if test="pumpHouseId!=null and pumpHouseId != ''">
+				and id=#{pumpHouseId}
+			</if>
+		</where>
+
+	</select>
 	<select id="pumpHouses" resultType="com.wapwag.woss.modules.sys.entity.PumpHouse">
 		select
 		aa.id AS "id",
