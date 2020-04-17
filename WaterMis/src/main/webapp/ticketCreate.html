@@ -212,6 +212,39 @@
                 <button type="button" onclick="frameElement.api.close()" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" onclick="createLxTicket()">创建工单</button>
             </div>
+            <div class="modal fade" tabindex="-1" role="dialog" id="alertWork">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">提示</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p id="alertWorkMessage" style="color: red"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myWorkModal" onclick="clickOk()" data-dismiss="modal">确定</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <div class="modal fade" tabindex="-1" role="dialog" id="alertShow">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">提示</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p id="alertShowMessage" style="color: red"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
         </div>
     <script src="static/assets/js/jquery-1.10.2.js"></script>
     <script src="static/assets/js/jquery-form.js"></script>
