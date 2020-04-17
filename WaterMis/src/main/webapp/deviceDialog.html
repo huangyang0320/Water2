@@ -362,14 +362,18 @@
                 if (pumpHouse["allPicUrl"] && $.trim(pumpHouse["allPicUrl"] != "") && pumpHouse["allPicUrl"] != "static/assets/img/default.png") {
                     $devicePic.find("img").prop("src", pumpHouse["allPicUrl"]);
                     //$devicePic.find("img").prop("src", "static/assets/img/default.png");
-                    $devicePic.attr("onclick", "parent.showPic('" + pumpHouse["allPicUrl"] + "')");
+
+
+                    // $devicePic.attr("onclick", "parent.showPic('" + pumpHouse["allPicUrl"] + "')");
+                    $devicePic.attr("onclick", "parent.showPic('" + pumpHouse["pumpHouseId"] + "')");
+
                     //$devicePic.attr("onclick", "parent.showPic('static/assets/img/default.png')");
                 } else {
                     pumpHouse["allPicUrl"] = "static/assets/img/default.png";
                     $devicePic.attr("onclick", "parent.showPic('" + pumpHouse["allPicUrl"] + "')");
                     //$devicePic.attr("onclick", "parent.showPic('static/assets/img/default.png')");
                 }
-                console.log(pumpHouse);
+                console.log('pumpHouse',pumpHouse);
                /* $($subtitle[0]).text("泵房编号：" + pumpHouse["pumpHouseId"]);*/
                 /*$($subtitle[0]).text("泵房名称：" + pumpHouse["pumpHouseName"]);
                 $($subtitle[1]).text("泵房地址：" + pumpHouse["address"]);
