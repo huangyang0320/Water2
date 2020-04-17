@@ -6,6 +6,7 @@ import com.wapwag.woss.common.utils.StringUtils;
 import com.wapwag.woss.common.web.BaseController;
 import com.wapwag.woss.modules.biz.entity.NoticeDto;
 import com.wapwag.woss.modules.biz.service.NoticeService;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ public class NoticeController extends BaseController{
     private NoticeService noticeService;
 
     @ModelAttribute
+    @ApiOperation(value = "获取通知", httpMethod = "GET", response =NoticeDto.class , notes = "通过标识获取通知")
     public NoticeDto get(@RequestParam(required=false) String id) {
         NoticeDto entity = null;
         if (StringUtils.isNotBlank(id)){
@@ -43,6 +45,7 @@ public class NoticeController extends BaseController{
 
     @RequiresPermissions("biz:notice:view")
     @RequestMapping(value = {"list", ""})
+    @ApiOperation(value = "获取通知列表", httpMethod = "GET", response =NoticeDto.class , notes = "获取通知列表")
     public String list(NoticeDto noticeDto, HttpServletRequest request, HttpServletResponse response, Model model) {
         Page<NoticeDto> page = noticeService.findPage(new Page<NoticeDto>(request, response), noticeDto);
         model.addAttribute("page", page);
@@ -51,6 +54,7 @@ public class NoticeController extends BaseController{
 
     @RequiresPermissions("biz:notice:view")
     @RequestMapping(value = "form")
+    @ApiOperation(value = "通知表单", httpMethod = "GET", response =NoticeDto.class , notes = "通知表单")
     public String form(NoticeDto noticeDto, Model model) {
         model.addAttribute("notice", noticeDto);
         return "modules/biz/noticeForm";
@@ -58,6 +62,7 @@ public class NoticeController extends BaseController{
 
     @RequiresPermissions("biz:notice:edit")
     @RequestMapping(value = "save")
+    @ApiOperation(value = "保存通知", httpMethod = "GET", response =NoticeDto.class , notes = "保存通知")
     public String save(NoticeDto noticeDto, Model model, RedirectAttributes redirectAttributes) {
         if (!beanValidator(model, noticeDto)){
             return form(noticeDto, model);
@@ -69,6 +74,7 @@ public class NoticeController extends BaseController{
 
     @RequiresPermissions("biz:notice:edit")
     @RequestMapping(value = "delete")
+    @ApiOperation(value = "删除通知", httpMethod = "GET", response =NoticeDto.class , notes = "删除通知")
     public String delete(NoticeDto noticeDto, RedirectAttributes redirectAttributes) {
         noticeService.delete(noticeDto);
         addMessage(redirectAttributes, "删除通知成功");
