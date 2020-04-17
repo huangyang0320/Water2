@@ -89,10 +89,17 @@ function queryMaintenanceWorkerDept() {
         success : function(data) {
             $("#deptId").html("");
             $.each(data, function (i, item) {
-                jQuery("#deptId").append("<option value="+ item.deptId+">"+ item.deptName+"</option>");
+                jQuery("#deptId").append("<option value="+ item.deptId+" mgName="+item.mgName+">"+ item.deptName+"</option>");
+                if(i==0){
+                    $("#mgName").val(item.mgName);
+                }
             });
         }
     });
+}
+
+function changerDept() {
+    $("#mgName").val(jQuery("#deptId option:selected").attr("mgName"));
 }
 
 function createLxTicket(){

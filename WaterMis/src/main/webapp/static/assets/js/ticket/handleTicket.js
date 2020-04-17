@@ -447,9 +447,9 @@ function initDetails(){
         editable:true,//开启编辑模式
         clickToSelect: true,
         showPaginationSwitch:true, //显示分页切换按钮
-        search: true,  //显示检索框
-        showRefresh: true,  //显示刷新按钮
-        showToggle:true, //显示切换按钮来切换列表/卡片视图
+        search: false,  //显示检索框
+        showRefresh: false,  //显示刷新按钮
+        showToggle:false, //显示切换按钮来切换列表/卡片视图
         pagination: true,
         pageList:  [20,30,50,100],
         pageSize:20,

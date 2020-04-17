@@ -341,10 +341,10 @@ function zTreeOnCheck(event, treeId, treeNode) {
     })
 
     if( window.choosedNodes.length<1 && ztreeBulid.isClearList){
-        GLOBAL_SELECT_LIST_B.map(function (v) {
-            ztreeBulid.zTreeObj.checkNode(v,true,true);
-        })
-        window.openAlertModel("myModalAlert" , "至少选择一个设备！")
+        // GLOBAL_SELECT_LIST_B.map(function (v) {
+        //     ztreeBulid.zTreeObj.checkNode(v,true,true);
+        // })
+        // window.openAlertModel("myModalAlert" , "至少选择一个设备！")
         return false;
     }
     if( window.choosedNodes.length>20){

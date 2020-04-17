@@ -121,7 +121,7 @@
                                         <label for="alarmStatus">当前状态</label>
                                         <input type="text" class="form-control" readonly  id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
                                 <!--2：待接单-->
-                                <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="2"  placeholder="请输入">
+                                <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="1"  placeholder="请输入">
 
                                 <!--<label for="processName">告警等级</label>
                                 <input type="text" class="form-control"  id="alarmLevel" name="alarmLevel" placeholder="请输入">-->
@@ -173,11 +173,16 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="deptId">执行人</label>
-                                <select class="form-control" id="deptId" name="deptId">
+                                <select class="form-control" id="deptId" name="deptId"  onchange="changerDept()">
                                 </select>
                             </div>
                         </div>
-
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="mgName">部门负责人</label>
+                                <input type="text" class="form-control" readonly id="mgName" name="mgName" >
+                            </div>
+                        </div>
                     </div>
 <!--
 
