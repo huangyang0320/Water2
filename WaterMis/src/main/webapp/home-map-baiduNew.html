@@ -248,13 +248,6 @@
         };
 
         showVideo = function (video) {
-
-
-         /*   var url = 'videoBaidu.html?videoNo=' + video + '&rnd=' + new Date().getTime();  //要打开的网页地址
-            var features = "height=500, width=800, top=100, left=100, toolbar=no, menubar=no,scrollbars=no,resizable=no, location=no, status=no";  //设置新窗口的特性//动态生成一个超链接
-            //document.write('<a href="c.biancheng.net" target="newW">切换到C语言中文网首页</a>');
-            var me = window.open(url, new Date().getTime(), features);  //打开新窗口
-*/
             $.dialog({
                 id: 'device-video',
                 title: '泵房视频',
@@ -282,6 +275,36 @@
                 }]*/
             });
         };
+
+        showVideoHis = function (video) {
+            $.dialog({
+                id: 'device-video-his',
+                title: '泵房视频',
+                content: 'url:videoBaidu1.html?videoNo=' + video + '&rnd=' + new Date().getTime(),
+                width: 900,
+                height: 460,
+                top:110,
+                left:304,
+                fixed: true,
+                max: true,
+                min: false,
+                resize: false,
+                lock: true,
+                background: '#000',
+                opacity:1,
+                ok: false,
+                drag: false
+                /*,
+                button: [{
+                    name: '云镜控制',
+                    callback: function() {
+                        this.iframe.contentWindow.toggleBtn();
+                        return false;
+                    }
+                }]*/
+            });
+        };
+
 
         showSummary = function (marker) {
             var pumpHouse = marker.pumpHouse;
