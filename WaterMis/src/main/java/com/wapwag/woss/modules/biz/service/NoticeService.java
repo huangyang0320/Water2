@@ -1,5 +1,6 @@
 package com.wapwag.woss.modules.biz.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wapwag.woss.common.persistence.Page;
 import com.wapwag.woss.common.service.CrudService;
 import com.wapwag.woss.modules.biz.dao.NoticeDao;
@@ -34,7 +35,8 @@ public class NoticeService extends CrudService<NoticeDao, NoticeDto> {
     }
 
     @Transactional(readOnly = false)
-    public void save(NoticeDto noticeDto) {
+    public JSONObject saveNotice(NoticeDto noticeDto) {
+        JSONObject result=new JSONObject();
         if(noticeDto.getIsNewRecord()){
             User user = UserUtils.getUser();
             if (null!=user && StringUtils.isNotBlank(user.getId())) {
@@ -42,16 +44,39 @@ public class NoticeService extends CrudService<NoticeDao, NoticeDto> {
             }
             noticeDto.setDeleteDate(new Date());
         }
-        super.save(noticeDto);
+
+        try{
+            super.save(noticeDto);
+        }catch(Exception e){
+            result.put("code","201");
+            result.put("status",false);
+            result.put("message","操作失败!");
+        }
+            result.put("code","200");
+            result.put("status",true);
+            result.put("message","操作成功!");
+        return result;
     }
 
     @Transactional(readOnly = false)
-    public void delete(NoticeDto noticeDto) {
+    public JSONObject deleteNotice(NoticeDto noticeDto) {
+        JSONObject result=new JSONObject();
         User user = UserUtils.getUser();
         if (null!=user && StringUtils.isNotBlank(user.getId())) {
             noticeDto.setDeleteBy(user);
         }
         noticeDto.setDeleteDate(new Date());
-        super.delete(noticeDto);
+
+        try{
+            super.delete(noticeDto);
+        }catch(Exception e){
+            result.put("code","201");
+            result.put("status",false);
+            result.put("message","操作失败!");
+        }
+        result.put("code","200");
+        result.put("status",true);
+        result.put("message","操作成功!");
+        return result;
     }
 }
