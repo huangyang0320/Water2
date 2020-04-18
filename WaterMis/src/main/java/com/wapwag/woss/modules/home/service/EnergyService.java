@@ -85,8 +85,11 @@ public class EnergyService {
 		Map<String, String> names = new HashMap<String, String>();
 		List<Map<String, String>> listNames = energyMapper.getNames(deviceIds, type);
 		for (int i = 0; i < listNames.size(); i++) {
+			/*names.put(listNames.get(i).get("devid"), listNames.get(i).get("pumpname") + "_"
+					+ listNames.get(i).get("devname") + "(" + listNames.get(i).get("devid") + ")");*/
+			//yxn 20200418(显示的名称 去掉设备的英文名)
 			names.put(listNames.get(i).get("devid"), listNames.get(i).get("pumpname") + "_"
-					+ listNames.get(i).get("devname") + "(" + listNames.get(i).get("devid") + ")");
+					+ listNames.get(i).get("devname"));
 			names.put(listNames.get(i).get("pumpid"), listNames.get(i).get("pumpname"));
 		}
 

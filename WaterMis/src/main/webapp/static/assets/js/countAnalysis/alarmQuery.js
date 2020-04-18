@@ -281,7 +281,23 @@ $(function(){
                field: 'alarmLevel',
                title: '告警等级',
                align: 'center',
-               sortable: true
+               //cellStyle:cellStylesales,
+               sortable: true,
+               formatter:  function(value,row,index) {
+                    var a = "";
+                    if(value == "一级") {
+                        a = '<span style="background-color:#FF0000;color:#ffff">'+value+'</span>';
+                    }else if(value == "二级"){
+                        a = '<span style="background-color:#f46b1c;color:#ffff">'+value+'</span>';
+                    }else if(value == "三级") {
+                        a = '<span style="background-color:#f4e672;color:#ffff">'+value+'</span>';
+                    }else if(value == "四级") {
+                        a = '<span style="background-color:#dbf4be;color:#ffff">'+value+'</span>';
+                    }else{
+                        a = '<span style="background-color:#45d60c;color:#ffff">'+value+'</span>';
+                    }
+                    return a;
+                }
            },{
                field: 'startDate',
                title: '开始时间',
@@ -316,6 +332,18 @@ $(function(){
         areaCount();
         alarmTypeCount();
    }
+
+function cellStylesales(value, row, index) {
+    if(value!="" && value=="一级"){
+        return {css:{background:'#f44336',color:'#000'}};
+    }else if(value!="" && value=="二级"){
+        return {css:{background:'#f46b1c',color:'#000'}};
+    }else if(value!="" && value=="三级"){
+        return {css:{background:'#f4e672',color:'#000'}};
+    }else if(value!="" && value=="四级"){
+        return {css:{background:'#dbf4be',color:'#000'}};
+    }
+}
 
 	function operateFormatter(value, row, index) {
 		    if(row.ticketId){
