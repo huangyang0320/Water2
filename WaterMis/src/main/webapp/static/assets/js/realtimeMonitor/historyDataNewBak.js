@@ -181,9 +181,9 @@ function initMetaDeviceList(deviceIds){
         var $deviceNormData = $deviceNorm.find(".list-group");
         $deviceNormData.empty();
         result.forEach(function(value,index){
-        	if(value.type == "ftMP" || value.type == "ftAC" || value.type == "ftMF"
+        	/*if(value.type == "ftMP" || value.type == "ftAC" || value.type == "ftMF"
             	|| value.type == "ftT" || value.type == "ftTL" || value.dataType=='uint' || value.dataType== 'real'){
-                var li = $("<li class='list-group-item'><label></label></li>");
+           */     var li = $("<li class='list-group-item'><label></label></li>");
                 var li1 = li.clone();
                 var input = $("<input type='checkbox'>")
                     .prop("name", "sameCompare")
@@ -201,7 +201,7 @@ function initMetaDeviceList(deviceIds){
                 li.find("label").append('<div class="colour_black_'+index%7+'">'+value["memo"]+"</div>");
                 li.find("label").prop("title", value["memo"]);
                 $deviceNormData.append(li);
-        	}
+        	/*}*/
         });
         $("input[type='checkbox'].minimal").icheck({
             checkboxClass: 'icheckbox_minimal-blue',
@@ -329,7 +329,7 @@ function initQueryBox(currentDate) {
      */
     $("#export").on("click", function () {
         var $chart = $("#highcharts-history-data");
-        $chart.highcharts().downloadXLS();
+        $chart.highcharts().downloadXLS()[0];
     });
 }
 

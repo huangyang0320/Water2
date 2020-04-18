@@ -123,14 +123,21 @@ ENERGY_ANALYSIS.CHART_COMPARE_CONFIG = {
         text: '设备千吨水耗电量对比'
     },
     tooltip: {
-        headerFormat: '吨水耗电量对比分析<br>',
-        pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+        shared: true
     },
-    legend: {
-        maxHeight: 40,
+    xAxis: {
+        crosshair: true,
+        categories: []
     },
-    plotOptions: {
-        pie: {
+    yAxis: [
+        {
+            title: {
+                text: "千吨水耗电量(度/千吨)",
+            }
+        }
+    ],
+   /* plotOptions: {
+        column: {
             allowPointSelect: true,
             cursor: 'pointer',
             dataLabels: {
@@ -138,11 +145,11 @@ ENERGY_ANALYSIS.CHART_COMPARE_CONFIG = {
             },
             showInLegend: true // 设置饼图是否在图例中显示
         }
-    },
+    },*/
     series: [{
-        type: 'pie',
+        type: 'column',
         size:'80%',
-        name: '设备',
+        name: '耗电量',
         data: []
     }],
     credits: {
@@ -382,15 +389,19 @@ function getPieData(type, sendData) {
             }
             if(res.count){
                 var pieData = [];
+                var XData = [];
                 res.count.map(function (v) {
                     // v.value = Math.floor(Math.random()*100)
                     if(v){
                         if(v.value != "-" && v.value != "" && v.value != "null" && v.value != "undefined"){
-                            pieData.push([v.name, v.value*1000]);
+                            pieData.push([v.name, Math.round(v.value*1000*100)/100]);
+                            XData.push(v.name);
                         }
                     }
                 })
                 ENERGY_ANALYSIS.CHART_COMPARE_CONFIG.series[0].data = pieData;
+                ENERGY_ANALYSIS.CHART_COMPARE_CONFIG.categories = XData;
+
                 $("#energyanalysis-compare").highcharts(ENERGY_ANALYSIS.CHART_COMPARE_CONFIG);
             }
 
