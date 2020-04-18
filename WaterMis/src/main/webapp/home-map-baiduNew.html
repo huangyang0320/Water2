@@ -599,11 +599,10 @@
                 if(data!=null && data.length){
                     for (var i in data) {
                         alarmListTmpe.push(data[i].phId)
-
                     }
-                    alarmList = alarmListTmpe;
-                    realMapIoc();
                 }
+                alarmList = alarmListTmpe;
+                realMapIoc();
             }
         })
     }
@@ -612,6 +611,8 @@
      */
     function showAllPumphouses() {
         clickStatus='0';
+        MAP.clearOverlays();//清空上一次  地图 底图
+        $("#areaId").val('');//清空边界线
         LOADING.show();
         var content = "<iframe id='deviceDialog' width='400px' height='415px' frameborder='no' border='0' " +
             "marginwidth='0' marginheight='0' scrolling='no' " +
@@ -672,7 +673,7 @@
                     MAP.centerAndZoom(new BMap.Point(118.384261,31.314748), 13);
                 });
                 LOADING.hide();
-                MAP.clearOverlays();
+               // MAP.clearOverlays();
                 /*    var k=0;
                     GLOBAL_REGION_LIST.map(function (val) {
                         if(val.pId && val.pId =="340200") {
@@ -835,7 +836,10 @@
 
         if($("#areaId").val()!="" && "请选择区域"!=$("#areaId").val() ){
             var areaObj = $.parseJSON( $("#areaId").val() );
-            setArea(areaObj.areaName,color[3]);
+            if(areaObj!=undefined && areaObj.areaName!=undefined){
+                setArea(areaObj.areaName,color[3]);
+            }
+
         }
     }
 
@@ -847,12 +851,6 @@
         callRefresh();
         initAreaBtn(GLOBAL_REGION_LIST);
     }
-
-    var phIdList = []
-    window.pumpList.map(function (v) {
-        phIdList.push(v.pumpHouseId);
-    })
-    getAlarmByPumpIds(phIdList);
     /**
      * 定时更图标
      */
@@ -863,17 +861,14 @@
         })
         getAlarmByPumpIds(phIdList);
 
-    }, 10000)
+    }, 15000)
 
     function realMapIoc(){
-        var phIdList = []
-        window.pumpList.map(function (v) {
-            phIdList.push(v.pumpHouseId);
-        })
         var allPumpArray = []
         window.pumpList.map(function (v) {
             allPumpArray.push(v.pumpHouseId);
         })
+        var mapPicUrl;
 
         //单个还是多个泵房 暂时 支持 所有泵房的时候展示 实时刷新图标
         if(clickStatus=='0'){
@@ -899,15 +894,15 @@
                             "propertyInformation":v.propertyInformation
                         };
                         if(isInArray(alarmList, v.pumpHouseId)){
-                            var mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
+                             mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
                             pumpnum4++
                         }else if(isInArray(res, v.pumpHouseId)){
-                            var mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
+                             mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
                             // var mapPicUrl = ROOT_PATH + "/static/assets/img/people.png";
                             pumpnum2++
 
                         }else{
-                            var mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
+                             mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
                             pumpnum3++
                         }
 

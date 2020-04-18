@@ -329,7 +329,7 @@ function initQueryBox(currentDate) {
      */
     $("#export").on("click", function () {
         var $chart = $("#highcharts-history-data");
-        $chart.highcharts().downloadXLS();
+        $chart.highcharts().downloadXLS()[0];
     });
 }
 

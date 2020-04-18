@@ -3,11 +3,13 @@
  */
 package com.wapwag.woss.modules.home.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 import com.wapwag.woss.modules.biz.entity.WorkOrder;
 import com.wapwag.woss.modules.home.entity.SysDict;
+import com.wapwag.woss.modules.sys.service.SortService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import com.wapwag.woss.modules.home.entity.AlarmStat;
 import com.wapwag.woss.modules.home.entity.User;
 import com.wapwag.woss.modules.home.service.AlarmStatService;
 import com.wapwag.woss.modules.sys.entity.BootPage;
+import sun.rmi.runtime.NewThreadAction;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,6 +38,9 @@ public class AlarmStatController {
 
 	@Autowired
 	private AlarmStatService alarmService;
+
+	@Autowired
+	private SortService sortService;
 
 	/**
 	 * 分页、导出统计
@@ -139,7 +145,12 @@ public class AlarmStatController {
 	@ApiOperation(value = "根据泵房ids告警列表信息", httpMethod = "POST",response = AlarmStat.class ,notes = "")
 	public List<AlarmStat> getAlarmByPumpIds(@RequestBody AlarmStat alarmObj, User user) {
 		alarmObj.setUserId(user.getUserId());
-		List<AlarmStat> list = alarmService.getAlarmDetail(alarmObj);
+		// false 屏蔽告警信息
+		boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
+		List<AlarmStat> list=list= new ArrayList<>();
+		if(isAlarm){
+			list = alarmService.getAlarmDetail(alarmObj);
+		}
 		return list;
 	}
 	/**
@@ -149,10 +160,15 @@ public class AlarmStatController {
 	 */
 	@ResponseBody
 	@RequestMapping("/indexAlarm")
-	@ApiOperation(value = "首页点击告警数显示的告警列表信息", httpMethod = "POST",response = AlarmStat.class ,notes = "")
+	@ApiOperation(value = "首页屏蔽告警提示/列表信息", httpMethod = "POST",response = AlarmStat.class ,notes = "")
 	public List<AlarmStat> getAlarmDetail(AlarmStat alarmStat, User user, HttpServletRequest request) {
 		alarmStat.setUserId(user.getUserId());
-		List<AlarmStat> list = alarmService.getAlarmDetail(alarmStat);
+		// false 屏蔽告警信息
+		boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
+		List<AlarmStat> list= new ArrayList<>();
+		if(isAlarm){
+			list = alarmService.getAlarmDetail(alarmStat);
+		}
 		return list;
 	}
 	
@@ -165,8 +181,12 @@ public class AlarmStatController {
 	@RequestMapping("/indexAlarmSize")
 	@ApiOperation(value = "告警量统计", httpMethod = "POST" ,notes = "")
 	public String countAlarms(User user) {
-
-		return alarmService.countAlarms(user.getUserId());
+		// false 屏蔽告警信息
+		boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
+		if(isAlarm){
+			return alarmService.countAlarms(user.getUserId());
+		}
+		return null;
 	}
 	
 	/**
