@@ -274,6 +274,10 @@ function queryParams(params) {
     var ticketType = $("#ticketType").val();
     var pumpName = $("#pumpName").val();
     var alarmContent = $("#alarmContent").val();
+    var status=$("#status").val();
+    var address=$("#address").val();
+    var deviceName=$("#deviceName").val();
+    var allHandleUser=$("#allHandleUser").val();
 
     var createBeginTime =$("#createBeginTime").val();
     if(createBeginTime!=""){
@@ -325,6 +329,10 @@ function queryParams(params) {
         ticketType: ticketType,
         pumpName: pumpName,
         title: alarmContent,
+        status:status,
+        address:address,
+        deviceName:deviceName,
+        allHandleUser:allHandleUser,
         createBeginTime: createBeginTime,
         createEndTime: createEndTime,
         startBeginTime: startBeginTime,

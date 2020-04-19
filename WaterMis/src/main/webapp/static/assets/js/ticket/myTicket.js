@@ -340,6 +340,8 @@ function queryParams(params) {
     var ticketType = $("#ticketType").val();
     var pumpName = $("#pumpName").val();
     var alarmContent = $("#alarmContent").val();
+    var status=$("#status").val();
+    var address=$("#address").val();
 
     var createBeginTime =$("#createBeginTime").val();
     if(createBeginTime!=""){
@@ -389,6 +391,8 @@ function queryParams(params) {
         sortOrder : params.sortOrder,
         ticketType: ticketType,
         pumpName: pumpName,
+        status:status,
+        address:address,
         title: alarmContent,
         createBeginTime: createBeginTime,
         createEndTime: createEndTime,
