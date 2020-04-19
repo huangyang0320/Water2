@@ -43,6 +43,11 @@ public class PumpDeviceService extends CrudService<DeviceDao, PumpDevice> {
 
 	}
 
+	public List<PumpHouse> findPumpHouse(PumpHouse pumpHouse) {
+		return deviceDao.findPumpHouse(pumpHouse);
+	}
+
+
 	public Archive getArchiveByDevId(String deviceId) {
 		return deviceDao.getArchiveByDevId(deviceId);
 	}

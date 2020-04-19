@@ -185,13 +185,14 @@ function initBootTable(url){
             title: '泵房名称',
             align: 'center',
             sortable : true,
-            sortable: true
-        },{
+            cellStyle: formatTableUnit
+        },/*{
             field: 'deviceName',
             title: '设备名称',
             align: 'center',
-            sortable: true
-        },/*{
+            sortable: true,
+            cellStyle: formatTableUnit
+        },*//*{
             field: 'ticketLevel',
             title: '故障等级',
             align: 'center'
@@ -219,12 +220,25 @@ function initBootTable(url){
             html.push('<p class="detail-view">' + '工单计划结束时间' + ' : ' + toTrim(row.endTime) + '</p>');
             html.push('<p class="detail-view">' + '告警时间' + ' : ' + toTrim(row.eventTime) + '</p>');
             html.push('<p class="detail-view">' + '告警级别' + ' : ' + toTrim(row.ticketLevel) + '</p>');
+            html.push('<p class="detail-view">' + '泵房名称' + ' : ' + toTrim(row.pumpName) + '</p>');
+            html.push('<p class="detail-view">' + '设备名称' + ' : ' + toTrim(row.deviceName) + '</p>');
             html.push('<p class="detail-view">' + '可能原因' + ' : ' + toTrim(row.ticketReason) + '</p>');
             html.push('<p class="detail-view">' + '解决方案' + ' : ' + toTrim(row.ticketDescription) + '</p>');
             return html.join('');
         }
     });
 
+}
+
+function formatTableUnit(value, row, index) {
+    return {
+        css: {
+            "white-space": "nowrap",
+            "text-overflow": "ellipsis",
+            "overflow": "hidden",
+            "max-width": "120px"
+        }
+    }
 }
 
 function operateFormatter(value, row, index) {

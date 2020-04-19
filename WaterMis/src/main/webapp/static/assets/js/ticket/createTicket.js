@@ -15,8 +15,27 @@ var CONTEXT_PATH = ROOT_PATH + "/a";
 getPumpList();
 queryMaintenanceWorkerDept();
 initCheck();
+showDevice($("#workType").val())
 
 $('#phId').selectpicker({});
+
+/*window.alert = function(name){
+    var iframe = document.createElement("IFRAME");
+    iframe.style.display="none";
+    document.documentElement.appendChild(iframe);
+    window.frames[0].window.alert(name);
+    iframe.parentNode.removeChild(iframe);
+}
+window.confirm = function (message) {
+    var iframe = document.createElement("IFRAME");
+    iframe.style.display = "none";
+    iframe.setAttribute("src", 'data:text/plain,');
+    document.documentElement.appendChild(iframe);
+    var alertFrame = window.frames[0];
+    var result = alertFrame.window.confirm(message);
+    iframe.parentNode.removeChild(iframe);
+    return result;
+}*/
 
 function getPumpList(){
     var url = CONTEXT_PATH+"/ticket/getPumpList?"+ Math.random();
@@ -61,17 +80,18 @@ function onChangPump(){
 
 
 function getDeviceList(id){
-    var url = CONTEXT_PATH+"/ticket/getDeviceList?"+ Math.random();
+    var url = CONTEXT_PATH+"/productComponent/getProductList?"+ Math.random();
     jQuery.ajax({
         type : 'POST',
         contentType : 'application/x-www-form-urlencoded',
         url : url,
         dataType : 'json',
-        data: {"id":id},
+        data: {},
+        async:false,
         success : function(data) {
             $("#deviceId").html("");
             for(var i=0;i<data.length;i++) {
-                jQuery("#deviceId").append("<option value=" + data[i].id + ">" + data[i].name + "</option>");
+                jQuery("#deviceId").append("<option value=" + data[i].id + ">" + data[i].componentName + "</option>");
             }
         }
     });
@@ -103,24 +123,58 @@ function changerDept() {
 }
 
 function createLxTicket(){
-    var id=  $("#phId").val();
-    var phId="";
-    for(var i=0;i<id.length;i++){
-        phId+=id[i]+","
+    //保存设置泵房多选
+    var id = $("#phId").val();
+    var phId = "";
+    if (id != null && id != undefined) {
+        for (var i = 0; i < id.length; i++) {
+            phId += id[i] + ","
+        }
+        phId = phId.substring(0, phId.length - 1)
+        $("#phStr").val(phId);
+    } else {
+        $("#phStr").val(null);
+        $('#alertShowMessage').html('请至少选择一个泵房!!!');
+        $('#alertShow').modal('show');
+        return
     }
-    phId=phId.substring(0,phId.length-1)
-    $("#phStr").val(phId);
-    var _url = CONTEXT_PATH+"/ticket/createWorkOrder?"+ Math.random();
-    $("#workOrder").ajaxSubmit( {
-        type : 'POST',
-        url : _url,
-        dataType : 'json',
-        async:false,
-        success : function(data){
-            if(data.status == "success"){
+
+
+    //保存设置工单配件多选
+    var deviceId = $("#deviceId").val()
+    if (deviceId != null && deviceId != undefined) {
+        var deviceIdStr = "";
+        for (var i = 0; i < deviceId.length; i++) {
+            deviceIdStr += deviceId[i] + ","
+        }
+        deviceIdStr = deviceIdStr.substring(0, deviceIdStr.length - 1)
+        $("#deviceStr").val(deviceIdStr);
+    } else {
+        $("#deviceStr").val(null);
+        var type = $("#workType").val();
+        if (type == "3") {
+            $('#alertShowMessage').html('请至少选择一个设备!!!');
+            $('#alertShow').modal('show');
+            return
+        }
+
+    }
+
+    $('#alertWorkMessage').html('确认要创建工单?');
+    $('#alertWork').modal('show');
+}
+function clickOk(){
+    var _url = CONTEXT_PATH + "/ticket/createWorkOrder?" + Math.random();
+    $("#workOrder").ajaxSubmit({
+        type: 'POST',
+        url: _url,
+        dataType: 'json',
+        async: false,
+        success: function (data) {
+            if (data.status == "success") {
                 frameElement.api.close();
                 alert(data.message);
-            }else{
+            } else {
                 alert(data.message);
             }
 
@@ -136,6 +190,15 @@ function onChangType(){
        intiWb();
    }
     setAlarmContent()//设置工单名称
+    showDevice(id);
+}
+
+function showDevice(type){
+    if(type=="2"){
+        $("#device").hide();
+    }else if(type=="3"){
+        $("#device").show();
+    }
 }
 
 function setAlarmContent(){

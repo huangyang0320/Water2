@@ -316,7 +316,23 @@
                      {
                          field:'alarmLevel',
                          title:'告警等级',
-                         sortable:'true'
+                         align: 'center',
+                         sortable:'true',
+                         formatter:  function(value,row,index) {
+                             var a = "";
+                             if(value == "一级") {
+                                 a = '<span style="background-color:#FF0000;color:#ffff">'+value+'</span>';
+                             }else if(value == "二级"){
+                                 a = '<span style="background-color:#f46b1c;color:#ffff">'+value+'</span>';
+                             }else if(value == "三级") {
+                                 a = '<span style="background-color:#f4e672;color:#ffff">'+value+'</span>';
+                             }else if(value == "四级") {
+                                 a = '<span style="background-color:#dbf4be;color:#ffff">'+value+'</span>';
+                             }else{
+                                 a = '<span style="background-color:#45d60c;color:#ffff">'+value+'</span>';
+                             }
+                             return a;
+                         }
                      },
                      {
                          field:'endDate',
@@ -342,6 +358,8 @@
              }
          });
      }
+
+
 
         function modalConfig(phId) {
         	phId = $(phId).attr('name');
