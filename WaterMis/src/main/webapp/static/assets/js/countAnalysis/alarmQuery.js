@@ -234,6 +234,9 @@ $(function(){
            smartDisplay:true,
            showExport:true,
            exportDataType:'all',
+            exportOptions: {
+                ignoreColumn: [0] //忽略某一列的索引
+            },
            onLoadSuccess:function(data){
         	   successHide(1);
         	   total = data.total;
