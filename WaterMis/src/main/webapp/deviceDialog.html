@@ -142,6 +142,10 @@
                         <li class="list-group-item">告警信息：<span id="showWarnInfo"></span><span id="clickHa" class="alarmMore" style="cursor:pointer">&nbsp;&nbsp;更多...</span></li>
                         <li class="list-group-item">泵房地址：<span id="title2"></span></li>
                         <!--<li class="list-group-item">....</li>-->
+<!--                        <li class="list-group-item">滤后压力：<span id="title10"></span></li>-->
+<!--                        <li class="list-group-item">瞬时流量：<span id="title11"></span></li>-->
+<!--                        <li class="list-group-item">进水余氯：<span id="title12"></span></li>-->
+<!--                        <li class="list-group-item">进水浊度：<span id="title13"></span></li>-->
                     </ul>
                 </div>
                 <div class="col-md-12">
@@ -152,7 +156,7 @@
                         <li>
                             <a href="#device-pic" data-toggle="tab">设备图片</a>
                         </li>
-                        <li>
+                        <li class="active">
                             <a href="#device-stat" data-toggle="tab">设备状态</a>
                         </li>
                         <li>
@@ -373,7 +377,7 @@
                     $devicePic.attr("onclick", "parent.showPic('" + pumpHouse["allPicUrl"] + "')");
                     //$devicePic.attr("onclick", "parent.showPic('static/assets/img/default.png')");
                 }
-                console.log('pumpHouse',pumpHouse);
+                // console.log('pumpHouse',pumpHouse);
                /* $($subtitle[0]).text("泵房编号：" + pumpHouse["pumpHouseId"]);*/
                 /*$($subtitle[0]).text("泵房名称：" + pumpHouse["pumpHouseName"]);
                 $($subtitle[1]).text("泵房地址：" + pumpHouse["address"]);

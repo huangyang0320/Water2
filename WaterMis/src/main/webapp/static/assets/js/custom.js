@@ -637,7 +637,7 @@ function getLeftMenuData() {
                     $(".showRightMenu").fadeIn();
                 });
             });
-            // 显示menu
+            // 显示menu ----无用代码 走yxn-header-menu.js里走的
             $(".showRightMenu").click(function(){
                 $(this).fadeOut();
                 $(".right-menu").animate({top: '65px'}).show();

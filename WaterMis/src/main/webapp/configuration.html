@@ -294,9 +294,22 @@
     #pumphouseName{
         position: fixed;
         top: 71px;
-        left: 588px;
+        left: calc(50% - 50px);
         color: #fff;
         font-size: 24px;
+    }
+    #tuli{
+        position: fixed;
+        top: 71px;
+        left: calc(50% + 100px);
+        color: #fff;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+    }
+    #tuli img{
+        width:15px;
+        margin-left: 20px;
     }
 </style>
 <script type="text/javascript" src="static/home/js/echarts.min.js"></script>
@@ -349,10 +362,10 @@
 </div>
 <!--泵房基本信息-->
 <div class="row" style="margin: 0px;height: 12%; width:100%; color: #3056aa; position: absolute;" id="111">
-    <div id="pumpBaseInfoTurning" onclick="onPumpBaseInfoTurningClick()">
-        <span id="pumpBaseInfoTurning1" style="display: none">+</span>
-        <span id="pumpBaseInfoTurning2">-</span>
-    </div>
+<!--    <div id="pumpBaseInfoTurning" onclick="onPumpBaseInfoTurningClick()">-->
+<!--        <span id="pumpBaseInfoTurning1" style="display: none">+</span>-->
+<!--        <span id="pumpBaseInfoTurning2">-</span>-->
+<!--    </div>-->
     <script>
         function onPumpBaseInfoTurningClick() {
             $('#pumpBaseInfo').toggle()
@@ -361,21 +374,27 @@
         }
     </script>
     <div id="pumphouseName"></div>
-    <div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false"
-         style="top: 40px;left: 63px;z-index: 0">
-        <div class="modal-dialog" role="document" style="width: 230px;">
-            <div class="modal-content" style="background-color: rgba(39, 90, 182, 0.9);">
-              <!--  <div style="background-color: #127ed4;border-radius: 5px;">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="titlePumpContent"> <span  id="a" style="font-size: 12px;font-weight: 500"></span> </h4>
-                </div>-->
-                <div class="modal-body"  id="pumpDataInfo" style="width: 230px;text-align: left;color: rgba(244,244,244,0.73);overflow-y: auto">
-                    <ul id="pumpDataInfoUl"></ul>
-                </div>
-
-            </div>
-        </div>
+    <div id="tuli">
+        <img src="static/assets/img/run.gif" />
+        <p>:在线</p>
+        <img src="static/assets/img/unRunYY.png" />
+        <p>:离线</p>
     </div>
+<!--    <div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false"-->
+<!--         style="top: 40px;left: 63px;z-index: 0">-->
+<!--        <div class="modal-dialog" role="document" style="width: 230px;">-->
+<!--            <div class="modal-content" style="background-color: rgba(39, 90, 182, 0.9);">-->
+<!--              &lt;!&ndash;  <div style="background-color: #127ed4;border-radius: 5px;">-->
+<!--                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+<!--                    <h4 class="modal-title" id="titlePumpContent"> <span  id="a" style="font-size: 12px;font-weight: 500"></span> </h4>-->
+<!--                </div>&ndash;&gt;-->
+<!--                <div class="modal-body"  id="pumpDataInfo" style="width: 230px;text-align: left;color: rgba(244,244,244,0.73);overflow-y: auto">-->
+<!--                    <ul id="pumpDataInfoUl"></ul>-->
+<!--                </div>-->
+
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>
 
 <div class="modal fade " id="showDataInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false" style="top:50px">
@@ -500,13 +519,16 @@
      style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
     <ul id="pumpUl_1" style="margin-left: 10px"></ul>
 </div>
-<div id="pumpDataUl_2" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+<div id="pumpDataUl_2"
+     style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
     <ul id="pumpUl_2" style="margin-left: 10px"></ul>
 </div>
-<div id="pumpDataUl_3" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+<div id="pumpDataUl_3"
+     style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
     <ul id="pumpUl_3" style="margin-left: 10px"></ul>
 </div>
-<div id="pumpDataUl_4" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+<div id="pumpDataUl_4"
+     style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
     <ul id="pumpUl_4" style="margin-left: 10px"></ul>
 </div>
 
