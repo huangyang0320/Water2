@@ -6,6 +6,7 @@ import com.wapwag.woss.common.web.BaseController;
 import com.wapwag.woss.modules.biz.entity.NoticeDto;
 import com.wapwag.woss.modules.biz.service.NoticeService;
 import com.wapwag.woss.modules.sys.entity.BootPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  * Created by Administrator on 2020/4/17.
  */
 @RestController
+@Api(produces = "通知相关API")
 @RequestMapping(value = "${adminPath}/biz/notice")
 public class NoticeController extends BaseController{
 
