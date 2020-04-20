@@ -62,8 +62,9 @@
         border-radius: 3px;
     }
     .selectedDevice {
-        width: 450px;
-        height: 30px;
+        /*width: 450px;*/
+        width: 300px;
+        height: 60px;
         padding: 0 10px;
         left: 50px;
         top: 6px;
@@ -96,24 +97,32 @@
     }
     .tagnotice{
         position: absolute;
-        left: 300px;
-        top: 12px;
+        /*left: 300px;*/
+        left:60px;
+        top: 40px;
         z-index: 2;
         color: #fff;
         font-size: 12px;
         display: flex;
         align-items: center;
     }
+    .tagnoticeitem{
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    .tagnoticeitem:hover{
+        background-color: rgba(0,0,0,0.3);
+    }
     .tagnoticeimg{
         width:15px;
-        margin-left: 10px;
-        margin-right: 5px;
     }
 </style>
 <div class="row">
-    <div class="container-bg choose-bg"></div>
-	<div class="container-choose choose-button">
-        <!--<button class="btn btn-default" onclick="showSCADA()">SCADA</button>-->
+    <div class="container-bg choose-bg" style="visibility: hidden"></div>
+	<div class="container-choose choose-button" style="visibility: hidden">
+<!--        <button class="btn btn-default" onclick="showSCADA()">SCADA</button>-->
         <div>
             <button class="btn btn-default" onclick="showAllPumphouses()">所有泵房</button>
             <label>区域定位 : </label>
@@ -122,22 +131,31 @@
             </select>
         </div>
         <div style="display: flex;align-items: center;justify-content: space-around;color:#fff">
-            <p>总数：<span id="pumpnum1">0</span></p>
-            <p>在线：<span id="pumpnum2">0</span></p>
-            <p>离线：<span id="pumpnum3">0</span></p>
-            <p>报警：<span id="pumpnum4">0</span></p>
+<!--            <p>总数：<span id="pumpnum1">0</span></p>-->
+<!--            <p>在线：<span id="pumpnum2">0</span></p>-->
+<!--            <p>离线：<span id="pumpnum3">0</span></p>-->
+<!--            <p>报警：<span id="pumpnum4">0</span></p>-->
         </div>
     </div>
     <div class="container-bg selectedDevice"></div>
     <div>
         <div class="container-choose selectedDevice" id="selectedDevice"></div>
         <div class='tagnotice'>
-            <img class="tagnoticeimg" src="static\assets\img\pump02.png"/>
-            <span>在线</span>
-            <img class="tagnoticeimg" src="static\assets\img\pump01.png"/>
-            <span>离线</span>
-            <img class="tagnoticeimg" src="static\assets\img\pump03.png"/>
-            <span>告警</span>
+            <div class="tagnoticeitem" onclick="redrawMap(2)">
+                <img class="tagnoticeimg" src="static\assets\img\pump02.png"/>
+                <span>在线：</span>
+                <span id="pumpnum2">0</span>
+            </div>
+            <div class="tagnoticeitem" onclick="redrawMap(1)">
+                <img class="tagnoticeimg" src="static\assets\img\pump01.png"/>
+                <span>离线：</span>
+                <span id="pumpnum3">0</span>
+            </div>
+            <div class="tagnoticeitem" onclick="redrawMap(3)">
+                <img class="tagnoticeimg" src="static\assets\img\pump03.png"/>
+                <span>告警：</span>
+                <span id="pumpnum4">0</span>
+            </div>
         </div>
     </div>
     <div class="hoverInfo" id="pumpHouseSummary">
@@ -159,6 +177,8 @@
     var MAP, selectDevice, showAllPumpHouse, console, showPic, showVideo, showSummary, showSummaryDelay, DIALOG_REQUEST;
 
     var color = new Array("#d60f16","#d60f16","#d60f16","#d60f16","#d60f16","#d60f16");
+
+    let selectpumps = []
     //标注区域边界
     function setArea(areaName,color){
         MAP.enableScrollWheelZoom(true);
@@ -194,6 +214,54 @@
         });
     }
 
+    //點擊 左上角的事件 --废弃 无法实现
+    function redrawMap(type) {
+        // console.log('111',selectpumps,window.pumpList)
+        return
+        MAP.clearOverlays();
+        $.ajax({
+            type: 'POST',
+            async:false,
+            contentType: 'application/json',
+            url: CONTEXT_PATH + '/monitor/statistic/pumpOnlineStat',
+            data: JSON.stringify(selectpumps) ,
+            dataType: 'JSON',
+            success: function (res) {
+                console.log('222',res)
+                window.pumpList.map(function (v) {
+                    console.log('333',v)
+                    var pointM = new BMap.Point(v.longi, v.lati);
+                    var pumpHouse = {
+                        "pumpHouseId":v.pumpHouseId,
+                        "longi":v.longi,
+                        "lati":v.lati,
+                        "deviceId":v.id,
+                        "pumpHouseName":v.title,
+                        "address":v.address,
+                        "deviceManufacturersInformation":v.deviceManufacturersInformation,
+                        "propertyInformation":v.propertyInformation
+                    };
+                    if(isInArray(alarmList, v.pumpHouseId)){
+                        if(type == 3){
+                            mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
+                            addMarker(pointM, pumpHouse, mapPicUrl);
+                        }
+                    }else if(isInArray(res, v.pumpHouseId)){
+                        if(type == 2){
+                            mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
+                            addMarker(pointM, pumpHouse, mapPicUrl);
+                        }
+                    }else{
+                        if(type == 1){
+                            mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
+                            addMarker(pointM, pumpHouse, mapPicUrl);
+                        }
+                    }
+
+                })
+            }
+        })
+    }
 
     pageLoading(initBd);
     function initBd(){
@@ -228,14 +296,14 @@
                 id: 'device-pic',
                 title: '泵房图片',
                 content: 'url:device-pic.html?' + pic,
-                width: 1020,
+                width: 1300,
                 height: 535,
                 fixed: true,
                 max: false,
                 min: false,
                 resize: false,
                 lock: true,
-                top:50,
+                top:10,
                 background: '#000',
                 opacity: 0.65,
                 ok: false,
@@ -321,12 +389,14 @@
                     dataType: 'JSON',
                     success: function (res) {
                         if(res){
+                            console.log(pumpHouse)
                             var detailHtml = '';
                             // detailHtml += '<li>泵房编号：<span class="pumpHouseId">'+pumpHouse.pumpHouseId+'</span></li>';
                             detailHtml += '<li>泵房名称：<span class="pumpHouseName">'+pumpHouse.pumpHouseName+'</span></li>';
                             detailHtml += '<li>泵房地址：<span class="pumpHouseName">'+pumpHouse.address+'</span></li>';
-                            detailHtml += '<li>供应商联系方式：<span class="pumpHouseName">'+pumpHouse.deviceManufacturersInformation+'</span></li>';
-                            detailHtml += '<li>物业联系方式：<span class="pumpHouseName">'+pumpHouse.propertyInformation+'</span></li>';
+                            // detailHtml += '<li>供应商联系方式：<span class="pumpHouseName">'+pumpHouse.deviceManufacturersInformation+'</span></li>';
+                            detailHtml += '<li>运维单位：<span class="pumpHouseName">'+'</span></li>';
+                            detailHtml += '<li>联系方式：<span class="pumpHouseName">'+pumpHouse.propertyInformation+'</span></li>';
                             /*detailHtml += '<li>告警信息：<span class="pumpHouseName">'+'无'+'</span></li>';*/
                             for(var i = 0;i < res.length;i++){
                                 detailHtml += '<li>'+res[i].name+' 出口压力(MPa)：<span>'+res[i].memo+'</span></li>';
@@ -393,9 +463,6 @@
             dataType: 'JSON',
             success: function (res) {
                 GLOBAL_PUMP_MSG_MAP = res;
-/*                console.log("------------------------");
-                console.log(res);
-                console.log(GLOBAL_REGION_LIST);*/
                 callRefreshInit(res);
                 LOADING.hide();
             }
@@ -437,7 +504,7 @@
         };
 
         if (pumpHouse["longi"] && pumpHouse["lati"]) {
-            var content = "<iframe id='deviceDialog"+ pump.pumpHouseId + "' style='top: 102px' width='443px' height='415px' frameborder='no' border='0' " +
+            var content = "<iframe id='deviceDialog"+ pump.pumpHouseId + "' style='top: 102px' width='250px' height='245px' frameborder='no' border='0' " +
                 "marginwidth='0' marginheight='0' scrolling='no' " +
                 "src='deviceDialog.html'></iframe>";
             var infoWindow = new BMap.InfoWindow(content);
@@ -553,6 +620,24 @@
     sendDataMapTree.userId = GLOBAL_LOGIN_USER['userId'];
     sendDataMapTree.isSpread = false;
 
+    //修改后的区域搜索 20200419
+    function toAreaPump2(treeNode) {
+
+        //清理之前的渲染图层
+        MAP.clearOverlays();
+        // var areaPonit = JSON.parse(point)
+        // 平移地图到区域点
+        var pointthis = new BMap.Point(treeNode.longi, treeNode.lati);
+        var areaId = treeNode.id;
+
+        MAP.setZoom(12); // 设置缩放级别
+        MAP.setCenter(pointthis);
+        MAP.panTo(pointthis);
+
+
+        areaMapClick(areaId);
+
+    }
     /**
      * 区域搜索
      */
@@ -578,8 +663,6 @@
 
 
         areaMapClick(areaId);
-
-
 
     }
     var alarmList = [];
@@ -614,7 +697,7 @@
         MAP.clearOverlays();//清空上一次  地图 底图
         $("#areaId").val('');//清空边界线
         LOADING.show();
-        var content = "<iframe id='deviceDialog' width='400px' height='415px' frameborder='no' border='0' " +
+        var content = "<iframe id='deviceDialog' width='250px' height='245px' frameborder='no' border='0' " +
             "marginwidth='0' marginheight='0' scrolling='no' " +
             "src='deviceDialog.html'></iframe>";
         var infoWindow = new BMap.InfoWindow(content);
@@ -623,6 +706,8 @@
         window.pumpList.map(function (v) {
             allPumpArray.push(v.pumpHouseId);
         })
+
+        selectpumps = allPumpArray
 
         getAlarmByPumpIds(allPumpArray);
 
@@ -688,11 +773,13 @@
     function areaMapClick(areaId) {
         clickStatus='1';
         var allPumpArray = [];
-            window.pumpList.map(function (v) {
-                if(areaId==v.pId){
-                    allPumpArray.push(v.pumpHouseId);
-                }
-            })
+        window.pumpList.map(function (v) {
+            if(areaId==v.pId){
+                allPumpArray.push(v.pumpHouseId);
+            }
+        })
+
+        selectpumps = allPumpArray
 
         getAlarmByPumpIds(allPumpArray);
 

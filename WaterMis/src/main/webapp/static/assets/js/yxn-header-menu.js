@@ -654,8 +654,9 @@ function getLeftMenuData() {
             });
             // 显示menu
             $(".showRightMenu").click(function(){
+                console.log(2)
                 $(this).fadeOut();
-                $(".right-menu").animate({top: '102px'}).show();
+                $(".right-menu").animate({top: '65px'}).show();
             });
             $.get(ROOT_PATH + "/static/assets/js/leftmenu-" + GLOBAL_LOGIN_USER["map"] + ".json", function (result) {
                 $(".sidebar-collapse").load("leftmenu.html", function() {
@@ -945,6 +946,7 @@ function rightMenuMsg() {
         }
         $("#selectedDevice").text(massage + ": " + areaName + "/" + pumpHouseName + "/" + deviceName).show();
     }
+    // $("#selectedDevice").text(massage + ": " + areaName + "/" + pumpHouseName + "/" + deviceName).show();
 }
 
 

@@ -294,9 +294,22 @@
     #pumphouseName{
         position: fixed;
         top: 71px;
-        left: 588px;
+        left: calc(50% - 50px);
         color: #fff;
         font-size: 24px;
+    }
+    #tuli{
+        position: fixed;
+        top: 71px;
+        left: calc(50% + 100px);
+        color: #fff;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+    }
+    #tuli img{
+        width:15px;
+        margin-left: 20px;
     }
 </style>
 <script type="text/javascript" src="static/home/js/echarts.min.js"></script>
@@ -349,10 +362,10 @@
 </div>
 <!--泵房基本信息-->
 <div class="row" style="margin: 0px;height: 12%; width:100%; color: #3056aa; position: absolute;" id="111">
-    <div id="pumpBaseInfoTurning" onclick="onPumpBaseInfoTurningClick()">
-        <span id="pumpBaseInfoTurning1" style="display: none">+</span>
-        <span id="pumpBaseInfoTurning2">-</span>
-    </div>
+<!--    <div id="pumpBaseInfoTurning" onclick="onPumpBaseInfoTurningClick()">-->
+<!--        <span id="pumpBaseInfoTurning1" style="display: none">+</span>-->
+<!--        <span id="pumpBaseInfoTurning2">-</span>-->
+<!--    </div>-->
     <script>
         function onPumpBaseInfoTurningClick() {
             $('#pumpBaseInfo').toggle()
@@ -361,21 +374,27 @@
         }
     </script>
     <div id="pumphouseName"></div>
-    <div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false"
-         style="top: 40px;left: 63px;z-index: 0">
-        <div class="modal-dialog" role="document" style="width: 230px;">
-            <div class="modal-content" style="background-color: rgba(39, 90, 182, 0.9);">
-              <!--  <div style="background-color: #127ed4;border-radius: 5px;">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="titlePumpContent"> <span  id="a" style="font-size: 12px;font-weight: 500"></span> </h4>
-                </div>-->
-                <div class="modal-body"  id="pumpDataInfo" style="width: 230px;text-align: left;color: rgba(244,244,244,0.73);overflow-y: auto">
-                    <ul id="pumpDataInfoUl"></ul>
-                </div>
-
-            </div>
-        </div>
+    <div id="tuli">
+        <img src="static/assets/img/run.gif" />
+        <p>:运行</p>
+        <img src="static/assets/img/unRunYY.png" />
+        <p>:停止</p>
     </div>
+<!--    <div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false"-->
+<!--         style="top: 40px;left: 63px;z-index: 0">-->
+<!--        <div class="modal-dialog" role="document" style="width: 230px;">-->
+<!--            <div class="modal-content" style="background-color: rgba(39, 90, 182, 0.9);">-->
+<!--              &lt;!&ndash;  <div style="background-color: #127ed4;border-radius: 5px;">-->
+<!--                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+<!--                    <h4 class="modal-title" id="titlePumpContent"> <span  id="a" style="font-size: 12px;font-weight: 500"></span> </h4>-->
+<!--                </div>&ndash;&gt;-->
+<!--                <div class="modal-body"  id="pumpDataInfo" style="width: 230px;text-align: left;color: rgba(244,244,244,0.73);overflow-y: auto">-->
+<!--                    <ul id="pumpDataInfoUl"></ul>-->
+<!--                </div>-->
+
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>
 
 <div class="modal fade " id="showDataInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false" style="top:50px">
@@ -500,13 +519,16 @@
      style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
     <ul id="pumpUl_1" style="margin-left: 10px"></ul>
 </div>
-<div id="pumpDataUl_2" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+<div id="pumpDataUl_2"
+     style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
     <ul id="pumpUl_2" style="margin-left: 10px"></ul>
 </div>
-<div id="pumpDataUl_3" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+<div id="pumpDataUl_3"
+     style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
     <ul id="pumpUl_3" style="margin-left: 10px"></ul>
 </div>
-<div id="pumpDataUl_4" style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
+<div id="pumpDataUl_4"
+     style="border-radius:12px;z-index: 900000;background-color:  rgba(39, 90, 182, 0.9);width: 160px;height: 110px;position: fixed;display: none;color: rgba(244,244,244,0.73)" >
     <ul id="pumpUl_4" style="margin-left: 10px"></ul>
 </div>
 
@@ -1119,6 +1141,7 @@ function setSvg(reloading) {
                 var val=window.level_tank[i];
                 if (val!=undefined && val.tagName == "水箱液位" ) {
                     setText(v, '水箱液位：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位");
+                    // setText(v, ''+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位");
                 }
             })
         }
@@ -1166,6 +1189,7 @@ function setSvg(reloading) {
     // 添加出口压力点
     if(conctolPs.curDevicePos && conctolPs.curDevicePos.outletPos) {
         conctolPs.curDevicePos.outletPos.map(function (v, i) {
+            console.log('-----------------', conctolPs)
             if (!reloading) {
                 setCicle(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
                 setRect(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
@@ -1183,15 +1207,31 @@ function setSvg(reloading) {
                         }
                     })
                 }
-                setText(v, '出口压力：' + outletPos.pv + outletPos.unit,'default',conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+                // setText(v, '出口压力：' + outletPos.pv + outletPos.unit,'default',conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+                setText(v, conctolPs.deviceInfo[i+1].devicePosition+' ： ' + outletPos.pv + outletPos.unit,'default',conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+
             }
         })
     }
-    // 添加设备点
+    // 添加设备点   修改成直供水阀门的坐标 20200420
     if(!reloading){
         if(conctolPs.curDevicePos && conctolPs.curDevicePos.deviceNamePos) {
             conctolPs.curDevicePos.deviceNamePos.map(function (v, i) {
-                if(conctolPs.deviceInfo[i]) setText(v, '设备：'+ conctolPs.deviceInfo[i].devicePosition, 'device')
+                if(conctolPs.deviceInfo[i]){
+                    // setText(v, '设备：'+ conctolPs.deviceInfo[i].devicePosition, 'device')
+
+                    var z_status=window.openend_directvalve.pv==1?"打开":"关闭";
+                    var box_status=window.openend_tankinvalve.pv==1?"打开":"关闭";
+                    if(i == 1){
+                        setRect(v,"control")
+                        setText(v, '直供水阀门:'+z_status,"control");
+
+                    }else if(i == 2){
+                        setRect(v,"control")
+                        setText(v, '水箱阀门:'+box_status,"control");
+                    }
+
+                }
             })
         }
     }
@@ -1299,36 +1339,36 @@ function setSvg(reloading) {
             setImage('static/assets/img/fmY.png', '35', '35', 1093, 258);
 
         }else */
-       if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
-
-            var v={x:890,y:280};
-            setRect(v,"control")
-            setText(v, '直供水阀门:'+z_status,"control");
-            //setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
-
-            var v1={x:890,y:220};
-            setRect({x:890,y:220},"control")
-            setText(v1, '水箱阀门:'+box_status,"control")
-            // setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
-
-        }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
-
-            // var v={x:1210,y:250};
-           var v={x:1050,y:250};
-
-           setRect(v,"control")
-            setText(v, '直供水阀门:'+z_status,"control");
-          // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
-
-            // var v1={x:1090,y:165};
-           var v1={x:1020,y:155};
-
-           setRect(v1,"control")
-            setText(v1, '水箱阀门:'+box_status,"control")
-           // setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
-
-        }
-        return false;
+       // if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
+       //
+       //      var v={x:890,y:280};
+       //      setRect(v,"control")
+       //      setText(v, '直供水阀门:'+z_status,"control");
+       //      //setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
+       //
+       //      var v1={x:890,y:220};
+       //      setRect({x:890,y:220},"control")
+       //      setText(v1, '水箱阀门:'+box_status,"control")
+       //      // setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
+       //
+       //  }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
+       //
+       //      // var v={x:1210,y:250};
+       //     var v={x:1050,y:250};
+       //
+       //     setRect(v,"control")
+       //      setText(v, '直供水阀门:'+z_status,"control");
+       //    // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
+       //
+       //      // var v1={x:1090,y:165};
+       //     var v1={x:1020,y:155};
+       //
+       //     setRect(v1,"control")
+       //      setText(v1, '水箱阀门:'+box_status,"control")
+       //     // setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
+       //
+       //  }
+       //  return false;
     }
 
 
@@ -1809,7 +1849,6 @@ $('#showDataInfo').on('hide.bs.modal', function () {
 
 
 
-
 /**
  * 下控弹窗
  */
@@ -1819,10 +1858,11 @@ function showDiv(deviceId,deviceName,code,dateType){
     lastOnClickParams.deviceName=deviceName;
     lastOnClickParams.code=code;
     lastOnClickParams.dateType=dateType;
-
+    $('#showDataInfo').css('display','none')
     $('#showDataInfo').modal('show');
 
     $("#titleContent").html(deviceName+"("+dateType+")");
+    clearEcharts()
     jQuery.ajax({
         type : 'POST',
         async: false,
@@ -1998,10 +2038,20 @@ function baseLine(deviceId,type){
     }
     return markLine;
 }
+function clearEcharts() {
+    var myChart = echarts.init(document.getElementById('dataInfo'));
+    myChart.clear()
+    // $('#dataInfo').html('加載中')
+}
 function setEcharts(xData,yData,dateType,markLine){
-    console.log(markLine)
-    let max = (markLine.data[1].yAxis * 1.2).toFixed(1)
-    console.log(max)
+    console.log('markline',markLine)
+    let max = 0
+    if(markLine.data[1]){
+        max = (markLine.data[1].yAxis * 1.2).toFixed(1)
+    }else{
+        // 進口壓力寫死
+        max = 0.5
+    }
     var myChart = echarts.init(document.getElementById('dataInfo'));
     option = {
         /*color:['#47d5a6'],*/
@@ -2079,13 +2129,14 @@ function setEcharts(xData,yData,dateType,markLine){
                     gt: 0.2,
                     lte: 1.9,          //这儿设置基线上下颜色区分 基线下面为绿色
                     color: '#45d60c'
-                }, {
-
+                },
+                {
                     gt: 1.9,          //这儿设置基线上下颜色区分 基线上面为红色
                     color: '#d60f16'
-                }]
+                }
+            ]
         },
-       dataZoom: [{
+        dataZoom: [{
             startValue: '00:00:00'
         }, {
             type: 'inside'
@@ -2095,12 +2146,9 @@ function setEcharts(xData,yData,dateType,markLine){
                 name:dateType,
                 type:'line',
                 symbol: 'none',
-           /*     areaStyle: {normal: {}},*/
                 data:yData,
                 markLine: markLine
-
             }
-
         ]
     };
 // if(dateType.indexOf("液位")>=0){
@@ -2114,7 +2162,7 @@ function setEcharts(xData,yData,dateType,markLine){
 
 
     // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
+    myChart.setOption(option,true);
     window.addEventListener("resize",function(){
         myChart.resize();
     });
