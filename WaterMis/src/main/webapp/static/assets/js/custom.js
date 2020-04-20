@@ -864,6 +864,8 @@ function ZtreeInitG(relaoding){
  * 展示选择的设备或泵房
  *
  */
+
+// 无用  在yxn-header-menu.js中调用
 function rightMenuMsg() {
     if(ztreeBulid.isShowCheck && GLOBAL_SELECT_LIST[0]){
         var rMM =  GLOBAL_SELECT_LIST[0].title

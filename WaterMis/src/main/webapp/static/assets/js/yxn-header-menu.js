@@ -946,6 +946,7 @@ function rightMenuMsg() {
         }
         $("#selectedDevice").text(massage + ": " + areaName + "/" + pumpHouseName + "/" + deviceName).show();
     }
+    // $("#selectedDevice").text(massage + ": " + areaName + "/" + pumpHouseName + "/" + deviceName).show();
 }
 
 

@@ -131,179 +131,194 @@
                 margin-right: -16px;
                 margin-top: -30px;
             }
+            #title0{
+                font-size: 18px;
+                font-weight: 700;
+            }
+            #title0:hover{
+                color: #0B61A4;
+            }
         </style>
     </head>
     <body>
         <div class="container-fluid" style="top:100px">
             <div class="row">
+<!--                <div class="col-md-12">-->
+<!--                    <ul class="list-group" id="device-title">-->
+<!--                        <li class="list-group-item">泵房名称：<span id="title0"></span></li>-->
+<!--                        <li class="list-group-item">告警信息：<span id="showWarnInfo"></span><span id="clickHa" class="alarmMore" style="cursor:pointer">&nbsp;&nbsp;更多...</span></li>-->
+<!--                        <li class="list-group-item">泵房地址：<span id="title2"></span></li>-->
+<!--                        &lt;!&ndash;<li class="list-group-item">....</li>&ndash;&gt;-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--                <div class="col-md-12">-->
+<!--                    <ul class="nav nav-tabs">-->
+<!--                        <li class="active">-->
+<!--                            <a href="#device-info" data-toggle="tab">泵房信息</a>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <a href="#device-pic" data-toggle="tab">设备图片</a>-->
+<!--                        </li>-->
+<!--                        <li class="active">-->
+<!--                            <a href="#device-stat" data-toggle="tab">设备状态</a>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <a href="#device-guard" data-toggle="tab">视频监控</a>-->
+<!--                        </li>-->
+<!--                        &lt;!&ndash; <li>-->
+<!--                             <a id="pumpbandpic" href="#device-pumpbandpic" data-toggle="tab">泵机带图</a>-->
+<!--                         </li>&ndash;&gt;-->
+<!--                       &lt;!&ndash;<li>-->
+<!--                            <a href="#device-zk" data-toggle="tab">门禁信息</a>-->
+<!--                        </li>&ndash;&gt;-->
+<!--                    </ul>-->
+<!--                    <div class="tab-content">-->
+<!--                        <div class="tab-pane fade in active" id="device-info">-->
+<!--                            <div class="list-group">-->
+<!--                                <div id="myCarousel2" class="carousel slide" data-interval="90000000">-->
+<!--                                    &lt;!&ndash; 轮播（Carousel）项目 &ndash;&gt;-->
+<!--                                    <div class="carousel-inner">-->
+
+<!--                                        <div class="item active">-->
+<!--                                        <ul class="list-group" id="pumpHouseInfo" style="margin-bottom: 0px">-->
+
+<!--                                            <li class="list-group-li">运维方：<span id="constructionSide"></span></li>-->
+<!--                                            <li class="list-group-li">运维方联系方式：<span id="constructionSideInformation"></span></li>-->
+<!--                                            <li class="list-group-li">物业方：<span id="property"></span></li>-->
+<!--                                            <li class="list-group-li">物业方联系方式：<span id="propertyInformation"></span></li>-->
+<!--                                            <li class="list-group-li">施工方：<span id="construction"></span></li>-->
+<!--                                            <li class="list-group-li">施工方联系方式：<span id="constructionInformation"></span></li>-->
+<!--                                            <li class="list-group-li">自控改造厂家：<span id="selfControlManufacturers"></span></li>-->
+<!--                                            <li class="list-group-li">自控改造厂家联系方式：<span id="selfControlManufacturersInformation"></span></li>-->
+<!--                                            <li class="list-group-li">设备厂家：<span id="deviceManufacturers"></span></li>-->
+<!--                                            <li class="list-group-li">设备厂家联系方式：<span id="deviceManufacturersInformation"></span></li>-->
+<!--                                            <li class="list-group-li">移交时间：<span id="handoverTime"></span></li>-->
+
+
+<!--                                        &lt;!&ndash;<li class="list-group-li">设备名称：高科技无敌设备</li>-->
+<!--                                        <li class="list-group-li">设备编号：0000000000000</li>-->
+<!--                                        <li class="list-group-li">设备最新数据：</li>-->
+<!--                                        <li class="list-group-item pre-scrollable" style="width: 100%;height: 176px">-->
+<!--                                        <p>设备编号：0000000000000</p>-->
+<!--                                        <p>设备编号：0000000000000</p>-->
+<!--                                        <p>设备编号：0000000000000</p>-->
+<!--                                        <p>设备编号：0000000000000</p>-->
+<!--                                        <p>设备编号：0000000000000</p>-->
+<!--                                        <p>设备编号：0000000000000</p>-->
+<!--                                        <p>设备编号：0000000000000</p>-->
+<!--                                        </li>&ndash;&gt;-->
+<!--                                        </ul>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+
+<!--                                    &lt;!&ndash; 轮播（Carousel）导航 &ndash;&gt;-->
+<!--                                   &lt;!&ndash; <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">-->
+<!--                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>-->
+<!--                                        <span class="sr-only">Previous</span>-->
+<!--                                    </a>-->
+<!--                                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">-->
+<!--                                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>-->
+<!--                                        <span class="sr-only">Next</span>-->
+<!--                                    </a>&ndash;&gt;-->
+<!--                                </div>-->
+<!--                        </div>-->
+<!--                        </div>-->
+<!--                        <div class="tab-pane fade in active" id="device-pic">-->
+<!--                            <img style="width:410px;height:250px" src="static/assets/img/default.png">-->
+<!--                        </div>-->
+<!--                        <div class="tab-pane fade device-overflow" id="device-stat">-->
+<!--                            <div class="list-group">-->
+<!--                                <div id="pointLoading" style="width: 100%; height: 254px; text-align: center;padding: 100px 0px;">-->
+<!--                                    <img width="50px" width="" src="static/assets/img/loading.gif" alt="">-->
+<!--                                </div>-->
+<!--                                <div id="myCarousel" class="carousel slide" data-interval="90000000">-->
+<!--                                    &lt;!&ndash; 轮播（Carousel）项目 &ndash;&gt;-->
+<!--                                    <div class="carousel-inner">-->
+
+<!--                                        &lt;!&ndash;<div class="item active">&ndash;&gt;-->
+<!--                                           &lt;!&ndash;<ul class="list-group" style="margin-bottom: 0px">&ndash;&gt;-->
+<!--                                               &lt;!&ndash;<li class="list-group-li">设备名称：高科技无敌设备</li>&ndash;&gt;-->
+<!--                                               &lt;!&ndash;<li class="list-group-li">设备编号：0000000000000</li>&ndash;&gt;-->
+<!--                                               &lt;!&ndash;<li class="list-group-li">设备最新数据：</li>&ndash;&gt;-->
+<!--                                               &lt;!&ndash;<li class="list-group-item pre-scrollable" style="width: 100%;height: 176px">&ndash;&gt;-->
+<!--                                                    &lt;!&ndash;<p>设备编号：0000000000000</p>&ndash;&gt;-->
+<!--                                                    &lt;!&ndash;<p>设备编号：0000000000000</p>&ndash;&gt;-->
+<!--                                                    &lt;!&ndash;<p>设备编号：0000000000000</p>&ndash;&gt;-->
+<!--                                                    &lt;!&ndash;<p>设备编号：0000000000000</p>&ndash;&gt;-->
+<!--                                                    &lt;!&ndash;<p>设备编号：0000000000000</p>&ndash;&gt;-->
+<!--                                                    &lt;!&ndash;<p>设备编号：0000000000000</p>&ndash;&gt;-->
+<!--                                                    &lt;!&ndash;<p>设备编号：0000000000000</p>&ndash;&gt;-->
+<!--                                               &lt;!&ndash;</li>&ndash;&gt;-->
+<!--                                           &lt;!&ndash;</ul>&ndash;&gt;-->
+<!--                                        &lt;!&ndash;</div>&ndash;&gt;-->
+<!--                                    </div>-->
+
+<!--                                    &lt;!&ndash; 轮播（Carousel）导航 &ndash;&gt;-->
+<!--                                    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">-->
+<!--                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>-->
+<!--                                        <span class="sr-only">Previous</span>-->
+<!--                                    </a>-->
+<!--                                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">-->
+<!--                                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>-->
+<!--                                        <span class="sr-only">Next</span>-->
+<!--                                    </a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="tab-pane fade device-overflow" id="device-guard" >-->
+<!--                            <div class="alert alert-success" id="noVideo" style="display:none" role="alert">当前泵房暂无可用视频监控.</div>-->
+<!--                            <ul class="list-group">-->
+<!--                &lt;!&ndash;                <li class="list-group-item door_state">门禁开关：未能获取到门禁状态，点击重新获取</li>-->
+<!--                                <li class="list-group-item">视频监控</li>&ndash;&gt;-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                        <div class="tab-pane fade device-overflow" id="device-pumpbandpic">-->
+<!--                            <div class="list-group">-->
+<!--                                <div id="pointLoadingTwo" style="width: 100%; height: 254px; text-align: center;padding: 100px 0px;">-->
+<!--                                    <img width="50px" width="" src="static/assets/img/loading.gif" alt="">-->
+<!--                                </div>-->
+<!--                                <div id="myCarouselTwo" class="carousel slide" data-interval="90000000">-->
+<!--                                    &lt;!&ndash; 轮播（Carousel）项目 &ndash;&gt;-->
+<!--                                    <div class="carousel-inner">-->
+
+<!--                                    </div>-->
+
+<!--                                    &lt;!&ndash; 轮播（Carousel）导航 &ndash;&gt;-->
+<!--                                    <a class="left carousel-control" href="#myCarouselTwo" role="button" data-slide="prev">-->
+<!--                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>-->
+<!--                                        <span class="sr-only">Previous</span>-->
+<!--                                    </a>-->
+<!--                                    <a class="right carousel-control" href="#myCarouselTwo" role="button" data-slide="next">-->
+<!--                                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>-->
+<!--                                        <span class="sr-only">Next</span>-->
+<!--                                    </a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash;门禁&ndash;&gt;-->
+<!--                        &lt;!&ndash;<div class="tab-pane fade" id="device-zk">-->
+<!--                                <ul class="list-group">-->
+<!--                                    <div class="modal-body door-modal-body"  id="doorModalBody">-->
+
+<!--                                    </div>-->
+<!--                                   &lt;!&ndash; <div class="tab-pane fade in active" id="zk-pic">-->
+<!--                                        <img style="width:410px;height:250px" src="static/assets/img/default.png">-->
+<!--                                    </div>&ndash;&gt;-->
+<!--                                </ul>-->
+<!--                        </div>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+            <div class="row">
                 <div class="col-md-12">
                     <ul class="list-group" id="device-title">
-                        <li class="list-group-item">泵房名称：<span id="title0"></span></li>
+                        <li class="list-group-item" style="cursor: pointer" onclick="clickTitle()"><span id="title0"></span></li>
+                        <li class="list-group-item">滤后压力：<span id="title10"></span></li>
+                        <li class="list-group-item">瞬时流量：<span id="title11"></span></li>
+                        <li class="list-group-item">进水余氯：<span id="title12"></span></li>
+                        <li class="list-group-item">进水浊度：<span id="title13"></span></li>
                         <li class="list-group-item">告警信息：<span id="showWarnInfo"></span><span id="clickHa" class="alarmMore" style="cursor:pointer">&nbsp;&nbsp;更多...</span></li>
-                        <li class="list-group-item">泵房地址：<span id="title2"></span></li>
-                        <!--<li class="list-group-item">....</li>-->
-<!--                        <li class="list-group-item">滤后压力：<span id="title10"></span></li>-->
-<!--                        <li class="list-group-item">瞬时流量：<span id="title11"></span></li>-->
-<!--                        <li class="list-group-item">进水余氯：<span id="title12"></span></li>-->
-<!--                        <li class="list-group-item">进水浊度：<span id="title13"></span></li>-->
                     </ul>
-                </div>
-                <div class="col-md-12">
-                    <ul class="nav nav-tabs">
-                        <li class="active">
-                            <a href="#device-info" data-toggle="tab">泵房信息</a>
-                        </li>
-                        <li>
-                            <a href="#device-pic" data-toggle="tab">设备图片</a>
-                        </li>
-                        <li class="active">
-                            <a href="#device-stat" data-toggle="tab">设备状态</a>
-                        </li>
-                        <li>
-                            <a href="#device-guard" data-toggle="tab">视频监控</a>
-                        </li>
-                        <!-- <li>
-                             <a id="pumpbandpic" href="#device-pumpbandpic" data-toggle="tab">泵机带图</a>
-                         </li>-->
-                       <!--<li>
-                            <a href="#device-zk" data-toggle="tab">门禁信息</a>
-                        </li>-->
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane fade in active" id="device-info">
-                            <div class="list-group">
-                                <div id="myCarousel2" class="carousel slide" data-interval="90000000">
-                                    <!-- 轮播（Carousel）项目 -->
-                                    <div class="carousel-inner">
-
-                                        <div class="item active">
-                                        <ul class="list-group" id="pumpHouseInfo" style="margin-bottom: 0px">
-
-                                            <li class="list-group-li">运维方：<span id="constructionSide"></span></li>
-                                            <li class="list-group-li">运维方联系方式：<span id="constructionSideInformation"></span></li>
-                                            <li class="list-group-li">物业方：<span id="property"></span></li>
-                                            <li class="list-group-li">物业方联系方式：<span id="propertyInformation"></span></li>
-                                            <li class="list-group-li">施工方：<span id="construction"></span></li>
-                                            <li class="list-group-li">施工方联系方式：<span id="constructionInformation"></span></li>
-                                            <li class="list-group-li">自控改造厂家：<span id="selfControlManufacturers"></span></li>
-                                            <li class="list-group-li">自控改造厂家联系方式：<span id="selfControlManufacturersInformation"></span></li>
-                                            <li class="list-group-li">设备厂家：<span id="deviceManufacturers"></span></li>
-                                            <li class="list-group-li">设备厂家联系方式：<span id="deviceManufacturersInformation"></span></li>
-                                            <li class="list-group-li">移交时间：<span id="handoverTime"></span></li>
-
-
-                                        <!--<li class="list-group-li">设备名称：高科技无敌设备</li>
-                                        <li class="list-group-li">设备编号：0000000000000</li>
-                                        <li class="list-group-li">设备最新数据：</li>
-                                        <li class="list-group-item pre-scrollable" style="width: 100%;height: 176px">
-                                        <p>设备编号：0000000000000</p>
-                                        <p>设备编号：0000000000000</p>
-                                        <p>设备编号：0000000000000</p>
-                                        <p>设备编号：0000000000000</p>
-                                        <p>设备编号：0000000000000</p>
-                                        <p>设备编号：0000000000000</p>
-                                        <p>设备编号：0000000000000</p>
-                                        </li>-->
-                                        </ul>
-                                        </div>
-                                    </div>
-
-                                    <!-- 轮播（Carousel）导航 -->
-                                   <!-- <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-                                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                        <span class="sr-only">Next</span>
-                                    </a>-->
-                                </div>
-                        </div>
-                        </div>
-                        <div class="tab-pane fade in active" id="device-pic">
-                            <img style="width:410px;height:250px" src="static/assets/img/default.png">
-                        </div>
-                        <div class="tab-pane fade device-overflow" id="device-stat">
-                            <div class="list-group">
-                                <div id="pointLoading" style="width: 100%; height: 254px; text-align: center;padding: 100px 0px;">
-                                    <img width="50px" width="" src="static/assets/img/loading.gif" alt="">
-                                </div>
-                                <div id="myCarousel" class="carousel slide" data-interval="90000000">
-                                    <!-- 轮播（Carousel）项目 -->
-                                    <div class="carousel-inner">
-
-                                        <!--<div class="item active">-->
-                                           <!--<ul class="list-group" style="margin-bottom: 0px">-->
-                                               <!--<li class="list-group-li">设备名称：高科技无敌设备</li>-->
-                                               <!--<li class="list-group-li">设备编号：0000000000000</li>-->
-                                               <!--<li class="list-group-li">设备最新数据：</li>-->
-                                               <!--<li class="list-group-item pre-scrollable" style="width: 100%;height: 176px">-->
-                                                    <!--<p>设备编号：0000000000000</p>-->
-                                                    <!--<p>设备编号：0000000000000</p>-->
-                                                    <!--<p>设备编号：0000000000000</p>-->
-                                                    <!--<p>设备编号：0000000000000</p>-->
-                                                    <!--<p>设备编号：0000000000000</p>-->
-                                                    <!--<p>设备编号：0000000000000</p>-->
-                                                    <!--<p>设备编号：0000000000000</p>-->
-                                               <!--</li>-->
-                                           <!--</ul>-->
-                                        <!--</div>-->
-                                    </div>
-
-                                    <!-- 轮播（Carousel）导航 -->
-                                    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-                                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade device-overflow" id="device-guard" >
-                            <div class="alert alert-success" id="noVideo" style="display:none" role="alert">当前泵房暂无可用视频监控.</div>
-                            <ul class="list-group">
-                <!--                <li class="list-group-item door_state">门禁开关：未能获取到门禁状态，点击重新获取</li>
-                                <li class="list-group-item">视频监控</li>-->
-                            </ul>
-                        </div>
-                        <div class="tab-pane fade device-overflow" id="device-pumpbandpic">
-                            <div class="list-group">
-                                <div id="pointLoadingTwo" style="width: 100%; height: 254px; text-align: center;padding: 100px 0px;">
-                                    <img width="50px" width="" src="static/assets/img/loading.gif" alt="">
-                                </div>
-                                <div id="myCarouselTwo" class="carousel slide" data-interval="90000000">
-                                    <!-- 轮播（Carousel）项目 -->
-                                    <div class="carousel-inner">
-
-                                    </div>
-
-                                    <!-- 轮播（Carousel）导航 -->
-                                    <a class="left carousel-control" href="#myCarouselTwo" role="button" data-slide="prev">
-                                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                    <a class="right carousel-control" href="#myCarouselTwo" role="button" data-slide="next">
-                                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <!--门禁-->
-                        <!--<div class="tab-pane fade" id="device-zk">
-                                <ul class="list-group">
-                                    <div class="modal-body door-modal-body"  id="doorModalBody">
-
-                                    </div>
-                                   &lt;!&ndash; <div class="tab-pane fade in active" id="zk-pic">
-                                        <img style="width:410px;height:250px" src="static/assets/img/default.png">
-                                    </div>&ndash;&gt;
-                                </ul>
-                        </div>-->
-                    </div>
                 </div>
             </div>
         </div>
@@ -463,6 +478,7 @@
                             pumpHouseId: pumpHouse.pumpHouseId
                         }),
                         success:function (res) {
+                            console.log('DIALOG_DATA_UPDATE，获取点位信息',res)
                             $("#pointLoading").hide();
                             var strDevice, deviceStatus, statusBtn, ponitStr;
                             if( res.length>1){
@@ -537,6 +553,41 @@
                                 $deviceData.append(strDevice);
                             }
                             $("#myCarousel").show();
+
+
+                            // 20200420 新增  点击地图修改弹窗内容   许天涵
+                            for(let i = 0;i<res.length;i++){
+                                //找到主控柜
+                                if(res[i].deviceId.indexOf('plc_main') != -1){
+                                    if(!res[i].pointList){
+                                        $('#title10').html('没有点位数据')
+                                        $('#title11').html('没有点位数据')
+                                        $('#title12').html('没有点位数据')
+                                        $('#title13').html('没有点位数据')
+                                    }else{
+                                        for(let j=0;j<res[i].pointList.length;j++){
+                                            if(res[i].pointList[j].pointCode == "chlorine_js"){
+                                                //进水余氯
+                                                // alert(res[i].pointList[j].pointValue)
+                                                $('#title12').html(res[i].pointList[j].pointValue + res[i].pointList[j].unit)
+                                            }
+                                            if(res[i].pointList[j].pointCode == "turbidity_js"){
+                                                //进水浊度
+                                                $('#title13').html(res[i].pointList[j].pointValue + res[i].pointList[j].unit)
+                                            }
+                                            if(res[i].pointList[j].pointCode == "flow_instant"){
+                                                //"总进水瞬时流量"
+                                                $('#title11').html(res[i].pointList[j].pointValue + res[i].pointList[j].unit)
+                                            }
+                                            if(res[i].pointList[j].pointCode == "pressure_szjs2"){
+                                                //滤后鸭梨
+                                                $('#title10').html(res[i].pointList[j].pointValue + res[i].pointList[j].unit)
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     })
                 };
@@ -609,6 +660,14 @@
                     clearInterval(DIALOG_INTERVAL);
                 }
             }
+
+            //点击名称 显示组态图
+            function clickTitle() {
+                console.log(parent.GLOBAL_PUMP_MSG_MAP)
+                parent.showPic(parent.GLOBAL_PUMP_MSG_MAP["pumpHouseId"])
+            }
+
+
 
             function showChar(dataMsg, divObj){
                 divObj.highcharts({

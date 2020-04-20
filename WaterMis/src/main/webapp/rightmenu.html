@@ -317,7 +317,7 @@ var ztreeBulid = {
 }
 /* 单击展开子节点 */
 function onClick(e,treeId, treeNode) {
-    // console.log(e,treeId,treeNode)
+    console.log(e,treeId,treeNode)
     if(!treeNode.isParent && !ztreeBulid.isShowCheck){
         GLOBAL_SELECT_LIST_CHO0SE = []
         GLOBAL_SELECT_LIST = []
@@ -331,14 +331,19 @@ function onClick(e,treeId, treeNode) {
         if(treeNode.level == 0){
             //点击芜湖
             showAllPumphouses()
-        }else{
+        }else if(treeNode.level == 1){
             //点击区
             toAreaPump2(treeNode)
+        }else {
+            //有柜子的页面点击事件
+            var zTree = $.fn.zTree.getZTreeObj(ztreeBulid.treeDomId);
+            zTree.expandNode(treeNode);
+            ztreeBulid.isShowCk();
         }
     }
-    var zTree = $.fn.zTree.getZTreeObj(ztreeBulid.treeDomId);
-    zTree.expandNode(treeNode);
-    ztreeBulid.isShowCk();
+    // var zTree = $.fn.zTree.getZTreeObj(ztreeBulid.treeDomId);
+    // zTree.expandNode(treeNode);
+    // ztreeBulid.isShowCk();
 }
 
 function zTreeOnCheck(event, treeId, treeNode) {

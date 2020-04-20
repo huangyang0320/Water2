@@ -376,9 +376,9 @@
     <div id="pumphouseName"></div>
     <div id="tuli">
         <img src="static/assets/img/run.gif" />
-        <p>:在线</p>
+        <p>:运行</p>
         <img src="static/assets/img/unRunYY.png" />
-        <p>:离线</p>
+        <p>:停止</p>
     </div>
 <!--    <div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false"-->
 <!--         style="top: 40px;left: 63px;z-index: 0">-->
@@ -1141,6 +1141,7 @@ function setSvg(reloading) {
                 var val=window.level_tank[i];
                 if (val!=undefined && val.tagName == "水箱液位" ) {
                     setText(v, '水箱液位：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位");
+                    // setText(v, ''+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位");
                 }
             })
         }
@@ -1188,6 +1189,7 @@ function setSvg(reloading) {
     // 添加出口压力点
     if(conctolPs.curDevicePos && conctolPs.curDevicePos.outletPos) {
         conctolPs.curDevicePos.outletPos.map(function (v, i) {
+            console.log('-----------------', conctolPs)
             if (!reloading) {
                 setCicle(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
                 setRect(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
@@ -1205,15 +1207,31 @@ function setSvg(reloading) {
                         }
                     })
                 }
-                setText(v, '出口压力：' + outletPos.pv + outletPos.unit,'default',conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+                // setText(v, '出口压力：' + outletPos.pv + outletPos.unit,'default',conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+                setText(v, conctolPs.deviceInfo[i+1].devicePosition+' ： ' + outletPos.pv + outletPos.unit,'default',conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+
             }
         })
     }
-    // 添加设备点
+    // 添加设备点   修改成直供水阀门的坐标 20200420
     if(!reloading){
         if(conctolPs.curDevicePos && conctolPs.curDevicePos.deviceNamePos) {
             conctolPs.curDevicePos.deviceNamePos.map(function (v, i) {
-                if(conctolPs.deviceInfo[i]) setText(v, '设备：'+ conctolPs.deviceInfo[i].devicePosition, 'device')
+                if(conctolPs.deviceInfo[i]){
+                    // setText(v, '设备：'+ conctolPs.deviceInfo[i].devicePosition, 'device')
+
+                    var z_status=window.openend_directvalve.pv==1?"打开":"关闭";
+                    var box_status=window.openend_tankinvalve.pv==1?"打开":"关闭";
+                    if(i == 1){
+                        setRect(v,"control")
+                        setText(v, '直供水阀门:'+z_status,"control");
+
+                    }else if(i == 2){
+                        setRect(v,"control")
+                        setText(v, '水箱阀门:'+box_status,"control");
+                    }
+
+                }
             })
         }
     }
@@ -1321,36 +1339,36 @@ function setSvg(reloading) {
             setImage('static/assets/img/fmY.png', '35', '35', 1093, 258);
 
         }else */
-       if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
-
-            var v={x:890,y:280};
-            setRect(v,"control")
-            setText(v, '直供水阀门:'+z_status,"control");
-            //setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
-
-            var v1={x:890,y:220};
-            setRect({x:890,y:220},"control")
-            setText(v1, '水箱阀门:'+box_status,"control")
-            // setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
-
-        }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
-
-            // var v={x:1210,y:250};
-           var v={x:1050,y:250};
-
-           setRect(v,"control")
-            setText(v, '直供水阀门:'+z_status,"control");
-          // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
-
-            // var v1={x:1090,y:165};
-           var v1={x:1020,y:155};
-
-           setRect(v1,"control")
-            setText(v1, '水箱阀门:'+box_status,"control")
-           // setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
-
-        }
-        return false;
+       // if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
+       //
+       //      var v={x:890,y:280};
+       //      setRect(v,"control")
+       //      setText(v, '直供水阀门:'+z_status,"control");
+       //      //setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
+       //
+       //      var v1={x:890,y:220};
+       //      setRect({x:890,y:220},"control")
+       //      setText(v1, '水箱阀门:'+box_status,"control")
+       //      // setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
+       //
+       //  }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
+       //
+       //      // var v={x:1210,y:250};
+       //     var v={x:1050,y:250};
+       //
+       //     setRect(v,"control")
+       //      setText(v, '直供水阀门:'+z_status,"control");
+       //    // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
+       //
+       //      // var v1={x:1090,y:165};
+       //     var v1={x:1020,y:155};
+       //
+       //     setRect(v1,"control")
+       //      setText(v1, '水箱阀门:'+box_status,"control")
+       //     // setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
+       //
+       //  }
+       //  return false;
     }
 
 
