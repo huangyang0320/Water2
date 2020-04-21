@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 通知Controller
- * Created by Administrator on 2020/4/17.
+ * Created by Fyc on 2020/4/17.
  */
 @RestController
 @RequestMapping(value = "${adminPath}/biz/notice")
