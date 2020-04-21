@@ -375,7 +375,6 @@ function getPieData(type, sendData) {
         success: function(res) {
             if(res.minmax){
                 var minmax = res.minmax
-                console.log(1111111,minmax)
                 if(minmax.kwh_m3){
                     $('#energyanalysis_msg_kwh_m3').html("吨水耗电量最高："+ minmax.kwh_m3.maxName +  minmax.kwh_m3.maxVal )
                 }

@@ -207,7 +207,6 @@ function initAccessories(deviceId) {
 			$("#e_table").html("");
 			$("#p_table").html("");
 			$("#a_table").html("");
-			console.log(data);
 			for (var i = 0; i < data.length; i++) {
 				if (1 == data[i].accessoriesType) {
 					$("#e_table").append(

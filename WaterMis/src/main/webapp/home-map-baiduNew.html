@@ -216,7 +216,6 @@
 
     //點擊 左上角的事件 --废弃 无法实现
     function redrawMap(type) {
-        // console.log('111',selectpumps,window.pumpList)
         return
         MAP.clearOverlays();
         $.ajax({
@@ -389,7 +388,6 @@
                     dataType: 'JSON',
                     success: function (res) {
                         if(res){
-                            console.log(pumpHouse)
                             var detailHtml = '';
                             // detailHtml += '<li>泵房编号：<span class="pumpHouseId">'+pumpHouse.pumpHouseId+'</span></li>';
                             detailHtml += '<li>泵房名称：<span class="pumpHouseName">'+pumpHouse.pumpHouseName+'</span></li>';
@@ -595,7 +593,6 @@
             clickStatus='2';
             var k=0;
             GLOBAL_REGION_LIST.map(function (val) {
-                console.log(val["name"]);
                 if(val["name"].indexOf(pumpHouse.pumpHouseName)>0){
                     GLOBAL_REGION_LIST.map(function (v) {
                         if(v.id==val.pId) {

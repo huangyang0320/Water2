@@ -622,6 +622,10 @@ function initRealtimeData(){
         $("#realtimeTbody1").html("");
         $("#realtimeTbody2").html("");
         $("#realtimeTbody3").html("");
+        $("#realtimeTbody4").html("");
+        $("#realtimeTbody5").html("");
+        $("#realtimeTbody6").html("");
+        $("#realtimeTbody7").html("");
         for(var i=0;i<serviceData.length;i++){
         	html = "";
             var info = serviceData[i];
@@ -653,14 +657,29 @@ function initRealtimeData(){
             }
             html +="<td>"+moment(info.serviceDate).format("YYYY-MM-DD HH:mm:ss")+"</td>";
             html += "</tr>";
-            if(info.type == "ftMP" || info.type == "ftAC" || info.type == "ftMF"
-            	|| info.type == "ftT" || info.type == "ftTL" || info.type == "ftWQ" || info.type == "ftEE"){
-                $("#realtimeTbody1").append(html);//曲线参数
-            }else if(info.type == "ftPS" || info.type == "ftRS" || info.type == "ftVS"
-            	|| info.type == "ftA"){
-            	$("#realtimeTbody3").append(html);//状态参数
+            // if(info.type == "ftMP" || info.type == "ftAC" || info.type == "ftMF"
+            // 	|| info.type == "ftT" || info.type == "ftTL" || info.type == "ftWQ" || info.type == "ftEE"){
+            //     $("#realtimeTbody1").append(html);//曲线参数
+            // }else if(info.type == "ftPS" || info.type == "ftRS" || info.type == "ftVS"
+            // 	|| info.type == "ftA"){
+            // 	$("#realtimeTbody3").append(html);//状态参数
+            // }else if(info.type == "ftSP"){
+            // 	$("#realtimeTbody2").append(html); //设置参数
+            // }
+            if(info.type == "ftWQ"){
+                $("#realtimeTbody1").append(html);//水质
+            }else if(info.type == "ftTL"){
+                $("#realtimeTbody4").append(html);//液位
+            }else if(info.type == "ftMP"||info.type == "ftMF"){
+                $("#realtimeTbody5").append(html); //管网
+            }else if(info.type == "ftAC"){
+                $("#realtimeTbody6").append(html); //用电
+            }else if(info.type == "ftA"){
+                $("#realtimeTbody2").append(html); //告警
+            }else if(info.type == "ftVS"||info.type == "ftRS"||info.type == "ftPS"){
+                $("#realtimeTbody7").append(html); //状态
             }else if(info.type == "ftSP"){
-            	$("#realtimeTbody2").append(html); //设置参数
+                $("#realtimeTbody3").append(html); //设置参数
             }
         }
     }
