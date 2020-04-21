@@ -33,14 +33,17 @@
             $(this).css({marginTop : "0.1rem"}).find("li:first").appendTo(this);
         })
     }
+    // alert
     $(function(){
         var num = $('.notice_active').find('li').length;
         if(num > 1){
-            var time=setInterval('timer(".notice_active")',10000);
-            $('.gg_more a').mousemove(function(){
+            var time=setInterval('timer(".notice_active")',3000);
+            $('.huadong').mousemove(function(){
+                // alert(1)
                 clearInterval(time);
             }).mouseout(function(){
-                time = setInterval('timer(".notice_active")',10000);
+                // alert(2)
+                time = setInterval('timer(".notice_active")',3000);
             });
         }
 

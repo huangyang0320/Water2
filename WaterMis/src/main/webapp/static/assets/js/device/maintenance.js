@@ -296,7 +296,6 @@ function qryProjectList(areaId){
 	});
 
 	function getPumpList(project){
-		console.log("3333333333333333333");
 		var url = CONTEXT_PATH+"/ticket/getPumpList?"+ Math.random();
 		jQuery.ajax({
 			type : 'POST',

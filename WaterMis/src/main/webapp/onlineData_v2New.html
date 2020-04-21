@@ -59,7 +59,7 @@
 
 <body>
 
-<div id="page-wrapper">
+<div id="page-wrapper" style="overflow-y:auto;overflow-x:hidden">
     <div id="rowsContainerDivOuter" style="height: 176px;display: none;">
         <div class="row rows-container" id="rowsContainerDivs" style="min-width: 1270px;">
         </div>
@@ -79,7 +79,7 @@
                     <li><a href="#realtime-table" data-toggle="tab" onclick="realDataTablClick()">实时数据列表</a></li>
                 </ul>
 
-                <div id="myTabContent" class="tab-content" style="height: 85%;">
+                <div id="myTabContent" class="tab-content" style="height: 85%;    overflow-y: auto;">
                     <div class="tab-pane fade in active" id="realtime-chart">
                         <div class="panel-body">
                             <div class="col-bg-9" style="margin-right: 0.8%;">
@@ -108,10 +108,10 @@
                             <div class="row rows-container" id="rowsContainerDiv">
                                 <div class="col-bg-4" style="margin-right: 0%;">
                                     <div class="table-responsive">
-                                        <div class="auto-resize panel panel-default" data-height="130" id="realtime-datalist1">
+                                        <div class="panel panel-default"  id="realtime-datalist1" >
                                             <table class="table table-hover" id="dataTables-example1" style="font-size: 13px;">
                                                 <caption class="text-center">
-                                                	<img src="static/assets/img/line-icon.png" class="img-circle" width="21px" style="margin-right:10px"><span>曲线参数</span></caption>
+                                                	<img src="static/assets/img/line-icon.png" class="img-circle" width="21px" style="margin-right:10px"><span>水质</span></caption>
                                                 <thead>
                                                 <tr>
                                                     <th class="text-center">指标</th>
@@ -127,13 +127,11 @@
                                         </div>
                                         <!-- realtime-datalist -->
                                     </div>
-                                </div>
-                                <div class="col-bg-4" style="margin-right: 0%; ">
                                     <div class="table-responsive">
-                                        <div class="auto-resize panel panel-default" data-height="130" id="realtime-datalist3">
-                                            <table class="table table-hover" id="dataTables-example3" style="font-size: 13px;">
+                                        <div class=" panel panel-default"  id="realtime-datalist4">
+                                            <table class="table table-hover" id="dataTables-example4" style="font-size: 13px;">
                                                 <caption class="text-center">
-                                                	<img src="static/assets/img/status-icon.png"  class="img-circle" width="21px" style="margin-right:10px;" ><span>状态参数</span></caption>
+                                                    <img src="static/assets/img/line-icon.png" class="img-circle" width="21px" style="margin-right:10px"><span>液位</span></caption>
                                                 <thead>
                                                 <tr>
                                                     <th class="text-center">指标</th>
@@ -141,8 +139,90 @@
                                                     <th class="text-center">更新时间</th>
                                                 </tr>
                                                 </thead>
-                                                <tbody id="realtimeTbody3">
+                                                <tbody id="realtimeTbody4">
+
+                                                </tbody>
+                                            </table>
+                                            <!-- table -->
+                                        </div>
+                                        <!-- realtime-datalist -->
+                                    </div>
+                                    <div class="table-responsive">
+                                        <div class=" panel panel-default" data-height="130" id="realtime-datalist5">
+                                            <table class="table table-hover" id="dataTables-example5" style="font-size: 13px;">
+                                                <caption class="text-center">
+                                                    <img src="static/assets/img/line-icon.png" class="img-circle" width="21px" style="margin-right:10px"><span>管网</span></caption>
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">指标</th>
+                                                    <th class="text-center">值</th>
+                                                    <th class="text-center">更新时间</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="realtimeTbody5">
+
+                                                </tbody>
+                                            </table>
+                                            <!-- table -->
+                                        </div>
+                                        <!-- realtime-datalist -->
+                                    </div>
+                                    <div class="table-responsive">
+                                        <div class=" panel panel-default" data-height="130" id="realtime-datalist6">
+                                            <table class="table table-hover" id="dataTables-example6" style="font-size: 13px;">
+                                                <caption class="text-center">
+                                                    <img src="static/assets/img/line-icon.png" class="img-circle" width="21px" style="margin-right:10px"><span>用电</span></caption>
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">指标</th>
+                                                    <th class="text-center">值</th>
+                                                    <th class="text-center">更新时间</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="realtimeTbody6">
+
+                                                </tbody>
+                                            </table>
+                                            <!-- table -->
+                                        </div>
+                                        <!-- realtime-datalist -->
+                                    </div>
+                                </div>
+                                <div class="col-bg-4" style="margin-right: 0%; ">
+                                    <div class="table-responsive">
+                                        <div class=" panel panel-default" data-height="130" id="realtime-datalist2">
+                                            <table class="table table-hover" id="dataTables-example2" style="font-size: 13px;">
+                                                <caption class="text-center">
+                                                	<img src="static/assets/img/status-icon.png"  class="img-circle" width="21px" style="margin-right:10px;" ><span>告警</span></caption>
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">指标</th>
+                                                    <th class="text-center">值</th>
+                                                    <th class="text-center">更新时间</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="realtimeTbody2">
         
+                                                </tbody>
+                                            </table>
+                                            <!-- table -->
+                                        </div>
+                                        <!-- realtime-datalist -->
+                                    </div>
+                                    <div class="table-responsive">
+                                        <div class=" panel panel-default" data-height="130" id="realtime-datalist7">
+                                            <table class="table table-hover" id="dataTables-example7" style="font-size: 13px;">
+                                                <caption class="text-center">
+                                                    <img src="static/assets/img/status-icon.png"  class="img-circle" width="21px" style="margin-right:10px;" ><span>状态</span></caption>
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">指标</th>
+                                                    <th class="text-center">值</th>
+                                                    <th class="text-center">更新时间</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="realtimeTbody7">
+
                                                 </tbody>
                                             </table>
                                             <!-- table -->
@@ -152,8 +232,8 @@
                                 </div>                                
                                 <div class="col-bg-4">
                                     <div class="table-responsive">
-                                        <div class="auto-resize panel panel-default" data-height="130" id="realtime-datalist2">
-                                            <table class="table table-hover" id="dataTables-example2" style="font-size: 13px;">
+                                        <div class=" panel panel-default" data-height="130" id="realtime-datalist3">
+                                            <table class="table table-hover" id="dataTables-example3" style="font-size: 13px;">
                                                 <caption class="text-center"><img src="static/assets/img/edit-icon.png" class="img-circle" width="21px" style="margin-right:10px"><span>设置参数</span></caption>
                                                 <thead>
                                                 <tr>
@@ -162,7 +242,7 @@
                                                     <th class="text-center">更新时间</th>
                                                 </tr>
                                                 </thead>
-                                                <tbody id="realtimeTbody2">
+                                                <tbody id="realtimeTbody3">
         
                                                 </tbody>
                                             </table>
@@ -194,7 +274,7 @@
 <script src="static/v2/assets/vue/2.2.6/vue.min.js"></script>
 <script src="static/v2/assets/vue-resource/1.2.1/vue-resource.min.js"></script>
 <script src="static/v2/index/scripts/constant.js"></script>
-<script src="static/v2/monitor/scripts/onlineData_v2New.js"></script>R
+<script src="static/v2/monitor/scripts/onlineData_v2New.js"></script>
 
 </body>
 

@@ -275,15 +275,12 @@
                  }
                  window.operateEvents = {
                      'click #answer': function (e, value, row, index) {
-                         console.log(e,value,row,index)
                          answer(row)
                      },
                      'click #ignore': function (e, value, row, index) {
-                         console.log(e,value,row,index)
                          ignore(row)
                      },
                      'click #createWorkOrder': function (e, value, row, index) {
-                         console.log(e,value,row,index)
                          if(row.ticketId){
                              alertErrors(row)
                          }else{
@@ -416,13 +413,11 @@
         }
 
         function answer(obj){
-            console.log('333333',obj)
         	// var item = $(obj).attr('name');
             // var alarmReason = $(obj).attr('alarmReason');
 
             let item = obj.alarDescription
             let alarmReason = obj.alarmReason
-        	//console.log(item);
         	if(item != undefined){
                 // window.parent.window.openAlertModel("myModalAlert" , item)
                 window.parent.window.myModalProDeaL(alarmReason, item)
@@ -450,7 +445,6 @@
 
         
         function createWorkOrder(self) {
-            console.log(self)
             // var data = $(self).attr('data');
             // var sdata =  JSON.parse(data);
 

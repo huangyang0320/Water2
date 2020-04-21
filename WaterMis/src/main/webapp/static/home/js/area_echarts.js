@@ -124,8 +124,12 @@ function wuhu_amp(data,subtext,unit,min,max){
             "properties": {
                 "adcode": 340202,
                 "name": "镜湖区",
-                "center": [118.376343, 31.32559],
-                "centroid": [118.458877, 31.231728],
+                // "center": [118.376343, 31.32559],
+                "center": [116.376343, 30.32559],
+
+                // "centroid": [118.458877, 31.231728],
+                "centroid": [116.458877, 30.231728],
+
                 "childrenNum": 0,
                 "level": "district",
                 "subFeatureIndex": 0,
@@ -796,7 +800,7 @@ function wuhu_amp(data,subtext,unit,min,max){
             "properties": {
                 "adcode": 340208,
                 "name": "三山区",
-                "center": [118.233987, 31.225423],
+                "center": [116.233987, 29.225423],
                 "centroid": [118.248668, 31.200091],
                 "childrenNum": 0,
                 "level": "district",
@@ -1053,12 +1057,14 @@ function wuhu_amp(data,subtext,unit,min,max){
                 },
                 data: data,
                 label: {
+                    position:[0,0],
                     normal: {
                         show: true,
+                        position:[0,0],
                         formatter: function (params) {
                             if(params.name=="镜湖区"){
                                 return '                         '+params.name+" "+ params.value+unit;
-                            }
+                        }
                             return params.name+"\n"+ params.value+unit;
                         },
                     },

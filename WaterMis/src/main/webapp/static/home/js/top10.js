@@ -42,7 +42,7 @@ function echarts_paiming1(dataName,dataValue,dataDefault) {
 	
 	var option1 = {
 		title: {
-		        text: '昨日用量排名前10',
+		        text: '昨日用水量前10',
 		        x: 'left',
 		        top: "0",
 		        textStyle: {
@@ -120,6 +120,7 @@ function echarts_paiming1(dataName,dataValue,dataDefault) {
 	                    show: true,
 	                    position: 'right',
 	                    color: '#fff',
+						formatter:'{c} m³'
 	                    //TODO 
 	                }
 	            },
@@ -331,7 +332,7 @@ function echarts_paiming2(dataName,dataValue,dataDefault) {
 
 	var option2 = {
 		title: {
-		        text: '昨日增量排名前10',
+		        text: '昨日增量前10',
 		        x: 'left',
 		        top: "0",
 		        textStyle: {
@@ -409,6 +410,7 @@ function echarts_paiming2(dataName,dataValue,dataDefault) {
 	                    show: true,
 	                    position: 'right',
 	                    color: '#fff',
+						formatter:'{c} m³'
 	                    //TODO
 	                }
 	            },
@@ -623,7 +625,7 @@ function echarts_paiming3(dataName,dataValue,dataDefault) {
 
 	var option3 = {
 		title: {
-		        text: '昨日用量排名后10',
+		        text: '昨日用水量后10',
 		        x: 'left',
 		        top: "0",
 		        textStyle: {
@@ -701,6 +703,7 @@ function echarts_paiming3(dataName,dataValue,dataDefault) {
 	                    show: true,
 	                    position: 'right',
 	                    color: '#fff',
+						formatter:'{c} m³'
 	                    //TODO
 	                }
 	            },
@@ -910,18 +913,21 @@ function echarts_paiming3(dataName,dataValue,dataDefault) {
 
 
 function echarts_paiming4(dataName,dataValue,dataDefault) {
+	// for(let i=0;i<dataValue.length;i++){
+	// 	dataValue[i] = dataValue[i]+'m³'
+	// }
 	var mypaiming4 = echarts.init(document.getElementById('paiming4'));
 
 	var option4 = {
 		title: {
-		        text: '昨日减量排名前10',
-		        x: 'left',
-		        top: "0",
-		        textStyle: {
-		            color: '#fff',
-		            fontSize: 10
-		        }
-		    },
+			text: '昨日减量前10',
+			x: 'left',
+			top: "0",
+			textStyle: {
+				color: '#fff',
+				fontSize: 10
+			}
+		},
 	    grid: {
 	        left: '2%',
 	        top: '12%',
@@ -950,18 +956,7 @@ function echarts_paiming4(dataName,dataValue,dataDefault) {
 	    },
 	    yAxis: {
 	        type: 'category',
-	        data: dataName,/*[
-	        'top10减量',
-	        'top9减量',
-	        'top8减量',
-			'top7减量',
-			'top6减量',
-			'top5减量',
-			'top4减量',
-			'top3减量',
-			'top2减量',
-			'top1减量',
-	        ],*/
+	        data: dataName,
 	        splitLine: {
 	            show: false
 	        },
@@ -972,27 +967,29 @@ function echarts_paiming4(dataName,dataValue,dataDefault) {
 	            show: false
 	        },
 	        axisLabel: {
-	                show:false
-	            }
+				show:false
+			}
 	    },
-	    series: [{
-	        type: 'bar',
-	        // data: [ 0,0,0, 0, 0, 0, 0, 210, 1150, 1310,1360, 1440, 1530, 1550, 3480,3850, 4000, 4000, 4000, 4690,23590],
-			data: dataValue,//[249, 260, 280,289, 300, 350,360, 370, 380, 400],
-	        barWidth: 10,
-	        z:10,
-	        itemStyle: {
-	          normal: {
-	        	color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-	        	  offset: 0,
-	        	  color: '#d8d7cd' // 0% 处的颜色
-	        	}, {
-	        	  offset: 1,
-	        	  color: '#d87f53' // 100% 处的颜色
-	        	}], false),
-	        	barBorderRadius: 14
-	          }
-	        },
+	    series: [
+	    	{
+				type: 'bar',
+				data: dataValue,//[249, 260, 280,289, 300, 350,360, 370, 380, 400],
+				barWidth: 10,
+				z:10,
+				itemStyle: {
+					normal: {
+						color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [
+							{
+								offset: 0,
+								color: '#d8d7cd' // 0% 处的颜色
+							}, {
+								offset: 1,
+								color: '#d87f53' // 100% 处的颜色
+							}
+						], false),
+						barBorderRadius: 14
+					}
+	        	},
 	            label: {
 	                show: true,
 	                fontSize: 20,
@@ -1003,31 +1000,31 @@ function echarts_paiming4(dataName,dataValue,dataDefault) {
 	                    show: true,
 	                    position: 'right',
 	                    color: '#fff',
+						formatter:'{c} m³'
 	                    //TODO
-	                }
-	            },
-	    }, {
+	                },
+				},
+	    	}, {
 	            // current data
-	             type: 'bar',
+	            type: 'bar',
 	            symbol: 'rect',
 	            symbolRepeat: 'fixed',
 	            symbolMargin: '70%',
 	            symbolClip: true,
 	            symbolSize: [10,70],
 	            symbolBoundingData: 1000,
-
-	                label: {
-	                    normal: {
-	                        show: true,
-	                        position: 'right',
-	                        offset: [-10, 70],
-	                        textStyle: {
-	                            color: 'darkorange',
-	                            fontSize: 18
-	                        }
-	                    }
-	                },
-	           data: [
+				label: {
+					normal: {
+						show: true,
+						position: 'right',
+						offset: [-10, 70],
+						textStyle: {
+							color: 'darkorange',
+							fontSize: 18
+						}
+					}
+				},
+	            data: [
 	                {
 	                    "value":0,
 	                    label: {
@@ -1181,26 +1178,26 @@ function echarts_paiming4(dataName,dataValue,dataDefault) {
 	            z: 99999999,
 
 	        }, {
-	        type: 'bar',
-	        // data: [4000, 10000, 10000, 2000, 6000,5000, 5000, 5000,5000, 5000,5000, 5000, 3480, 5000, 4000,4000, 4000, 4810, 37000],
-	       data: dataDefault,//[ 400, 400, 400,400, 400, 400,400, 400, 400,400],
-	        barWidth: 10,
-			tooltip: {
-						show: true
-					},
-	        barGap: '-100%',
-	        label: {
-	            normal: {
-	                show: false,
-	            }
-	        },
-	         itemStyle:{
-	            normal:{
-	                color:'#0278e7',
-	                barBorderRadius : 10
-	            }
-	        }
-	    }]
+	        	type: 'bar',
+	       		data: dataDefault,//[ 400, 400, 400,400, 400, 400,400, 400, 400,400],
+	        	barWidth: 10,
+				tooltip: {
+					show: true
+				},
+	        	barGap: '-100%',
+	        	label: {
+	            	normal: {
+	               		show: false,
+					}
+				},
+				itemStyle:{
+					normal:{
+						color:'#0278e7',
+						barBorderRadius : 10
+					}
+				}
+	    	}
+	    ]
 	};
 	
 	 mypaiming4.setOption(option4);
