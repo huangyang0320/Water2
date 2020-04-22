@@ -413,6 +413,8 @@
 </div>
 
 
+<!--20200421 去掉左侧弹窗  新增小弹窗-->
+<div id="smallDialog"></div>
 
 
 <!-- Modal -->
@@ -551,6 +553,8 @@
 <script>
 
 var svrStr = $('#svgcfn')
+
+
 
 /**
  * 获取门禁信息
@@ -722,6 +726,7 @@ function getConfigurantionData(type){
         datatype:"JSON",
         data:{phid: GLOBAL_SELECT_DEVICE.pumpHouseId},
         success: function (res) {
+
             LOADING.hide();
             getServiceSetValues(GLOBAL_SELECT_DEVICE.pumpHouseId);
             window.FrequencyOutput = {};
@@ -734,6 +739,7 @@ function getConfigurantionData(type){
 
 
             window.conctolData = [];
+            window.serviceValue = res
             if(res){
                 res.map(function (v) {
 				    if(v.tagName.indexOf("进口压力") >= 0 || v.tagName.indexOf("总进水压力") >= 0){
@@ -749,18 +755,18 @@ function getConfigurantionData(type){
                     if(v.tagName == "进口压力" || v.tagName == "出口压力" || v.tagName == "水箱液位" ){
                         window.conctolData.push(v);
                     }
-                    if(v.code.indexOf('sewagepump_run') >= 0){
+                    if(v.code.indexOf('sewagepump_run') >= 0){//潜污泵
                         if(!window.FrequencyOutput[v.idDevice]) window.FrequencyOutput[v.idDevice] = [];
                         window.FrequencyOutput[v.idDevice].push(v);
                     }
-                    if(v.code.indexOf('run_pump') >= 0){
+                    if(v.code.indexOf('run_pump') >= 0){//泵开关状态
                         if(!window.runPump[v.idDevice]) window.runPump[v.idDevice] = [];
                         window.runPump[v.idDevice].push(v);
                     }
-                    if(v.code.indexOf('openend_directvalve') >= 0){
+                    if(v.code.indexOf('openend_directvalve') >= 0){//直供水电动阀
                         openend_directvalve=v;
                     }
-                    if(v.code.indexOf('openend_tankinvalve') >= 0){
+                    if(v.code.indexOf('openend_tankinvalve') >= 0){//水箱电动阀
                         openend_tankinvalve=v;
                     }
                    /* if(v.tagName.indexOf("水箱液位上限值") >= 0 || v.tagName.indexOf("水箱液位下限值") >= 0 ||
@@ -1087,8 +1093,6 @@ function pumpBaseInfo(res){
  * 展示单测点
  */
 function singleNode(arr) {
-    console.log(arr)
-    console.log(window.conctolParam)
     var conctolParams = window.conctolParam;
 
     $('#singleNodes').html('')
@@ -1140,7 +1144,7 @@ function setSvg(reloading) {
                 }
                 var val=window.level_tank[i];
                 if (val!=undefined && val.tagName == "水箱液位" ) {
-                    setText(v, '水箱液位：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位");
+                    setText(v, '液位：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位");
                     // setText(v, ''+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位");
                 }
             })
@@ -1156,8 +1160,11 @@ function setSvg(reloading) {
                     setRect(v,conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力")
                 }
                 var val=window.pressure_szjs[i];
-                if (val!=undefined && (val.tagName == "进口压力" || val.tagName == "总进水压力") ) {
-                    setText(v, '进口压力：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力");
+                if (val!=undefined && (val.idService.split('.')[1] == 'plc_main\\pressure_szjs1') ) {
+                    setText(v, '滤前：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力");
+                }
+                if (val!=undefined && (val.idService.split('.')[1] == 'plc_main\\pressure_szjs2') ) {
+                    setText(v, '滤后：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力");
                 }
             })
         }
@@ -1189,7 +1196,6 @@ function setSvg(reloading) {
     // 添加出口压力点
     if(conctolPs.curDevicePos && conctolPs.curDevicePos.outletPos) {
         conctolPs.curDevicePos.outletPos.map(function (v, i) {
-            console.log('-----------------', conctolPs)
             if (!reloading) {
                 setCicle(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
                 setRect(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
@@ -1214,23 +1220,114 @@ function setSvg(reloading) {
         })
     }
     // 添加设备点   修改成直供水阀门的坐标 20200420
+    //修改成各区参数窗口 20200421
     if(!reloading){
         if(conctolPs.curDevicePos && conctolPs.curDevicePos.deviceNamePos) {
             conctolPs.curDevicePos.deviceNamePos.map(function (v, i) {
                 if(conctolPs.deviceInfo[i]){
-                    // setText(v, '设备：'+ conctolPs.deviceInfo[i].devicePosition, 'device')
+                    if(i == 0){
+                        let flow_instantVal
+                        for(let n = 0;n<window.serviceValue.length;n++){
+                            if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\flow_instant'){
+                                flow_instantVal = '瞬时流量：'+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                            }
+                        }
+                        var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+                        var rectStr = $(rect).attr({
+                            x:  v.x - 200,
+                            y:  v.y - 20,
+                            rx:  '5',
+                            ry:  '5',
+                            width: "200",
+                            height: "50",
+                            fill: "##5461",
+                            stroke:"#fff",
+                            "stroke-width": '1',
+                            "fill-opacity":"0.3"
+                        })
+                        svrStr.append(rectStr)
+                        let text1 = document.createElementNS("http://www.w3.org/2000/svg","text");
+                        var text1str = $(text1).attr({
+                            x:  v.x-180,
+                            y:  v.y+0,
+                            fill:  "#fff",
+                        })
+                        $(text1).text(flow_instantVal)
+                        svrStr.append(text1str);
 
-                    var z_status=window.openend_directvalve.pv==1?"打开":"关闭";
-                    var box_status=window.openend_tankinvalve.pv==1?"打开":"关闭";
-                    if(i == 1){
-                        setRect(v,"control")
-                        setText(v, '直供水阀门:'+z_status,"control");
+                        let text2 = document.createElementNS("http://www.w3.org/2000/svg","text");
+                        var text2str = $(text2).attr({
+                            x:  v.x-180,
+                            y:  v.y+20,
+                            fill:  "#fff",
+                        })
+                        $(text2).text('累计流量：')
+                        svrStr.append(text2str);
+                    }else{
+                        let flowinstant_outwaterVal,frequency_pump11Val,frequency_pump12Val,frequency_pump13Val,
+                            frequency_pump11Time='运行时间：',frequency_pump12Time='运行时间：',frequency_pump13Time='运行时间：'
+                        for(let n = 0;n<window.serviceValue.length;n++){
+                            if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\flowinstant_outwater'){
+                                flowinstant_outwaterVal =  '瞬时流量：'+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                            }
+                            if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\frequency_pump11'){
+                                frequency_pump11Val = '1# 频率      ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                            }
+                            if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\frequency_pump12'){
+                                frequency_pump12Val = '2# 频率      ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                            }
+                            if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\frequency_pump13'){
+                                frequency_pump13Val = '3# 频率      ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                            }
+                        }
 
-                    }else if(i == 2){
-                        setRect(v,"control")
-                        setText(v, '水箱阀门:'+box_status,"control");
+                        var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+                        var rectStr = $(rect).attr({
+                            x:  v.x - 200, y:  v.y - 20,
+                            rx:  '5', ry:  '5',
+                            width: "180", height: "180",
+                            fill: "##5461", stroke:"#fff",
+                            "stroke-width": '1',
+                            "fill-opacity":"0.3"
+                        })
+                        svrStr.append(rectStr);
+
+                        let text1 = document.createElementNS("http://www.w3.org/2000/svg","text");
+                        var text1str = $(text1).attr({x:  v.x-180, y:  v.y+10, fill:  "#fff",})
+                        $(text1).text(flowinstant_outwaterVal)
+                        svrStr.append(text1str);
+
+                        let text2 = document.createElementNS("http://www.w3.org/2000/svg","text");
+                        var text2str = $(text2).attr({x:  v.x-180, y:  v.y+30, fill:  "#fff",})
+                        $(text2).text(frequency_pump11Val)
+                        svrStr.append(text2str);
+
+                        let text2Time = document.createElementNS("http://www.w3.org/2000/svg","text");
+                        var text2Timestr = $(text2Time).attr({x:  v.x-180,y:  v.y+50,fill:  "#fff",})
+                        $(text2Time).text(frequency_pump11Time)
+                        svrStr.append(text2Timestr);
+
+                        let text3 = document.createElementNS("http://www.w3.org/2000/svg","text");
+                        var text3str = $(text3).attr({x:  v.x-180, y:  v.y+70, fill:  "#fff",})
+                        $(text3).text(frequency_pump12Val)
+                        svrStr.append(text3str);
+
+                        let text3Time = document.createElementNS("http://www.w3.org/2000/svg","text");
+                        var text3Timestr = $(text3Time).attr({x:  v.x-180,y:  v.y+90,fill:  "#fff",})
+                        $(text3Time).text(frequency_pump12Time)
+                        svrStr.append(text3Timestr);
+
+                        let text4 = document.createElementNS("http://www.w3.org/2000/svg","text");
+                        var text4str = $(text4).attr({x:  v.x-180, y:  v.y+110, fill:  "#fff",})
+                        $(text4).text(frequency_pump13Val)
+                        svrStr.append(text4str);
+
+                        let text4Time = document.createElementNS("http://www.w3.org/2000/svg","text");
+                        var text4Timestr = $(text4Time).attr({x:  v.x-180,y:  v.y+130,fill:  "#fff",})
+                        $(text4Time).text(frequency_pump13Time)
+                        svrStr.append(text4Timestr);
+
                     }
-
                 }
             })
         }
@@ -1339,36 +1436,36 @@ function setSvg(reloading) {
             setImage('static/assets/img/fmY.png', '35', '35', 1093, 258);
 
         }else */
-       // if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
-       //
-       //      var v={x:890,y:280};
-       //      setRect(v,"control")
-       //      setText(v, '直供水阀门:'+z_status,"control");
-       //      //setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
-       //
-       //      var v1={x:890,y:220};
-       //      setRect({x:890,y:220},"control")
-       //      setText(v1, '水箱阀门:'+box_status,"control")
-       //      // setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
-       //
-       //  }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
-       //
-       //      // var v={x:1210,y:250};
-       //     var v={x:1050,y:250};
-       //
-       //     setRect(v,"control")
-       //      setText(v, '直供水阀门:'+z_status,"control");
-       //    // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
-       //
-       //      // var v1={x:1090,y:165};
-       //     var v1={x:1020,y:155};
-       //
-       //     setRect(v1,"control")
-       //      setText(v1, '水箱阀门:'+box_status,"control")
-       //     // setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
-       //
-       //  }
-       //  return false;
+       if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
+
+            var v={x:890,y:280};
+            setRect(v,"control")
+            setText(v, '直供水阀门:'+z_status,"control");
+            //setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
+
+            var v1={x:890,y:220};
+            setRect({x:890,y:220},"control")
+            setText(v1, '水箱阀门:'+box_status,"control")
+            // setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
+
+        }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
+
+            // var v={x:1210,y:250};
+           var v={x:1050,y:250};
+
+           setRect(v,"control")
+            setText(v, '直供水阀门:'+z_status,"control");
+          // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
+
+            // var v1={x:1090,y:165};
+           var v1={x:1020,y:155};
+
+           setRect(v1,"control")
+            setText(v1, '水箱阀门:'+box_status,"control")
+           // setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
+
+        }
+        return false;
     }
 
 
@@ -1427,7 +1524,7 @@ function setRect(v, type,code,dateType) {
             y:  v.y + 10,
             rx:  '5',
             ry:  '5',
-            width: "150",
+            width: "120",
             height: "30",
             fill: "##5461",
             stroke:"#fff",
@@ -1613,6 +1710,21 @@ function callRefresh(){
     getConfigurantionParam()
     getDeviceDoorInfo()
     getDeviceStatus()
+
+    //初始化摄像头事件 20200421 xth
+    setTimeout(()=>{
+        var circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        $(circle).attr('onclick', 'showvideoDialog()')
+        var circleStr = $(circle).attr({
+            cx:  533,
+            cy:  103,
+            r:  '5',
+            fill:'rgba(0,0,0,0)',
+            stroke:'#fff',
+            cursor:'pointer'
+        })
+        svrStr.append(circleStr);
+    },1000)
 }
 function showChange(self) {
     $(self).hide();
@@ -1828,20 +1940,97 @@ function defChoose() {
 var lastOnClickParams={};
 function initThisPage() {
    // $("#pumpBaseInfo").modal('show');
-    callRefresh();
+   callRefresh();
    setInterval(function () {
         getConfigurantionData(true)
         getDeviceStatus()
-    }, 15000)
+   }, 15000)
+
 
     /*setInterval(function () {
         if(lastOnClickParams.deviceId!=undefined){
             showDiv(lastOnClickParams.deviceId,lastOnClickParams.deviceName,lastOnClickParams.code,lastOnClickParams.dateType);
         }
-
     }, 30000)*/
-
 }
+let videoInfoList = []
+function showvideoDialog(){
+    $.dialog({
+        id: 'device-videodialog',
+        title: '泵房视频列表',
+        content: 'url:videoInZuTai.html?' + GLOBAL_SELECT_DEVICE.pumpHouseId,
+        width: 300,
+        height: 50,
+        top:110,
+        left:500,
+        fixed: true,
+        max: true,
+        min: false,
+        resize: false,
+        lock: true,
+        background: '#000',
+        opacity:1,
+        ok: false,
+        drag: false
+    });
+}
+function showVideo(video) {
+    $.dialog({
+        id: 'device-video',
+        title: '泵房视频',
+        content: 'url:videoBaidu.html?videoNo=' + video + '&rnd=' + new Date().getTime(),
+        width: 900,
+        height: 460,
+        top:110,
+        left:304,
+        fixed: true,
+        max: true,
+        min: false,
+        resize: false,
+        lock: true,
+        background: '#000',
+        opacity:1,
+        ok: false,
+        drag: false
+        /*,
+        button: [{
+            name: '云镜控制',
+            callback: function() {
+                this.iframe.contentWindow.toggleBtn();
+                return false;
+            }
+        }]*/
+    });
+};
+function showVideoHis(video) {
+    $.dialog({
+        id: 'device-video-his',
+        title: '泵房视频',
+        content: 'url:videoBaidu1.html?videoNo=' + video + '&rnd=' + new Date().getTime(),
+        width: 900,
+        height: 460,
+        top:110,
+        left:304,
+        fixed: true,
+        max: true,
+        min: false,
+        resize: false,
+        lock: true,
+        background: '#000',
+        opacity:1,
+        ok: false,
+        drag: false
+        /*,
+        button: [{
+            name: '云镜控制',
+            callback: function() {
+                this.iframe.contentWindow.toggleBtn();
+                return false;
+            }
+        }]*/
+    });
+};
+
 //关闭后触发
 $('#showDataInfo').on('hide.bs.modal', function () {
     lastOnClickParams={};
@@ -1870,7 +2059,6 @@ function showDiv(deviceId,deviceName,code,dateType){
         url : 'a' + '/homeV2/getCurrentDataByDeviceIdAndCode/'+deviceId+"/data/"+code,
         dataType : 'json',
         success : function(data) {
-            console.log('echarts',data)
             if (undefined == data || data==null) {
                 return;
             } else {
@@ -2044,7 +2232,6 @@ function clearEcharts() {
     // $('#dataInfo').html('加載中')
 }
 function setEcharts(xData,yData,dateType,markLine){
-    console.log('markline',markLine)
     let max = 0
     if(markLine.data[1]){
         max = (markLine.data[1].yAxis * 1.2).toFixed(1)

@@ -32,7 +32,6 @@
 </svg>
 <script>
     let pumpHouseId = location.search.replace("?", "")
-    console.log(pumpHouseId)
     var svrStr = $('#svgcfn')
     getConfigurantionParam()
 
@@ -45,7 +44,6 @@
             datatype:"JSON",
             data:{phid: pumpHouseId},
             success: function (res) {
-                console.log('获取图片名称和url地址',res)
                 setImage(res.phUrl, '1705', '797')
                 window.conctolParam = res
                 if(res.Identification == "1"){

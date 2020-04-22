@@ -670,7 +670,6 @@ function getLeftMenuData() {
             });
             // 显示menu
             $(".showRightMenu").click(function(){
-                console.log(2)
                 $(this).fadeOut();
                 $(".right-menu").animate({top: '65px'}).show();
             });
@@ -960,7 +959,7 @@ function rightMenuMsg() {
                 areaName = nodearea['name'];
             }
         }
-        $("#selectedDevice").text(massage + ": " + areaName + "/" + pumpHouseName + "/" + deviceName).show();
+        $("#selectedDevice").text(massage + ":" + areaName + "/" + pumpHouseName + "/" + deviceName).show();
     }
     // $("#selectedDevice").text(massage + ": " + areaName + "/" + pumpHouseName + "/" + deviceName).show();
 }
@@ -1205,7 +1204,6 @@ function myModalWorkOrder(row) {
 
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept();
-    console.log(1111111111111111111111111)
     $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
     $("#alarmTime").val(row.startDate);
     $("#phName").val(row.phName);
