@@ -715,7 +715,7 @@ function echarts_31() {
 		    },
           xAxis: {
               type: 'category',
-              boundaryGap: false,
+              // boundaryGap: false,
               axisLine:{
                 lineStyle:{
                   color:'rgba(255,255,255,.2)'

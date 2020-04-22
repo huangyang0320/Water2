@@ -1032,21 +1032,21 @@ function wuhu_amp(data,subtext,unit,min,max){
                 saveAsImage: {}
             }
         },*/
-        visualMap: {
-            min: min,
-            max: max,
-            text: ['高', '低'],
-            realtime: false,
-            calculable: true,
-            itemHeight:100,
-            inRange: {
-                color: ['lightskyblue', 'yellow', 'orangered']
-            },
-            borderColor:"#ccc",
-            textStyle:{
-            	color:'#ffffff'
-            }
-        },
+        // visualMap: {
+        //     min: min,
+        //     max: max,
+        //     text: ['高', '低'],
+        //     realtime: false,
+        //     calculable: true,
+        //     itemHeight:100,
+        //     inRange: {
+        //         color: ['lightskyblue', 'yellow', 'orangered']
+        //     },
+        //     borderColor:"#ccc",
+        //     textStyle:{
+        //     	color:'#ffffff'
+        //     }
+        // },
         series: [
             {
                 name: '芜湖市',
