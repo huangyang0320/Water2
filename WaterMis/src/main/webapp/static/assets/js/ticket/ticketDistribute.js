@@ -39,6 +39,7 @@ function getTicketInfo(ticketId){
 
             $("#ticketId").val(data.ticketId);
             $("#workType").val(data.ticketTypeName);
+            $("#channelName").val(data.channelName);
             $("#alarmContent").val(data.title);
             $("#phName").val(data.pumpName);
             $("#address").val(data.address);

@@ -94,6 +94,9 @@
             max-height:200px;
             overflow-y:auto;
         }
+        a:hover{
+            cursor:pointer
+        }
     </style>
 <!--    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
 <!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>-->
@@ -104,12 +107,10 @@
     <div class="alarmTitle" style="color: #fff;">
         消息提示
         <span class="closeTips" onclick="window.parent.window.closeDetailsTips()" title="关闭" style="    color: #fff;">X</span>
-    </div>
-    <div class="panel-heading" style=" text-align:center">
-        <button id="resetStatus" type="button" class="btn btn-primary query-btn">全部忽略</button>
+        <span class="closeTips" id="resetStatus" title="" style="color: #fff;">全部忽略</span>
     </div>
     <div class="content">
-        <table class="list-group" id="content">
+        <table style="width:100%" class="list-group" id="content">
 
         </table>
     </div>
@@ -121,8 +122,9 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="myModalLabel">消息详细</h4>
                 </div>
-                <div class="modal-body" id="detailsContent">
-
+                <div class="modal-body">
+                    <table class='list-group' style="width:100%" id="detailsContent">
+                    </table>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
@@ -138,25 +140,27 @@
     <script src="static/assets/js/ticket/ticketDetail.js"></script>
     <script>
         $(function(){
-            $.post(CONTEXT_PATH + "/biz/notice/getDetailsList", function(result) {
+            loadDetails();
+            /*$.post(CONTEXT_PATH + "/biz/notice/getDetailsList", function(result) {
                 $("#content").html("");
                 for(var i=0;i<result.length;i++){
-                    $("#content").append("<tr class='list-group-item'><td>消息标题："+result[i]["noticeTitle"]+"&nbsp;&nbsp;&nbsp;&nbsp;</td><td>消息类型："+result[i]["noticeType"]+"&nbsp;&nbsp;&nbsp;&nbsp;</td><td><a ref='javascrip:void(0);' value='"+result[i]["id"]+"'>查看详细内容</a></td><tr/>");
+                    $("#content").append("<tr class='list-group-item'><td>消息标题："+result[i]["noticeTitle"]+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>消息类型："+result[i]["noticeType"]+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><a ref='javascrip:void(0);' value='"+result[i]["id"]+"'>详情</a></td><tr/>");
                 }
-                $("#content a").on("click",function(){
-                    var id=$(this).attr("value");
-                    $.post(CONTEXT_PATH + "/biz/notice/getDetailsById",{"id":id}, function(result) {
-                        if(result!=null&&result.length>0){
-                            $("#detailsContent").html("");
-                            $("#detailsContent").append("<table class='list-group'><tr class='list-group-item'><td>工单标题：</td><td>"+result[0]["noticeTitle"]+"</td></tr><tr class='list-group-item'><td>工单类型：</td><td>"+result[0]["noticeType"]+"</td></tr><tr class='list-group-item'><td></td><td>通知内容："+result[0]["noticeContent"]+"</td></tr></table>");
-                        }
-                        $("#myModalDetails").modal("show")
-                        //点击查看后重新设置对应的消息
-                        loadDetails();
-                    });
-
+                $("#content a").each(function(index,item){
+                    $(this).click(function(){
+                        var id=$(this).attr("value");
+                        $.post(CONTEXT_PATH + "/biz/notice/getDetailsById",{"id":id}, function(result) {
+                            if(result!=null&&result.length>0){
+                                $("#detailsContent").html("");
+                                $("#detailsContent").append("<tr class='list-group-item'><td>工单标题：</td><td>"+result[0]["noticeTitle"]+"</td></tr><tr class='list-group-item'><td>工单类型：</td><td>"+result[0]["noticeType"]+"</td></tr><tr class='list-group-item'><td></td><td>通知内容："+result[0]["noticeContent"]+"</td></tr>");
+                            }
+                            $("#myModalDetails").modal("show")
+                            //点击查看后重新设置对应的消息
+                            loadDetails();
+                        });
+                    })
                 });
-            });
+            });*/
             $("#resetStatus").click(function(){
                 $.post(CONTEXT_PATH + "/biz/notice/resetStatus",function(res) {
                     if(res>0){
@@ -169,8 +173,22 @@
             $.post(CONTEXT_PATH + "/biz/notice/getDetailsList", function(result) {
                 $("#content").html("");
                 for (var i = 0; i < result.length; i++) {
-                    $("#content").append("<tr class='list-group-item'><td>消息标题：" + result[i]["noticeTitle"] + "&nbsp;&nbsp;&nbsp;&nbsp;</td><td>消息类型：" + result[i]["noticeType"] + "&nbsp;&nbsp;&nbsp;&nbsp;</td><td><a ref='javascrip:void(0);' value='" + result[i]["id"] + "'>查看详细内容</a></td><tr/>");
+                    $("#content").append("<tr class='list-group-item'><td>消息标题：" + result[i]["noticeTitle"] + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>消息类型：" + result[i]["noticeType"] + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><a ref='javascrip:void(0);' value='" + result[i]["id"] + "'>详情</a></td><tr/>");
                 }
+                $("#content a").each(function(index,item){
+                    $(this).click(function(){
+                        var id=$(this).attr("value");
+                        $.post(CONTEXT_PATH + "/biz/notice/getDetailsById",{"id":id}, function(result) {
+                            if(result!=null&&result.length>0){
+                                $("#detailsContent").html("");
+                                $("#detailsContent").append("<tr class='list-group-item'><td>工单标题：</td><td>"+result[0]["noticeTitle"]+"</td></tr><tr class='list-group-item'><td>工单类型：</td><td>"+result[0]["noticeType"]+"</td></tr><tr class='list-group-item'><td></td><td>通知内容："+result[0]["noticeContent"]+"</td></tr>");
+                            }
+                            $("#myModalDetails").modal("show")
+                            //点击查看后重新设置对应的消息
+                            loadDetails();
+                        });
+                    })
+                });
             });
         }
     </script>

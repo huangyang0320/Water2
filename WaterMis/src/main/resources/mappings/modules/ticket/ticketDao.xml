@@ -35,6 +35,9 @@
             <if test="title != null  and title != ''" >
                 title,
             </if>
+            <if test="channel != null  and channel != ''" >
+                channel,
+            </if>
             <if test="ticketLevel != null  and ticketLevel != ''" >
                 ticket_level,
             </if>
@@ -99,6 +102,9 @@
             </if>
             <if test="title != null  and title != ''" >
                 #{title},
+            </if>
+            <if test="channel != null  and channel != ''" >
+                #{channel},
             </if>
             <if test="ticketLevel != null  and ticketLevel != ''" >
                 #{ticketLevel},
@@ -693,6 +699,18 @@
         t.pump_id pumpId,
         t.area_id areaId,
         t.channel channel,
+        (
+        CASE
+        WHEN t.channel = '1' THEN
+        '系统报警'
+        WHEN t.channel = '2' THEN
+        '二供平台'
+        WHEN t.channel = '3' THEN
+        '定期计划'
+        WHEN t.channel = '4' THEN
+        '物业保修' ELSE ''
+        END
+        ) channelName,
         t.report_name reportName,
         t.report_phone reportPhone,
         t.start_time startTime,
@@ -735,7 +753,21 @@
         </if>
 
     </select>
-
+      <select id="getTicketInfoForObj" resultType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+        SELECT
+        t.ticket_id ticketId
+        FROM
+        ticket t
+        <where>
+        1=1
+        and TO_DAYS(`create_Date`)=TO_DAYS(NOW())
+        <if test="ticketType !=null and ticketType!='' " >
+            and t.ticket_type=#{ticketType}
+        </if>
+        </where>
+        order by create_date desc
+        limit 1
+    </select>
 
     <select id="getTicketLogList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketLogDto" parameterType="java.lang.String">
         SELECT

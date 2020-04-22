@@ -23,6 +23,7 @@ public class TicketDto extends DataEntity<TicketDto> {
     private String pumpName;
     private String areaId;
     private String channel;
+    private String channelName;
     private String reportName;
     private String reportPhone;
     private Date  startTime;//计划开始
@@ -31,7 +32,7 @@ public class TicketDto extends DataEntity<TicketDto> {
     private Date endTime;//计划结束
     private String createBeginTime;//新建开始 用于条件
     private String createEndTime;//新建截止  用于条件
-
+    private String createTime;//等于当前日期的记录
     private String validFlag;
 
     private String ticketReason;
@@ -399,5 +400,21 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setHandleStatus(String handleStatus) {
         this.handleStatus = handleStatus;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 }

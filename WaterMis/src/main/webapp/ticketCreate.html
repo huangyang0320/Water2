@@ -50,30 +50,21 @@
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-group">
+                                <label for="ticketId">工单编号</label>
+                                <input type="text" class="form-control" readonly id="ticketId" name="ticketId">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
                                 <label for="workType">工单类型</label>
                                 <select id="workType" onchange="onChangType()" name="workType" class="form-control">
                                     <option value="2">巡检</option>
                                     <option value="3">维保</option>
                                 </select>
-
-                                <!-- <select class="form-control" id="workType" name="workType">
-                                     <option value="1">告警工单</option>
-                                 </select>-->
                             </div>
 
                         </div>
-                        <div class="col-md-5 col-md-offset-1">
-                            <div class="form-group">
 
-                                <label for="alarmContent">工单名称</label>
-                                <input type="text" class="form-control" readonly id="alarmContent" name="alarmContent">
-                                <!--<select class="form-control" id="alarmContent" name="alarmContent">
-                                    <option value="维保水泵">维保水泵</option>
-                                    <option value="清洗水箱">清洗水箱</option>
-                                </select>-->
-
-                            </div>
-                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -86,19 +77,23 @@
                                 <!--<select class="selectpicker form-control" id="phId" onchange="onChangPump()" multiple data-live-search="true" title="请选择泵房">
                                 </select>-->
                                 <input type="hidden" name="phId" id="phStr"/>
-
+                                <!-- 工单名称 -->
+                                <input type="hidden" class="form-control" readonly id="alarmContent" name="alarmContent">
 
 
                             </div>
                         </div>
                         <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
-                                <label for="addressStr">泵房地址</label>
-                                <select class="form-control" id="addressStr" style="display: none" name="addressStr">
+                                <label for="channel">任务来源</label>
+                                <select id="channel" name="channel" class="form-control">
+                                    <option value="1">系统报警</option>
+                                    <option value="2">二供平台</option>
+                                    <option value="3">定期计划</option>
+                                    <option value="4">物业保修</option>
                                 </select>
-                                <input type="text" class="form-control" readonly id="address" name="address" placeholder="请输入">
-
                             </div>
+
                         </div>
                     </div>
                    <!-- <div class="row">
@@ -116,6 +111,39 @@
                             </div>
                         </div>
                     </div>-->
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="alarmStatus">当前状态</label>
+                                <input type="text" class="form-control" readonly  id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
+                                <!--2：待接单-->
+                                <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="1"  placeholder="请输入">
+
+                                <!--<label for="processName">告警等级</label>
+                                <input type="text" class="form-control"  id="alarmLevel" name="alarmLevel" placeholder="请输入">-->
+                            </div>
+                        </div>
+                        <!--<div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="addressStr">泵房地址</label>
+                                <select class="form-control" id="addressStr" style="display: none" name="addressStr">
+                                </select>
+                                <input type="text" class="form-control" readonly id="address" name="address" placeholder="请输入">
+
+                            </div>
+                        </div>-->
+                        <div class="col-md-5 col-md-offset-1" id="device">
+                            <div class="form-group">
+                                <label for="deviceId">所在设备</label>
+                                <!-- <input type="text" class="form-control"  id="processName" name="processName" placeholder="请输入">
+                                 <input type="hidden"  class="form-control"  id="deviceId" name="deviceId" placeholder="请输入">-->
+                                <select class="selectpicker form-control" id="deviceId" multiple data-live-search="true" title="请选择所在设备">
+                                </select>
+                                <input type="hidden" name="deviceId" id="deviceStr"/>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-group">
@@ -130,30 +158,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <label for="alarmStatus">当前状态</label>
-                                <input type="text" class="form-control" readonly  id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
-                                <!--2：待接单-->
-                                <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="1"  placeholder="请输入">
-
-                                <!--<label for="processName">告警等级</label>
-                                <input type="text" class="form-control"  id="alarmLevel" name="alarmLevel" placeholder="请输入">-->
-                            </div>
-                        </div>
-                        <div class="col-md-5 col-md-offset-1" id="device">
-                            <div class="form-group">
-                                <label for="deviceId">所在设备</label>
-                                <!-- <input type="text" class="form-control"  id="processName" name="processName" placeholder="请输入">
-                                 <input type="hidden"  class="form-control"  id="deviceId" name="deviceId" placeholder="请输入">-->
-                                <select class="selectpicker form-control" id="deviceId" multiple data-live-search="true" title="请选择所在设备">
-                                </select>
-                                <input type="hidden" name="deviceId" id="deviceStr"/>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="row">
                         <div class="col-md-11">
                             <div class="form-group">

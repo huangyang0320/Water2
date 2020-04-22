@@ -199,12 +199,12 @@ function initBootTable(url){
             field: 'ticketLevel',
             title: '故障等级',
             align: 'center'
-        },*/{
+        },*//*{
             field: 'address',
             title: '泵房地址',
             align: 'center',
             sortable: true
-        },{
+        },*/{
             field: 'createDate',
             title: '工单创建时间',
             align: 'center',
