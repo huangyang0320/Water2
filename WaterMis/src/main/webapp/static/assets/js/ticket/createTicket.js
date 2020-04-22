@@ -22,6 +22,7 @@ queryMaintenanceWorkerDept();
 initCheck();
 showDevice($("#workType").val())
 qryAreaList();
+setTicketId("2");
 
 var url = CONTEXT_PATH+"/device/pumpHouse?'+ Math.random()";
 initBootTable(url);
@@ -144,6 +145,18 @@ function qryPumpHouseByAreaId(areaId){
         {
         }
     });
+}
+function setTicketId(mark){
+    $.ajax({
+        type:"POST",
+        url: CONTEXT_PATH+'/ticket/getTicketId',
+        async: false,
+        datatype:"JSON",
+        data:{ticketType:mark},
+        success: function (res) {
+            $("#ticketId").val(res);
+        }
+    })
 }
 function savePumps(){
     var row=$("#dataTables-example").bootstrapTable('getSelections');
@@ -474,6 +487,7 @@ function onChangType(){
     }
     setAlarmContent()//设置工单名称
     showDevice(id);
+    setTicketId(id);
 }
 
 function showDevice(type){

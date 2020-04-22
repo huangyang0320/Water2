@@ -41,9 +41,15 @@ function getTicketInfo(ticketId){
         data: {"ticketId":ticketId},
         success : function(data) {
 
+            if(data.ticketType=="2"){//巡检
+                $("#showTicketPartsTable").hide();
+            }else{
+                $("#showTicketPartsTable").show();
+            }
 
             $("#ticketId").val(data.ticketId);
             $("#workType").val(data.ticketTypeName);
+            $("#channelName").val(data.channelName);
             $("#alarmContent").val(data.title);
             $("#phName").val(data.pumpName);
             $("#address").val(data.address);

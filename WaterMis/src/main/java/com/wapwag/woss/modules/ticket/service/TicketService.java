@@ -17,6 +17,8 @@ import com.wapwag.woss.modules.ticket.utils.NodeEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.apache.ibatis.annotations.Param;
+import org.apache.poi.ss.formula.functions.T;
+import org.omg.CORBA.TIMEOUT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,16 +85,16 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
     public JSONObject createWorkOrder(TicketDto ticketDto) throws Exception {
         JSONObject result=new JSONObject();
         //1,2,3
-        String uCode = ticketDto.getCreateBy().getId().length()>6?ticketDto.getCreateBy().getId().substring(0,6):ticketDto.getCreateBy().getId();
+        /*String uCode = ticketDto.getCreateBy().getId().length()>6?ticketDto.getCreateBy().getId().substring(0,6):ticketDto.getCreateBy().getId();
         String p=ticketDto.getTicketType().equals("1")?"GJ":(ticketDto.getTicketType().equals("2")?"XJ":"WB");
         String ticketId= p+"-"+ DateUtils.formatDateTimeByFormat(new Date(),"yyyyMMddHHmmss")+"-"+uCode;
-        ticketDto.setTicketId(ticketId);
+        ticketDto.setTicketId(ticketId);*/
         ticketDto.setValidFlag("1");
         this.insertTicket(ticketDto);
         //日志
         TicketLogDto log=new TicketLogDto();
         log.setId(UUID.randomUUID().toString());
-        log.setTicketId(ticketId);
+        log.setTicketId(ticketDto.getTicketId());
         log.setStatus(ticketDto.getStatus());
         log.setCreateBy(ticketDto.getCreateBy());
         log.setCreateDate(new Date());
@@ -119,7 +121,7 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
                 TicketToDoDto ticketToDoDto=null;
                 for(String userId:userList){
                     //status :0待分发  1签收  (直接接受，不需要签收)
-                    ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketId,"","1",userId,"1",new Date(),new Date(),ticketDto.getUpdateBy(),ticketDto.getCreateBy());
+                    ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketDto.getTicketId(),"","1",userId,"1",new Date(),new Date(),ticketDto.getUpdateBy(),ticketDto.getCreateBy());
                     this.insertTicketToDo(ticketToDoDto);
                     result.put("code","201");
                     result.put("status","success");
@@ -411,8 +413,36 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         return ticketDao.getPumpList(projectId);
     }
 
-   public  List<TicketComDto> getDeviceList(String id){
+    public  List<TicketComDto> getDeviceList(String id){
        return ticketDao.getDeviceList(id);
    }
+
+    public String getTicketId(String mark){
+        String res="";
+        TicketDto ticketDto=new TicketDto();
+        ticketDto.setTicketType(mark);
+        TicketDto ticketInfo = ticketDao.getTicketInfoForObj(ticketDto);
+        int uCode=0;
+        if(ticketInfo!=null){
+            String ticketId = ticketInfo.getTicketId();
+            if(!TextUtils.isEmpty(ticketId)){
+                try {
+                    uCode = Integer.parseInt(ticketId.substring(10));
+                }catch (Exception e){
+                    uCode=0;
+                }
+            }
+        }
+        uCode++;
+        String code = String.format("%03d", uCode);
+        if("1".equals(mark)){//告警
+            res= "GJ"+ DateUtils.formatDateTimeByFormat(new Date(),"yyyyMMdd")+code;
+        }else if("2".equals(mark)){//巡检
+            res= "XJ"+ DateUtils.formatDateTimeByFormat(new Date(),"yyyyMMdd")+code;
+        }else if("3".equals(mark)){//维保
+            res= "WB"+ DateUtils.formatDateTimeByFormat(new Date(),"yyyyMMdd")+code;
+        }
+        return res;
+    }
 
 }

@@ -191,12 +191,12 @@ function initBootTable(url){
             title: '设备名称',
             align: 'center',
             sortable: true
-        },{
+        },/*{
             field: 'address',
             title: '泵房地址',
             align: 'center',
             sortable: true
-        },{
+        },*/{
             field: 'allHandleUser',
             title: '待处理人',
             align: 'center',
@@ -219,6 +219,8 @@ function initBootTable(url){
             html.push('<p class="detail-view">' + '工单计划结束时间' + ' : ' + toTrim(row.endTime) + '</p>');
             html.push('<p class="detail-view">' + '告警时间' + ' : ' + toTrim(row.eventTime) + '</p>');
            html.push('<p class="detail-view">' + '告警等级' + ' : ' + toTrim(row.ticketLevel) + '</p>');
+            html.push('<p class="detail-view">' + '泵房名称' + ' : ' + toTrim(row.pumpName) + '</p>');
+            html.push('<p class="detail-view">' + '设备名称' + ' : ' + toTrim(row.deviceName) + '</p>');
             html.push('<p class="detail-view">' + '可能原因' + ' : ' + toTrim(row.ticketReason) + '</p>');
             html.push('<p class="detail-view">' + '解决方案' + ' : ' + toTrim(row.ticketDescription) + '</p>');
             return html.join('');
