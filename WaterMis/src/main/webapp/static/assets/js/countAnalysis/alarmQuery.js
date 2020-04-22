@@ -191,8 +191,8 @@ $(function(){
         window.operateEvents = {
             'click .jumpWork': function (e, value, row, index) {
                 queryWhetherWorker(row.deviceId);
-                queryAlarmWorkTemplate();
-                queryMaintenanceWorkerUser();
+               /* queryAlarmWorkTemplate();
+                queryMaintenanceWorkerUser();*/
                 $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
 				$("#alarmTime").val(row.startDate);
 				$("#processName").val(row.deviceName);
@@ -605,7 +605,9 @@ function cellStylesales(value, row, index) {
     }
 
     function queryWhetherWorker(deviceId) {
-        var url = CONTEXT_PATH+"/alarmStatController/queryWhetherWorker?"+ Math.random();
+        $('#myWorkModal').modal('show');
+
+       /* var url = CONTEXT_PATH+"/alarmStatController/queryWhetherWorker?"+ Math.random();
         jQuery.ajax({
             type : 'POST',
             contentType : 'application/json',
@@ -622,7 +624,7 @@ function cellStylesales(value, row, index) {
                     openAlertModel("myModalAlert" , data.message);
                 }
             }
-        });
+        });*/
     }
    function render(countObj,dataMsg,titleName){
 	   /* 大区报警对比 */
