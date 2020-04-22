@@ -5,19 +5,19 @@ import com.wapwag.woss.common.utils.StringUtils;
 import com.wapwag.woss.common.web.BaseController;
 import com.wapwag.woss.modules.biz.entity.NoticeDto;
 import com.wapwag.woss.modules.biz.service.NoticeService;
+import com.wapwag.woss.modules.home.entity.User;
 import com.wapwag.woss.modules.sys.entity.BootPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * 通知Controller
@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @Api(produces = "通知相关API")
+@SessionAttributes("user")
 @RequestMapping(value = "${adminPath}/biz/notice")
 public class NoticeController extends BaseController{
 
@@ -65,4 +66,51 @@ public class NoticeController extends BaseController{
     public Object delete(NoticeDto noticeDto, RedirectAttributes redirectAttributes) {
         return noticeService.deleteNotice(noticeDto);
     }
+
+    @RequestMapping("/getDetails")
+    @ResponseBody
+    public int getDetails(User user,HttpServletRequest request) {
+        return noticeService.findDetailsCount(user.getUserId());
+    }
+
+    @RequestMapping("/getDetailsList")
+    @ResponseBody
+    public List<NoticeDto> getDetailsList(User user, HttpServletRequest request) {
+        NoticeDto noticeDto=new NoticeDto();
+        noticeDto.setNoticeGroupRefId(user.getUserId());
+        return noticeService.findDetails(noticeDto);
+    }
+
+    @RequestMapping("/getDetailsById")
+    @ResponseBody
+    public List<NoticeDto> getDetailsById(NoticeDto noticeDto,User user, HttpServletRequest request) {
+        //先查询后进行修改消息状态
+        List<NoticeDto> details = noticeService.findDetails(noticeDto);
+        //修改一查看的消息状态
+        noticeDto.setNoticeStatus("02");
+        noticeService.updateNoticeDto(noticeDto);
+        return details;
+    }
+
+    @RequestMapping("/resetStatus")
+    @ResponseBody
+    public int resetStatus(User user, HttpServletRequest request) {
+        int res=0;
+        NoticeDto noticeDto=new NoticeDto();
+        noticeDto.setNoticeGroupRefId(user.getUserId());
+        List<NoticeDto> details = noticeService.findDetails(noticeDto);
+        for(NoticeDto d:details){
+            NoticeDto noticeDto2=new NoticeDto();
+            noticeDto2.setId(d.getId());
+            noticeDto2.setNoticeStatus("02");
+            noticeService.updateNoticeDto(noticeDto2);
+        }
+        res=1;
+        return res;
+    }
+
+
+
+
+
 }

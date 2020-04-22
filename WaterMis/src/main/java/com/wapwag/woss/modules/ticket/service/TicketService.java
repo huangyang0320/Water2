@@ -5,6 +5,8 @@ import com.wapwag.woss.common.persistence.Page;
 import com.wapwag.woss.common.service.CrudService;
 import com.wapwag.woss.common.service.ServiceException;
 import com.wapwag.woss.common.utils.DateUtils;
+import com.wapwag.woss.modules.biz.entity.NoticeDto;
+import com.wapwag.woss.modules.biz.service.NoticeService;
 import com.wapwag.woss.modules.sys.entity.User;
 import com.wapwag.woss.modules.ticket.Entity.TicketComDto;
 import com.wapwag.woss.modules.ticket.Entity.TicketDto;
@@ -13,6 +15,7 @@ import com.wapwag.woss.modules.ticket.Entity.TicketToDoDto;
 import com.wapwag.woss.modules.ticket.dao.TicketDao;
 import com.wapwag.woss.modules.ticket.utils.NodeEnum;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.util.TextUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,9 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
     @Autowired
     private TicketDao ticketDao;
 
+    @Autowired
+    private NoticeService noticeService;
+
     /**
      * 获取所有部门组织
      * @return
@@ -40,6 +46,34 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         return ticketDao.getUserIdByDeptId(deptId);
     }
 
+    public void insertDetails(String ticketId,String title,String userId){
+        TicketDto ticketDto=ticketDao.getTicketInfo(ticketId);
+        //插入分发消息表
+        NoticeDto noticeDto=new NoticeDto();
+        noticeDto.setId(UUID.randomUUID().toString());
+        noticeDto.setNoticeStatus("01");//通知状态：01待查看，02已查看，03忽略
+        noticeDto.setNoticeTitle(title);
+        String ticketType = ticketDto.getTicketType();
+        if(!TextUtils.isEmpty(ticketType)){
+            String comment="";
+            if("1".equals(ticketType)){
+                comment="告警工单";
+            }else if("2".equals(ticketType)){
+                comment="巡检工单";
+            }else if("3".equals(ticketType)){
+                comment="维保工单";
+            }
+            noticeDto.setNoticeType(comment);
+        }
+        noticeDto.setNoticeContent(ticketDto.getTicketReason());
+        noticeDto.setNoticeGroupObj("01");
+        noticeDto.setNoticeGroupRefId(userId);
+        noticeDto.setCreateBy(ticketDto.getCreateBy());
+        noticeDto.setCreateDate(new Date());
+        noticeDto.setIsNewRecord(true);
+        noticeDto.setBizId("0");
+        noticeService.insertNoticeDetails(noticeDto);
+    }
     /**
      * 创建工单
      * @param ticketDto
@@ -69,6 +103,10 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         if("1".equals(ticketDto.getTicketType())){
             this.updateAlarmTicketByDeviceIdAndStartTime(ticketDto);
         }
+        //创建插入提示消息
+        List<String> mgUser= this.getUserIdByDeptId(ticketDto.getDeptId());
+        String uId=mgUser.get(0);
+        insertDetails(ticketDto.getTicketId(),"工单创建",uId);
 
         //需求变更，发给部门负责人
         //根据部门ID获取负责人
@@ -123,7 +161,8 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
             log.setCreateDate(new Date());
             log.setUpdateBy(ticketDto.getUpdateBy());
             log.setUpdateDate(new Date());
-
+            String title="";
+            String uId="";
             // 01：分发业务到人修改为 待接单状态2、
             if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("01")){
                 //工单为待审核 4  获取工单创建人的UserId
@@ -132,6 +171,8 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
                 log.setStatus("2");
                 log.setNodeId(NodeEnum.DISTRIBUTION.getValue());
                 log.setNodeId(NodeEnum.DISTRIBUTION.getName());
+                title="工单分发";
+                uId=handleUserId;
             //退回（处理不了，退回给部门负责人）
             //02回退业务分子修改为待分发状态1、
             }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("02")){
@@ -141,6 +182,8 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
                 log.setStatus("1");
                 log.setNodeId(NodeEnum.SINGLE_BACK.getValue());
                 log.setNodeId(NodeEnum.SINGLE_BACK.getName());
+                title="工单回退";
+                uId=mgUuer.get(0);
                 //03处理业务修改为待审核状态4
             }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("03")){
                 //工单为待审核 4  获取工单部门负责人的UserId
@@ -149,6 +192,8 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
                 log.setStatus("4");
                 log.setNodeId(NodeEnum.HANDLE.getValue());
                 log.setNodeId(NodeEnum.HANDLE.getName());
+                title="工单处理";
+                uId=mgUuer.get(0);
             }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("04")){
                 //04审核不同意业务修改为处理状态3
                 //获取工单最近处理人UserId
@@ -157,6 +202,8 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
                 log.setStatus("3");
                 log.setNodeId(NodeEnum.UN_AGREE.getValue());
                 log.setNodeId(NodeEnum.UN_AGREE.getName());
+                title="工单审核";
+                uId=lastHandleUserId;
             }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("05")){
                 //05审核同意业务修改为完成状态5
                 ticketDto.setStatus("5");//完成
@@ -166,7 +213,12 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
                 log.setStatus("5");
                 log.setNodeId(NodeEnum.AGREE.getValue());
                 log.setNodeId(NodeEnum.AGREE.getName());
+                title="工单审核同意";
+                uId="";
             }
+            //创建插入提示消息
+            insertDetails(ticketDto.getTicketId(),title,uId);
+
             this.insertTicketLog(log);
 
             ticketDto.setStatus(log.getStatus());
