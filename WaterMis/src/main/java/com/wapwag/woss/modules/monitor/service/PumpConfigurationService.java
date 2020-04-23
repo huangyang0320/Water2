@@ -305,6 +305,10 @@ public class PumpConfigurationService {
             code.add("TankLevel");
 
 
+            code.add("hourtotal_pump11");//运行时长
+            code.add("hourtotal_pump12");//运行时长
+            code.add("hourtotal_pump13");//运行时长
+
             code.add("tubeburst_outwater");//
             code.add("stop_electric");//
             code.add("overpressure_pumptotal");//

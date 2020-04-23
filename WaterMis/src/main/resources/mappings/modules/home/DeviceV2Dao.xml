@@ -151,7 +151,7 @@
         deviceData.ID_SERVICE as serviceId,
         fu.TYPE AS type,
         fu.MEMO AS serviceName,
-        date_format( deviceData.DATE_TIME, '%Y-%m-%d %H:%i:%s') as serviceDate,
+        date_format( deviceData.DATE_TIME, '%H:%i:%s') as serviceDate,
         IFNULL(case
         truncate(deviceData.pv * case when service.ratio is null then 1 else service.ratio end
         ,2)
@@ -193,7 +193,7 @@
         INNER JOIN services service ON service.ID = deviceData.ID_SERVICE
         INNER JOIN function fu on fu.id = service.ID_FUNCTION
         where service.node_display='0'
-
+        order by  DATE_TIME
     </select>
 
 </mapper>
