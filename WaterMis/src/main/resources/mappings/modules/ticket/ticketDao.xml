@@ -457,6 +457,9 @@
         <if test="ticketType !=null and ticketType!='' " >
             and t.ticket_type = #{ticketType}
         </if>
+        <if test="ticketId !=null and ticketId!='' " >
+            and t.ticket_id like concat('%',#{ticketId},'%')
+        </if>
         <if test="createBeginTime !=null and createBeginTime!='' " >
             and t.create_Date >= #{createBeginTime}
         </if>
@@ -561,6 +564,9 @@
         </if>
         <if test="pumpName !=null and pumpName!='' " >
             and p.`NAME` like concat('%',#{pumpName},'%')
+        </if>
+        <if test="ticketId !=null and ticketId!='' " >
+            and t.ticket_id like concat('%',#{ticketId},'%')
         </if>
         <if test="ticketType !=null and ticketType!='' " >
             and t.ticket_type = #{ticketType}

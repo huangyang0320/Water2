@@ -16,6 +16,7 @@ var CONTEXT_PATH = ROOT_PATH + "/a";
    var ticketId= GetQueryiframe("ticketId");
    var status= GetQueryiframe("status");
    var flag=1;
+   var result='';
     getTicketLogList(ticketId);
     getTicketInfo(ticketId);
 
@@ -68,13 +69,18 @@ function getTicketInfo(ticketId){
 
             showDevice()
 
+            $("#ok").hide()
+            $("#no").hide()
+            $("#approval").show();
             $("#buttonId").html(data.currentStatusName);
             if(data.status==4){//增加审核操作
                 //隐藏退回按钮
                 $("#backButton").hide();
 
-                $("#buttonId").html("审核");
-                $("#approveOperationKZ").html("<div class=\"col-md-5\">\n" +
+                $("#ok").show()
+                $("#no").show()
+                $("#approval").hide();
+                /*$("#approveOperationKZ").html("<div class=\"col-md-5\">\n" +
                     "                            <div class=\"form-group\">\n" +
                     "                                <label for=\"approveOperation\">审核:</label>\n" +
                     "                                <select id=\"approveOperation\">\n" +
@@ -83,7 +89,7 @@ function getTicketInfo(ticketId){
                     "                                    <option value=\"N\">不同意</option>\n" +
                     "                                </select>\n" +
                     "                            </div>\n" +
-                    "                        </div>");
+                    "                        </div>");*/
             }else{
                 $("#buttonId").html("处理");
             }
@@ -98,7 +104,7 @@ function getTicketInfo(ticketId){
 
 
 
-function approval(flag2){
+function approval(flag2,result){
     var status = $("#status").val();
     var approveOpinion = $("#approveOpinion").val();
     var row = $('#reportTable').bootstrapTable('getData');
@@ -108,21 +114,29 @@ function approval(flag2){
         $('#alertShow').modal('show');
         return false;
     }
-    if (status == 4 && $("#approveOperation").val() == "") {
+    /*if (status == 4 && $("#approveOperation").val() == "") {
         $('#alertShowMessage').html('审核结果不能为空!!!');
         $('#alertShow').modal('show');
         return false;
-    }
+    }*/
     if(!validRow(row)){
         return false;
     }
     var str="";
-    if(flag2=="1"){
-        str = $("#buttonId").html();
-    }else{
+    if(status=="1"){
+        str = "分发";
+    }else if(status=="2"){
+        str = "退单";
+    }else if(status=="3"){
+        str = "处理";
+    }else if(status=="4"){
+        str = "审核";
+    }
+    if(flag2=="0"){
         str="退单"
     }
     this.flag=flag2
+    this.result=result;
     $('#alertWorkMessage').html("确认要"+str+"工单?");
     $('#alertWork').modal('show');
 }
@@ -131,32 +145,33 @@ function clickOk(){
     save();
     var ticketId = $("#ticketId").val();
     var approveOpinion = $("#approveOpinion").val();
-    var approveOperation = $("#approveOperation").val();
+    /*var approveOperation = $("#approveOperation").val();*/
     var deptId = $("#deptId").val();
     var json = "";
+
 
     //回退
     if (flag == 0) {
         json = {"ticketId": ticketId, "approveOpinion": approveOpinion, "handleStatus": "02", "deptId": deptId};
     } else {
         //处理 前往待审核
-        if (approveOperation == "" || approveOperation == undefined) {
+        if (this.result == "") {
             //处理  发往待审核
             json = {"ticketId": ticketId, "approveOpinion": approveOpinion, "handleStatus": "03", "deptId": deptId};
         } else {
-            if (approveOperation == "N") {
+            if (this.result == "N") {
                 json = {
                     "ticketId": ticketId,
                     "approveOpinion": approveOpinion,
-                    "approveOperation": approveOperation,
+                    "approveOperation": this.result,
                     "handleStatus": "04",
                     "deptId": deptId
                 };
-            } else if (approveOperation == "Y") {
+            } else if (this.result == "Y") {
                 json = {
                     "ticketId": ticketId,
                     "approveOpinion": approveOpinion,
-                    "approveOperation": approveOperation,
+                    "approveOperation": this.result,
                     "handleStatus": "05",
                     "deptId": deptId
                 };

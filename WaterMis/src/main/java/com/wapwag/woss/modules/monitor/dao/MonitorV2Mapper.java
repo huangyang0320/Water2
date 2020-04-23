@@ -14,7 +14,7 @@ import java.util.Map;
  */
 @MyBatisDao("com.wapwag.woss.modules.monitor.dao.MonitorV2Mapper")
 public interface MonitorV2Mapper {
-	
+
 	List<Map<String, Object>> getLatestDeviceData(@Param("dbName") String dbName, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("deviceId") String deviceId, @Param("serviceId") String serviceId);
 
     List<Map<String, Object>> getServiceData(@Param("dbName") String dbName, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("deviceId") String deviceId, @Param("serviceIds") String serviceIds);
@@ -22,4 +22,7 @@ public interface MonitorV2Mapper {
     List<Map<String, Object>> getServiceInfo( @Param("deviceId") String deviceId);
 
     List<Map<String, Object>> getLatestDevicesData(@Param("dbName") String dbName, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("deviceId") String deviceId, @Param("serviceId") String serviceId);
+
+    List<Map<String, Object>> getLatestDevicesDataNew(@Param("dbName") String dbName, @Param("startDate") String startDate, @Param("endDate") String endDate, @Param("deviceId") String deviceId, @Param("serviceId") String serviceId);
+
 }
