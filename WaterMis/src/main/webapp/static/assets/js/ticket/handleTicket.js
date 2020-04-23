@@ -643,6 +643,7 @@ function saveDataTable(index, field, value) {
 /*var aryIndexs=new Array();*/
 var flagCheckAll=false;
 function deleteRow(){
+    var data=$('#reportTable').bootstrapTable('getData');
     var row = $('#reportTable').bootstrapTable('getSelections');
     if(row.length>0){
         if(flagCheckAll){
@@ -651,6 +652,10 @@ function deleteRow(){
             $("#reportTable tbody tr[class='selected']").each(function(index,element){
                 $(this).remove();
             })
+            for(var i=0;i<row.length;i++){
+                data.splice(data.indexOf(row[i]),1);
+            }
+            $('#reportTable').bootstrapTable('refreshOptions',{data:data});
         }
        /* $('#reportTable').bootstrapTable('remove', {
             field: "index",
