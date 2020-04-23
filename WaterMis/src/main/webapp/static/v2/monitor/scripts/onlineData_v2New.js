@@ -681,6 +681,8 @@ function initRealtimeData(){
         $("#realtimeTbody5").html("");
         $("#realtimeTbody6").html("");
         $("#realtimeTbody7").html("");
+        let number1=0,number2=0//水质参数的数量，液位参数的数量
+
         for(var i=0;i<serviceData.length;i++){
         	html = "";
             var info = serviceData[i];
@@ -722,8 +724,10 @@ function initRealtimeData(){
             // 	$("#realtimeTbody2").append(html); //设置参数
             // }
             if(info.type == "ftWQ"){
+                number1 ++
                 $("#realtimeTbody1").append(html);//水质
             }else if(info.type == "ftTL"){
+                number2 ++
                 $("#realtimeTbody4").append(html);//液位
             }else if(info.type == "ftMP"||info.type == "ftMF"){
                 $("#realtimeTbody5").append(html); //管网
@@ -736,6 +740,18 @@ function initRealtimeData(){
             }else if(info.type == "ftSP"){
                 $("#realtimeTbody3").append(html); //设置参数
             }
+
+        }
+        // console.log(number1,number2)
+        if(number1 == 0){
+            $('#realtime-datalist1').css('display','none')
+        }else{
+            $('#realtime-datalist1').css('display','block')
+        }
+        if(number2 == 0){
+            $('#realtime-datalist4').css('display','none')
+        }else{
+            $('#realtime-datalist4').css('display','block')
         }
     }
 }
