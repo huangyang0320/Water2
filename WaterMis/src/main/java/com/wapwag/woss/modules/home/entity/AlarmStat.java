@@ -32,6 +32,9 @@ public class AlarmStat {
 	private String alarDescription;
 	private String alarmLevel;
 	private String alarmReason;
+
+	//告警类型备注
+	private String alarmTypeRemarks;
 	
 	private String confirmStat;
 	private String userName;
@@ -297,5 +300,13 @@ public class AlarmStat {
 
 	public void setAlarmSetValue(String alarmSetValue) {
 		this.alarmSetValue = alarmSetValue;
+	}
+
+	public String getAlarmTypeRemarks() {
+		return alarmTypeRemarks;
+	}
+
+	public void setAlarmTypeRemarks(String alarmTypeRemarks) {
+		this.alarmTypeRemarks = alarmTypeRemarks;
 	}
 }

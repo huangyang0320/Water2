@@ -399,6 +399,12 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="form-group">
+                                    <label for="ticketId">工单编号</label>
+                                    <input type="text" class="form-control" readonly id="ticketId" name="ticketId">
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-md-offset-1">
+                                <div class="form-group">
                                     <label for="workType">工单类型</label>
                                     <input type="text" class="form-control" readonly id="showWorkType" name="showWorkType" value="告警工单" placeholder="请输入">
                                     <input type="hidden" id="workType" name="workType" value="1">
@@ -407,13 +413,13 @@
                                     </select>-->
                                 </div>
                             </div>
-                            <div class="col-md-5 col-md-offset-1">
+                           <!-- <div class="col-md-5 col-md-offset-1">
                                 <div class="form-group">
 
                                     <label for="alarmContent">工单名称</label>
                                     <input type="text" class="form-control" readonly id="alarmContent" name="alarmContent" placeholder="请输入">
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                         <div class="row">
                             <div class="col-md-5">
@@ -424,9 +430,6 @@
                                     <label for="phName">泵房名称</label>
                                     <input type="text" class="form-control" readonly id="phName" name="phName" placeholder="请输入">
                                     <input type="hidden" class="form-control" readonly id="phId" name="phId" placeholder="请输入">
-
-
-
                                 </div>
                             </div>
                             <div class="col-md-5 col-md-offset-1">
@@ -437,10 +440,13 @@
                             </div>
                         </div>
                         <div class="row">
+
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label for="alarmTime">告警时间</label>
-                                    <input type="text" class="form-control" readonly id="alarmTime" name="alarmTime" placeholder="请输入">
+                                    <label for="processName">所在设备</label>
+                                    <input type="text" class="form-control" readonly id="processName" name="processName" placeholder="请输入">
+                                    <input type="hidden"  class="form-control" readonly id="deviceId" name="deviceId" placeholder="请输入">
+
                                 </div>
                             </div>
                             <div class="col-md-5 col-md-offset-1">
@@ -456,18 +462,17 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label for="processName">告警等级</label>
-                                    <input type="text" class="form-control" id="alarmLevel" name="alarmLevel" placeholder="请输入">
+                                    <label for="alarmTime">告警时间</label>
+                                    <input type="text" class="form-control" readonly id="alarmTime" name="alarmTime" placeholder="请输入">
                                 </div>
                             </div>
                             <div class="col-md-5 col-md-offset-1">
                                 <div class="form-group">
-                                    <label for="processName">所在设备</label>
-                                    <input type="text" class="form-control" readonly id="processName" name="processName" placeholder="请输入">
-                                    <input type="hidden"  class="form-control" readonly id="deviceId" name="deviceId" placeholder="请输入">
-
+                                    <label for="processName">告警等级</label>
+                                    <input type="text" class="form-control" id="alarmLevel" name="alarmLevel" placeholder="请输入">
                                 </div>
                             </div>
+
                         </div>
                         <div class="row">
                             <div class="col-md-5">
@@ -483,7 +488,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-11">
                                 <div class="form-group">
@@ -523,7 +527,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" onclick="submitWorkOrder()">创建</button>
+                    <button type="button" class="btn btn-primary" id="createBtn" onclick="submitWorkOrder()">创建</button>
                 </div>
             </div>
         </div>

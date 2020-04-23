@@ -234,16 +234,18 @@
 
                     </div>
 
-                    <div class="row" id="approveOperationKZ">
+                    <!--<div class="row" id="approveOperationKZ">
 
-                    </div>
+                    </div>-->
 
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" onclick="frameElement.api.close()" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="approval(1)"><span id="buttonId"></span></button>
-                <button type="button" class="btn btn-primary" onclick="approval(0)"  id="backButton">退单</span></button>
+                <button type="button" class="btn btn-primary" id="approval" onclick="approval(1,'')"><span id="buttonId"></span></button>
+                <button type="button" id="ok" class="btn btn-primary" onclick="approval(1,'Y')">同意</button>
+                <button type="button" id="no" class="btn btn-primary" onclick="approval(1,'N')">不同意</button>
+                <button type="button" class="btn btn-primary" onclick="approval(0,'')"  id="backButton">退单</span></button>
             </div>
 
             <div class="modal fade" tabindex="-1" role="dialog" id="alertWork">
@@ -279,23 +281,6 @@
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
-            <div class="modal fade" tabindex="-1" role="dialog" id="alertShow">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">提示</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p id="alertShowMessage" style="color: red"></p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-        </div>
     <script src="static/assets/js/jquery-1.10.2.js"></script>
     <script src="static/assets/js/bootstrap.min.js"></script>
     <script src="static/assets/js/bootstrap-table/bootstrap-table.min.js"></script>

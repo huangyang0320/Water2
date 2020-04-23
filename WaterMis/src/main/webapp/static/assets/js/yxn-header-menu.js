@@ -186,6 +186,7 @@ var delObject = "";
         });
     });
     setTimeout(showDetails,6000);
+    setTicketId("1");
 }(jQuery));
 
 var isShow=true;
@@ -203,6 +204,19 @@ function showDetails(){
             setTimeout(showDetails,6000);
         }
     });
+}
+
+function setTicketId(mark){
+    $.ajax({
+        type:"POST",
+        url: CONTEXT_PATH+'/ticket/getTicketId',
+        async: false,
+        datatype:"JSON",
+        data:{ticketType:mark},
+        success: function (res) {
+            $("#ticketId").val(res);
+        }
+    })
 }
 
 function getTreeType(isloading){
@@ -1205,6 +1219,13 @@ function formValidator() {
     });
 }
 
+function hideCreateBtn() {
+    $("#createBtn").hide();
+}
+function showCreateBtn() {
+    $("#createBtn").show();
+}
+
 function myModalWorkOrder(row) {
 
     //queryAlarmWorkTemplate();
@@ -1366,6 +1387,10 @@ function submitWorkOrder(){
                     $('#myWorkModal').modal('hide'); // 关闭模态框
                     $('#alertErrorMessage').html(data.message);
                     $('#alertError').modal('show');
+                    $(".alarmTips").animate({bottom: "0px"}, 1000, function() {
+                        $(this).find("iframe").prop("src", "warn.html");
+                        $(this).find("iframe").attr('id','warnHtml');
+                    });
                 }else{
                     $('#alertErrorMessage').html(data.message);
                     $('#alertError').modal('show');
