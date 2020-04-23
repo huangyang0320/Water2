@@ -210,6 +210,9 @@
            getAlarmList();
      }
      function getAlarmList() {
+         // alert('getAlarmList')
+         $('#alarmtable').bootstrapTable('destroy')
+         // alert('destroy')
          //  $.get(parent.CONTEXT_PATH + '/alarmStatController/indexAlarm', function(data) {
          $("#alarmForm").ajaxSubmit({
              type: 'POST',
@@ -387,10 +390,18 @@
         	// var item = $(obj).attr('name');
             let item = obj.id
         	if(confirm('确定要忽略此条告警吗？')){
-                window.parent.window.alarmIgnore(item);
-                setTimeout(()=>{
+                // window.parent.window.alarmIgnore(item);
+                // setTimeout(()=>{
+                //     getAlarmList()
+                // },2000)
+                $.post(parent.CONTEXT_PATH + '/alarmStatController/indexConfig',{
+                    "id": obj.id,
+                    "alarmType": "2"   //1：确认，2：忽略
+                }, function(data) {
+                    parent.showErrorMsgVideo("忽略成功")
+                    // $('#alarmtable').bootstrapTable('resetView')
                     getAlarmList()
-                },2000)
+                });
             }
         }
         function ignoreAll(){
