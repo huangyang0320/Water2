@@ -337,6 +337,7 @@ function queryParams(params) {
     }
     alertType = '1';
     //配置参数
+    var ticketId = $("#ticketId").val();
     var ticketType = $("#ticketType").val();
     var pumpName = $("#pumpName").val();
     var alarmContent = $("#alarmContent").val();
@@ -389,6 +390,7 @@ function queryParams(params) {
         offset : params.offset,
         sortName : sortName,
         sortOrder : params.sortOrder,
+        ticketId : ticketId,
         ticketType: ticketType,
         pumpName: pumpName,
         status:status,

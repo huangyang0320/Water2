@@ -49,10 +49,22 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
     }
 
     public void insertDetails(String ticketId,String title,String userId){
+        //每次插入新的之前都会把所有这个bizId的对应的流程都修改为一查看
+        NoticeDto noticeDto1=new NoticeDto();
+        noticeDto1.setBizId(ticketId);
+        List<NoticeDto> details = noticeService.findDetails(noticeDto1);
+        for(NoticeDto d:details){
+            NoticeDto noticeDto2=new NoticeDto();
+            noticeDto2.setId(d.getId());
+            noticeDto2.setNoticeStatus("02");
+            noticeService.updateNoticeDto(noticeDto2);
+        }
+        //插入新的流程消息
         TicketDto ticketDto=ticketDao.getTicketInfo(ticketId);
         //插入分发消息表
         NoticeDto noticeDto=new NoticeDto();
         noticeDto.setId(UUID.randomUUID().toString());
+        noticeDto.setBizId(ticketId);
         noticeDto.setNoticeStatus("01");//通知状态：01待查看，02已查看，03忽略
         noticeDto.setNoticeTitle(title);
         String ticketType = ticketDto.getTicketType();
@@ -73,7 +85,6 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         noticeDto.setCreateBy(ticketDto.getCreateBy());
         noticeDto.setCreateDate(new Date());
         noticeDto.setIsNewRecord(true);
-        noticeDto.setBizId("0");
         noticeService.insertNoticeDetails(noticeDto);
     }
     /**

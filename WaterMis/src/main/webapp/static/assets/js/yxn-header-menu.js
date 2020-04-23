@@ -188,13 +188,19 @@ var delObject = "";
     setTimeout(showDetails,6000);
 }(jQuery));
 
+var isShow=true;
 function showDetails(){
     $.post(CONTEXT_PATH + "/biz/notice/getDetails", function(result) {
-        if(result>0){
-            $(".alarmTips2").animate({bottom: "0px"}, 1000, function() {
-                $(this).find("iframe").prop("src", "showDetails.html");
-                $(this).find("iframe").attr('id','showDetailsHtml');
-            });
+        if(isShow){
+            if(result>0){
+                $(".alarmTips2").animate({bottom: "0px"}, 1000, function() {
+                    $(this).find("iframe").prop("src", "showDetails.html");
+                    $(this).find("iframe").attr('id','showDetailsHtml');
+                });
+            }else{
+                    closeDetailsTips()
+            }
+            setTimeout(showDetails,6000);
         }
     });
 }
@@ -228,7 +234,6 @@ function closeTips(){
 }
 function closeDetailsTips(){
     $(".alarmTips2").animate({bottom: "-300px"}, 500);
-    setTimeout(showDetails,6000);
 }
 
 
