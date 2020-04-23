@@ -263,7 +263,12 @@ $(function(){
                sortable: true
            },{
                field: 'deviceName',
-               title: '设备名称',
+               title: '电气位置',
+               align: 'center',
+               sortable: true
+           },{
+               field: 'alarmTypeRemarks',
+               title: '设备位置',
                align: 'center',
                sortable: true
            }/*,{

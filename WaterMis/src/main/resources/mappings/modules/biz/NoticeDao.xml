@@ -232,6 +232,9 @@
 			<if test="noticeGroupRefId!=null and noticeGroupRefId!=''">
 				and notice_group_ref_id = #{noticeGroupRefId}
 			</if>
+			<if test="bizId!=null and bizId!=''">
+				and biz_id = #{bizId}
+			</if>
 			<if test="id!=null and id!=''">
 				and id = #{id}
 			</if>
