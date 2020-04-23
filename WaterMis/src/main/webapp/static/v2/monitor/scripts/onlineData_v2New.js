@@ -406,8 +406,8 @@ function switchDeviceData() {
     //
     var d = deviceIds.split(',');
     if(Number(d.length)*Number(indexs.length)>5){
-        parent.showErrorMsgVideo("你选中设备的参数曲线将超过5条，数据加载时间可能变长，确认要选中吗？");
-    	//parent.openAlertModel("myModalAlert" , "你选中设备的参数曲线将超过5条，数据加载时间可能变长，确认要选中吗？");
+        parent.showErrorMsgVideo("你选中设备的参数曲线将超过50条，数据加载时间可能变长，确认要选中吗？");
+    	//parent.openAlertModel("myModalAlert" , "你选中设备的参数曲线将超过50条，数据加载时间可能变长，确认要选中吗？");
     }
     onlineData.loading.show();
     initChartHis();
