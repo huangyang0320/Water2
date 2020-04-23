@@ -359,13 +359,24 @@ public class MonitorService {
 			dimenFlag = Calendar.SECOND;
 		}
 		for(ServiceValueDto dto:list) {
-			while(calendar.getTime().before(dto.getQueryDate())) {
-				valueList.add(0D);
-				calendar.add(dimenFlag, 1);
-			}
-			if(calendar.getTime().equals(dto.getQueryDate())) {
-				calendar.add(dimenFlag, 1);
-				valueList.add(dto.getQueryValue());
+			if("minute".equals(hisDto.getDimen())){
+				while (calendar.getTime().before(dto.getQueryDate())) {
+					//valueList.add(0D);
+					calendar.add(dimenFlag, 1);
+				}
+				if (calendar.getTime().equals(dto.getQueryDate())) {
+					calendar.add(dimenFlag, 1);
+					valueList.add(dto.getQueryValue());
+				}
+			}else {
+				while (calendar.getTime().before(dto.getQueryDate())) {
+					valueList.add(0D);
+					calendar.add(dimenFlag, 1);
+				}
+				if (calendar.getTime().equals(dto.getQueryDate())) {
+					calendar.add(dimenFlag, 1);
+					valueList.add(dto.getQueryValue());
+				}
 			}
 		}
 		return valueList;
@@ -384,7 +395,10 @@ public class MonitorService {
 			calendarFlag = Calendar.DATE;
 		}else if("hour".equals(dimen)){
 			calendarFlag = Calendar.HOUR;
+		}else if("minute".equals(dimen)){
+			calendarFlag = Calendar.MINUTE;
 		}
+
 		startCalendar.add(calendarFlag, -i);
 		endCalendar.add(calendarFlag, -i);
 		hisDto.setBeginDate(startCalendar.getTime());
@@ -401,6 +415,8 @@ public class MonitorService {
 			f="yyyy/MM/dd";
 		}else if("hour".equals(hisDto.getDimen())){
 			f="yyyy/MM/dd HH";
+		}else if("minute".equals(hisDto.getDimen())){
+			f="yyyy/MM/dd HH:mm";
 		}
 		SimpleDateFormat format = new SimpleDateFormat(f);
 		return format.format(date);
