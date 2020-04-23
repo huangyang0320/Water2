@@ -1171,8 +1171,9 @@ function queryMaintenanceWorkerUser() {
 }
 
 function queryWhetherWorker(deviceId) {
-    var url = CONTEXT_PATH+"/alarmStatController/queryWhetherWorker?"+ Math.random();
-    jQuery.ajax({
+    $('#myWorkModal').modal('show');
+    /*var url = CONTEXT_PATH+"/alarmStatController/queryWhetherWorker?"+ Math.random();*/
+   /* jQuery.ajax({
         type : 'POST',
         contentType : 'application/json',
         url : url,
@@ -1188,7 +1189,7 @@ function queryWhetherWorker(deviceId) {
                 openAlertModel("myModalAlert" , data.message);
             }
         }
-    });
+    });*/
 }
 
 function refresh() {

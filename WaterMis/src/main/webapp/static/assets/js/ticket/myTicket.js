@@ -133,6 +133,9 @@ function initBootTable(url){
         showExport: true,
         exportDataType: 'all',
         rowStyle: rowStyle,
+        exportOptions: {
+            ignoreColumn: [0] //忽略某一列的索引
+        },
         onLoadSuccess:function(data){
             LOADING.hide();
             total = data.total;
@@ -196,12 +199,12 @@ function initBootTable(url){
             field: 'ticketLevel',
             title: '故障等级',
             align: 'center'
-        },*/{
+        },*//*{
             field: 'address',
             title: '泵房地址',
             align: 'center',
             sortable: true
-        },{
+        },*/{
             field: 'createDate',
             title: '工单创建时间',
             align: 'center',
@@ -337,6 +340,8 @@ function queryParams(params) {
     var ticketType = $("#ticketType").val();
     var pumpName = $("#pumpName").val();
     var alarmContent = $("#alarmContent").val();
+    var status=$("#status").val();
+    var address=$("#address").val();
 
     var createBeginTime =$("#createBeginTime").val();
     if(createBeginTime!=""){
@@ -386,6 +391,8 @@ function queryParams(params) {
         sortOrder : params.sortOrder,
         ticketType: ticketType,
         pumpName: pumpName,
+        status:status,
+        address:address,
         title: alarmContent,
         createBeginTime: createBeginTime,
         createEndTime: createEndTime,

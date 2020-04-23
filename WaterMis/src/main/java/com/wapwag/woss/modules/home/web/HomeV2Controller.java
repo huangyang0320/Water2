@@ -122,7 +122,7 @@ public class HomeV2Controller {
     @RequestMapping(value = "/getUseWaterHourAnalysis")
     public Map<String,List<String>> getUseWaterHourAnalysis(User user){
         String cTime= DateUtils.getDate("yyyy-MM-dd HH").substring(11,13);//当前日期
-        if(Integer.parseInt(cTime)>0 && Integer.parseInt(cTime)<7){
+        if(Integer.parseInt(cTime)>0 && Integer.parseInt(cTime)<5){
             return homeV2Service.getUseWaterHourAnalysisNew();
         }else{
             return homeV2Service.getUseWaterHourAnalysis();

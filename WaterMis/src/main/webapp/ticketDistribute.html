@@ -43,6 +43,12 @@
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-group">
+                                <label for="ticketId">工单编号</label>
+                                <input type="text" class="form-control" readonly id="ticketId" name="ticketId">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
                                 <label for="workType">工单类型</label>
                                 <input type="text" class="form-control" readonly id="workType" name="workType"  placeholder="请输入">
                                 <input type="hidden" class="form-control" id="ticketId" name="ticketId"  placeholder="请输入">
@@ -53,13 +59,13 @@
                                  </select>-->
                             </div>
                         </div>
-                        <div class="col-md-5 col-md-offset-1">
+                        <!--<div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
 
                                 <label for="alarmContent">工单名称</label>
                                 <input type="text" class="form-control" readonly id="alarmContent" name="alarmContent" placeholder="请输入">
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -76,8 +82,8 @@
                         </div>
                         <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
-                                <label for="address">泵房地址</label>
-                                <input type="text" class="form-control" readonly id="address" name="address" placeholder="请输入">
+                                <label for="channelName">任务来源</label>
+                                <input type="text" class="form-control" readonly id="channelName" name="channelName" placeholder="请输入">
                             </div>
                         </div>
                     </div>
@@ -164,7 +170,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-11">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="handleUserId">处理人</label>
                                 <select class="form-control" id="handleUserId" name="handleUserId" >

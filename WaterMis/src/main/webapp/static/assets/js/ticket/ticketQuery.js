@@ -132,6 +132,9 @@ function initBootTable(url){
         smartDisplay:true,
         showExport:true,
         exportDataType:'all',
+        exportOptions: {
+            ignoreColumn: [0] //忽略某一列的索引
+        },
         onLoadSuccess:function(data){
             LOADING.hide();
             total = data.total;
@@ -188,12 +191,12 @@ function initBootTable(url){
             title: '设备名称',
             align: 'center',
             sortable: true
-        },{
+        },/*{
             field: 'address',
             title: '泵房地址',
             align: 'center',
             sortable: true
-        },{
+        },*/{
             field: 'allHandleUser',
             title: '待处理人',
             align: 'center',
@@ -216,6 +219,8 @@ function initBootTable(url){
             html.push('<p class="detail-view">' + '工单计划结束时间' + ' : ' + toTrim(row.endTime) + '</p>');
             html.push('<p class="detail-view">' + '告警时间' + ' : ' + toTrim(row.eventTime) + '</p>');
            html.push('<p class="detail-view">' + '告警等级' + ' : ' + toTrim(row.ticketLevel) + '</p>');
+            html.push('<p class="detail-view">' + '泵房名称' + ' : ' + toTrim(row.pumpName) + '</p>');
+            html.push('<p class="detail-view">' + '设备名称' + ' : ' + toTrim(row.deviceName) + '</p>');
             html.push('<p class="detail-view">' + '可能原因' + ' : ' + toTrim(row.ticketReason) + '</p>');
             html.push('<p class="detail-view">' + '解决方案' + ' : ' + toTrim(row.ticketDescription) + '</p>');
             return html.join('');
@@ -271,6 +276,10 @@ function queryParams(params) {
     var ticketType = $("#ticketType").val();
     var pumpName = $("#pumpName").val();
     var alarmContent = $("#alarmContent").val();
+    var status=$("#status").val();
+    var address=$("#address").val();
+    var deviceName=$("#deviceName").val();
+    var allHandleUser=$("#allHandleUser").val();
 
     var createBeginTime =$("#createBeginTime").val();
     if(createBeginTime!=""){
@@ -322,6 +331,10 @@ function queryParams(params) {
         ticketType: ticketType,
         pumpName: pumpName,
         title: alarmContent,
+        status:status,
+        address:address,
+        deviceName:deviceName,
+        allHandleUser:allHandleUser,
         createBeginTime: createBeginTime,
         createEndTime: createEndTime,
         startBeginTime: startBeginTime,

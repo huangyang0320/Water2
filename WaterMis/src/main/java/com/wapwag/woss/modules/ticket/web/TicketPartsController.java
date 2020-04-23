@@ -1,5 +1,7 @@
 package com.wapwag.woss.modules.ticket.web;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wapwag.woss.common.persistence.Page;
 import com.wapwag.woss.modules.biz.entity.WorkOrder;
 import com.wapwag.woss.modules.home.entity.User;
@@ -49,10 +51,17 @@ public class TicketPartsController {
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "成功"),
 			@ApiResponse(code = 500, message = "服务错误", response = TicketParts.class)})
-	public Object addOrUpdateTicketParts(TicketParts ticketParts, User user){
+	public Object addOrUpdateTicketParts(@RequestBody TicketParts[] ticketParts, User user){
 		Object msg;
 		try {
-			return ticketPartsService.addOrUpdate(ticketParts,user);
+			for(int i=0;i<ticketParts.length;i++){
+				ticketPartsService.addOrUpdate(ticketParts[i],user);
+			}
+			JSONObject result=new JSONObject();
+			result.put("code","200");
+			result.put("status","success");
+			result.put("message","配件记录编辑成功!");
+			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 			msg = e.getMessage();

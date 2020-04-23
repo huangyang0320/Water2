@@ -110,6 +110,14 @@ var DATE_CONFIG = function (startView, minView, format) {
     }
 };
 
+var DATA_MINUTE_CONFIG = function() {
+    var categories = [];
+    for (var i = 0; i <= 11; i++) {
+        categories.push(i*5 + "");
+    }
+    return categories;
+}();
+
 var DATA_HOUR_CONFIG = function() {
     var categories = [];
     for (var i = 0; i < 60; i++) {
@@ -166,7 +174,7 @@ var DATE_ADD_CONFIG = function (dimen) {
 var DEVICE_DIMEN = function (unit) {
     return {
         "minute": {
-            categories: DATA_HOUR_CONFIG,
+            categories: DATA_MINUTE_CONFIG,
             formatter: function () {
                 return this.value + '秒';
             },

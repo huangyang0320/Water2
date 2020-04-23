@@ -137,6 +137,9 @@ function initBootTable(url){
          pageList:[20,30,50,100],
          showExport:true,
          exportDataType:'all',
+		 exportOptions: {
+			 ignoreColumn: [0] //忽略某一列的索引
+		 },
          searchOnEnterKey: false,//回车搜索
          onLoadSuccess:function(data){
         	 if("2" == changeFlag){

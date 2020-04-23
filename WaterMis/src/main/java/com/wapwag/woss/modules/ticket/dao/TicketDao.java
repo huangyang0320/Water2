@@ -110,5 +110,7 @@ public interface TicketDao  extends CrudDao<TicketDto> {
 
     List<TicketComDto> getDeviceList(@Param("id") String id);
 
+    TicketDto getTicketInfoForObj(TicketDto ticketDto);
+
 
 }
