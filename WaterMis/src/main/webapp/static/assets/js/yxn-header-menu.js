@@ -1016,7 +1016,7 @@ function alarmIgnore(id,delObj) {
             }
         });
     	$(delObj).parent().parent().remove();
-        showErrorMsgVideo("忽略成功");
+        //showErrorMsgVideo("忽略成功");
     	openAlertModel("myModalAlert" , "忽略成功")
     });
 }

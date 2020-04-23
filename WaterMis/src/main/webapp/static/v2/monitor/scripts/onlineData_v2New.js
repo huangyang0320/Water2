@@ -260,6 +260,7 @@ function initData() {
     initMetaDeviceList();
     //加载全部测点数据
     initServiceDataAll(false);
+    initChartHis();
     setInterval(function () {
     	if(deviceIds.length>0 && serviceIds.length>0){
     		//折现图
@@ -456,6 +457,58 @@ function initChart(clearFlag){
         }
     });
 }
+
+
+//加载实时数据折现图
+function initChartHis(clearFlag){
+    //查询前选中的测点，和查询结果返回后的测点比对，如果不一致进行处理
+    var currentServiceIds = serviceIds;
+    var currentSelectDeviceId = deviceIds;
+    //如果上次查询的结果还没有返回就直接返回不执行查询
+    if(!realTimeReturnFlag && !clearFlag){
+        return
+    }
+    realTimeReturnFlag = false
+    $.post(onlineData.contextPath + "/monitor/v2/devices/"+deviceIds+"/data/"+serviceIds+"/latestHis/"+"waterdb",function(result){
+        realTimeReturnFlag = true
+        var  flag = false;
+        //解决修改测点后折线图长度不一致问题
+        if(clearFlag){
+            onlineData.chart.onlineDataChart.config.series = [];
+            onlineData.chart.onlineDataChart.config.xAxis.categories = [];
+            onlineData.chart.gaugeChart.instance = [];
+        }
+        //修改测点或设备后 处理
+        if(serviceIds != currentServiceIds || currentSelectDeviceId != deviceIds){
+            return;
+        }
+        for (var i = 0; i < result.length; i++) {
+            if(!onlineData.chart.onlineDataChart.config.series[i]){
+                onlineData.chart.onlineDataChart.config.series[i]={name:"",data:[]}
+            }
+            onlineData.chart.onlineDataChart.config.series[i].name = result[i]["name"];
+            onlineData.chart.onlineDataChart.config.series[i].data=result[i]["data"];
+            /*  if(onlineData.chart.onlineDataChart.config.series[i].data.length > 100){
+                  onlineData.chart.onlineDataChart.config.series[i].data.shift();
+                  flag = true;
+              }*/
+        }
+        onlineData.chart.onlineDataChart.config.xAxis.categories=result[0]["xData"];;
+        /*  if(flag){
+              onlineData.chart.onlineDataChart.config.xAxis.categories.shift();
+          }*/
+        if(realTimeFullFalg){
+            onlineData.chart.onlineDataChart.instance = Highcharts.chart('enlargeOnlineDataChart', onlineData.chart.onlineDataChart.config);
+        }else{
+            onlineData.chart.onlineDataChart.instance = Highcharts.chart('onlineDataChart', onlineData.chart.onlineDataChart.config);
+        }
+        //当前展示的是折现tab则取消
+        if(!realTimeTableFlag){
+            onlineData.loading.hide();
+        }
+    });
+}
+
 
 function initFirstDeviceServices(){
     var deviceIdArry = deviceIds.split(",");

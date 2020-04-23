@@ -3,29 +3,31 @@ package com.wapwag.woss.modules.biz.entity;
 import java.util.List;
 import java.util.Map;
 
-/**  
-    * @ClassName: ChartSeriesDto  
-    * @Description: TODO(图表返回类)  
-    * @author jiaxm  
-    * @date 2018年6月8日  
-    *    
-    */  
+/**
+    * @ClassName: ChartSeriesDto
+    * @Description: TODO(图表返回类)
+    * @author jiaxm
+    * @date 2018年6月8日
+    *
+    */
 public class ChartSeriesDto {
-	  
-	    /**  
-	    * @Fields field:field:{todo}(名称)  
-	    */  
+
+	    /**
+	    * @Fields field:field:{todo}(名称)
+	    */
 	String name;
-	  
-	    /**  
-	    * @Fields field:field:{todo}(值，有值存为dubbo类型，没有值存为'-')  
-	    */  
+
+	List<String> xData;
+
+	    /**
+	    * @Fields field:field:{todo}(值，有值存为dubbo类型，没有值存为'-')
+	    */
 	List<Double> data;
 
 	String unit;
 
 	List<Map<String, Object>> serviceData;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -53,5 +55,13 @@ public class ChartSeriesDto {
 
 	public void setServiceData(List<Map<String, Object>> serviceData) {
 		this.serviceData = serviceData;
+	}
+
+	public List<String> getxData() {
+		return xData;
+	}
+
+	public void setxData(List<String> xData) {
+		this.xData = xData;
 	}
 }
