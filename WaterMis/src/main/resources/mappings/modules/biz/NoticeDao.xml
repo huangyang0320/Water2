@@ -95,7 +95,7 @@
 		<if test="createTime != null and createTime != ''">
 			create_time,
 		</if>
-		<if test="updateById != null and updateById != ''">
+		<if test="updateBy.Id != null and updateBy.Id != ''">
 			update_by,
 		</if>
 		<if test="updateTime != null and updateTime != ''">
@@ -139,7 +139,7 @@
 		<if test="createTime != null and createTime != ''">
 			#{createDate},
 		</if>
-		<if test="updateById != null and updateById != ''">
+		<if test="updateBy.Id != null and updateBy.Id != ''">
 			#{updateBy.id},
 		</if>
 		<if test="updateTime != null and updateTime != ''">
