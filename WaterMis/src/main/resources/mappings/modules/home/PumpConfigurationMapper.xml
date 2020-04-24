@@ -300,7 +300,7 @@
 				(SELECT
 				id_device,id_service, tag_name,pv,date_time
 			FROM
-				service_values_hour_20200424
+				${tableName}
 			where TAG_NAME='总进水压力' or TAG_NAME='进水压力下限'
 				) temp1
 			) temp
