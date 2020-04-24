@@ -126,7 +126,7 @@
                     <option value="4">四级</option>
                 </select>
                 <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
-                <button id="all" type="button" onclick="ignoreAll()"  class="btn btn-primary query-btn">全部忽略</button>
+               <!-- <button id="all" type="button" onclick="ignoreAll()"  class="btn btn-primary query-btn">全部忽略</button>-->
             </div>
             <input id="sortName" name="sortName" type="hidden"/>
             <input id="sortOrder" name="sortOrder" type="hidden"/>
@@ -210,6 +210,9 @@
            getAlarmList();
      }
      function getAlarmList() {
+         // alert('getAlarmList')
+         $('#alarmtable').bootstrapTable('destroy')
+         // alert('destroy')
          //  $.get(parent.CONTEXT_PATH + '/alarmStatController/indexAlarm', function(data) {
          $("#alarmForm").ajaxSubmit({
              type: 'POST',
@@ -367,14 +370,14 @@
 
         function modalConfig(phId) {
         	phId = $(phId).attr('name');
-        	
+
         	if(window.parent.GLOBAL_URL_ADDRESS != 'home-map-baiduNew.html'){
-        		
+
         		//用于首次地图加载判断
         		window.parent.ALARM_TO_MAP_PUMP_ID = 'FIRST_IN';
-        		
+
         		window.parent.GLOBAL_URL_ADDRESS = 'home-map-baiduNew.html';
-            	
+
             	window.parent.window.$pageWrapper.load('home-map-baiduNew.html', function() {
         			window.parent.window.refreshLeftMenuStatus("地图导航");
         			window.parent.ALARM_TO_MAP_PUMP_ID = phId;
@@ -384,7 +387,7 @@
         		window.parent.ALARM_TO_MAP_PUMP_ID = phId;
         		window.parent.window.callRefresh();
         	}
-        	
+
         }
         function affirm(obj){
         	var item = $(obj).attr('name');
@@ -394,10 +397,18 @@
         	// var item = $(obj).attr('name');
             let item = obj.id
         	if(confirm('确定要忽略此条告警吗？')){
-                window.parent.window.alarmIgnore(item);
-                setTimeout(()=>{
+                // window.parent.window.alarmIgnore(item);
+                // setTimeout(()=>{
+                //     getAlarmList()
+                // },2000)
+                $.post(parent.CONTEXT_PATH + '/alarmStatController/indexConfig',{
+                    "id": obj.id,
+                    "alarmType": "2"   //1：确认，2：忽略
+                }, function(data) {
+                    parent.showErrorMsgVideo("忽略成功")
+                    // $('#alarmtable').bootstrapTable('resetView')
                     getAlarmList()
-                },2000)
+                });
             }
         }
         function ignoreAll(){
@@ -432,7 +443,7 @@
                 window.parent.window.openAlertModel("myModalAlert" , "暂无解决方案")
         	}
         }
-        
+
         function checStr(str){
         	if(undefined == str || null == str){
         		return "";
@@ -450,7 +461,7 @@
         }
 
 
-        
+
         function createWorkOrder(self) {
             // var data = $(self).attr('data');
             // var sdata =  JSON.parse(data);

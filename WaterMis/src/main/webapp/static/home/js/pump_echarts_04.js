@@ -110,6 +110,45 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 
 	// 基于准备好的dom，初始化echarts实例
 	var myChart = echarts.init(document.getElementById('echarts_04'));
+	console.log(useWaterHis,usePowerHis,useWaterReal,usePowerReal)
+	let leftmin = 999999,leftmax =-999999,rightmin=999999,rightmax=-999999
+	for(let i = 0;i<useWaterHis.length;i++){
+		if(useWaterHis[i]<leftmin){
+			leftmin = useWaterHis[i] * 1
+		}
+		if(useWaterHis[i]>leftmax){
+			leftmax = useWaterHis[i] * 1
+		}
+	}
+	for(let i = 0;i<useWaterReal.length;i++){
+		if(useWaterReal[i]<leftmin){
+			leftmin = useWaterReal[i] * 1
+		}
+		if(useWaterReal[i]>leftmax){
+			leftmax = useWaterReal[i] * 1
+		}
+	}
+	for(let i = 0;i<usePowerHis.length;i++){
+		if(usePowerHis[i]<rightmin){
+			rightmin = usePowerHis[i] * 1
+		}
+		if(usePowerHis[i]>rightmax){
+			rightmax = usePowerHis[i] * 1
+		}
+	}
+	for(let i = 0;i<usePowerReal.length;i++){
+		if(usePowerReal[i]<rightmin){
+			rightmin = usePowerReal[i] * 1
+		}
+		if(usePowerReal[i]>rightmax){
+			rightmax = usePowerReal[i] * 1
+		}
+	}
+	leftmin+=0
+	leftmax+=50
+	rightmin-=50
+	rightmax+=10
+	console.log(leftmin,leftmax,rightmin,rightmax)
 
 	option = {
 		tooltip: {
@@ -137,70 +176,41 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 			bottom: '3%',
 			containLabel: true
 		},
-
-		xAxis: [{
-			type: 'category',
-			boundaryGap: false,
-			axisLabel:  {
-				textStyle: {
-					color: "rgba(255,255,255,.6)",
-					fontSize:12,
-				},
-			},
-			axisLine: {
-				lineStyle: {
-					color: 'rgba(255,255,255,.2)'
-				}
-
-			},
-
-			data: xData
-
-		}, {
-
-			axisPointer: {show: false},
-			axisLine: {  show: false},
-			position: 'bottom',
-			offset: 0,
-		}],
-
-		yAxis: [{
-			type: 'value',
-			name:'m³',
-			nameTextStyle: {
-				color: '#ccc'
-			},
-			/*min: 0,
-			max: 40,*/
-			/*interval: 5,*/
-			axisTick: {show: false},
-			axisLine: {
-				lineStyle: {
-					color: 'rgba(255,255,255,.1)'
-				}
-			},
-			axisLabel:  {
-				textStyle: {
-					color: "rgba(255,255,255,.6)",
-					fontSize:12,
-				},
-			},
-
-			splitLine: {
-				lineStyle: {
-					color: 'rgba(255,255,255,.1)'
-				}
-			}
-		},
+		xAxis: [
 			{
-				type: 'value',//右边第一个y轴
-				name: 'kwh',
-				/*min: 2,
-				max: 20,*/
-				/*interval: 4,*/
+				type: 'category',
+				boundaryGap: false,
+				axisLabel:  {
+					textStyle: {
+						color: "rgba(255,255,255,.6)",
+						fontSize:12,
+					},
+				},
+				axisLine: {
+					lineStyle: {
+						color: 'rgba(255,255,255,.2)'
+					}
+				},
+				data: xData
+			}, {
+				axisPointer: {show: false},
+				axisLine: {  show: false},
+				position: 'bottom',
+				offset: 0,
+			}
+		],
+
+		yAxis: [
+			{
+				type: 'value',
+				name:'m³',
 				nameTextStyle: {
 					color: '#ccc'
 				},
+				min: leftmin,
+				max: leftmax,
+				/*interval: 5,*/
+				axisTick: {show: false},
 				axisLine: {
 					lineStyle: {
 						color: 'rgba(255,255,255,.1)'
@@ -218,8 +228,33 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 						color: 'rgba(255,255,255,.1)'
 					}
 				}
+			},
+			{
+				type: 'value',//右边第一个y轴
+				name: 'kwh',
+				min: rightmin,
+				max: rightmax,
+				/*interval: 4,*/
+				nameTextStyle: {
+					color: '#ccc'
+				},
+				axisLine: {
+					lineStyle: {
+						color: 'rgba(255,255,255,.1)'
+					}
+				},
+				axisLabel:  {
+					textStyle: {
+						color: "rgba(255,255,255,.6)",
+						fontSize:12,
+					},
+				},
+				splitLine: {
+					lineStyle: {
+						color: 'rgba(255,255,255,.1)'
+					}
+				}
 			}
-
 		],
 		series: [
 			{
@@ -230,7 +265,6 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 				symbolSize: 6,
 				showSymbol: true,
 				lineStyle: {
-
 					normal: {
 						color: '#feff4d',
 						width: 2
@@ -256,7 +290,6 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 					}
 				},
 				data: useWaterHis
-
 			},
 			{
 				name: xName[1],
@@ -267,7 +300,6 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 				symbolSize: 5,
 				showSymbol: true,
 				lineStyle: {
-
 					normal: {
 						color: '#00d887',
 						width: 2
@@ -293,7 +325,6 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 					}
 				},
 				data: usePowerHis
-
 			},
 			{
 				name: xName[2],
@@ -303,7 +334,6 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 				symbolSize: 6,
 				showSymbol: true,
 				lineStyle: {
-
 					normal: {
 						color: '#d87f53',
 						width: 2
@@ -329,7 +359,6 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 					}
 				},
 				data: useWaterReal
-
 			},
 			{
 				name: xName[3],
@@ -365,11 +394,8 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 					}
 				},
 				data: usePowerReal
-
 			}
-
 		]
-
 	};
 
 	// 使用刚指定的配置项和数据显示图表。

@@ -144,4 +144,56 @@
         GROUP BY
         service.data_sort
     </select>
+
+    <select id="getLatestDevicesDataNew" resultType="map">
+        SELECT
+        deviceData.ID_DEVICE as deviceId,
+        deviceData.ID_SERVICE as serviceId,
+        fu.TYPE AS type,
+        fu.MEMO AS serviceName,
+        date_format( deviceData.DATE_TIME, '%H:%i:%s') as serviceDate,
+        IFNULL(case
+        truncate(deviceData.pv * case when service.ratio is null then 1 else service.ratio end
+        ,2)
+        when '0.00' then '0' else
+        truncate(deviceData.pv * case when service.ratio is null then
+        1 else service.ratio end ,2)
+        end, '-') as serviceValue,
+        fu.UNIT AS serviceUnit
+        FROM
+        (
+        SELECT
+        *
+        FROM
+        ${dbName}
+        <where>
+            <if test="deviceId.indexOf(',') == -1">
+                AND ID_DEVICE = #{deviceId}
+            </if>
+            <if test="deviceId.indexOf(',') > -1 ">
+                AND ID_DEVICE in
+                <foreach collection="deviceId.split(',')" separator="," open="(" close=")" item="item" >
+                    #{item}
+                </foreach>
+            </if>
+            <if test="serviceId != null and !serviceId.isEmpty() and serviceId.indexOf(',') == -1">
+                AND `ID_SERVICE` = #{serviceId}
+            </if>
+            <if test="serviceId != null and !serviceId.isEmpty() and serviceId.indexOf(',') >= -1">
+                AND ID_SERVICE in
+                <foreach collection="serviceId.split(',')" separator="," open="(" close=")" item="item" >
+                    #{item}
+                </foreach>
+            </if>
+            and DATE_TIME BETWEEN #{startDate} and #{endDate}
+        </where>
+        ORDER BY
+        DATE_TIME DESC LIMIT 100000
+        ) deviceData
+        INNER JOIN services service ON service.ID = deviceData.ID_SERVICE
+        INNER JOIN function fu on fu.id = service.ID_FUNCTION
+        where service.node_display='0'
+        order by  DATE_TIME
+    </select>
+
 </mapper>

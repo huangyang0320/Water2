@@ -5,6 +5,7 @@ var realTimeReturnFlag = true;
 var realTimeFullFalg = false;
 var realTimeAllDateFlag = false;
 var firstDeviceServices = [];
+var hisRealSynchro=false;
 var onlineData = {
     loading: {
         show: function () {
@@ -260,6 +261,7 @@ function initData() {
     initMetaDeviceList();
     //加载全部测点数据
     initServiceDataAll(false);
+    initChartHis();
     setInterval(function () {
     	if(deviceIds.length>0 && serviceIds.length>0){
     		//折现图
@@ -317,6 +319,7 @@ var getSendData = function() {
         deviceIds = deviceIdsTmp.join(",");
         //如果第一台设备发生变化重新加载第一台设备的测点
         if(selectFirstDeviceId != deviceIdsTmp[0]){
+            initChartHis();
             initFirstDeviceServices();
         }
         selectFirstDeviceId = deviceIdsTmp[0];
@@ -382,6 +385,9 @@ function initLayout() {
 
 //勾选/取消测点后触发
 function switchDeviceData() {
+    //不能加载实时的，先加载历史后在加载实时数据
+    hisRealSynchro=false;
+
     var indexArray = $("#device-norm-data").find("input").serializeArray();
     var indexs = [];
     serviceIds = '';
@@ -399,11 +405,12 @@ function switchDeviceData() {
     }
     //
     var d = deviceIds.split(',');
-    if(Number(d.length)*Number(indexs.length)>50){
+    if(Number(d.length)*Number(indexs.length)>5){
         parent.showErrorMsgVideo("你选中设备的参数曲线将超过50条，数据加载时间可能变长，确认要选中吗？");
     	//parent.openAlertModel("myModalAlert" , "你选中设备的参数曲线将超过50条，数据加载时间可能变长，确认要选中吗？");
     }
     onlineData.loading.show();
+    initChartHis();
     initChart(true);
 }
 
@@ -414,6 +421,10 @@ function initChart(clearFlag){
     var currentSelectDeviceId = deviceIds;
     //如果上次查询的结果还没有返回就直接返回不执行查询
     if(!realTimeReturnFlag && !clearFlag){
+        return
+    }
+    //历史数据执行后才开始加载实时数据
+    if(!hisRealSynchro){
         return
     }
     realTimeReturnFlag = false
@@ -428,6 +439,7 @@ function initChart(clearFlag){
         }
         //修改测点或设备后 处理
         if(serviceIds != currentServiceIds || currentSelectDeviceId != deviceIds){
+            initChartHis();
             return;
         }
         for (var i = 0; i < result.length; i++) {
@@ -436,7 +448,7 @@ function initChart(clearFlag){
             }
             onlineData.chart.onlineDataChart.config.series[i].name = result[i]["name"];
             onlineData.chart.onlineDataChart.config.series[i].data.push(result[i]["data"][0]);
-            if(onlineData.chart.onlineDataChart.config.series[i].data.length > 100){
+            if(onlineData.chart.onlineDataChart.config.series[i].data.length > 1000){
                 onlineData.chart.onlineDataChart.config.series[i].data.shift();
                 flag = true;
             }
@@ -456,6 +468,49 @@ function initChart(clearFlag){
         }
     });
 }
+
+
+//加载实时数据折现图
+function initChartHis(){
+    //查询前选中的测点，和查询结果返回后的测点比对，如果不一致进行处理
+    var currentServiceIds = serviceIds;
+    var currentSelectDeviceId = deviceIds;
+
+    $.post(onlineData.contextPath + "/monitor/v2/devices/"+deviceIds+"/data/"+serviceIds+"/latestHis/"+"waterdb",function(result){
+        realTimeReturnFlag = true
+        //修改测点或设备后 处理
+        if(serviceIds != currentServiceIds || currentSelectDeviceId != deviceIds){
+            return;
+        }
+        for (var i = 0; i < result.length; i++) {
+            if(!onlineData.chart.onlineDataChart.config.series[i]){
+                onlineData.chart.onlineDataChart.config.series[i]={name:"",data:[]}
+            }
+            onlineData.chart.onlineDataChart.config.series[i].name = result[i]["name"];
+            onlineData.chart.onlineDataChart.config.series[i].data=result[i]["data"];
+            /*  if(onlineData.chart.onlineDataChart.config.series[i].data.length > 100){
+                  onlineData.chart.onlineDataChart.config.series[i].data.shift();
+                  flag = true;
+              }*/
+        }
+        onlineData.chart.onlineDataChart.config.xAxis.categories=result[0]["xData"];;
+        /*  if(flag){
+              onlineData.chart.onlineDataChart.config.xAxis.categories.shift();
+          }*/
+        if(realTimeFullFalg){
+            onlineData.chart.onlineDataChart.instance = Highcharts.chart('enlargeOnlineDataChart', onlineData.chart.onlineDataChart.config);
+        }else{
+            onlineData.chart.onlineDataChart.instance = Highcharts.chart('onlineDataChart', onlineData.chart.onlineDataChart.config);
+        }
+        //当前展示的是折现tab则取消
+        if(!realTimeTableFlag){
+            onlineData.loading.hide();
+        }
+
+        hisRealSynchro=true;
+    });
+}
+
 
 function initFirstDeviceServices(){
     var deviceIdArry = deviceIds.split(",");
@@ -626,6 +681,8 @@ function initRealtimeData(){
         $("#realtimeTbody5").html("");
         $("#realtimeTbody6").html("");
         $("#realtimeTbody7").html("");
+        let number1=0,number2=0//水质参数的数量，液位参数的数量
+
         for(var i=0;i<serviceData.length;i++){
         	html = "";
             var info = serviceData[i];
@@ -667,8 +724,10 @@ function initRealtimeData(){
             // 	$("#realtimeTbody2").append(html); //设置参数
             // }
             if(info.type == "ftWQ"){
+                number1 ++
                 $("#realtimeTbody1").append(html);//水质
             }else if(info.type == "ftTL"){
+                number2 ++
                 $("#realtimeTbody4").append(html);//液位
             }else if(info.type == "ftMP"||info.type == "ftMF"){
                 $("#realtimeTbody5").append(html); //管网
@@ -681,6 +740,18 @@ function initRealtimeData(){
             }else if(info.type == "ftSP"){
                 $("#realtimeTbody3").append(html); //设置参数
             }
+
+        }
+        // console.log(number1,number2)
+        if(number1 == 0){
+            $('#realtime-datalist1').css('display','none')
+        }else{
+            $('#realtime-datalist1').css('display','block')
+        }
+        if(number2 == 0){
+            $('#realtime-datalist4').css('display','none')
+        }else{
+            $('#realtime-datalist4').css('display','block')
         }
     }
 }
