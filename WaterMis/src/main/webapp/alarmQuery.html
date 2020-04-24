@@ -107,52 +107,84 @@
     </div>
     <!-- /. ROW  -->
 </div>
-
 <!-- Modal -->
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myWorkModal">
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myWorkModal1" style="z-index: 99991">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 class="modal-title" id="myModalLabel">创建工单</h3>
+                <h3 class="modal-title">创建工单</h3>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="height:500px ;overflow-y: auto">
                 <form id="workOrder">
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-group">
-                                <label for="workType">工单类型</label>
-                                <select class="form-control" id="workType" name="workType">
-                                </select>
+                                <label for="ticketId">工单编号</label>
+                                <input type="text" class="form-control" readonly id="ticketId" name="ticketId">
                             </div>
                         </div>
                         <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
-                                <label for="taskSource">工单来源</label>
-                                <input type="text" class="form-control" id="taskSource" name="taskSource" placeholder="请输入">
+                                <label for="workType">工单类型</label>
+                                <input type="text" class="form-control" readonly id="showWorkType" name="showWorkType" value="告警工单" placeholder="请输入">
+                                <input type="hidden" id="workType" name="workType" value="1">
+                                <!-- <select class="form-control" id="workType" name="workType">
+                                     <option value="1">告警工单</option>
+                                 </select>-->
                             </div>
                         </div>
+                        <!-- <div class="col-md-5 col-md-offset-1">
+                             <div class="form-group">
+
+                                 <label for="alarmContent">工单名称</label>
+                                 <input type="text" class="form-control" readonly id="alarmContent" name="alarmContent" placeholder="请输入">
+                             </div>
+                         </div>-->
                     </div>
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-group">
-                                <label for="alarmContent">工单内容</label>
-                                <input type="text" class="form-control" id="alarmContent" name="alarmContent" placeholder="请输入">
+                                <!--  <label for="taskSource">工单来源</label>  -->
+                                <input type="hidden" class="form-control" id="taskSource" name="taskSource" value="二供平台" placeholder="请输入">
+
+                                <label for="phName">泵房名称</label>
+                                <input type="text" class="form-control" readonly id="phName" name="phName" placeholder="请输入">
+                                <input type="hidden" class="form-control" readonly id="phId" name="phId" placeholder="请输入">
                             </div>
                         </div>
                         <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
-                                <label for="alarmTime">告警时间</label>
-                                <input type="text" class="form-control" readonly id="alarmTime" name="alarmTime" placeholder="请输入">
+                                <label for="address">泵房地址</label>
+                                <input type="text" class="form-control" readonly id="address" name="address" placeholder="请输入">
                             </div>
                         </div>
                     </div>
                     <div class="row">
+
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="processName">所在设备</label>
                                 <input type="text" class="form-control" readonly id="processName" name="processName" placeholder="请输入">
-                                <input type="hidden"  class="form-control" readonly id="processObject" name="processObject" placeholder="请输入">
+                                <input type="hidden"  class="form-control" readonly id="deviceId" name="deviceId" placeholder="请输入">
+
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="alarmStatus">告警状态</label>
+                                <input type="text" class="form-control" readonly id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
+                                <!--2：待接单-->
+                                <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="1"  placeholder="请输入">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="alarmTime">告警时间</label>
+                                <input type="text" class="form-control" readonly id="alarmTime" name="alarmTime" placeholder="请输入">
                             </div>
                         </div>
                         <div class="col-md-5 col-md-offset-1">
@@ -161,6 +193,7 @@
                                 <input type="text" class="form-control" id="alarmLevel" name="alarmLevel" placeholder="请输入">
                             </div>
                         </div>
+
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -176,7 +209,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-11">
                             <div class="form-group">
@@ -197,23 +229,30 @@
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-group">
-                                <label for="executor">执行人</label>
-                                <select class="form-control" id="executor" name="executor">
+                                <label for="deptId">执行部门</label>
+                                <select class="form-control" id="deptId" name="deptId" onchange="changerDept()">
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="mgName">部门负责人</label>
+                                <input type="text" class="form-control" readonly id="mgName" name="mgName" >
+                            </div>
+                        </div>
+
 
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="submitWorkOrder()">创建</button>
+                <button type="button" class="btn btn-primary" id="createBtn" onclick="submitWorkOrder()">创建</button>
             </div>
         </div>
     </div>
 </div>
-
 <div class="modal fade" tabindex="-1" role="dialog" id="alertWork">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -226,7 +265,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myWorkModal" data-dismiss="modal">确定</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myWorkModal1" data-dismiss="modal">确定</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
