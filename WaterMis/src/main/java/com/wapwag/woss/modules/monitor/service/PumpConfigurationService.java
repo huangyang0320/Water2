@@ -848,11 +848,9 @@ public class PumpConfigurationService {
         //当前天的实时tableName
         String tableName="service_values_hour_"+DateUtils.formatDateTimeByFormat(new Date(),"yyyyMMdd");
 
-        List<PumpService> listData = pumpConfigurationMapper.getDateHour(tableName);
-        for(PumpService l:listData){
-            list4.add(l.getDateTime());
-            List<PumpService> listData2 = pumpConfigurationMapper.getDatePv(tableName,l.getDateTime());
-            for(PumpService p:listData2){
+        List<PumpService> listData = pumpConfigurationMapper.getDatePv(tableName);
+        for(PumpService p:listData){
+            list4.add(p.getDateTime());
                 if(p.getNum()>0){
                     float res=((Float.parseFloat(p.getPv())*100)/p.getNum())/100;
                     if("pressure_szjs1".equals(p.getCode())){
@@ -865,23 +863,7 @@ public class PumpConfigurationService {
                         list3.add(res+"");
                     }
                 }
-
-            }
-            int n1=list1.size();
-            int n2=list2.size();
-            int n3=list3.size();
-            if(!(n1==n2&&n2==n3)){
-                int m = ((n1 < n2) ? n1 : n2)<n3?((n1 < n2) ? n1 : n2):n3;
-                if(m==n1){
-                    list1.add("0");
-                }else if(m==n2){
-                    list2.add("0");
-                }else if(m==n3){
-                    list3.add("0");
-                }
-            }
         }
-
         map.put("szjs1",list1);
         map.put("szjs2",list2);
         map.put("lowset",list3);
