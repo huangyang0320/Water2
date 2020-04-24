@@ -13,6 +13,9 @@ public class PumpService {
 	private String unit;//单位
     private String pv;//值
 	private String code;
+	private String dateTime;
+	private String pumpName;
+	private Integer num;
 
 	private String phId;
 	private List<String> codeList;
@@ -89,5 +92,29 @@ public class PumpService {
 
 	public void setCodeList(List<String> codeList) {
 		this.codeList = codeList;
+	}
+
+	public String getDateTime() {
+		return dateTime;
+	}
+
+	public void setDateTime(String dateTime) {
+		this.dateTime = dateTime;
+	}
+
+	public String getPumpName() {
+		return pumpName;
+	}
+
+	public void setPumpName(String pumpName) {
+		this.pumpName = pumpName;
+	}
+
+	public Integer getNum() {
+		return num;
+	}
+
+	public void setNum(Integer num) {
+		this.num = num;
 	}
 }

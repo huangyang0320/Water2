@@ -269,4 +269,48 @@
         </where>
     </select>
 
+
+<!-- 所有泵房进口压力1、进口压力2、压力下限值在每个小时点的平均值； -->
+    <select id="getDynamicPressureData" resultType="com.wapwag.woss.modules.monitor.pumpNode.PumpService" parameterType="java.lang.String">
+
+       SELECT
+			temp.id_device idDevice,temp.id_service idService, s.name tag_name tagName, s.unit, sum(temp.pv * case when ratio is null then 1 else ratio end) as pv, s.code,temp.date_time dateTime,count(*) num
+		FROM
+			(SELECT
+				temp1.id_device,temp1.id_service, temp1.tag_name, temp1.pv, DATE_FORMAT(temp1.date_time, '%Y-%m-%d %h') date_time
+			FROM
+				(SELECT
+				id_device,id_service, tag_name,pv,date_time
+			FROM
+				${tableName}
+			where TAG_NAME='总进水压力' or TAG_NAME='进水压力下限'
+				) temp1
+			) temp
+				JOIN services s ON s.id = temp.id_service where s.code in ('pressure_szjs1','pressure_szjs2','pressurein_lowset')
+        GROUP BY temp.date_time,s.code
+    </select>
+
+
+    <!-- 每个泵房的实时进口压力1、进口压力2、压力下限值 -->
+    <select id="getPumpHouseDynamicPressureData" resultType="com.wapwag.woss.modules.monitor.pumpNode.PumpService" parameterType="java.lang.String">
+
+      SELECT
+        temp2.DATE_TIME dateTime,
+        temp2.FUNCTION_MEMO tagName,
+        temp2.ID_SERVICE idService,
+        temp2.FUNCTION_NAME code,
+        temp2.pv,
+        temp2.unit,
+        p.`NAME` pumpName
+    FROM
+        service_values_current temp2
+    LEFT JOIN device d ON d.id = temp2.id_device
+    LEFT JOIN pump_house p ON p.id = d.ID_PUMP_HOUSE
+    WHERE
+        temp2.FUNCTION_MEMO IN (
+            '总进水压力',
+            '进水压力下限'
+        )
+    </select>
+
 </mapper>
