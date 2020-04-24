@@ -13,6 +13,7 @@ public class PumpService {
 	private String unit;//单位
     private String pv;//值
 	private String code;
+	private String sCode;
 	private String dateTime;
 	private String pumpName;
 	private Integer num;
@@ -116,5 +117,13 @@ public class PumpService {
 
 	public void setNum(Integer num) {
 		this.num = num;
+	}
+
+	public String getsCode() {
+		return sCode;
+	}
+
+	public void setsCode(String sCode) {
+		this.sCode = sCode;
 	}
 }

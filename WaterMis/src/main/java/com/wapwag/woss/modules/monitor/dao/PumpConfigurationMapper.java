@@ -48,7 +48,13 @@ public interface PumpConfigurationMapper {
 
 	List<SysDict> selectSysDictByType(String type);
 
-    List<PumpService>  getDynamicPressureData(@Param("tableName")String tableName);
-    List<PumpService>  getPumpHouseDynamicPressureData();
+    List<PumpService>  getDateHour(@Param("tableName")String tableName);
+
+    List<PumpService>  getDatePv(@Param("tableName")String tableName,@Param("hour")String hour);
+
+    List<PumpService>  getPName();
+
+    List<PumpService>  getPvData(@Param("pName")String tableName);
+
 
 }
