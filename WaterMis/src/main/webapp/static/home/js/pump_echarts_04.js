@@ -24,6 +24,7 @@ function getPumpData_04_day(obj) {
 				var xName=[];
 				xName.push("昨日用水量(m3)");
 				xName.push("昨日用电量(kWh)");
+                xName.push("");
 				xName.push("今日用水量(m3)");
 				xName.push("今日用电量(kWh)");
 				var xData=data.xData;
@@ -56,6 +57,7 @@ function getPumpData_04_month(obj) {
 				var xName=[];
 				xName.push("上月用水量(m3)");
 				xName.push("上月用电量(kWh)");
+                xName.push("");
 				xName.push("当月用水量(m3)");
 				xName.push("当月用电量(kWh)");
 				var xData=data.xData;
@@ -88,6 +90,7 @@ function getPumpData_04_year(obj) {
 				var xName=[];
 				xName.push("去年用水量(m3)");
 				xName.push("去年用电量(kWh)");
+                xName.push("");
 				xName.push("今年用水量(m3)");
 				xName.push("今年用电量(kWh)");
 				var xData=data.xData;
@@ -327,7 +330,7 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 				data: usePowerHis
 			},
 			{
-				name: xName[2],
+				name: xName[3],
 				type: 'line',
 				smooth: false,
 				symbol: 'circle',
@@ -361,7 +364,7 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 				data: useWaterReal
 			},
 			{
-				name: xName[3],
+				name: xName[4],
 				type: 'line',
 				smooth: false,
 				yAxisIndex: 1,
