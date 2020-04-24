@@ -159,7 +159,7 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 			position: [10, 10],
 			axisPointer: {
 				lineStyle: {
-					color: '#dddc6b'
+					color: '#dddc6b',
 				}
 			}
 		},
