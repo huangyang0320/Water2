@@ -524,7 +524,7 @@
             var marker = new BMap.Marker(point, {icon: myIcon});
             // map.clearOverlays()
             map.addOverlay(marker);
-            map.centerAndZoom(point, 12);
+            map.centerAndZoom(point, 14);
 
             marker.pumpHouse = pumpHouse;
 
@@ -627,7 +627,7 @@
         var pointthis = new BMap.Point(treeNode.longi, treeNode.lati);
         var areaId = treeNode.id;
 
-        MAP.setZoom(12); // 设置缩放级别
+        MAP.setZoom(13); // 设置缩放级别
         MAP.setCenter(pointthis);
         MAP.panTo(pointthis);
 
@@ -654,7 +654,7 @@
         var pointthis = new BMap.Point(areaPonit.longi, areaPonit.lati);
         var areaId = areaPonit.areaId;
 
-        MAP.setZoom(12); // 设置缩放级别
+        MAP.setZoom(15); // 设置缩放级别
         MAP.setCenter(pointthis);
         MAP.panTo(pointthis);
 
@@ -911,7 +911,7 @@
                         }
                         clearTimeout(showSummaryDelay);
                     }
-                    MAP.setZoom(12); // 设置缩放级别
+                    MAP.setZoom(13); // 设置缩放级别
                     marker.openInfoWindow(window.infoWindow);
                     LOADING.hide();
                 }

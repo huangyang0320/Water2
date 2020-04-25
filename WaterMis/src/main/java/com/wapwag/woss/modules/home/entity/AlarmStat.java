@@ -32,6 +32,7 @@ public class AlarmStat {
 	private String alarDescription;
 	private String alarmLevel;
 	private String alarmReason;
+	private String confirmDate;
 
 	//告警类型备注
 	private String alarmTypeRemarks;
@@ -308,5 +309,13 @@ public class AlarmStat {
 
 	public void setAlarmTypeRemarks(String alarmTypeRemarks) {
 		this.alarmTypeRemarks = alarmTypeRemarks;
+	}
+
+	public String getConfirmDate() {
+		return confirmDate;
+	}
+
+	public void setConfirmDate(String confirmDate) {
+		this.confirmDate = confirmDate;
 	}
 }

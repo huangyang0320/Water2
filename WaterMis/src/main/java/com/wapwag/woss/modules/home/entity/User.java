@@ -34,7 +34,8 @@ public class User extends DataEntity<User> {
 
     private String deviceId;
 
-    /**
+    private String alarmReceptionLevel;//告警接收级别
+  /**
      * 一定记得加密
      */
     private String encryPassword;
@@ -122,5 +123,13 @@ public class User extends DataEntity<User> {
 
     public void setEncryPassword(String encryPassword) {
         this.encryPassword = encryPassword;
+    }
+
+    public String getAlarmReceptionLevel() {
+        return alarmReceptionLevel;
+    }
+
+    public void setAlarmReceptionLevel(String alarmReceptionLevel) {
+        this.alarmReceptionLevel = alarmReceptionLevel;
     }
 }
