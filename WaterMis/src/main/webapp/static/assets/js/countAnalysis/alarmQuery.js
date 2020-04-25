@@ -6,7 +6,7 @@ var alarmInitCount = 0;
 var alarmPage = "1";
 var alarm_higth = 1;
 var ischeck = false;
-var url = CONTEXT_PATH+"/alarmStatController/alarmList?'+ Math.random()";
+var url = CONTEXT_PATH+"/alarmStatController/alarmList?"+ Math.random();
 
 function qryAreaList(){
     $("#areaCode").empty();
@@ -188,27 +188,6 @@ $(function(){
             $("#alarm-area-compare, #alarm-type-compare").height(calcHeight()/2 - 5);
             $("#alarm-compare-graph, #alarm-compare-pie").height(calcHeight());
         });
-        window.operateEvents = {
-            'click .jumpWork': function (e, value, row, index) {
-                queryWhetherWorker(row.deviceId);
-               /* queryAlarmWorkTemplate();
-                queryMaintenanceWorkerUser();*/
-                $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
-				$("#alarmTime").val(row.startDate);
-				$("#processName").val(row.deviceName);
-                $("#processObject").val(row.deviceId);
-				$("#alarmReason").val(row.alarmReason);
-				$("#alarmLevel").val(row.alarmLevel);
-				$("#planContent").val(row.alarDescription);
-				$("#taskSource").val("二供");
-
-				//重置验证
-                $("#workOrder").data('bootstrapValidator').destroy();
-                $('#workOrder').data('bootstrapValidator',null);
-                formValidator();
-
-            }
-        };
 
    	    $('#dataTables-example').bootstrapTable({
            url:url,
@@ -324,7 +303,6 @@ $(function(){
                field: 'createWorkOrder',
                title: '创建工单',
                align: 'center',
-               events: operateEvents,
                formatter: operateFormatter
            }],
            detailFormatter: function(index, row) {// 详情信息
@@ -339,6 +317,7 @@ $(function(){
 
         areaCount();
         alarmTypeCount();
+        setTicketId("1");
    }
 
 function cellStylesales(value, row, index) {
@@ -353,15 +332,98 @@ function cellStylesales(value, row, index) {
     }
 }
 
+function setTicketId(mark){
+    $.ajax({
+        type:"POST",
+        url: CONTEXT_PATH+'/ticket/getTicketId',
+        async: false,
+        datatype:"JSON",
+        data:{ticketType:mark},
+        success: function (res) {
+            $("#ticketId").val(res);
+        }
+    })
+}
+
+function queryMaintenanceWorkerDept() {
+    //var url = CONTEXT_PATH+"/alarmStatController/queryMaintenanceWorkerUser?"+ Math.random();
+    var url =CONTEXT_PATH+"/ticket/getDept?"+ Math.random();
+    jQuery.ajax({
+        type : 'POST',
+        contentType : 'application/json',
+        url : url,
+        dataType : 'json',
+        success : function(data) {
+            $("#deptId").html("");
+            $.each(data, function (i, item) {
+                jQuery("#deptId").append("<option value="+ item.deptId+" mgName="+item.mgName+">"+ item.deptName+"</option>");
+                if(i==0){
+                    $("#mgName").val(item.mgName);
+                }
+            });
+        }
+    });
+}
+function myModalWorkOrder(row) {
+
+    //queryAlarmWorkTemplate();
+    queryMaintenanceWorkerDept();
+    $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
+    $("#alarmTime").val(row.startDate);
+    $("#phName").val(row.phName);
+    $("#phId").val(row.phId);
+    $("#address").val(row.address);
+
+
+    $("#processName").val(row.deviceName);
+    $("#deviceId").val(row.deviceId);
+    $("#alarmReason").val(row.alarmReason);
+    $("#alarmLevel").val(row.alarmLevel);
+    $("#planContent").val(row.alarDescription);
+    $("#taskSource").val("二供");
+
+    $("#planStartTime").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        minuteStep:1,
+        minView:1,
+        language: 'zh-CN',
+        pickerPosition:'bottom-right',
+        autoclose:true,
+        startDate: new Date()
+    }).on("click",function(){
+        $("#planStartTime").datetimepicker("setEndDate",$("#planEndTime").val());
+    });
+
+    $("#planEndTime").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        minuteStep:1,
+        minView:'hour',
+        language: 'zh-CN',
+        autoclose:true
+    }).on("click",function(){
+        $("#planEndTime").datetimepicker("setStartDate",$("#planStartTime").val());
+    });
+
+    var myDate = new Date();
+    $("#planStartTime").val(myDate.Format("yyyy-MM-dd HH:mm:ss"));
+    myDate.setDate(myDate.getDate() + 7)
+    $("#planEndTime").val(myDate.Format("yyyy-MM-dd HH:mm:ss"));
+
+    formValidator();
+    //重置验证
+    $("#workOrder").data('bootstrapValidator').destroy();
+    $('#workOrder').data('bootstrapValidator',null);
+    formValidator();
+}
+
 	function operateFormatter(value, row, index) {
-		    if(row.ticketId){
-              //  return ['<button type="button" onclick="alertError()"  class="btn btn-warning">创建工单</button>'].join('');
-
-                return ['<span style="    display: inline-block;padding: 6px 12px; margin-bottom: 0;border: 1px solid transparent;border-radius: 4px;font-size: 14px;" class=" btn-warning">已创建工单</span>'].join('');
-
-            }else {
-                return ['<button type="button"  class="jumpWork btn btn-primary">创建工单</button>'].join('');
-            };
+            let str = ''
+            if(!row.ticketId){
+                str = '<button id="createWorkOrder" type="button" class="btn btn-info" onclick="createWorkOrder1(\''+row+'\')">创建工单</button>'
+            }else{
+                 str = '<button id="showWorkOrder" type="button" class="btn btn-warning" onclick="showWorkOrder1(\''+row+'\')">查看工单</button>'
+            }
+            return str;
 
 	}
 	function alertError() {
@@ -370,6 +432,34 @@ function cellStylesales(value, row, index) {
         $('#alertError').modal('show');
     }
 
+    function hideCreateBtn() {
+        $("#createBtn").hide();
+    }
+    function showCreateBtn() {
+        $("#createBtn").show();
+    }
+    function createWorkOrder1(self) {
+        let sdata = self
+        //创建按钮显示
+        showCreateBtn();
+        //打开创建工单页面
+        $('#myWorkModal1').modal('show');
+        //工单页面赋值
+        myModalWorkOrder(sdata);
+        //给工单编号赋值
+        setTicketId("1");
+    }
+
+    function showWorkOrder1(self) {
+        let sdata = self
+        //创建按钮隐藏
+        hideCreateBtn();
+        //打开创建工单页面
+        $('#myWorkModal1').modal('show');
+        //工单页面赋值
+        myModalWorkOrder(sdata);
+
+    }
 	function toTrim(str){
 		if(undefined == str || null == str){
 			return "-";
@@ -557,7 +647,7 @@ function cellStylesales(value, row, index) {
                 dataType : 'json',
                 success : function(data){
                     if(data.status == "success"){
-                        $('#myWorkModal').modal('hide'); // 关闭模态框
+                        $('#myWorkModal1').modal('hide'); // 关闭模态框
                         $('#alertErrorMessage').html(data.message);
                         $('#alertError').modal('show');
                     }else{
@@ -610,7 +700,7 @@ function cellStylesales(value, row, index) {
     }
 
     function queryWhetherWorker(deviceId) {
-        $('#myWorkModal').modal('show');
+        $('#myWorkModal1').modal('show');
 
        /* var url = CONTEXT_PATH+"/alarmStatController/queryWhetherWorker?"+ Math.random();
         jQuery.ajax({

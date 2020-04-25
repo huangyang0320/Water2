@@ -6,7 +6,9 @@ import static com.wapwag.woss.modules.config.RestResult.success;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.wapwag.woss.modules.monitor.pumpNode.PumpService;
@@ -125,5 +127,24 @@ public class PumpConfigurationController extends BaseController {
         String door=new Gson().toJson(accessControlService.getAccessDataByPumpId(pumpId));
         String req=renderString(response,door,"application/json");
         return req;
+    }
+
+
+    /**
+     * 获取每天每小时的统计数据
+     * @return
+     */
+    @RequestMapping(value = {"getDynamicPressureData"})
+    public Map<String,Object> getDynamicPressureData(HttpServletRequest request,HttpServletResponse response) {
+            return pumpConfigurationService.getDynamicPressureData();
+    }
+
+    /**
+     * 获取每天每小时的统计数据
+     * @return
+     */
+    @RequestMapping(value = {"getPumpHouseDynamicPressureData"})
+    public Map<String,Object> getPumpHouseDynamicPressureData(HttpServletRequest request,HttpServletResponse response) {
+        return pumpConfigurationService.getPumpHouseDynamicPressureData();
     }
 }
