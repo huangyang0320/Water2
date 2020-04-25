@@ -379,4 +379,19 @@ public class TicketController {
     }
 
 
+    @RequestMapping("/getUserId")
+    @ResponseBody
+    @ApiOperation(value = "获取userId", httpMethod = "POST" )
+    public String getUserId(User user){
+        return user.getUserId();
+    }
+
+
+    @RequestMapping("/deleteTicket")
+    @ResponseBody
+    @ApiOperation(value = "删除工单", httpMethod = "POST" ,response = TicketDto.class)
+    public boolean deleteTicket(TicketDto ticketDto){
+        ticketDto.setValidFlag("0");
+        return ticketService.updateTicketInfo(ticketDto);
+    }
 }

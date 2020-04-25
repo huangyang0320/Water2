@@ -34,6 +34,7 @@ public class TicketDto extends DataEntity<TicketDto> {
     private String createEndTime;//新建截止  用于条件
     private String createTime;//等于当前日期的记录
     private String validFlag;
+    private String createName;//创建人
 
     private String ticketReason;
     private String ticketDescription;
@@ -416,5 +417,13 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setChannelName(String channelName) {
         this.channelName = channelName;
+    }
+
+    public String getCreateName() {
+        return createName;
+    }
+
+    public void setCreateName(String createName) {
+        this.createName = createName;
     }
 }

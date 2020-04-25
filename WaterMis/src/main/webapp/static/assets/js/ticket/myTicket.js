@@ -343,6 +343,7 @@ function queryParams(params) {
     var alarmContent = $("#alarmContent").val();
     var status=$("#status").val();
     var address=$("#address").val();
+    var createName=$("#createName").val();
 
     var createBeginTime =$("#createBeginTime").val();
     if(createBeginTime!=""){
@@ -396,6 +397,7 @@ function queryParams(params) {
         status:status,
         address:address,
         title: alarmContent,
+        createName:createName,
         createBeginTime: createBeginTime,
         createEndTime: createEndTime,
         startBeginTime: startBeginTime,

@@ -67,6 +67,8 @@
                                 <input id="address" placeholder="泵房地址" name="address" class="device-id form-control input-text1">
                                 <label>待处理人 : </label>
                                 <input id="allHandleUser" placeholder="待处理人" name="allHandleUser" class="device-id form-control input-text1">
+                                <label>创建人 : </label>
+                                <input id="createName" placeholder="创建人" name="createName" class="device-id form-control input-text1">
                             <label>工单创建时间 : </label>
                             <input id ="createBeginTime" name="createBeginTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-begin timepicker">-
                             <input id="createEndTime" name="createEndTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-end timepicker">
@@ -89,6 +91,22 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="alertShow">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">提示</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="alertShowMessage" style="color: red"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <!-- /. ROW  -->
 </div>
 

@@ -6,6 +6,7 @@ var alarmInitCount = 0;
 var alarmPage = "1";
 var alarm_higth = 1;
 var ischeck = false;
+var userId=null;
 $(function(){
     alarmInitCount = 0;
     //初始化时间
@@ -15,7 +16,11 @@ $(function(){
     var url = CONTEXT_PATH+"/ticket/getAllTicketListPage?"+Math.random();
 
 
-    initBootTable(url);
+    $.post(CONTEXT_PATH+"/ticket/getUserId",function (res) {
+        userId=res;
+        initBootTable(url);
+    })
+
 
     //查询事件
     $("#query").click(function(){
@@ -230,8 +235,12 @@ function initBootTable(url){
 }
 
 function operateFormatter(value, row, index) {
-    //status: 2 待接单   3处理中  4审核中  5完成
-        return ['<button type="button" onclick="ticketInfo(\''+row.ticketId+'\')" class="btn btn-primary">详情</button>'].join('');
+    //status:1 待分发 2 待接单   3处理中  4审核中  5完成
+        var str="";
+        if((row.status=='1'||row.status=='2')&&row.createByStr==userId){
+            str+='<button type="button" onclick="deleteTicket(\''+row.ticketId+'\')" class="btn btn-primary">删除</button>'
+        }
+        return [str,'<button type="button" onclick="ticketInfo(\''+row.ticketId+'\')" class="btn btn-primary">详情</button>'].join('');
 
 
 }
@@ -258,6 +267,19 @@ function ticketInfo(ticketId){
     });
 }
 
+function deleteTicket(ticketId){
+    //只能删除自己名下的数据行
+    $.post(CONTEXT_PATH+"/ticket/deleteTicket",{"ticketId":ticketId},function (res){
+        if(res==true){
+            $('#alertShowMessage').html('工单删除成功!!!');
+            $('#alertShow').modal('show');
+        }else{
+            $('#alertShowMessage').html('工单删除失败!!!');
+            $('#alertShow').modal('show');
+        }
+        $('#dataTables-example').bootstrapTable('refresh');
+    })
+}
 
 function toTrim(str){
     if(undefined == str || null == str){
@@ -281,7 +303,7 @@ function queryParams(params) {
     var address=$("#address").val();
     var deviceName=$("#deviceName").val();
     var allHandleUser=$("#allHandleUser").val();
-
+    var createName=$("#createName").val();
     var createBeginTime =$("#createBeginTime").val();
     if(createBeginTime!=""){
         createBeginTime = createBeginTime+" 00:00:00";
@@ -336,6 +358,7 @@ function queryParams(params) {
         status:status,
         address:address,
         deviceName:deviceName,
+        createName:createName,
         allHandleUser:allHandleUser,
         createBeginTime: createBeginTime,
         createEndTime: createEndTime,
