@@ -16,12 +16,14 @@
 	    <result column="failure_rate_year_9" jdbcType="REAL" property="failureRateYear9" />
 	    <result column="failure_rate_year_10" jdbcType="REAL" property="failureRateYear10" />
 	    <result column="weight" jdbcType="REAL" property="weight" />
+		<result column="wb_reason" jdbcType="VARCHAR" property="wbReason" />
+		<result column="wb_programme" jdbcType="VARCHAR" property="wbProgramme" />
 	    <result column="sort" jdbcType="BIGINT" property="sort" />
   	</resultMap>
 	<sql id="ProductComponent_Column_List">
 	    id, component_name, component_model, failure_rate_year_1, failure_rate_year_2, failure_rate_year_3, 
 	    failure_rate_year_4, failure_rate_year_5, failure_rate_year_6, failure_rate_year_7, 
-	    failure_rate_year_8, failure_rate_year_9, failure_rate_year_10, weight, sort
+	    failure_rate_year_8, failure_rate_year_9, failure_rate_year_10, weight, wb_reason, wb_programme, sort
 	</sql>    
 	<select id="getProductComponentById" resultMap="ProductComponentMap">
 	    select 
