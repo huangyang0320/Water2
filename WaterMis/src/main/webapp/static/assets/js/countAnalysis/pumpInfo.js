@@ -69,9 +69,9 @@ $(function(){
            searchOnEnterKey: false,//回车搜索
            clickToSelect:true,
            showRefresh: false,//刷新按钮
-           showColumns: true,//列选择按钮
-           smartDisplay:true,
-           showExport:true,
+           showColumns: false,//列选择按钮
+           // smartDisplay:true,
+           // showExport:true,
            exportDataType:'all',
            exportOptions: {
                ignoreColumn: [0] //忽略某一列的索引
@@ -90,97 +90,101 @@ $(function(){
            },
            locale: "zh-CN",//中文支持
            detailView: true, //是否显示详情折叠
-           columns: [{
-               field: 'areaId',
-               title: '所属区域',
-               align: 'center'
-           },{
-               field: 'projectId',
-               title: '项目名称',
-               align: 'center'
-           },{
-               field: 'pumpHouseName',
-               title: '泵房名称',
-               align: 'center'
-           },{
-               field: 'id',
-               title: '泵房编码',
-               visible:false,
-               align: 'center'
-           },{
-               field: 'cellAdress',
-               title: '泵房地址',
-               align: 'center'
-           },{
-               field: 'cellName',
-               title: '小区名称',
-               align: 'center'
-           },/*{
-               field: 'cellAdress',
-               title: '小区地址',
-               visible:false,
-               visible:false,
-               align: 'center'
-           },*/{
-               field: 'deviceManufacturers',
-               title: '设备厂家',
-               visible:false,
-               align: 'center'
-           },{
-               field: 'deviceManufacturersInformation',
-               title: '设备厂家联系方式',
-               visible:false,
-               align: 'center'
-           },{
-               field: 'selfControlManufacturers',
-               title: '自控改造厂家',
-               visible:false,
-               align: 'center'
-           },{
-               field: 'selfControlManufacturersInformation',
-               title: '自控改造厂家联系方式',
-               visible:false,
-               align: 'center'
-           },{
-               field: 'constructionSide',
-               title: '运维方',
-               visible:false,
-               align: 'center'
-           },{
-               field: 'constructionSideInformation',
-               title: '运维方联系方式',
-               visible:false,
-               align: 'center'
-           },{
-               field: 'construction',
-               title: '施工方',
-               visible:false,
-               align: 'center'
-           },{
-               field: 'constructionInformation',
-               title: '施工方联系方式',
-               visible:false,
-               align: 'center'
-           },{
-               field: 'property',
-               title: '物业',
-               visible:false,
-               align: 'center'
-           },{
-               field: 'propertyInformation',
-               title: '物业联系方式',
-               visible:false,
-               align: 'center'
-           },{
-               field: 'handoverTime',
-               title: '移交时间',
-               visible:false,
-               align: 'center'
-           }],
+           columns: [
+               {
+                   field: 'areaId',
+                   title: '所属区域',
+                   align: 'center'
+               },
+                   //     field: 'projectId',
+                   //     title: '项目名称',
+                   //     align: 'center'
+                   // },  //     {
+
+               {
+                   field: 'pumpHouseName',
+                   title: '泵房名称',
+                   align: 'center'
+               },{
+                   field: 'id',
+                   title: '泵房编码',
+                   visible:false,
+                   align: 'center'
+               },{
+                   field: 'cellAdress',
+                   title: '泵房地址',
+                   align: 'center'
+               },{
+                   field: 'cellName',
+                   title: '小区名称',
+                   align: 'center'
+               },/*{
+                   field: 'cellAdress',
+                   title: '小区地址',
+                   visible:false,
+                   visible:false,
+                   align: 'center'
+               },*/{
+                   field: 'deviceManufacturers',
+                   title: '设备厂家',
+                   visible:false,
+                   align: 'center'
+               },{
+                   field: 'deviceManufacturersInformation',
+                   title: '设备厂家联系方式',
+                   visible:false,
+                   align: 'center'
+               },{
+                   field: 'selfControlManufacturers',
+                   title: '自控改造厂家',
+                   visible:false,
+                   align: 'center'
+               },{
+                   field: 'selfControlManufacturersInformation',
+                   title: '自控改造厂家联系方式',
+                   visible:false,
+                   align: 'center'
+               },{
+                   field: 'constructionSide',
+                   title: '运维方',
+                   visible:false,
+                   align: 'center'
+               },{
+                   field: 'constructionSideInformation',
+                   title: '运维方联系方式',
+                   visible:false,
+                   align: 'center'
+               },{
+                   field: 'construction',
+                   title: '施工方',
+                   visible:false,
+                   align: 'center'
+               },{
+                   field: 'constructionInformation',
+                   title: '施工方联系方式',
+                   visible:false,
+                   align: 'center'
+               },{
+                   field: 'property',
+                   title: '物业',
+                   visible:false,
+                   align: 'center'
+               },{
+                   field: 'propertyInformation',
+                   title: '物业联系方式',
+                   visible:false,
+                   align: 'center'
+               },{
+                   field: 'handoverTime',
+                   title: '移交时间',
+                   visible:false,
+                   align: 'center'
+               }
+           ],
            detailFormatter: function(index, row) {// 详情信息
                var html = [];
                html.push('<p class="detail-view">' + '所属区域' + ' : ' + toTrim(row.areaId) + '</p>');
-               html.push('<p class="detail-view">' + '项目名称' + ' : ' + toTrim(row.projectId) + '</p>');
+               // html.push('<p class="detail-view">' + '项目名称' + ' : ' + toTrim(row.projectId) + '</p>');
                html.push('<p class="detail-view">' + '泵房名称' + ' : ' + toTrim(row.pumpHouseName) + '</p>');
                html.push('<p class="detail-view">' + '泵房编码' + ' : ' + toTrim(row.id) + '</p>');
                html.push('<p class="detail-view">' + '泵房地址' + ' : ' + toTrim(row.pumpHouseAddress) + '</p>');
@@ -213,6 +217,19 @@ $(function(){
 		}
 		return str;
 	}
+    // 自定义按钮导出数据  20200426 xth
+    function exportData(){
+        $('#dataTables-example').tableExport({
+            type: 'excel',
+            exportDataType: "all",
+            ignoreColumn: [0],//忽略某一列的索引
+            fileName: '泵房信息'+moment().format('YYYY-MM-DD HH_mm_ss'),//下载文件名称
+            onCellHtmlData: function (cell, row, col, data){//处理导出内容,自定义某一行、某一列、某个单元格的内容
+                console.info(data);
+                return data;
+            },
+        });
+    }
    function queryParams(params) {
        if(ischeck){
            params.pageNumber = 1;
