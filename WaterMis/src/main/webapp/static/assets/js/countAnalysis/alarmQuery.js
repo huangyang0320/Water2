@@ -172,21 +172,18 @@ $(function(){
     }
 
     function initBootTable(url){
-        // 初始化无滚动条
         $("#page-wrapper").css("overflow-y", "hidden");
         $("#page-inner").css("padding-right", "25px");
-   	    // table height
+        // table height
         var calcHeight = function() {
             var height = $(window).height() - $(".top-navbar").height() - $(".panel-heading").height() -
                 $(".nav-tabs").height() - 72;
             return height;
         };
-        $("#alarm-area-compare, #alarm-type-compare").height(calcHeight()/2 - 5);
-        $("#alarm-compare-graph, #alarm-compare-pie").height(calcHeight());
+
         $(window).resize(function() {
             $('#dataTables-example').bootstrapTable('resetView', {height : calcHeight() + 55});
-            $("#alarm-area-compare, #alarm-type-compare").height(calcHeight()/2 - 5);
-            $("#alarm-compare-graph, #alarm-compare-pie").height(calcHeight());
+
         });
 
    	    $('#dataTables-example').bootstrapTable({
@@ -308,13 +305,15 @@ $(function(){
            detailFormatter: function(index, row) {// 详情信息
                var html = [];
                html.push('<p class="detail-view">' + '操作人员' + ' : ' + toTrim(row.userName) + '</p>');
+               html.push('<p class="detail-view">' + '告警状态' + ' : ' + toTrim(row.confirmStat) + '</p>');
+               html.push('<p class="detail-view">' + '操作时间' + ' : ' + toTrim(row.confirmDate) + '</p>');
                html.push('<p class="detail-view">' + '设备编号' + ' : ' + toTrim(row.deviceId) + '</p>');
                html.push('<p class="detail-view">' + '操作原因' + ' : ' + toTrim(row.confirmReson) + '</p>');
                html.push('<p class="detail-view">' + '解决方案' + ' : ' + toTrim(row.alarDescription) + '</p>');
                return html.join('');
            }
         });
-
+//confirmStat confirmDate
         areaCount();
         alarmTypeCount();
         setTicketId("1");

@@ -219,8 +219,8 @@ var t = null;
         <li>
             <div class="map">
                 <div>
-                    <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpMapData(this);">泵房数</span>
-                    <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getUseWaterOrUsrPowerData('m3',this);">用水量</span>
+                    <!--<span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpMapData(this);">泵房数</span>-->
+                    <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getUseWaterOrUsrPowerData('m3',this);">用水量</span>
                     <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getUseWaterOrUsrPowerData('kWh',this);">耗电量</span>
                     <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpMapFreeWater(this);">蓄水量</span>
 
@@ -233,10 +233,12 @@ var t = null;
 
             </div>
             <div class="boxall" style="height: 3.66rem;">
-                <div class="alltitle">动态压力</div>
-                <div style="height:100%; width: 100%; float: left;">
-                    <div class="allnav" id="fb1"></div>
-                </div>
+                <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getDynamicPressureData(this);">动态压力</span>
+                <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpHouseDynamicPressureData(this);">压力平均值</span>
+                <!--<div class="alltitle">动态压力</div>-->
+                <!--<div style="height:100%; width: 100%; float: left;">-->
+                    <!--<div class="allnav" id="fb1"></div>-->
+                <!--</div>-->
                 <!--<div class="alltitle">总耗电量</div>
                 <div style="height:45%; width: 100%; float: left;">
                     <div class="allnav" id="fb2"></div>
