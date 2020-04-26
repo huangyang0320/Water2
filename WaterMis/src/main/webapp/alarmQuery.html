@@ -68,7 +68,7 @@
                 <div class="panel-body">
                     <ul id="myTab" class="nav nav-tabs">
                         <li class="active"><a id="alarmList" href="#alarm-datalist" data-toggle="tab">告警信息列表</a></li>
-                        <li><a id="alarmDetail" href="#alarm-compare-chart" data-toggle="tab">月告警对比图</a></li>
+                        <li><a id="alarmDetail" href="#alarm-compare-chart" data-toggle="tab">告警数统计</a></li>
                     </ul>
                     <div id="myTabContent" class="tab-content" style="margin-top: 15px;">
                         <div class="tab-pane fade in active" id="alarm-datalist">
@@ -82,9 +82,9 @@
                             <!--End Advanced Tables -->
 
                             <!-- alarm compare pie -->
-                            <div class="col-md-3 col-xs-3" style="padding-right: 0;">
+                            <div class="col-md-3 col-xs-6" style="padding-right: 0;">
                                 <div id="alarm-area-compare"></div>
-                                <div id="alarm-type-compare"></div>
+                                <!--<div id="alarm-type-compare"></div>-->
                             </div>
                             <!-- alarm compare pie end -->
                         </div>
@@ -291,3 +291,14 @@
 <!-- Script -->
 <script src="static/common/common.js"></script>
 <script src="static/assets/js/countAnalysis/alarmQuery.js"></script>
+<script>
+    //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
+    /* 点击input框时加载监听事件*/
+    $(".timepicker").each(function () {
+        this.addEventListener('click',myfunc);
+    })
+
+    function myfunc(e){
+        e.currentTarget.blur();
+    }
+</script>

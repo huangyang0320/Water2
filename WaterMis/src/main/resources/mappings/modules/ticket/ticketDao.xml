@@ -355,9 +355,15 @@
 
     <update id="updateTicketInfo" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
         update ticket a
-        set a.`status`= #{status}
+        <set>
+            <if test="status!=null and status!=''">
+                a.`status`= #{status},
+            </if>
+            <if test="validFlag!=null and validFlag!=''">
+                a.valid_Flag= #{validFlag},
+            </if>
+        </set>
         where a.ticket_id=#{ticketId}
-
     </update>
 
     <!--获取对应工单的最后处理人-->
@@ -436,6 +442,7 @@
         ticket t
         LEFT JOIN device de ON de.ID = t.device_code
         LEFT JOIN pump_house p ON p.id = de.ID_PUMP_HOUSE
+        LEFT JOIN sys_user su on su.id=t.create_by
         <if test=" handleUserId !=null and handleUserId!='' " >
             INNER JOIN ticket_to_do td ON td.ticket_id = t.ticket_id
             and td.user_Id = #{handleUserId}
@@ -459,6 +466,9 @@
         </if>
         <if test="ticketId !=null and ticketId!='' " >
             and t.ticket_id like concat('%',#{ticketId},'%')
+        </if>
+        <if test="createName !=null and createName!='' " >
+            and su.name like concat('%',#{createName},'%')
         </if>
         <if test="createBeginTime !=null and createBeginTime!='' " >
             and t.create_Date >= #{createBeginTime}
@@ -545,6 +555,7 @@
         LEFT JOIN pump_house p ON p.id = de.ID_PUMP_HOUSE
         LEFT JOIN ticket_to_do td ON td.ticket_id = t.ticket_id
         LEFT JOIN sys_user u ON u.id=td.user_id
+        LEFT JOIN sys_user su on su.id=t.create_by
         WHERE
         t.valid_flag = '1'
         <if test="title !=null and title!='' " >
@@ -558,6 +569,9 @@
         </if>
         <if test="allHandleUser !=null and allHandleUser!='' " >
             and u.`name` like concat('%',#{allHandleUser},'%')
+        </if>
+        <if test="createName !=null and createName!='' " >
+            and su.name like concat('%',#{createName},'%')
         </if>
         <if test="deviceName !=null and deviceName!='' " >
             and de.`NAME` like concat('%',#{deviceName},'%')

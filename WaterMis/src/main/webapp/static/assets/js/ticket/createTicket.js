@@ -426,7 +426,7 @@ function changerDept() {
 function createLxTicket(){
     //保存设置泵房多选
     var id = arysId;
-    if (id != null && id != undefined) {
+    if (id != '' && id != null && id != undefined) {
         $("#phStr").val(id);
     } else {
         $("#phStr").val(null);
@@ -434,11 +434,9 @@ function createLxTicket(){
         $('#alertShow').modal('show');
         return
     }
-
-
     //保存设置工单配件多选
     var deviceId = $("#deviceId").val()
-    if (deviceId != null && deviceId != undefined) {
+    if (deviceId != '' && deviceId != null && deviceId != undefined) {
         var deviceIdStr = "";
         for (var i = 0; i < deviceId.length; i++) {
             deviceIdStr += deviceId[i] + ","
