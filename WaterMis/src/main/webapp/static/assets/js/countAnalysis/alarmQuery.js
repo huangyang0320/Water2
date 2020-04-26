@@ -44,7 +44,7 @@ $(function(){
 
 
     qryAreaList();
-    
+
     //查询事件
     $("#query").click(function(){
         ischeck = true;
@@ -203,6 +203,31 @@ $(function(){
 
         });
 
+
+            function operateFormatter(value, row, index) {
+                if(!row.ticketId){
+                    return ['<button type="button" id="createWorkOrder" class="btn btn-info">创建工单</button>'].join('');
+                }else{
+                    return ['<button type="button" id="showWorkOrder" class="btn btn-warning">查看工单</button>'].join('');
+                }
+
+            }
+            window.operateEvents = {
+                'click #createWorkOrder': function (e, value, row, index) {
+                    if(row.ticketId){
+                        alertError(row)
+                    }else{
+                        createWorkOrder1(row)
+                    }
+                },
+                 'click #showWorkOrder': function (e, value, row, index) {
+                     showWorkOrder1(row)
+                 }
+            };
+
+
+
+
    	    $('#dataTables-example').bootstrapTable({
            url:url,
        	   cache:false,
@@ -318,6 +343,7 @@ $(function(){
                field: 'createWorkOrder',
                title: '创建工单',
                align: 'center',
+               events: operateEvents,//给按钮注册事件
                formatter: operateFormatter
            }],
            detailFormatter: function(index, row) {// 详情信息
@@ -381,7 +407,7 @@ function queryMaintenanceWorkerDept() {
         }
     });
 }
-function myModalWorkOrder(row) {
+function myModalWorkOrder(row,flag) {
 
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept();
@@ -390,6 +416,10 @@ function myModalWorkOrder(row) {
     $("#phName").val(row.phName);
     $("#phId").val(row.phId);
     $("#address").val(row.address);
+
+    if(row.ticketId!=null&&row.ticketId!=''){
+        $("#ticketId").val(row.ticketId);
+    }
 
 
     $("#processName").val(row.deviceName);
@@ -431,18 +461,32 @@ function myModalWorkOrder(row) {
     $("#workOrder").data('bootstrapValidator').destroy();
     $('#workOrder').data('bootstrapValidator',null);
     formValidator();
+
+    //查看 0  创建 1
+    if(flag=="1"){
+        disShow();
+    }else if(flag=="0"){
+        disHide();
+    }
+}
+function disShow(){
+
+    $("#alarmLevel").removeAttr("readonly");
+    $("#planStartTime").removeAttr("disabled");
+    $("#planEndTime").removeAttr("disabled");
+    $("#alarmReason").removeAttr("disabled");
+    $("#planContent").removeAttr("disabled");
+    $("#deptId").removeAttr("disabled");
+}
+function disHide(){
+    $("#alarmLevel").attr("readonly","true");
+    $("#planStartTime").attr("disabled","true");
+    $("#planEndTime").attr("disabled","true");
+    $("#alarmReason").attr("disabled","true");
+    $("#planContent").attr("disabled","true");
+    $("#deptId").attr("disabled","true");
 }
 
-	function operateFormatter(value, row, index) {
-            let str = ''
-            if(!row.ticketId){
-                str = '<button id="createWorkOrder" type="button" class="btn btn-info" onclick="createWorkOrder1(\''+row+'\')">创建工单</button>'
-            }else{
-                 str = '<button id="showWorkOrder" type="button" class="btn btn-warning" onclick="showWorkOrder1(\''+row+'\')">查看工单</button>'
-            }
-            return str;
-
-	}
 	function alertError() {
         $('#alertErrorMessage').html('该告警已经创建工单,无法创建');
         $('#alertErrorMessage').css("color","red");
@@ -456,25 +500,23 @@ function myModalWorkOrder(row) {
         $("#createBtn").show();
     }
     function createWorkOrder1(self) {
-        let sdata = self
         //创建按钮显示
         showCreateBtn();
         //打开创建工单页面
         $('#myWorkModal1').modal('show');
         //工单页面赋值
-        myModalWorkOrder(sdata);
+        myModalWorkOrder(self,"1");
         //给工单编号赋值
         setTicketId("1");
     }
 
     function showWorkOrder1(self) {
-        let sdata = self
         //创建按钮隐藏
         hideCreateBtn();
         //打开创建工单页面
         $('#myWorkModal1').modal('show');
         //工单页面赋值
-        myModalWorkOrder(sdata);
+        myModalWorkOrder(self,"0");
 
     }
 	function toTrim(str){

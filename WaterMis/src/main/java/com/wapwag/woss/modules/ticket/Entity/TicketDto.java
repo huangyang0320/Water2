@@ -19,6 +19,7 @@ public class TicketDto extends DataEntity<TicketDto> {
     private Date eventTime;//告警生成时间
     private String deviceCode;
     private String deviceName;
+    private String deviceName1;
     private String pumpId;
     private String pumpName;
     private String areaId;
@@ -425,5 +426,13 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setCreateName(String createName) {
         this.createName = createName;
+    }
+
+    public String getDeviceName1() {
+        return deviceName1;
+    }
+
+    public void setDeviceName1(String deviceName1) {
+        this.deviceName1 = deviceName1;
     }
 }

@@ -166,7 +166,7 @@ var delObject = "";
                 resize: true,
                 fixed: true
             });*/
-
+            console.log(window)
 
            $(".alarmTips").animate({bottom: "0px"}, 1000, function() {
                 $(this).find("iframe").prop("src", "warn.html");

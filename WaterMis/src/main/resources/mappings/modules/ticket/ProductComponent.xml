@@ -25,8 +25,21 @@
 	</sql>
     <select id="findAllProductComponentList" resultMap="BaseResultMap">
         select
-        a.id,a.component_name
+        a.id,a.component_name,
         from product_component a
-        order by a.sort asc;
+        order by a.sort asc
+    </select>
+
+	<select id="findProductComponentReasonListById" resultType="com.wapwag.woss.modules.biz.entity.ProductComponent">
+        select
+        a.id,a.component_name,a.wb_Reason wbReason,a.wb_Programme wbProgramme
+        from product_component a
+        <where>
+			d.id IN
+			<foreach collection="deviceIds.split(',')" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+        order by a.sort asc
     </select>
 </mapper>

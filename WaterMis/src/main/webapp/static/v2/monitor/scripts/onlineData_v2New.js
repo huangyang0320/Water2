@@ -696,7 +696,7 @@ function initRealtimeData(){
                 value +=' '+info.serviceUnit
             }
             html += '<tr class="even gradeA">'
-            html +="<td>"+info.serviceName+"</td>";
+            html +="<td style='width:30%'>"+info.serviceName+"</td>";
             if(info.type == "ftPS" || info.type == "ftRS" || info.type == "ftVS"
             	|| info.type == "ftA"){
             	if(info.serviceName.search("故障") != -1 || info.serviceName.search("报警") != -1){
@@ -715,9 +715,9 @@ function initRealtimeData(){
                 	}
             	}
             }else{
-            	html +="<td>"+value+"</td>";
+            	html +="<td style='width:30%'>"+value+"</td>";
             }
-            html +="<td>"+moment(info.serviceDate).format("YYYY-MM-DD HH:mm:ss")+"</td>";
+            html +="<td style='width:40%'>"+moment(info.serviceDate).format("YYYY-MM-DD HH:mm:ss")+"</td>";
             html += "</tr>";
             // if(info.type == "ftMP" || info.type == "ftAC" || info.type == "ftMF"
             // 	|| info.type == "ftT" || info.type == "ftTL" || info.type == "ftWQ" || info.type == "ftEE"){

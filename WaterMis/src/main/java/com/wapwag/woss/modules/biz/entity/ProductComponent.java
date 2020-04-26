@@ -1,9 +1,9 @@
 package com.wapwag.woss.modules.biz.entity;
 
 
-import java.text.DecimalFormat;
-
 import com.wapwag.woss.common.persistence.DataEntity;
+
+import java.text.DecimalFormat;
 
 /**
  * <p>
@@ -90,6 +90,16 @@ public class ProductComponent extends DataEntity<ProductComponent> {
      * 权重
      */
 	private String weight;
+
+	/**
+	 * 维保原因
+	 */
+	private String wbReason;
+
+	/**
+	 * 维保方案
+	 */
+	private String wbProgramme;
 	
 	public ProductComponent() {
 		super();
@@ -218,7 +228,23 @@ public class ProductComponent extends DataEntity<ProductComponent> {
 	public void setKeyWord(String keyWord) {
 		this.keyWord = keyWord;
 	}
-	
+
+	public String getWbReason() {
+		return wbReason;
+	}
+
+	public void setWbReason(String wbReason) {
+		this.wbReason = wbReason;
+	}
+
+	public String getWbProgramme() {
+		return wbProgramme;
+	}
+
+	public void setWbProgramme(String wbProgramme) {
+		this.wbProgramme = wbProgramme;
+	}
+
 	public Double[] getFailureRate() {
 		String[] values = {"0",failureRateYear1,failureRateYear2,failureRateYear3,failureRateYear4,failureRateYear5,
 				failureRateYear6,failureRateYear7,failureRateYear8,failureRateYear9,failureRateYear10};
