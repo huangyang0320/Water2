@@ -11,6 +11,8 @@
         <result column="login_flag" property="loginFlag" jdbcType="CHAR"/>
         <result column="alarmRate" property="alarmRate" jdbcType="VARCHAR"/>
         <result column="update_date" property="updateTime" jdbcType="VARCHAR"/>
+        <result column="alarm_reception_level" property="alarmReceptionLevel" jdbcType="VARCHAR"/>
+
     </resultMap>
 
     <select id="login" resultMap="BaseResultMap">

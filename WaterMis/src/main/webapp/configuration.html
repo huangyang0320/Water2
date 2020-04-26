@@ -308,7 +308,7 @@
         align-items: center;
     }
     #tuli img{
-        width:15px;
+        width:18px;
         margin-left: 20px;
     }
 </style>
@@ -377,8 +377,10 @@
     <div id="tuli">
         <img src="static/assets/img/run.gif" />
         <p>:运行</p>
-        <img src="static/assets/img/unRunYY.png" />
+        <img src="static/assets/img/stopYY.png" />
         <p>:停止</p>
+        <!--<img src="static/assets/img/warnYY.png" />-->
+        <!--<p>:告警</p>-->
     </div>
 <!--    <div class="modalOver fade" id="pumpBaseInfo" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel"  aria-hidden="true" data-backdrop="false" data-keyboard="false"-->
 <!--         style="top: 40px;left: 63px;z-index: 0">-->
@@ -1226,10 +1228,13 @@ function setSvg(reloading) {
             conctolPs.curDevicePos.deviceNamePos.map(function (v, i) {
                 if(conctolPs.deviceInfo[i]){
                     if(i == 0){
-                        let flow_instantVal
+                        let flow_instantVal,flow_total
                         for(let n = 0;n<window.serviceValue.length;n++){
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\flow_instant'){
                                 flow_instantVal = '瞬时流量：'+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                            }
+                            if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\flow_total'){
+                                flow_total = '累计流量：'+ window.serviceValue[n].pv + 'm³'
                             }
                         }
                         var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
@@ -1261,7 +1266,7 @@ function setSvg(reloading) {
                             y:  v.y+20,
                             fill:  "#fff",
                         })
-                        $(text2).text('累计流量：')
+                        $(text2).text(flow_total)
                         svrStr.append(text2str);
                     }else{
                         let flowinstant_outwaterVal,frequency_pump11Val,frequency_pump12Val,frequency_pump13Val,
@@ -1279,6 +1284,15 @@ function setSvg(reloading) {
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\frequency_pump13'){
                                 frequency_pump13Val = '3# 频率      ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
                             }
+                            if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\hourtotal_pump11'){
+                                frequency_pump11Time = '运行时间      ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                            }
+                            if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\hourtotal_pump12'){
+                                frequency_pump12Time = '运行时间      ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                            }
+                            if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\hourtotal_pump13'){
+                                frequency_pump13Time = '运行时间       ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                            }
                         }
 
                         var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
@@ -1295,11 +1309,17 @@ function setSvg(reloading) {
                         let text1 = document.createElementNS("http://www.w3.org/2000/svg","text");
                         var text1str = $(text1).attr({x:  v.x-180, y:  v.y+10, fill:  "#fff",})
                         $(text1).text(flowinstant_outwaterVal)
+                        let code1 ='222',dateType1 ='瞬时流量'
+                        $(text1).attr('onclick', 'showDiv("'+window.serviceValue[i].idDevice+'","'+conctolPs.deviceInfo[i].devicePosition+'","'+code1+'","'+dateType1+'")')
+                        $(text1).css('cursor', 'pointer')
                         svrStr.append(text1str);
 
                         let text2 = document.createElementNS("http://www.w3.org/2000/svg","text");
                         var text2str = $(text2).attr({x:  v.x-180, y:  v.y+30, fill:  "#fff",})
                         $(text2).text(frequency_pump11Val)
+                        let code2 ='222',dateType2 ='1#频率'
+                        $(text2).attr('onclick', 'showDiv("'+window.serviceValue[i].idDevice+'","'+conctolPs.deviceInfo[i].devicePosition+'","'+code1+'","'+dateType2+'")')
+                        $(text2).css('cursor', 'pointer')
                         svrStr.append(text2str);
 
                         let text2Time = document.createElementNS("http://www.w3.org/2000/svg","text");
@@ -1310,6 +1330,9 @@ function setSvg(reloading) {
                         let text3 = document.createElementNS("http://www.w3.org/2000/svg","text");
                         var text3str = $(text3).attr({x:  v.x-180, y:  v.y+70, fill:  "#fff",})
                         $(text3).text(frequency_pump12Val)
+                        let code3 ='222',dateType3 ='2#频率'
+                        $(text3).attr('onclick', 'showDiv("'+window.serviceValue[i].idDevice+'","'+conctolPs.deviceInfo[i].devicePosition+'","'+code1+'","'+dateType3+'")')
+                        $(text3).css('cursor', 'pointer')
                         svrStr.append(text3str);
 
                         let text3Time = document.createElementNS("http://www.w3.org/2000/svg","text");
@@ -1320,6 +1343,9 @@ function setSvg(reloading) {
                         let text4 = document.createElementNS("http://www.w3.org/2000/svg","text");
                         var text4str = $(text4).attr({x:  v.x-180, y:  v.y+110, fill:  "#fff",})
                         $(text4).text(frequency_pump13Val)
+                        let code4 ='222',dateType4 ='3#频率'
+                        $(text4).attr('onclick', 'showDiv("'+window.serviceValue[i].idDevice+'","'+conctolPs.deviceInfo[i].devicePosition+'","'+code1+'","'+dateType4+'")')
+                        $(text4).css('cursor', 'pointer')
                         svrStr.append(text4str);
 
                         let text4Time = document.createElementNS("http://www.w3.org/2000/svg","text");
@@ -1345,7 +1371,7 @@ function setSvg(reloading) {
                             if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
                                 setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
                             }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
-                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                                setImage('static/assets/img/stopYY.png', '25', '25', va.x, va.y);
                             }
                             setDiv(va,"pumpDataUl_1");
                         }else if(j<6){
@@ -1357,7 +1383,7 @@ function setSvg(reloading) {
                             if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
                                 setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
                             }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
-                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                                setImage('static/assets/img/stopYY.png', '25', '25', va.x, va.y);
                             }
                             setDiv(va,"pumpDataUl_2");
                             k++;
@@ -1370,7 +1396,7 @@ function setSvg(reloading) {
                             if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
                                 setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
                             }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
-                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                                setImage('static/assets/img/stopYY.png', '25', '25', va.x, va.y);
                             }
                             setDiv(va,"pumpDataUl_3");
                             k++;
@@ -1384,7 +1410,7 @@ function setSvg(reloading) {
                             if (val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 1) {
                                 setImage('static/assets/img/run.gif', '25', '25', va.x, va.y);
                             }else if(val.code.indexOf('run_pump') >= 0 && parseInt(val.pv) == 0) {
-                                setImage('static/assets/img/unRunYY.png', '25', '25', va.x, va.y);
+                                setImage('static/assets/img/stopYY.png', '25', '25', va.x, va.y);
                             }
                             setDiv(va,"pumpDataUl_4");
                             k++;

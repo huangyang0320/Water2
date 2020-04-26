@@ -1,7 +1,7 @@
 ﻿
 $(function () {
 //echarts_4();
-echarts_31();
+// echarts_31();
 /*echarts_32();*/
 /*echarts_33();*/
 /*echarts_5();*/
@@ -750,7 +750,7 @@ function echarts_31() {
           series: [
               {
                   name:'2月',
-                  type:'bar',
+                  type:'line',
                   stack: '总量',
                     areaStyle: {normal: {}},
                   data:[120, 132, 101, 134, 90, 230, 210,120, 132, 101, 134, 90, 230, 210,300]

@@ -136,7 +136,8 @@ function initData() {
     preLoad();
     var currentDate = new Date().Format("yyyy-MM-dd HH");
     var dateRegion = new Date().getCurrentHour(currentDate, "yyyy-MM-dd HH:mm:ss");
-    var selectDevices = GLOBAL_SELECT_LIST;
+    // var selectDevices = GLOBAL_SELECT_LIST;
+    var selectDevices = [GLOBAL_SELECT_DEVICE]
     var selectDeviceIds = [];
     selectDevices.forEach(function(value){
         selectDeviceIds.push(value.id);
@@ -185,7 +186,7 @@ function initMetaDeviceList(deviceIds){
             	|| value.type == "ftT" || value.type == "ftTL" || value.dataType=='uint' || value.dataType== 'real'){
            */     var li = $("<li class='list-group-item'><label></label></li>");
                 var li1 = li.clone();
-                var input = $("<input type='checkbox'>")
+                var input = $("<input type='radio'>")
                     .prop("name", "sameCompare")
                     .prop("value", value["name"])
                     .addClass("minimal");
@@ -203,7 +204,7 @@ function initMetaDeviceList(deviceIds){
                 $deviceNormData.append(li);
         	/*}*/
         });
-        $("input[type='checkbox'].minimal").icheck({
+        $("input[type='radio'].minimal").icheck({
             checkboxClass: 'icheckbox_minimal-blue',
             radioClass: 'iradio_minimal-blue'
         }).on("click", function () {
@@ -359,7 +360,8 @@ function switchDeviceData() {
     $queryForm.find("input[name='index']").val(indexs.join(","));
     
     //var d = deviceIds.split(',');
-    var selectDevices = GLOBAL_SELECT_LIST;
+    // var selectDevices = GLOBAL_SELECT_LIST;
+    var selectDevices = [GLOBAL_SELECT_DEVICE]
     var selectDeviceIds = [];
     selectDevices.forEach(function(value){
         selectDeviceIds.push(value.id);
@@ -371,8 +373,12 @@ function switchDeviceData() {
     
     initChart();
 }
+function callRefresh(){
+    defChoose()
+}
 function defChoose() {
-    refreshDeviceCheck(GLOBAL_SELECT_LIST);
+    // refreshDeviceCheck(GLOBAL_SELECT_LIST);
+    refreshDeviceCheck([GLOBAL_SELECT_DEVICE]);
 }
 function refreshDeviceCheck(device) {
     var deviceIds;

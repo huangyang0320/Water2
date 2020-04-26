@@ -272,6 +272,7 @@
 		          else '无' end confirmStat,
 		     alarm.org_user_name userName,
 		     alarm.confirm_reason confirmReson,
+			 date_format(confirm_date,'%Y-%m-%d %H:%i:%s') confirmDate,
 			 alarm.ticketId ticketId
 		FROM
 		    alarm_statistics alarm

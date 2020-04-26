@@ -219,10 +219,10 @@ var t = null;
         <li>
             <div class="map">
                 <div>
-                    <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;" onclick="getPumpMapData(this);">泵房数</span>
-                    <span class="button-span" style="display:inline-block;margin-left: 3px;" onclick="getUseWaterOrUsrPowerData('m3',this);">用水量</span>
-                    <span class="button-span" style="display:inline-block;margin-left: 3px;" onclick="getUseWaterOrUsrPowerData('kWh',this);">耗电量</span>
-                    <span class="button-span" style="display:inline-block;margin-left: 3px;" onclick="getPumpMapFreeWater(this);">蓄水量</span>
+                    <!--<span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpMapData(this);">泵房数</span>-->
+                    <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getUseWaterOrUsrPowerData('m3',this);">用水量</span>
+                    <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getUseWaterOrUsrPowerData('kWh',this);">耗电量</span>
+                    <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpMapFreeWater(this);">蓄水量</span>
 
                 </div>
 
@@ -232,11 +232,13 @@ var t = null;
                 <div class="map4" id="map_1"></div>
 
             </div>
-            <div class="boxall" style="height: 3.2rem;margin-top: 30px">
-                <div class="alltitle">动态压力</div>
-                <div style="height:100%; width: 100%; float: left;">
-                    <div class="allnav" id="fb1"></div>
-                </div>
+            <div class="boxall" style="height: 3.66rem;">
+                <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getDynamicPressureData(this);">动态压力</span>
+                <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpHouseDynamicPressureData(this);">压力平均值</span>
+                <!--<div class="alltitle">动态压力</div>-->
+                <!--<div style="height:100%; width: 100%; float: left;">-->
+                    <!--<div class="allnav" id="fb1"></div>-->
+                <!--</div>-->
                 <!--<div class="alltitle">总耗电量</div>
                 <div style="height:45%; width: 100%; float: left;">
                     <div class="allnav" id="fb2"></div>
@@ -344,9 +346,9 @@ var t = null;
             <div class="boxall" style="height:4.9rem">
                 <div class="alltitle">趋势曲线</div>
                 <div>
-                    <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;" onclick="getPumpData_04_day(this);">日曲线</span>
-                    <span class="button-span" style="display:inline-block;margin-left: 3px;" onclick="getPumpData_04_month(this);">月曲线</span>
-                    <span class="button-span" style="display:inline-block;margin-left: 3px;" onclick="getPumpData_04_year(this);">年曲线</span>
+                    <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpData_04_day(this);">日曲线</span>
+                    <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpData_04_month(this);">月曲线</span>
+                    <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpData_04_year(this);">年曲线</span>
                         <!--<uul>
                             <lli class="nav_active" style="display:inline-block;margin-left: 10px;"><a href="#" onclick="getPumpData_04_day();">日曲线</a> </lli>
                             <lli style="display:inline-block;margin-left: 3px;"><a href="#" onclick="getPumpData_04_month();">月曲线</a> </lli>

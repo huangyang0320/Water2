@@ -138,6 +138,8 @@ public class ArtemisPost {
 
 		System.out.println(list);
 		for(int i=0;i<list.size();i++){
+			String name = list.getJSONObject(i).getString("name");
+			System.out.print(name);
 			String indexCode = list.getJSONObject(i).getString("indexCode");
 			System.out.println(indexCode);
 		}
