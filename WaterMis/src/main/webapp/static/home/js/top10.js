@@ -47,7 +47,7 @@ function echarts_paiming1(dataName,dataValue,dataDefault) {
 		        top: "0",
 		        textStyle: {
 		            color: '#fff',
-		            fontSize: 10
+		            fontSize: 14
 		        }
 		    },
 	    grid: {
@@ -337,7 +337,7 @@ function echarts_paiming2(dataName,dataValue,dataDefault) {
 		        top: "0",
 		        textStyle: {
 		            color: '#fff',
-		            fontSize: 10
+		            fontSize: 14
 		        }
 		    },
 	    grid: {
@@ -630,7 +630,7 @@ function echarts_paiming3(dataName,dataValue,dataDefault) {
 		        top: "0",
 		        textStyle: {
 		            color: '#fff',
-		            fontSize: 10
+		            fontSize: 14
 		        }
 		    },
 	    grid: {
@@ -925,7 +925,7 @@ function echarts_paiming4(dataName,dataValue,dataDefault) {
 			top: "0",
 			textStyle: {
 				color: '#fff',
-				fontSize: 10
+				fontSize: 14
 			}
 		},
 	    grid: {

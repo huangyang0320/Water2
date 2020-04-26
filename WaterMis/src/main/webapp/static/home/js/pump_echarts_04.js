@@ -153,255 +153,559 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
 	rightmax+=10
 	console.log(leftmin,leftmax,rightmin,rightmax)
 
+	// option = {
+	// 	tooltip: {
+	// 		trigger: 'axis',
+	// 		position: [10, 10],
+	// 		axisPointer: {
+	// 			lineStyle: {
+	// 				color: '#dddc6b',
+	// 			}
+	// 		}
+	// 	},
+	// 	legend: {
+	// 		top:'0%',
+	// 		data:xName,
+	// 		// width:'35%',
+	// 		textStyle: {
+	// 			color: 'rgba(255,255,255,.5)',
+	// 			fontSize:'12',
+	// 		}
+	// 	},
+	// 	grid: {
+	// 		left: '3%',
+	// 		top: '30%',
+	// 		right: '3%',
+	// 		bottom: '3%',
+	// 		containLabel: true
+	// 	},
+	// 	xAxis: [
+	// 		{
+	// 			type: 'category',
+	// 			boundaryGap: false,
+	// 			axisLabel:  {
+	// 				textStyle: {
+	// 					color: "rgba(255,255,255,.6)",
+	// 					fontSize:12,
+	// 				},
+	// 			},
+	// 			axisLine: {
+	// 				lineStyle: {
+	// 					color: 'rgba(255,255,255,.2)'
+	// 				}
+	// 			},
+	// 			data: xData
+	// 		}, {
+	// 			axisPointer: {show: false},
+	// 			axisLine: {  show: false},
+	// 			position: 'bottom',
+	// 			offset: 0,
+	// 		}
+	// 	],
+    //
+	// 	yAxis: [
+	// 		{
+	// 			type: 'value',
+	// 			name:'m³',
+	// 			nameTextStyle: {
+	// 				color: '#ccc'
+	// 			},
+	// 			min: leftmin,
+	// 			max: leftmax,
+	// 			/*interval: 5,*/
+	// 			axisTick: {show: false},
+	// 			axisLine: {
+	// 				lineStyle: {
+	// 					color: 'rgba(255,255,255,.1)'
+	// 				}
+	// 			},
+	// 			axisLabel:  {
+	// 				textStyle: {
+	// 					color: "rgba(255,255,255,.6)",
+	// 					fontSize:12,
+	// 				},
+	// 			},
+    //
+	// 			splitLine: {
+	// 				lineStyle: {
+	// 					color: 'rgba(255,255,255,.1)'
+	// 				}
+	// 			}
+	// 		},
+	// 		{
+	// 			type: 'value',//右边第一个y轴
+	// 			name: 'kwh',
+	// 			min: rightmin,
+	// 			max: rightmax,
+	// 			/*interval: 4,*/
+	// 			nameTextStyle: {
+	// 				color: '#ccc'
+	// 			},
+	// 			axisLine: {
+	// 				lineStyle: {
+	// 					color: 'rgba(255,255,255,.1)'
+	// 				}
+	// 			},
+	// 			axisLabel:  {
+	// 				textStyle: {
+	// 					color: "rgba(255,255,255,.6)",
+	// 					fontSize:12,
+	// 				},
+	// 			},
+	// 			splitLine: {
+	// 				lineStyle: {
+	// 					color: 'rgba(255,255,255,.1)'
+	// 				}
+	// 			}
+	// 		}
+	// 	],
+	// 	series: [
+	// 		{
+	// 			name: xName[0],
+	// 			type: 'line',
+	// 			smooth: false,
+	// 			symbol: 'circle',
+	// 			symbolSize: 6,
+	// 			showSymbol: true,
+	// 			lineStyle: {
+	// 				normal: {
+	// 					color: '#feff4d',
+	// 					width: 2
+	// 				}
+	// 			},
+	// 			areaStyle: {
+	// 				normal: {
+	// 					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+	// 						offset: 0,
+	// 						color: 'rgba(1, 132, 213, 0.4)'
+	// 					}, {
+	// 						offset: 0.8,
+	// 						color: 'rgba(1, 132, 213, 0.1)'
+	// 					}], false),
+	// 					shadowColor: 'rgba(0, 0, 0, 0.1)',
+	// 				}
+	// 			},
+	// 			itemStyle: {
+	// 				normal: {
+	// 					color: '#feff4d',
+	// 					borderColor: 'rgba(221, 220, 107, .1)',
+	// 					borderWidth: 12
+	// 				}
+	// 			},
+	// 			data: useWaterHis
+	// 		},
+	// 		{
+	// 			name: xName[1],
+	// 			type: 'line',
+	// 			smooth: false,
+	// 			symbol: 'circle',
+	// 			yAxisIndex: 1,
+	// 			symbolSize: 5,
+	// 			showSymbol: true,
+	// 			lineStyle: {
+	// 				normal: {
+	// 					color: '#00d887',
+	// 					width: 2
+	// 				}
+	// 			},
+	// 			areaStyle: {
+	// 				normal: {
+	// 					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+	// 						offset: 0,
+	// 						color: 'rgba(0, 216, 135, 0.4)'
+	// 					}, {
+	// 						offset: 0.8,
+	// 						color: 'rgba(0, 216, 135, 0.1)'
+	// 					}], false),
+	// 					shadowColor: 'rgba(0, 0, 0, 0.1)',
+	// 				}
+	// 			},
+	// 			itemStyle: {
+	// 				normal: {
+	// 					color: '#00d887',
+	// 					borderColor: 'rgba(221, 220, 107, .1)',
+	// 					borderWidth: 12
+	// 				}
+	// 			},
+	// 			data: usePowerHis
+	// 		},
+	// 		{
+	// 			name: xName[3],
+	// 			type: 'line',
+	// 			smooth: false,
+	// 			symbol: 'circle',
+	// 			symbolSize: 6,
+	// 			showSymbol: true,
+	// 			lineStyle: {
+	// 				normal: {
+	// 					color: '#d87f53',
+	// 					width: 2
+	// 				}
+	// 			},
+	// 			areaStyle: {
+	// 				normal: {
+	// 					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+	// 						offset: 0,
+	// 						color: 'rgba(0, 216, 135, 0.4)'
+	// 					}, {
+	// 						offset: 0.8,
+	// 						color: 'rgba(0, 216, 135, 0.1)'
+	// 					}], false),
+	// 					shadowColor: 'rgba(0, 0, 0, 0.1)',
+	// 				}
+	// 			},
+	// 			itemStyle: {
+	// 				normal: {
+	// 					color: '#ff3c51',
+	// 					borderColor: 'rgba(221, 220, 107, .1)',
+	// 					borderWidth: 12
+	// 				}
+	// 			},
+	// 			data: useWaterReal
+	// 		},
+	// 		{
+	// 			name: xName[4],
+	// 			type: 'line',
+	// 			smooth: false,
+	// 			yAxisIndex: 1,
+	// 			symbol: 'circle',
+	// 			symbolSize: 6,
+	// 			showSymbol: true,
+	// 			lineStyle: {
+	// 				normal: {
+	// 					color: '#d8a8c2',
+	// 					width: 2
+	// 				}
+	// 			},
+	// 			areaStyle: {
+	// 				normal: {
+	// 					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+	// 						offset: 0,
+	// 						color: 'rgba(0, 216, 135, 0.4)'
+	// 					}, {
+	// 						offset: 0.8,
+	// 						color: 'rgba(0, 216, 135, 0.1)'
+	// 					}], false),
+	// 					shadowColor: 'rgba(0, 0, 0, 0.1)',
+	// 				}
+	// 			},
+	// 			itemStyle: {
+	// 				normal: {
+	// 					color: '#d8a8c2',
+	// 					borderColor: 'rgba(221, 220, 107, .1)',
+	// 					borderWidth: 12
+	// 				}
+	// 			},
+	// 			data: usePowerReal
+	// 		}
+	// 	]
+	// };
 	option = {
-		tooltip: {
-			trigger: 'axis',
-			position: [10, 10],
-			axisPointer: {
-				lineStyle: {
-					color: '#dddc6b',
-				}
+        title: {
+            text: '',
+            subtext: '',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                animation: false
+            }
+        },
+        legend: {
+            data: xName,
+			top: 0,
+            textStyle: {
+                color: 'rgba(255,255,255,.5)',
+                fontSize:'12',
 			}
-		},
-		legend: {
-			top:'0%',
-			data:xName,
-			// width:'35%',
-			textStyle: {
-				color: 'rgba(255,255,255,.5)',
-				fontSize:'12',
-			}
-		},
-		grid: {
-			left: '3%',
-			top: '30%',
-			right: '3%',
-			bottom: '3%',
-			containLabel: true
-		},
-		xAxis: [
-			{
-				type: 'category',
-				boundaryGap: false,
-				axisLabel:  {
-					textStyle: {
-						color: "rgba(255,255,255,.6)",
-						fontSize:12,
-					},
+        },
+        axisPointer: {
+            link: {xAxisIndex: 'all'}
+        },
+        dataZoom: [
+            {
+                show: true,
+                realtime: true,
+                height: 10,
+				bottom: 15,
+                start: 0,
+                end: 100,
+                xAxisIndex: [0, 1],
+                textStyle:{
+                    color:"rgba(204,187,225,0.5)",
+                },
+                fillerColor:"rgba(67,55,160,0.4)",
+                borderColor: "rgba(204,187,225,0.5)",
+            },
+            {
+                type: 'inside',
+                realtime: true,
+                height: 10,
+                start: 0,
+                end: 35,
+                xAxisIndex: [0, 1],
+                textStyle:{
+                    color:"rgba(204,187,225,0.5)",
+                },
+                fillerColor:"rgba(67,55,160,0.4)",
+                borderColor: "rgba(204,187,225,0.5)",
+            }
+        ],
+        grid: [{
+            left: 50,
+            right: 50,
+            height: '28%'
+        }, {
+            left: 50,
+            right: 50,
+            top: '56%',
+            height: '30%'
+        }],
+        xAxis: [
+            {
+                type: 'category',
+                boundaryGap: false,
+                axisLine: {onZero: true},
+                data: xData,
+                axisLabel:  {
+                    textStyle: {
+                    	color: "rgba(255,255,255,.6)",
+                    	fontSize:12,
+                    },
 				},
-				axisLine: {
-					lineStyle: {
-						color: 'rgba(255,255,255,.2)'
-					}
+                axisLine: {
+                    lineStyle: {
+                    	color: 'rgba(255,255,255,.2)'
+                    }
+                },
+            },
+            {
+                gridIndex: 1,
+                type: 'category',
+                boundaryGap: false,
+				// show: false,
+                axisLine: {onZero: true},
+                data: xData,
+                // position: 'top',
+                axisLabel:  {
+                    textStyle: {
+                        color: "rgba(255,255,255,.6)",
+                        fontSize:12,
+                        // color: 'rgba(0,0,0,0.1)'
+                    },
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(255,255,255,.2)'
+                    }
+                },
+            }
+        ],
+        yAxis: [
+            {
+                name: 'm³',
+                type: 'value',
+                nameTextStyle: {
+                    color: '#ccc'
 				},
-				data: xData
-			}, {
-				axisPointer: {show: false},
-				axisLine: {  show: false},
-				position: 'bottom',
-				offset: 0,
-			}
-		],
+                axisTick: {show: false},
+                			axisLine: {
+                    lineStyle: {
+                        color: 'rgba(255,255,255,.1)'
+                    }
+                },
+                axisLabel:  {
+                    textStyle: {
+                        color: "rgba(255,255,255,.6)",
+                        fontSize:12,
+                    },
+                },
 
-		yAxis: [
-			{
-				type: 'value',
-				name:'m³',
-				nameTextStyle: {
-					color: '#ccc'
-				},
-				min: leftmin,
-				max: leftmax,
-				/*interval: 5,*/
-				axisTick: {show: false},
-				axisLine: {
-					lineStyle: {
-						color: 'rgba(255,255,255,.1)'
-					}
-				},
-				axisLabel:  {
-					textStyle: {
-						color: "rgba(255,255,255,.6)",
-						fontSize:12,
-					},
-				},
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(255,255,255,.1)'
+                    }
+                }
+            },
+            {
+                gridIndex: 1,
+                name: 'kWh',
+                // inverse: true,
+                type: 'value',
+                nameTextStyle: {
+                    color: '#ccc'
+                },
+                axisTick: {show: false},
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(255,255,255,.1)'
+                    }
+                },
+                axisLabel:  {
+                    textStyle: {
+                        color: "rgba(255,255,255,.6)",
+                        fontSize:12,
+                    },
+                },
 
-				splitLine: {
-					lineStyle: {
-						color: 'rgba(255,255,255,.1)'
-					}
-				}
-			},
-			{
-				type: 'value',//右边第一个y轴
-				name: 'kwh',
-				min: rightmin,
-				max: rightmax,
-				/*interval: 4,*/
-				nameTextStyle: {
-					color: '#ccc'
-				},
-				axisLine: {
-					lineStyle: {
-						color: 'rgba(255,255,255,.1)'
-					}
-				},
-				axisLabel:  {
-					textStyle: {
-						color: "rgba(255,255,255,.6)",
-						fontSize:12,
-					},
-				},
-				splitLine: {
-					lineStyle: {
-						color: 'rgba(255,255,255,.1)'
-					}
-				}
-			}
-		],
-		series: [
-			{
-				name: xName[0],
-				type: 'line',
-				smooth: false,
-				symbol: 'circle',
-				symbolSize: 6,
-				showSymbol: true,
-				lineStyle: {
-					normal: {
-						color: '#feff4d',
-						width: 2
-					}
-				},
-				areaStyle: {
-					normal: {
-						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-							offset: 0,
-							color: 'rgba(1, 132, 213, 0.4)'
-						}, {
-							offset: 0.8,
-							color: 'rgba(1, 132, 213, 0.1)'
-						}], false),
-						shadowColor: 'rgba(0, 0, 0, 0.1)',
-					}
-				},
-				itemStyle: {
-					normal: {
-						color: '#feff4d',
-						borderColor: 'rgba(221, 220, 107, .1)',
-						borderWidth: 12
-					}
-				},
-				data: useWaterHis
-			},
-			{
-				name: xName[1],
-				type: 'line',
-				smooth: false,
-				symbol: 'circle',
-				yAxisIndex: 1,
-				symbolSize: 5,
-				showSymbol: true,
-				lineStyle: {
-					normal: {
-						color: '#00d887',
-						width: 2
-					}
-				},
-				areaStyle: {
-					normal: {
-						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-							offset: 0,
-							color: 'rgba(0, 216, 135, 0.4)'
-						}, {
-							offset: 0.8,
-							color: 'rgba(0, 216, 135, 0.1)'
-						}], false),
-						shadowColor: 'rgba(0, 0, 0, 0.1)',
-					}
-				},
-				itemStyle: {
-					normal: {
-						color: '#00d887',
-						borderColor: 'rgba(221, 220, 107, .1)',
-						borderWidth: 12
-					}
-				},
-				data: usePowerHis
-			},
-			{
-				name: xName[3],
-				type: 'line',
-				smooth: false,
-				symbol: 'circle',
-				symbolSize: 6,
-				showSymbol: true,
-				lineStyle: {
-					normal: {
-						color: '#d87f53',
-						width: 2
-					}
-				},
-				areaStyle: {
-					normal: {
-						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-							offset: 0,
-							color: 'rgba(0, 216, 135, 0.4)'
-						}, {
-							offset: 0.8,
-							color: 'rgba(0, 216, 135, 0.1)'
-						}], false),
-						shadowColor: 'rgba(0, 0, 0, 0.1)',
-					}
-				},
-				itemStyle: {
-					normal: {
-						color: '#ff3c51',
-						borderColor: 'rgba(221, 220, 107, .1)',
-						borderWidth: 12
-					}
-				},
-				data: useWaterReal
-			},
-			{
-				name: xName[4],
-				type: 'line',
-				smooth: false,
-				yAxisIndex: 1,
-				symbol: 'circle',
-				symbolSize: 6,
-				showSymbol: true,
-				lineStyle: {
-					normal: {
-						color: '#d8a8c2',
-						width: 2
-					}
-				},
-				areaStyle: {
-					normal: {
-						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-							offset: 0,
-							color: 'rgba(0, 216, 135, 0.4)'
-						}, {
-							offset: 0.8,
-							color: 'rgba(0, 216, 135, 0.1)'
-						}], false),
-						shadowColor: 'rgba(0, 0, 0, 0.1)',
-					}
-				},
-				itemStyle: {
-					normal: {
-						color: '#d8a8c2',
-						borderColor: 'rgba(221, 220, 107, .1)',
-						borderWidth: 12
-					}
-				},
-				data: usePowerReal
-			}
-		]
-	};
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(255,255,255,.1)'
+                    }
+                }
+            },
 
+        ],
+        series: [
+            {
+                name: xName[0],
+                type: 'line',
+                symbolSize: 8,
+                smooth: false,
+                symbol: 'circle',
+                showSymbol: true,
+                hoverAnimation: false,
+                data: useWaterHis,
+                lineStyle: {
+                    				normal: {
+                    					color: '#feff4d',
+                    					width: 2
+                    				}
+                    			},
+                areaStyle: {
+                    				normal: {
+                    					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    						offset: 0,
+                    						color: 'rgba(1, 132, 213, 0.4)'
+                    					}, {
+                    						offset: 0.8,
+                    						color: 'rgba(1, 132, 213, 0.1)'
+                    					}], false),
+                    					shadowColor: 'rgba(0, 0, 0, 0.1)',
+                    				}
+                    			},
+                itemStyle: {
+                    				normal: {
+                    					color: '#feff4d',
+                    					borderColor: 'rgba(221, 220, 107, .1)',
+                    					borderWidth: 12
+                    				}
+                    			},
+            },
+            {
+                name: xName[1],
+                type: 'line',
+                xAxisIndex: 1,
+                yAxisIndex: 1,
+                symbolSize: 8,
+                smooth: false,
+                symbol: 'circle',
+                showSymbol: true,
+                hoverAnimation: false,
+                data: usePowerHis,
+                lineStyle: {
+                    normal: {
+                        color: '#00d887',
+                        width: 2
+                    }
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(0, 216, 135, 0.4)'
+                        }, {
+                            offset: 0.8,
+                            color: 'rgba(0, 216, 135, 0.1)'
+                        }], false),
+                        shadowColor: 'rgba(0, 0, 0, 0.1)',
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#00d887',
+                        borderColor: 'rgba(221, 220, 107, .1)',
+                        borderWidth: 12
+                    }
+                },
+            },
+            {
+                name: xName[3],
+                type: 'line',
+                symbolSize: 8,
+                smooth: false,
+                symbol: 'circle',
+                showSymbol: true,
+                hoverAnimation: false,
+                data: useWaterReal,
+                lineStyle: {
+                    normal: {
+                        color: '#d87f53',
+                        width: 2
+                    }
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(0, 216, 135, 0.4)'
+                        }, {
+                            offset: 0.8,
+                            color: 'rgba(0, 216, 135, 0.1)'
+                        }], false),
+                        shadowColor: 'rgba(0, 0, 0, 0.1)',
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#ff3c51',
+                        borderColor: 'rgba(221, 220, 107, .1)',
+                        borderWidth: 12
+                    }
+                },
+            },
+            {
+                name: xName[4],
+                type: 'line',
+                xAxisIndex: 1,
+                yAxisIndex: 1,
+                symbolSize: 8,
+                smooth: false,
+                symbol: 'circle',
+                showSymbol: true,
+                hoverAnimation: false,
+                data: usePowerReal,
+                lineStyle: {
+                    normal: {
+                        color: '#d8a8c2',
+                        width: 2
+                    }
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(0, 216, 135, 0.4)'
+                        }, {
+                            offset: 0.8,
+                            color: 'rgba(0, 216, 135, 0.1)'
+                        }], false),
+                        shadowColor: 'rgba(0, 0, 0, 0.1)',
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#d8a8c2',
+                        borderColor: 'rgba(221, 220, 107, .1)',
+                        borderWidth: 12
+                    }
+                },
+            }
+        ]
+	}
 	// 使用刚指定的配置项和数据显示图表。
+	myChart.clear()
 	myChart.setOption(option);
 	window.addEventListener("resize",function(){
 		myChart.resize();
