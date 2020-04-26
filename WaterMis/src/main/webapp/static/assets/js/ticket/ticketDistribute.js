@@ -22,8 +22,19 @@ function showDevice(){
     var type=$("#workType").val();
     if(type=="巡检工单"){
         $("#device").hide();
-    }else if(type=="维保工单"){
+    }else{
         $("#device").show();
+    }
+}
+
+function showChannelOrAddress(){
+    var type=$("#workType").val();
+    if(type=="告警工单"){
+        $("#channelShow").hide();
+        $("#addressShow").show();
+    }else{
+        $("#addressShow").hide();
+        $("#channelShow").show();
     }
 }
 function getTicketInfo(ticketId){
@@ -47,7 +58,11 @@ function getTicketInfo(ticketId){
             $("#alarmTime").val(data.eventTime);
             $("#alarmStatus").val(data.currentStatusName);
             $("#alarmLevel").val(data.ticketLevel);
-            $("#processName").val(data.deviceName);
+            if(data.ticketType=="1"){//告警的设备
+                $("#processName").val(data.deviceName1);
+            }else{
+                $("#processName").val(data.deviceName);
+            }
 
             $("#planStartTime").val(data.startTime);
             $("#planEndTime").val(data.endTime);
@@ -59,6 +74,7 @@ function getTicketInfo(ticketId){
             $("#buttonId").html("分发");
 
             showDevice()
+            showChannelOrAddress()
 
             //非告警工单  去掉不要的信息
             if(data.ticketType!=1){

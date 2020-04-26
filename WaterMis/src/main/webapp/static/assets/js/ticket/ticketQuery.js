@@ -115,6 +115,28 @@ function initBootTable(url){
         $('#dataTables-example').bootstrapTable('resetView', {height : calcHeight() + 55});
 
     });
+    function operateFormatter(value, row, index) {
+        //status:1 待分发 2 待接单   3处理中  4审核中  5完成
+        var str="";
+        if((row.status=='1')&&row.createByStr==userId){
+            /*str+='<button type="button" id="editGJ" class="btn btn-primary">编辑</button>'*/
+            str+='<button type="button" onclick="deleteTicket(\''+row.ticketId+'\')" class="btn btn-primary">删除</button>'
+        }
+        return [str,'<button type="button" onclick="ticketInfo(\''+row.ticketId+'\')" class="btn btn-primary">详情</button>'].join('');
+
+
+    }
+    window.operateEvents = {
+        'click #editGJ': function (e, value, row, index) {
+                if(row.ticketType=="1"){
+                    editTicket(row)
+                }else{
+                    editTicketWBOrXJ(row)
+                }
+
+        }
+    };
+
     $('#dataTables-example').bootstrapTable({
         url: url,
         cache:false,
@@ -215,7 +237,7 @@ function initBootTable(url){
             field: 'operateSatus',
             title: '操作',
             align: 'center',
-            /* events: operateEvents,*/
+             events: operateEvents,
             formatter: operateFormatter
         }],
         detailFormatter: function(index, row) {// 详情信息
@@ -234,15 +256,27 @@ function initBootTable(url){
 
 }
 
-function operateFormatter(value, row, index) {
-    //status:1 待分发 2 待接单   3处理中  4审核中  5完成
-        var str="";
-        if((row.status=='1'||row.status=='2')&&row.createByStr==userId){
-            str+='<button type="button" onclick="deleteTicket(\''+row.ticketId+'\')" class="btn btn-primary">删除</button>'
+function editTicketWBOrXJ(row) {
+    $.dialog({
+        id: 'ticket-edit',
+        title: '编辑工单',
+        content: 'url:ticketCreateSelect.html?ticketId='+row.ticketId+'&rnd=' + new Date().getTime(),
+        width: 1000,
+        height: 450,
+        fixed: true,
+        max: true,
+        min: false,
+        resize: false,
+        lock: false,
+        top: 120,
+        background: '#000',
+        opacity: 0.65,
+        ok: false,
+        drag: false,
+        close: function () {
+            $("#query").click();
         }
-        return [str,'<button type="button" onclick="ticketInfo(\''+row.ticketId+'\')" class="btn btn-primary">详情</button>'].join('');
-
-
+    });
 }
 function ticketInfo(ticketId){
     $.dialog({
@@ -281,11 +315,137 @@ function deleteTicket(ticketId){
     })
 }
 
+function editTicket(row){
+    //工单页面赋值
+    myModalWorkOrder(row);
+    //打开创建工单页面
+    $('#myWorkModal2').modal('show');
+}
+
 function toTrim(str){
     if(undefined == str || null == str){
         return "-";
     }
     return str;
+}
+
+function myModalWorkOrder(row) {
+    console.log(row)
+    queryMaintenanceWorkerDept(row.deptId);
+    $("#alarmTime2").val(row.startTime);
+    $("#phName2").val(row.pumpName);
+    $("#phId2").val(row.phId);
+    $("#address2").val(row.address);
+    $("#ticketId2").val(row.ticketId);
+    $("#processName2").val(row.deviceName1);
+    $("#alarmReason2").val(row.ticketReason);
+    $("#alarmLevel2").val(row.ticketLevel);
+    $("#planContent2").val(row.ticketDescription);
+    $("#planStartTime2").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        minuteStep:1,
+        minView:1,
+        language: 'zh-CN',
+        pickerPosition:'bottom-right',
+        autoclose:true,
+        startDate: new Date()
+    }).on("click",function(){
+        $("#planStartTime2").datetimepicker("setEndDate",$("#planEndTime2").val());
+    });
+
+    $("#planEndTime2").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        minuteStep:1,
+        minView:'hour',
+        language: 'zh-CN',
+        autoclose:true
+    }).on("click",function(){
+        $("#planEndTime2").datetimepicker("setStartDate",$("#planStartTime2").val());
+    });
+
+    $("#planStartTime2").val(row.startTime);
+    $("#planEndTime2").val(row.endTime);
+
+    formValidator();
+    //重置验证
+    $("#workOrder").data('bootstrapValidator').destroy();
+    $('#workOrder').data('bootstrapValidator',null);
+    formValidator();
+}
+
+function changerDept() {
+    $("#mgName2").val(jQuery("#deptId2 option:selected").attr("mgName"));
+}
+
+function queryMaintenanceWorkerDept(deptId) {
+    //var url = CONTEXT_PATH+"/alarmStatController/queryMaintenanceWorkerUser?"+ Math.random();
+    var url =CONTEXT_PATH+"/ticket/getDept?"+ Math.random();
+    jQuery.ajax({
+        type : 'POST',
+        contentType : 'application/json',
+        url : url,
+        dataType : 'json',
+        success : function(data) {
+            $("#deptId2").html("");
+            $.each(data, function (i, item) {
+                jQuery("#deptId2").append("<option value="+ item.deptId+" mgName="+item.mgName+">"+ item.deptName+"</option>");
+                if(i==0){
+                    $("#mgName2").val(item.mgName);
+                }
+            });
+            $("#deptId2").val(deptId);
+            $("#mgName2").val(jQuery("#deptId2 option:selected").attr("mgName"));
+        }
+    });
+}
+function formValidator() {
+    $('#workOrder').bootstrapValidator({
+        message: '不能为空',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            alarmContent: {
+                validators: {
+                    notEmpty: {
+                        message: '工单内容不能为空'
+                    }
+                }
+            },
+            alarmLevel: {
+                validators: {
+                    notEmpty: {
+                        message: '告警等级不能为空'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function submitWorkOrder(){
+    var bootstrapValidator = $("#workOrder").data('bootstrapValidator');
+    //手动触发验证
+    bootstrapValidator.validate();
+    if(bootstrapValidator.isValid()){
+        var ticketId=$("#ticketId2").val();
+        var alarmLevel=$("#alarmLevel2").val();
+        var planStartTime=$("#planStartTime2").val();
+        var planEndTime=$("#planEndTime2").val();
+        var alarmReason=$("#alarmReason2").val();
+        var planContent=$("#planContent2").val();
+        var deptId=$("#deptId2").val();
+        //只能删除自己名下的数据行
+        $.post(CONTEXT_PATH+"/ticket/updateTicketInfo",{"ticketId":ticketId,"alarmLevel":alarmLevel,"planStartTime":planStartTime,"planEndTime":planEndTime,"alarmReason":alarmReason,"planContent":planContent,"deptId":deptId},function (res){
+                $('#alertErrorMessage').html(res.message);
+                $('#alertError').modal('show');
+                $('#dataTables-example').bootstrapTable('refresh');
+                $('#myWorkModal2').modal('hide'); // 关闭模态框
+        })
+    }
+
 }
 
 function queryParams(params) {

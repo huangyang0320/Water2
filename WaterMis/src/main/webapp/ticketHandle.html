@@ -86,10 +86,16 @@
 
                             </div>
                         </div>
-                        <div class="col-md-5 col-md-offset-1">
+                        <div class="col-md-5 col-md-offset-1" id="channelShow">
                             <div class="form-group">
                                 <label for="channelName">任务来源</label>
                                 <input type="text" class="form-control" readonly id="channelName" name="channelName" placeholder="请输入">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1" id="addressShow">
+                            <div class="form-group">
+                                <label for="address">泵房地址</label>
+                                <input type="text" class="form-control" readonly id="address" name="address" placeholder="请输入">
                             </div>
                         </div>
                     </div>
@@ -147,7 +153,7 @@
                         <div class="col-md-11">
                             <div class="form-group">
                                 <label for="alarmReason">告警原因</label>
-                                <textarea class="form-control" rows="3" id="alarmReason" name="alarmReason"></textarea>
+                                <textarea class="form-control" disabled rows="3" id="alarmReason" name="alarmReason"></textarea>
                             </div>
                         </div>
                     </div>
@@ -155,7 +161,7 @@
                         <div class="col-md-11">
                             <div class="form-group">
                                 <label for="planContent">解决方案</label>
-                                <textarea class="form-control" rows="3" id="planContent" name="planContent"></textarea>
+                                <textarea class="form-control" disabled rows="3" id="planContent" name="planContent"></textarea>
                             </div>
                         </div>
                     </div>
