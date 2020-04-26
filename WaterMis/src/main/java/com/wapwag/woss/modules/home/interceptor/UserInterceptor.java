@@ -20,9 +20,6 @@ public class UserInterceptor implements HandlerInterceptor {
         Object sessionObject = session.getAttribute("user");
         User currentUser = sessionObject instanceof User ? (User) sessionObject : null;
         String servletPath = request.getServletPath();
-        System.out.println("-----");
-        System.out.println(servletPath);
-        System.out.println("-----");
 
         //首页
         if(servletPath.contains("a/treeType/getTreeDataByType") || servletPath.contains("a/alarmStatController/indexAlarmSize")
