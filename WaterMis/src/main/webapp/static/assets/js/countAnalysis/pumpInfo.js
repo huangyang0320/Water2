@@ -217,19 +217,7 @@ $(function(){
 		}
 		return str;
 	}
-    // 自定义按钮导出数据  20200426 xth
-    function exportData(){
-        $('#dataTables-example').tableExport({
-            type: 'excel',
-            exportDataType: "all",
-            ignoreColumn: [0],//忽略某一列的索引
-            fileName: '泵房信息'+moment().format('YYYY-MM-DD HH_mm_ss'),//下载文件名称
-            onCellHtmlData: function (cell, row, col, data){//处理导出内容,自定义某一行、某一列、某个单元格的内容
-                console.info(data);
-                return data;
-            },
-        });
-    }
+
    function queryParams(params) {
        if(ischeck){
            params.pageNumber = 1;
