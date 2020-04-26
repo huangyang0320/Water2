@@ -61,24 +61,28 @@ $(function(){
     		alarmTypeCountDetail();
     	}
     });
-    
+    // 告警信息列表
     $("#alarmList").click(function(){
+        $('#exportBtn')[0].style.display = 'inline-block'
     	if("1" ==alarmPage){
     		return;
     	}
     	alarmPage = "1";
-    	$('#dataTables-example').bootstrapTable('removeAll');
-    	$('#dataTables-example').bootstrapTable('refresh');
-    	areaCount();
-        alarmTypeCount();
+        initBootTable(url);
+    	// $('#dataTables-example').bootstrapTable('removeAll');
+    	// $('#dataTables-example').bootstrapTable('refresh');
+    	areaCount();  // 告警等级对比
+        // alarmTypeCount(); // 告警类型对比
     });
+    // 告警数统计
     $("#alarmDetail").click(function(){
+        $('#exportBtn')[0].style.display = 'none'
     	if("2" ==alarmPage){
     		return;
     	}
     	alarmPage = "2";
-    	countAlarmTimes();
-    	alarmTypeCountDetail();
+    	countAlarmTimes();  /*设备每天告警次数对比*/
+    	alarmTypeCountDetail();  // 告警类型对比
     });
     
     // datetimepicker init
@@ -170,7 +174,19 @@ $(function(){
             }
         });
     }
-
+    // 自定义按钮导出数据
+    function exportData(){
+        $('#dataTables-example').tableExport({
+            type: 'excel',
+            exportDataType: "all",
+            ignoreColumn: [0],//忽略某一列的索引
+            fileName: '告警信息列表' + moment().format('YYYY-MM-DD'),//下载文件名称
+            onCellHtmlData: function (cell, row, col, data){//处理导出内容,自定义某一行、某一列、某个单元格的内容
+                console.info(data);
+                return data;
+            },
+        });
+    }
     function initBootTable(url){
         $("#page-wrapper").css("overflow-y", "hidden");
         $("#page-inner").css("padding-right", "25px");
@@ -178,6 +194,7 @@ $(function(){
         var calcHeight = function() {
             var height = $(window).height() - $(".top-navbar").height() - $(".panel-heading").height() -
                 $(".nav-tabs").height() - 72;
+            console.log(height)
             return height;
         };
 
@@ -215,7 +232,7 @@ $(function(){
            url:url,
        	   cache:false,
        	   striped:true,
-           // height:calcHeight() + 55,//设定高度，固定头部
+           height:calcHeight() + 55,//设定高度，固定头部
            search: false,//是否搜索
            queryParamsType:'',
            queryParams:queryParams,
@@ -233,11 +250,12 @@ $(function(){
            showRefresh: false,//刷新按钮
            showColumns: true,//列选择按钮
            smartDisplay:true,
-           showExport:true,
-           exportDataType:'all',
-            exportOptions: {
-                ignoreColumn: [0] //忽略某一列的索引
-            },
+            // toolbar: "#toolbar",//显示工具栏
+            // showExport: true,//工具栏上显示导出按钮
+            // exportTypes: ['json', 'xml', 'png', 'csv', 'txt', 'sql', 'doc', 'excel', 'xlsx', 'pdf'],//导出格式
+            // exportOptions: {//导出设置
+            //     fileName: 'Tablexxx',//下载文件名称
+            // },
            onLoadSuccess:function(data){
         	   successHide(1);
         	   total = data.total;

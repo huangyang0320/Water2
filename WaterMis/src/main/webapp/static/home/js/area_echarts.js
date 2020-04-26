@@ -3,6 +3,7 @@ $(function () {
     //map();
     // getPumpMapData();
     getUseWaterOrUsrPowerData('m3')
+    getDynamicPressureData()
 })
 
 function setButtonCss(obj){
@@ -1414,14 +1415,143 @@ function wuhu_amp(data,subtext,unit,min,max){
 
 // 动态压力
 function getDynamicPressureData(obj) {
-    setButtonCss(obj);
     jQuery.ajax({
         type : 'get',
+        ayscn: false,
         contentType : 'application/json',
-        url : 'a/monitor/configuration/getDynamicPressureData',
+        url : 'a/monitor/configuration/getPumpHouseDynamicPressureData',
         dataType : 'json',
         success : function(data) {
-            console.log(data)
+            console.log(data.pumpName)
+            setButtonCss(obj);
+            // 基于准备好的dom，初始化echarts实例
+            let myChart = echarts.init(document.getElementById('fb1'));
+            let option = {
+                color:['#CC66CC','#33CC00','#CCFF00'],
+                // backgroundColor: 'rgba(1,202,217,.2)',
+                grid: {
+                    left: '5%',
+                    right: '8%',
+                    bottom: '7%',
+                    top:'8%',
+                    containLabel: true
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    top:'0%',
+                    icon: 'rectangle',
+                    data:['进口压力1','进口压力2','设定值'],
+                    // width:'35%',
+                    textStyle: {
+                        color: 'rgba(255,255,255,.5)',
+                        fontSize:'12',
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    // boundaryGap: false,
+                    axisLine:{
+                        lineStyle:{
+                            color:'rgba(255,255,255,.2)'
+                        }
+                    },
+                    splitLine:{
+                        lineStyle:{
+                            color:'rgba(255,255,255,.1)'
+                        }
+                    },
+                    axisLabel:{
+                        color:"rgba(255,255,255,.7)"
+                    },
+                    data: data.pumpName
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLine:{
+                            lineStyle:{
+                                color:'rgba(255,255,255,.2)'
+                            }
+                        },
+                        splitLine:{
+                            lineStyle:{
+                                color:'rgba(255,255,255,.1)'
+                            }
+                        },
+                        axisLabel:{
+                            color:"rgba(255,255,255,.7)"
+                        }
+                    }],
+                series: [
+                    {
+                        name:'进口压力1',
+                        type:'bar',
+                        barWidth: 20,
+                        lineStyle: {
+                            normal: {
+                                color: '#CC66CC',
+                                width: 2
+                            }
+                        },
+                        data:data.szjs1
+                    },
+                    {
+                        name:'进口压力2',
+                        type:'bar',
+                        barWidth: 20,
+                        lineStyle: {
+                            normal: {
+                                color: '#33CC00',
+                                width: 2
+                            }
+                        },
+                        data:data.szjs2
+                    },{
+                        name:'设定值',
+                        type:'line',
+
+                        lineStyle: {
+                            normal: {
+                                color: '#CCFF00',
+                                width: 2
+                            }
+                        },
+                        data:data.lowset
+                    }
+
+                ],
+                dataZoom: [
+                    {
+                        show: true,
+                        realtime: true,
+                        height: 10,
+                        xAxisIndex: [0],
+                        bottom: 10,
+                        textStyle:{
+                            color:"rgba(204,187,225,0.5)",
+                        },
+                        fillerColor:"rgba(67,55,160,0.4)",
+                        borderColor: "rgba(204,187,225,0.5)",
+                        "start": 0,
+                        "end": 100,
+                    },
+                    {
+                        type: 'inside',
+                        show: true,
+                        height: 15,
+                        start: 1,
+                        end: 35
+                    }
+                ],
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.clear()
+            myChart.setOption(option);
+            window.addEventListener("resize",function(){
+                myChart.resize();
+            });
         },
         error : function(data) {
 
@@ -1430,7 +1560,160 @@ function getDynamicPressureData(obj) {
 }
 // 压力平均值
 function getPumpHouseDynamicPressureData(obj) {
-    setButtonCss(obj);
+    jQuery.ajax({
+        type: 'get',
+        ayscn: false,
+        contentType: 'application/json',
+        url: 'a/monitor/configuration/getDynamicPressureData',
+        dataType: 'json',
+        success: function (data) {
+            setButtonCss(obj);
+            let xArr = []
+            for(let i=0;i<24;i++){
+                if(i<10){
+                    let n = '0' +i
+                    xArr.push(n)
+                }else {
+                    xArr.push(i)
+                }
+            }
+            console.log(xArr)
+            // 基于准备好的dom，初始化echarts实例
+            let myChart2 = echarts.init(document.getElementById('fb1'));
+            let option2 = {
+                color:['#CC66CC','#33CC00','#CCFF00'],
+                // backgroundColor: 'rgba(1,202,217,.2)',
+                grid: {
+                    left: '5%',
+                    right: '8%',
+                    bottom: '7%',
+                    top:'8%',
+                    containLabel: true
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    top:'0%',
+                    icon: 'rectangle',
+                    data:['进口压力1','进口压力2','设定值'],
+                    // width:'35%',
+                    textStyle: {
+                        color: 'rgba(255,255,255,.5)',
+                        fontSize:'12',
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    // boundaryGap: false,
+                    axisLine:{
+                        lineStyle:{
+                            color:'rgba(255,255,255,.2)'
+                        }
+                    },
+                    splitLine:{
+                        lineStyle:{
+                            color:'rgba(255,255,255,.1)'
+                        }
+                    },
+                    axisLabel:{
+                        color:"rgba(255,255,255,.7)"
+                    },
+                    data: xArr,
+                    // axisLabel : {//坐标轴刻度标签的相关设置。
+                    //     interval:0,
+                    //     rotate:"45"
+                    // }
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLine:{
+                            lineStyle:{
+                                color:'rgba(255,255,255,.2)'
+                            }
+                        },
+                        splitLine:{
+                            lineStyle:{
+                                color:'rgba(255,255,255,.1)'
+                            }
+                        },
+                        axisLabel:{
+                            color:"rgba(255,255,255,.7)"
+                        }
+                    }],
+                series: [
+                    {
+                        name:'进口压力1',
+                        type:'line',
+                        // barWidth: 20,
+                        lineStyle: {
+                            normal: {
+                                color: '#FF66CC',
+                                width: 2
+                            }
+                        },
+                        data:data.szjs1
+                    },
+                    {
+                        name:'进口压力2',
+                        type:'line',
+                        // barWidth: 20,
+                        lineStyle: {
+                            normal: {
+                                color: '#00FF33',
+                                width: 2
+                            }
+                        },
+                        data:data.szjs2
+                    },{
+                        name:'设定值',
+                        type:'line',
+                        lineStyle: {
+                            normal: {
+                                color: '#CCFF00',
+                                width: 2
+                            }
+                        },
+                        data:data.lowset
+                    }
+
+                ],
+                dataZoom: [
+                    {
+                        show: true,
+                        realtime: true,
+                        height: 10,
+                        xAxisIndex: [0],
+                        bottom: 10,
+                        textStyle:{
+                            color:"rgba(204,187,225,0.5)",
+                        },
+                        fillerColor:"rgba(67,55,160,0.4)",
+                        borderColor: "rgba(204,187,225,0.5)",
+                        "start": 0,
+                        "end": 100,
+                    },
+                    {
+                        type: 'inside',
+                        show: true,
+                        height: 15,
+                        start: 1,
+                        end: 35
+                    }
+                ],
+            };
+            // 使用刚指定的配置项和数据显示图表。.
+            myChart2.clear()
+            myChart2.setOption(option2);
+            window.addEventListener("resize",function(){
+                myChart2.resize();
+            });
+        },
+        error : function(data) {
+
+        }
+    })
     
 }
 
