@@ -6,13 +6,15 @@
 	#page-inner {
         padding: 0 10px 10px 10px;
         height: 100%;
+        overflow-y:auto;
+        overflow-x:hidden ;
     }
     .panel-body {
         padding: 0px 15px 6px;
     }
     #page-inner .pre-scrollable{
-      height: 90%;
-      max-height: 90%;
+      /*height: 90%;*/
+      /*max-height: 90%;*/
     }
 	/* Water/Electricity/Water-Electricity */
 	.water,
@@ -158,8 +160,9 @@
 		</div>
 		<!-- col-md-9 -->
         <div class="col-md-8 col-sm-8 col-xs-8" style="height:100%">
-            <div class="panel panel-default pre-scrollable">
-				<div class="panel-body">
+<!--            <div class="panel panel-default pre-scrollable">-->
+            <div class="panel panel-default">
+                <div class="panel-body">
 					<!-- chart -->
                     <div class="col-xs-12 col-md-12" >
                         <div id="energyanalysis-chart-m3"></div>
@@ -177,3 +180,14 @@
 </div>
 <!-- /. PAGE INNER  -->
 <script src="static/assets/js/realtimeMonitor/energyanalysisNew.js"></script>
+<script>
+    //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
+    /* 点击input框时加载监听事件*/
+    $(".timepicker").each(function () {
+        this.addEventListener('click',myfunc);
+    })
+
+    function myfunc(e){
+        e.currentTarget.blur();
+    }
+</script>

@@ -35,8 +35,12 @@ GLOBAL.IMG_CONTEXT_PATH_BAIDU = "/HFWater";
 var _page_url_show_list = ["home-map-baiduNew.html", "realtimeData.html","deviceArchives.html", "themeDeviceStat.html", "historyData.html", "energyanalysisNew.html", "poweranalysis.html", "lifeprediction.html","videoMonitor.html","video.html", "videoMonitorBacl.html","videoHis.html","energyanalysis.html","onlineData_v2.html","themeStatNew.html","themeStatNew.html","configuration.html","historyDataNewBak.html","realtimeDataNew.html","historyDataNew.html" ,"pumpGuide.html", "pumpBandDiagram.html", "smallFlow.html"];
 
 // 需要展示右侧树复选框的列表
-var _page_url_check_list = ["energyanalysisNew.html","historyDataNewBak.html","realtimeDataNew.html", "pumpBandDiagram.html"];
-
+var _page_url_check_list = [
+    "energyanalysisNew.html",
+    // "historyDataNewBak.html",
+    // "realtimeDataNew.html",
+    "pumpBandDiagram.html"
+];
 // 需要展示右侧树到设备的列表
 var _page_url_equipment_list = ["energyanalysisNew.html","energyanalysis.html","onlineData_v2.html","historyDataNew.html","poweranalysis.html","themeStatNew.html","themeStatNew.html","themeDeviceStat.html","realtimeDataNew.html","deviceArchives.html","lifeprediction.html","realtimeData.html","historyDataNewBak.html","pumpGuide.html", "pumpBandDiagram.html", "smallFlow.html"];
 
@@ -69,7 +73,8 @@ var GLOBAL_SELECT_LIST_B = []; //只有树调用
 
 var GLOBAL_SELECT_LIST_CHO0SE = []; // 选中的设备或者泵房
 
-var GLOBAL_SELECT_LIST_TYPE = 'device'; // 选中的列表类型
+// var GLOBAL_SELECT_LIST_TYPE = 'device'; // 选中的列表类型
+var GLOBAL_SELECT_LIST_TYPE = 'pump'; // 选中的列表类型
 
 var GLOBAL_SELECT_LIST_ISSHOWCHECK = true; // 选中的列表是否多选
 
@@ -109,6 +114,14 @@ var DATE_CONFIG = function (startView, minView, format) {
         todayHighlight: true
     }
 };
+
+var DATA_MINUTE_CONFIG = function() {
+    var categories = [];
+    for (var i = 0; i <= 11; i++) {
+        categories.push(i*5 + "");
+    }
+    return categories;
+}();
 
 var DATA_HOUR_CONFIG = function() {
     var categories = [];
@@ -166,7 +179,7 @@ var DATE_ADD_CONFIG = function (dimen) {
 var DEVICE_DIMEN = function (unit) {
     return {
         "minute": {
-            categories: DATA_HOUR_CONFIG,
+            categories: DATA_MINUTE_CONFIG,
             formatter: function () {
                 return this.value + '秒';
             },

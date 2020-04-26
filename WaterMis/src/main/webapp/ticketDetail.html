@@ -76,13 +76,20 @@
                         </div>
                         <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
-                                <label for="address">泵房地址</label>
-                                <input type="text" class="form-control" readonly id="address" name="address" placeholder="请输入">
+                                <label for="channelName">任务来源</label>
+                                <input type="text" class="form-control" readonly id="channelName" name="channelName" placeholder="请输入">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="alarmStatus">告警状态</label>
+                                <input type="text" class="form-control" readonly id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
+
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1" id="device">
                             <div class="form-group">
                                 <label for="processName">所在设备</label>
                                 <input type="text" class="form-control" readonly id="processName" name="processName" placeholder="请输入">
@@ -91,13 +98,7 @@
                             </div>
 
                         </div>
-                        <div class="col-md-5 col-md-offset-1">
-                            <div class="form-group">
-                                <label for="alarmStatus">告警状态</label>
-                                <input type="text" class="form-control" readonly id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
 
-                            </div>
-                        </div>
                     </div>
                     <div class="row" id="alarmTimeAndAlarmLevel">
                         <div class="col-md-5">
@@ -117,13 +118,13 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="planStartTime">计划开始时间</label>
-                                <input id ="planStartTime" name="planStartTime" readonly type="text" value="" readonly style="background-color: white" class="planStartTime form-control timepicker">
+                                <input id ="planStartTime" name="planStartTime" disabled type="text" value="" readonly style="background-color: white" class="planStartTime form-control timepicker">
                             </div>
                         </div>
                         <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
                                 <label for="planEndTime">计划结束时间</label>
-                                <input id ="planEndTime" name="planEndTime" readonly type="text" value="" readonly style="background-color: white"  class="planEndTime form-control timepicker">
+                                <input id ="planEndTime" name="planEndTime" disabled type="text" value="" readonly style="background-color: white"  class="planEndTime form-control timepicker">
                             </div>
                         </div>
                     </div>
@@ -132,7 +133,7 @@
                         <div class="col-md-11">
                             <div class="form-group">
                                 <label for="alarmReason">告警原因</label>
-                                <textarea class="form-control" rows="3" id="alarmReason" name="alarmReason"></textarea>
+                                <textarea class="form-control" readonly rows="3" id="alarmReason" name="alarmReason"></textarea>
                             </div>
                         </div>
                     </div>
@@ -140,11 +141,17 @@
                         <div class="col-md-11">
                             <div class="form-group">
                                 <label for="planContent">解决方案</label>
-                                <textarea class="form-control" rows="3" id="planContent" name="planContent"></textarea>
+                                <textarea class="form-control" readonly rows="3" id="planContent" name="planContent"></textarea>
                             </div>
                         </div>
                     </div>
-
+                    <div id="showTicketPartsTable">
+                        <div>
+                            <div class="col-md-11">
+                                <table class="table table-striped table-hover"  id="reportTable"></table>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row" id="ticketLogs">
 
 
@@ -161,5 +168,5 @@
             </div>
         </div>
     <script src="static/assets/js/jquery-1.10.2.js"></script>
-
-        <script src="static/assets/js/ticket/ticketDetail.js"></script>
+    <script src="static/assets/js/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="static/assets/js/ticket/ticketDetail.js"></script>

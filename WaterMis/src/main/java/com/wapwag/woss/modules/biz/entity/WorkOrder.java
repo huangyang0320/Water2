@@ -7,6 +7,8 @@ package com.wapwag.woss.modules.biz.entity;
  */
 public class WorkOrder {
 
+    private String ticketId;        //工单编号
+    private String channel;         //工单来源
 	private String workType;		    // 工单类型
 	private String taskSource;		// 工单来源
 	private String alarmContent;		// 工单内容
@@ -199,5 +201,21 @@ public class WorkOrder {
 
     public void setMgName(String mgName) {
         this.mgName = mgName;
+    }
+
+    public String getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(String ticketId) {
+        this.ticketId = ticketId;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 }

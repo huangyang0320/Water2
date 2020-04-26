@@ -136,7 +136,8 @@ function initData() {
     preLoad();
     var currentDate = new Date().Format("yyyy-MM-dd HH");
     var dateRegion = new Date().getCurrentHour(currentDate, "yyyy-MM-dd HH:mm:ss");
-    var selectDevices = GLOBAL_SELECT_LIST;
+    // var selectDevices = GLOBAL_SELECT_LIST;
+    var selectDevices = [GLOBAL_SELECT_DEVICE]
     var selectDeviceIds = [];
     selectDevices.forEach(function(value){
         selectDeviceIds.push(value.id);
@@ -181,11 +182,11 @@ function initMetaDeviceList(deviceIds){
         var $deviceNormData = $deviceNorm.find(".list-group");
         $deviceNormData.empty();
         result.forEach(function(value,index){
-        	if(value.type == "ftMP" || value.type == "ftAC" || value.type == "ftMF"
+        	/*if(value.type == "ftMP" || value.type == "ftAC" || value.type == "ftMF"
             	|| value.type == "ftT" || value.type == "ftTL" || value.dataType=='uint' || value.dataType== 'real'){
-                var li = $("<li class='list-group-item'><label></label></li>");
+           */     var li = $("<li class='list-group-item'><label></label></li>");
                 var li1 = li.clone();
-                var input = $("<input type='checkbox'>")
+                var input = $("<input type='radio'>")
                     .prop("name", "sameCompare")
                     .prop("value", value["name"])
                     .addClass("minimal");
@@ -201,9 +202,9 @@ function initMetaDeviceList(deviceIds){
                 li.find("label").append('<div class="colour_black_'+index%7+'">'+value["memo"]+"</div>");
                 li.find("label").prop("title", value["memo"]);
                 $deviceNormData.append(li);
-        	}
+        	/*}*/
         });
-        $("input[type='checkbox'].minimal").icheck({
+        $("input[type='radio'].minimal").icheck({
             checkboxClass: 'icheckbox_minimal-blue',
             radioClass: 'iradio_minimal-blue'
         }).on("click", function () {
@@ -252,7 +253,7 @@ function initQueryBox(currentDate) {
         var endTime=$("#statisticDate").val().substring($("#statisticDate").val().length-2);
         if(startTime!="" && endTime!=""){
             var k =parseInt(endTime)-parseInt(startTime)
-            $queryForm.find("input[name='addOnDate']").val(1);
+            $queryForm.find("input[name='addOnDate']").val(k);
         }
         initChart()
     });
@@ -269,7 +270,7 @@ function initQueryBox(currentDate) {
         var endTime=$("#statisticDate").val().substring($("#statisticDate").val().length-2);
         if(startTime!="" && endTime!=""){
             var k =parseInt(endTime)-parseInt(startTime)
-            $queryForm.find("input[name='addOnDate']").val(1);
+            $queryForm.find("input[name='addOnDate']").val(k);
         }
 
         initChart();
@@ -329,7 +330,7 @@ function initQueryBox(currentDate) {
      */
     $("#export").on("click", function () {
         var $chart = $("#highcharts-history-data");
-        $chart.highcharts().downloadXLS();
+        $chart.highcharts().downloadXLS()[0];
     });
 }
 
@@ -359,7 +360,8 @@ function switchDeviceData() {
     $queryForm.find("input[name='index']").val(indexs.join(","));
     
     //var d = deviceIds.split(',');
-    var selectDevices = GLOBAL_SELECT_LIST;
+    // var selectDevices = GLOBAL_SELECT_LIST;
+    var selectDevices = [GLOBAL_SELECT_DEVICE]
     var selectDeviceIds = [];
     selectDevices.forEach(function(value){
         selectDeviceIds.push(value.id);
@@ -371,8 +373,12 @@ function switchDeviceData() {
     
     initChart();
 }
+function callRefresh(){
+    defChoose()
+}
 function defChoose() {
-    refreshDeviceCheck(GLOBAL_SELECT_LIST);
+    // refreshDeviceCheck(GLOBAL_SELECT_LIST);
+    refreshDeviceCheck([GLOBAL_SELECT_DEVICE]);
 }
 function refreshDeviceCheck(device) {
     var deviceIds;

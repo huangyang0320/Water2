@@ -137,6 +137,9 @@ function initBootTable(url){
          pageList:[20,30,50,100],
          showExport:true,
          exportDataType:'all',
+		 exportOptions: {
+			 ignoreColumn: [0] //忽略某一列的索引
+		 },
          searchOnEnterKey: false,//回车搜索
          onLoadSuccess:function(data){
         	 if("2" == changeFlag){
@@ -296,7 +299,6 @@ function qryProjectList(areaId){
 	});
 
 	function getPumpList(project){
-		console.log("3333333333333333333");
 		var url = CONTEXT_PATH+"/ticket/getPumpList?"+ Math.random();
 		jQuery.ajax({
 			type : 'POST',

@@ -140,7 +140,11 @@ function echarts_02(data) {
 					textStyle: {
 						color: "rgba(255, 255, 255)"
 					},
-					formatter: [ '{b}','{d}%'].join('\n'),
+					// formatter: [ '{b}','{d}%'].join('\n'),
+					formatter:function(params){
+						console.log(params)
+						return params.name+"\n"+params.value + ' (' +params.percent+'%）'
+					},
 					rich: {
 						b: {
 							color: '#fff',

@@ -63,7 +63,7 @@
 }
 .pumpIcon{
     position: absolute;
-    left: 90px;
+    left: 70px;
     top: 10px;
     display: inline-block;
     width: 16px;
@@ -74,13 +74,30 @@
 /*.ztree li span ..pumpIcon{*/
     /*right: 78px;*/
 /*}*/
+.ztree li span.button.switch{
+    width: 20%;
+    height: 100%;
+    margin: 0;
+}
+.ztree li span.switch {
+    background-size: 30%;
+    background-position: 50% 12px
+}
+.ztree li span.button.center_close {
+    background-size: 30%;
+    background-position: 50% 12px
+}
+.ztree li span.button.bottom_close {
+    background-size: 30%;
+    background-position: 50% 12px
+}
 .pumpOut{
     background: url('static/assets/img/outline.png') no-repeat;
     background-size: 100%;
 }
 .pumpOff{
     background: url('static/assets/img/offline.png') no-repeat;
-    background-size: 100%;
+background-size: 100%;
 }
 #jquery-accordion-menu .searchClearCtent{
     right: 68px;
@@ -130,6 +147,7 @@ var ztreeBulid = {
     'nodeList':[],
     'fontCss':{},
     'isShowCheck': true, // 是否显示复选框 默认显示
+
     'isClearList': true, // 默认多选list清空
     'zNodes' : [], // 需要渲染的树结构
     'setting':{
@@ -154,7 +172,6 @@ var ztreeBulid = {
          callback: {
              onClick: onClick,
              onCheck: zTreeOnCheck,
-
          }
     },
     'setOption':function (data) {
@@ -260,7 +277,6 @@ var ztreeBulid = {
         let saveObj = JSON.parse(JSON.stringify(obj));
         saveObj.name = saveObj.title;
         if(ztreeBulid.isShowCheck){
-            console.log(saveObj);
             GLOBAL_SELECT_LIST.push(saveObj)
             GLOBAL_SELECT_LIST_CHO0SE.push(saveObj)
             GLOBAL_SELECT_LIST_B.push(obj)
@@ -317,19 +333,39 @@ var ztreeBulid = {
 }
 /* 单击展开子节点 */
 function onClick(e,treeId, treeNode) {
+    console.log(treeNode)
     if(!treeNode.isParent && !ztreeBulid.isShowCheck){
+        // 点击具体泵房地址
+        console.log('点击',treeNode.name)
         GLOBAL_SELECT_LIST_CHO0SE = []
         GLOBAL_SELECT_LIST = []
         treeNode.name =  treeNode.title;
         GLOBAL_SELECT_DEVICE = treeNode;
         GLOBAL_SELECT_LIST_CHO0SE.push(treeNode);
-        console.log(treeNode)
         GLOBAL_SELECT_LIST.push(treeNode);
         refreshDevice(treeNode)
+        toAreaPump2(treeNode, '3')
+    }else{
+        if(treeNode.level == 0){
+            //点击芜湖
+            $('#selectedDevice').html('当前选择:芜湖')
+            // 展示所有泵房事件
+            showAllPumphouses()
+        }else if(treeNode.level == 1){
+            //点击区
+            $('#selectedDevice').html('当前选择:芜湖/'+treeNode.name)
+            // 区域搜索
+            toAreaPump2(treeNode, '2')
+        }else {
+            //有柜子的页面点击事件
+            var zTree = $.fn.zTree.getZTreeObj(ztreeBulid.treeDomId);
+            zTree.expandNode(treeNode);
+            ztreeBulid.isShowCk();
+        }
     }
-    var zTree = $.fn.zTree.getZTreeObj(ztreeBulid.treeDomId);
-    zTree.expandNode(treeNode);
-    ztreeBulid.isShowCk();
+    // var zTree = $.fn.zTree.getZTreeObj(ztreeBulid.treeDomId);
+    // zTree.expandNode(treeNode);
+    // ztreeBulid.isShowCk();
 }
 
 function zTreeOnCheck(event, treeId, treeNode) {
@@ -341,11 +377,11 @@ function zTreeOnCheck(event, treeId, treeNode) {
     })
 
     if( window.choosedNodes.length<1 && ztreeBulid.isClearList){
-        GLOBAL_SELECT_LIST_B.map(function (v) {
-            ztreeBulid.zTreeObj.checkNode(v,true,true);
-        })
-        window.openAlertModel("myModalAlert" , "至少选择一个设备！")
-        return false;
+        // GLOBAL_SELECT_LIST_B.map(function (v) {
+        //     ztreeBulid.zTreeObj.checkNode(v,true,true);
+        // })
+        // window.openAlertModel("myModalAlert" , "至少选择一个设备！")
+        // return false;
     }
     if( window.choosedNodes.length>20){
         window.ConfirmModal("提示" , "你选中的设备/泵房将多于20套/个，可能导致数据加载时间变长，确认要选中吗？",'choosedRun', 'choosedStop')

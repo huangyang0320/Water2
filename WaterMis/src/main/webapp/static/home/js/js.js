@@ -1,7 +1,7 @@
 ﻿
 $(function () {
 //echarts_4();
-echarts_31();
+// echarts_31();
 /*echarts_32();*/
 /*echarts_33();*/
 /*echarts_5();*/
@@ -715,7 +715,7 @@ function echarts_31() {
 		    },
           xAxis: {
               type: 'category',
-              boundaryGap: false,
+              // boundaryGap: false,
               axisLine:{
                 lineStyle:{
                   color:'rgba(255,255,255,.2)'

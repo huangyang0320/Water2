@@ -637,7 +637,7 @@ function getLeftMenuData() {
                     $(".showRightMenu").fadeIn();
                 });
             });
-            // 显示menu
+            // 显示menu ----无用代码 走yxn-header-menu.js里走的
             $(".showRightMenu").click(function(){
                 $(this).fadeOut();
                 $(".right-menu").animate({top: '65px'}).show();
@@ -864,6 +864,8 @@ function ZtreeInitG(relaoding){
  * 展示选择的设备或泵房
  *
  */
+
+// 无用  在yxn-header-menu.js中调用
 function rightMenuMsg() {
     if(ztreeBulid.isShowCheck && GLOBAL_SELECT_LIST[0]){
         var rMM =  GLOBAL_SELECT_LIST[0].title
@@ -1169,8 +1171,9 @@ function queryMaintenanceWorkerUser() {
 }
 
 function queryWhetherWorker(deviceId) {
-    var url = CONTEXT_PATH+"/alarmStatController/queryWhetherWorker?"+ Math.random();
-    jQuery.ajax({
+    $('#myWorkModal').modal('show');
+    /*var url = CONTEXT_PATH+"/alarmStatController/queryWhetherWorker?"+ Math.random();*/
+   /* jQuery.ajax({
         type : 'POST',
         contentType : 'application/json',
         url : url,
@@ -1186,7 +1189,7 @@ function queryWhetherWorker(deviceId) {
                 openAlertModel("myModalAlert" , data.message);
             }
         }
-    });
+    });*/
 }
 
 function refresh() {

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--    <script src="static/assets/js/jquery-1.10.2.js"></script>-->
+    <style>
+        .item{
+            border: 1px solid #ccc;
+            cursor: pointer;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            line-height: 30px;
+            padding-left: 10px;
+        }
+        .item:hover{
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <div id="videoList"></div>
+
+    <script>
+        let $ = parent.$
+        let pumpHouseId = location.href.split('?')[1]
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: parent.CONTEXT_PATH + '/monitor/statistic/findPumpHouseInfoById',
+            data: JSON.stringify({
+                pumpHouseId: pumpHouseId
+            }),
+            dataType: 'JSON',
+            success: function (res) {
+                console.log(res)
+                if(res.videoInfoList){
+                    let str = '',str2 = ''
+                    for(let i=0;i<res.videoInfoList.length;i++){
+                        // console.log(i)
+                        str  += '<div class="item" onclick="parent.showVideo(\'' +
+                            res.videoInfoList[i].hkVideoDeviceId +
+                            '\')">'+
+                            res.videoInfoList[i].name +
+                            '</div>'
+
+                        str2  += '<div class="item" onclick="parent.showVideoHis(\'' +
+                            res.videoInfoList[i].hkVideoDeviceId +
+                            '\')">'+
+                            res.videoInfoList[i].name +
+                            ' ' +
+                            ' 回放</div>'
+                    }
+                    document.querySelector('#videoList').innerHTML = str + str2
+                }
+            }
+        })
+    </script>
+
+</body>
+</html>

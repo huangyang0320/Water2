@@ -133,6 +133,9 @@ function initBootTable(url){
         showExport: true,
         exportDataType: 'all',
         rowStyle: rowStyle,
+        exportOptions: {
+            ignoreColumn: [0] //忽略某一列的索引
+        },
         onLoadSuccess:function(data){
             LOADING.hide();
             total = data.total;
@@ -185,22 +188,23 @@ function initBootTable(url){
             title: '泵房名称',
             align: 'center',
             sortable : true,
-            sortable: true
-        },{
+            cellStyle: formatTableUnit
+        },/*{
             field: 'deviceName',
             title: '设备名称',
             align: 'center',
-            sortable: true
-        },/*{
+            sortable: true,
+            cellStyle: formatTableUnit
+        },*//*{
             field: 'ticketLevel',
             title: '故障等级',
             align: 'center'
-        },*/{
+        },*//*{
             field: 'address',
             title: '泵房地址',
             align: 'center',
             sortable: true
-        },{
+        },*/{
             field: 'createDate',
             title: '工单创建时间',
             align: 'center',
@@ -219,12 +223,25 @@ function initBootTable(url){
             html.push('<p class="detail-view">' + '工单计划结束时间' + ' : ' + toTrim(row.endTime) + '</p>');
             html.push('<p class="detail-view">' + '告警时间' + ' : ' + toTrim(row.eventTime) + '</p>');
             html.push('<p class="detail-view">' + '告警级别' + ' : ' + toTrim(row.ticketLevel) + '</p>');
+            html.push('<p class="detail-view">' + '泵房名称' + ' : ' + toTrim(row.pumpName) + '</p>');
+            html.push('<p class="detail-view">' + '设备名称' + ' : ' + toTrim(row.deviceName) + '</p>');
             html.push('<p class="detail-view">' + '可能原因' + ' : ' + toTrim(row.ticketReason) + '</p>');
             html.push('<p class="detail-view">' + '解决方案' + ' : ' + toTrim(row.ticketDescription) + '</p>');
             return html.join('');
         }
     });
 
+}
+
+function formatTableUnit(value, row, index) {
+    return {
+        css: {
+            "white-space": "nowrap",
+            "text-overflow": "ellipsis",
+            "overflow": "hidden",
+            "max-width": "120px"
+        }
+    }
 }
 
 function operateFormatter(value, row, index) {
@@ -320,9 +337,13 @@ function queryParams(params) {
     }
     alertType = '1';
     //配置参数
+    var ticketId = $("#ticketId").val();
     var ticketType = $("#ticketType").val();
     var pumpName = $("#pumpName").val();
     var alarmContent = $("#alarmContent").val();
+    var status=$("#status").val();
+    var address=$("#address").val();
+    var createName=$("#createName").val();
 
     var createBeginTime =$("#createBeginTime").val();
     if(createBeginTime!=""){
@@ -370,9 +391,13 @@ function queryParams(params) {
         offset : params.offset,
         sortName : sortName,
         sortOrder : params.sortOrder,
+        ticketId : ticketId,
         ticketType: ticketType,
         pumpName: pumpName,
+        status:status,
+        address:address,
         title: alarmContent,
+        createName:createName,
         createBeginTime: createBeginTime,
         createEndTime: createEndTime,
         startBeginTime: startBeginTime,

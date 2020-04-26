@@ -18,6 +18,14 @@ var CONTEXT_PATH = ROOT_PATH + "/a";
     getTicketLogList(ticketId);
     getTicketInfo(ticketId);
 
+function showDevice(){
+    var type=$("#workType").val();
+    if(type=="巡检工单"){
+        $("#device").hide();
+    }else if(type=="维保工单"){
+        $("#device").show();
+    }
+}
 function getTicketInfo(ticketId){
     var url = CONTEXT_PATH+"/ticket/getTicketInfo?"+ Math.random();
     jQuery.ajax({
@@ -31,6 +39,7 @@ function getTicketInfo(ticketId){
 
             $("#ticketId").val(data.ticketId);
             $("#workType").val(data.ticketTypeName);
+            $("#channelName").val(data.channelName);
             $("#alarmContent").val(data.title);
             $("#phName").val(data.pumpName);
             $("#address").val(data.address);
@@ -48,6 +57,8 @@ function getTicketInfo(ticketId){
             //初始话部门对应的处理人 列表
             getApprovalUserList(data.deptId);
             $("#buttonId").html("分发");
+
+            showDevice()
 
             //非告警工单  去掉不要的信息
             if(data.ticketType!=1){
@@ -76,41 +87,55 @@ function getApprovalUserList(deptId){
 
 
 function approval(){
-    var ticketId= $("#ticketId").val();
-    var status= $("#status").val();
-    //var approvalById= $("#approvalById").val();
-    var approveOpinion= $("#approveOpinion").val();
-    var handleUserId= $("#handleUserId").val();
+        var status = $("#status").val();
+        var approveOpinion = $("#approveOpinion").val();
 
-    var json={"ticketId":ticketId,"approveOpinion":approveOpinion,"handleStatus":"01","handleUserId":handleUserId,"handleUserId":handleUserId};//分配到人
-
-    if(approveOpinion==""){
-        alert("处理结果不能为空!");
-        return false;
-    }if(status==4 && $("#approveOperation").val()==""){
-            alert("审核结果不能为空!");
+        if (approveOpinion == "") {
+            $('#alertShowMessage').html('处理结果不能为空!!!');
+            $('#alertShow').modal('show');
             return false;
-    }else{
-        var url = CONTEXT_PATH+"/ticket/handleWorkOrder?"+ Math.random();
-        jQuery.ajax({
-            type : 'POST',
-            contentType : 'application/json',
-            url : url,
-            dataType : 'json',
-            data:  JSON.stringify(json),
-            success : function(data) {
-                if(data.status == "success"){
-                    frameElement.api.close();
-                    alert(data.message);
-                }else{
-                    alert(data.message);
-                }
-            }
-        });
-    }
-
+        }
+        if (status == 4 && $("#approveOperation").val() == "") {
+            $('#alertShowMessage').html('审核结果不能为空!!!');
+            $('#alertShow').modal('show');
+            return false;
+        }
+        $('#alertWorkMessage').html('确认要分发工单?');
+        $('#alertWork').modal('show');
 }
 
+function clickOk(){
+    var ticketId = $("#ticketId").val();
+    var status = $("#status").val();
+    //var approvalById= $("#approvalById").val();
+    var approveOpinion = $("#approveOpinion").val();
+    var handleUserId = $("#handleUserId").val();
+
+    var json = {
+        "ticketId": ticketId,
+        "approveOpinion": approveOpinion,
+        "handleStatus": "01",
+        "handleUserId": handleUserId,
+        "handleUserId": handleUserId
+    };//分配到人
+
+    var url = CONTEXT_PATH + "/ticket/handleWorkOrder?" + Math.random();
+    jQuery.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: url,
+        dataType: 'json',
+        data: JSON.stringify(json),
+        success: function (data) {
+            if (data.status == "success") {
+                frameElement.api.close();
+                alert(data.message);
+            } else {
+                alert(data.message);
+            }
+        }
+    });
+}
 
 function getTicketLogList(ticketId){
     var url = CONTEXT_PATH+"/ticket/getTicketLogList?"+ Math.random();

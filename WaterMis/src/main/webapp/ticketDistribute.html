@@ -38,10 +38,16 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h3 class="modal-title">创建工单</h3>
             </div>-->
-            <div class="modal-body" style="height:800px ;overflow-y: auto;overflow-x: hidden">
+            <div class="modal-body" style="overflow-y: auto;overflow-x: hidden">
                 <form id="workOrder">
                     <div class="row">
                         <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="ticketId">工单编号</label>
+                                <input type="text" class="form-control" readonly id="ticketId" name="ticketId">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
                                 <label for="workType">工单类型</label>
                                 <input type="text" class="form-control" readonly id="workType" name="workType"  placeholder="请输入">
@@ -53,13 +59,13 @@
                                  </select>-->
                             </div>
                         </div>
-                        <div class="col-md-5 col-md-offset-1">
+                        <!--<div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
 
                                 <label for="alarmContent">工单名称</label>
                                 <input type="text" class="form-control" readonly id="alarmContent" name="alarmContent" placeholder="请输入">
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -76,25 +82,24 @@
                         </div>
                         <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
-                                <label for="address">泵房地址</label>
-                                <input type="text" class="form-control" readonly id="address" name="address" placeholder="请输入">
+                                <label for="channelName">任务来源</label>
+                                <input type="text" class="form-control" readonly id="channelName" name="channelName" placeholder="请输入">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-group">
+                                <label for="alarmStatus">告警状态</label>
+                                <input type="text" class="form-control" readonly id="alarmStatus" name="alarmStatus" value="待分发"  placeholder="请输入">
+
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1" id="device">
+                            <div class="form-group">
                                 <label for="processName">所在设备</label>
                                 <input type="text" class="form-control" readonly id="processName" name="processName" placeholder="请输入">
                                 <input type="hidden"  class="form-control" readonly id="deviceId" name="deviceId" placeholder="请输入">
-
-                            </div>
-
-                        </div>
-                        <div class="col-md-5 col-md-offset-1">
-                            <div class="form-group">
-                                <label for="alarmStatus">告警状态</label>
-                                <input type="text" class="form-control" readonly id="alarmStatus" name="alarmStatus" value="待分发"  placeholder="请输入">
 
                             </div>
                         </div>
@@ -165,7 +170,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-11">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label for="handleUserId">处理人</label>
                                 <select class="form-control" id="handleUserId" name="handleUserId" >
@@ -180,7 +185,41 @@
                 <button type="button" class="btn btn-default" onclick="frameElement.api.close()" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" onclick="approval()"><span id="buttonId"></span></button>
             </div>
+            <div class="modal fade" tabindex="-1" role="dialog" id="alertWork">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">提示</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p id="alertWorkMessage" style="color: red"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myWorkModal" onclick="clickOk()" data-dismiss="modal">确定</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <div class="modal fade" tabindex="-1" role="dialog" id="alertShow">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">提示</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p id="alertShowMessage" style="color: red"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
         </div>
     <script src="static/assets/js/jquery-1.10.2.js"></script>
+    <script src="static/assets/js/bootstrap.min.js"></script>
 
         <script src="static/assets/js/ticket/ticketDistribute.js"></script>

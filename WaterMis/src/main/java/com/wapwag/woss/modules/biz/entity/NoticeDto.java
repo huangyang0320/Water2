@@ -27,6 +27,8 @@ public class NoticeDto extends DataEntity<NoticeDto> {
 
     private String noticeGroupRefId;  //通知分组关系ID，用于存人的id/部门的id/其他
 
+    private String deleteFlag;
+
     private User deleteBy;  //删除人
 
     private Date deleteDate;  //删除时间
@@ -115,5 +117,13 @@ public class NoticeDto extends DataEntity<NoticeDto> {
 
     public void setDeleteDate(Date deleteDate) {
         this.deleteDate = deleteDate;
+    }
+
+    public String getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(String deleteFlag) {
+        this.deleteFlag = deleteFlag;
     }
 }

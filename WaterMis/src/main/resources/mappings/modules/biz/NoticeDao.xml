@@ -66,8 +66,11 @@
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO sys_notice(
-		id,
+		INSERT INTO sys_notice
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null and id != ''">
+				id,
+			</if>
 		<if test="bizId != null and bizId != ''">
 			biz_id,
 		</if>
@@ -89,29 +92,33 @@
 		<if test="noticeGroupRefId != null and noticeGroupRefId != ''">
 			notice_group_ref_id,
 		</if>
-		<if test="createBy.id != null and createBy.id  != ''">
+		<if test="createBy!=null and createBy.id != null and createBy.id  != ''">
 			create_by,
 		</if>
-		<if test="createTime != null and createTime != ''">
+		<if test="createDate != null and createDate != ''">
 			create_time,
 		</if>
 		<if test="updateBy.Id != null and updateBy.Id != ''">
 			update_by,
 		</if>
-		<if test="updateTime != null and updateTime != ''">
+		<if test="updateDate != null and updateDate != ''">
 			update_time,
 		</if>
-		<if test="deleteBy.id != null and deleteBy.id != ''">
+		<if test="deleteBy!=null and deleteBy.id != null and deleteBy.id != ''">
 			delete_by,
 		</if>
-		<if test="deleteTime != null and deleteTime != ''">
+		<if test="deleteDate != null and deleteDate != ''">
 			delete_time,
 		</if>
 		<if test="deleteFlag != null and deleteFlag != ''">
-			delete_flag
+			delete_flag,
 		</if>
-		) VALUES (
-		#{id},
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null and id != ''">
+				#{id},
+			</if>
+
 		<if test="bizId != null and bizId != ''">
 			#{bizId},
 		</if>
@@ -133,32 +140,33 @@
 		<if test="noticeGroupRefId != null and noticeGroupRefId != ''">
 			#{noticeGroupRefId},
 		</if>
-		<if test="createBy.id != null and createBy.id  != ''">
+		<if test="createBy!=null and createBy.id != null and createBy.id  != ''">
 			#{createBy.id},
 		</if>
-		<if test="createTime != null and createTime != ''">
+		<if test="createDate != null and createDate != ''">
 			#{createDate},
 		</if>
 		<if test="updateBy.Id != null and updateBy.Id != ''">
 			#{updateBy.id},
 		</if>
-		<if test="updateTime != null and updateTime != ''">
+		<if test="updateDate != null and updateDate != ''">
 			#{updateDate},
 		</if>
-		<if test="deleteBy.id != null and deleteBy.id != ''">
+		<if test="deleteBy!=null and deleteBy.id != null and deleteBy.id != ''">
 			#{deleteBy.id},
 		</if>
-		<if test="deleteTime != null and deleteTime != ''">
+		<if test="deleteDate != null and deleteDate != ''">
 			#{deleteDate},
 		</if>
 		<if test="deleteFlag != null and deleteFlag != ''">
-			#{delFlag}
+			#{delFlag},
 		</if>
-		)
+		</trim>
 	</insert>
 	
 	<update id="update">
-		UPDATE sys_notice SET
+		UPDATE sys_notice
+		<set>
 		<if test="bizId != null and bizId != ''">
 			biz_id = #{bizId},
 		</if>
@@ -180,12 +188,13 @@
 		<if test="noticeGroupRefId != null and noticeGroupRefId != ''">
 			notice_group_ref_id = #{noticeGroupRefId},
 		</if>
-		<if test="updateBy.id != null and updateBy.id != ''">
+		<if test="updateBy!=null and updateBy.id != null and updateBy.id != ''">
 			update_by = #{updateBy.id},
 		</if>
 		<if test="updateDate != null and updateDate != ''">
-			update_time = #{updateDate}
+			update_time = #{updateDate},
 		</if>
+		</set>
 		WHERE id = #{id}
 	</update>
 	
@@ -196,5 +205,40 @@
 			delete_time = #{deleteDate}
 		WHERE id = #{id}
 	</update>
+	<select id="findDetailsCount"  resultType="java.lang.Integer">
+		select count(id) from sys_notice
+		<where>
+		1=1
+		and notice_status="01"
+		<if test="userId!=null and userId!=''">
+			and notice_group_ref_id = #{userId}
+		</if>
+		</where>
+	</select>
+	<select id="findDetails"  resultType="com.wapwag.woss.modules.biz.entity.NoticeDto">
+		select
+		`ID` as id,
+		`biz_id` as bizId,
+		`notice_status` as noticeStatus,
+		`notice_title` as noticeTitle,
+		`notice_type` as noticeType,
+		`notice_content` as noticeContent,
+		`notice_group_obj` as noticeGroupObj,
+		`notice_group_ref_id` as noticeGroupRefId
+		from sys_notice
+		<where>
+			1=1
+			and notice_status="01"
+			<if test="noticeGroupRefId!=null and noticeGroupRefId!=''">
+				and notice_group_ref_id = #{noticeGroupRefId}
+			</if>
+			<if test="bizId!=null and bizId!=''">
+				and biz_id = #{bizId}
+			</if>
+			<if test="id!=null and id!=''">
+				and id = #{id}
+			</if>
+		</where>
+	</select>
 
 </mapper>

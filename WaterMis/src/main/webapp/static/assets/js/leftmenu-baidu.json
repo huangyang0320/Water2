@@ -44,9 +44,6 @@
     },{
       "title": "设备档案",
       "url": "deviceArchives"
-    },{
-      "title": "维保信息",
-      "url": "maintenance"
     }]
   }, {
     "title": "工单管理",

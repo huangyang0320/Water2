@@ -153,7 +153,7 @@ public class HomeV2Service {
     public Map<String,List<String>> getUseWaterHourAnalysis(){
         String tableName="service_values_summary";
         String formatDate="'%Y-%m-%d %H'";
-        String startTime= DateUtils.getLastDay("yyyy-MM-dd",-1)+" 07";//昨天日期
+        String startTime= DateUtils.getLastDay("yyyy-MM-dd",-1)+" 05";//昨天日期
         String endTime= DateUtils.getDate("yyyy-MM-dd HH");//当前日期
 
 
@@ -186,7 +186,7 @@ public class HomeV2Service {
                 }
 
                 //实时：今天7点  到实时
-                if(endTime.substring(0,10).equals(dto.getDateTime().substring(0,10)) && Integer.parseInt(h)>=7){
+                if(endTime.substring(0,10).equals(dto.getDateTime().substring(0,10)) && Integer.parseInt(h)>=5){
                     if("m3".equals(dto.getUnit())){
                         dto.setPv(FNUM_3.format(Float.valueOf(dto.getPv())));
                         useWaterHourReal.add(dto);
@@ -221,7 +221,7 @@ public class HomeV2Service {
                 }
             }*/
 
-            endTime = DateUtils.getDate("yyyy-MM-dd")+" 06";
+            endTime = DateUtils.getDate("yyyy-MM-dd")+" 04";
 
 
             LinkedHashMap<String,String> xMap = FullZero.getDefaultYHour(startTime,endTime);
@@ -246,9 +246,9 @@ public class HomeV2Service {
         String cTime= DateUtils.getDate("yyyy-MM-dd HH").substring(11,13);//当前日期
 
         Map<String,List<String>> resutMap= new HashMap<>();
-        if(Integer.parseInt(cTime)>0 && Integer.parseInt(cTime)<7){
-            String startTime= DateUtils.getLastDay("yyyy-MM-dd",-2)+" 07";//前天日期
-            String endTime=DateUtils.getLastDay("yyyy-MM-dd",-1)+" 07";;//昨天前日期
+        if(Integer.parseInt(cTime)>0 && Integer.parseInt(cTime)<5){
+            String startTime= DateUtils.getLastDay("yyyy-MM-dd",-2)+" 05";//前天日期
+            String endTime=DateUtils.getLastDay("yyyy-MM-dd",-1)+" 05";;//昨天前日期
             List<HomeDTO> listData = homeV2Dao.getUseWaterThAnalysis(startTime,endTime,tableName,formatDate);
             //历史
             List<HomeDTO> useWaterHourHis=null;
@@ -270,7 +270,7 @@ public class HomeV2Service {
                         usePowerHourHis.add(dto);
                     }
                 }
-                endTime = DateUtils.getDate("yyyy-MM-dd")+" 06";
+                endTime = DateUtils.getDate("yyyy-MM-dd")+" 04";
 
                 LinkedHashMap<String,String> xMap = FullZero.getDefaultYHour(startTime,endTime);
                 List<String> xData=xMap.keySet().stream().collect(Collectors.toList());
@@ -285,7 +285,7 @@ public class HomeV2Service {
             List<HomeDTO> useWaterHourReal=null;
             List<HomeDTO> usePowerHourReal=null;
             List<HomeDTO> useAvgPowerHourReal=null;
-            startTime= DateUtils.getLastDay("yyyy-MM-dd",-1)+" 07";//昨天前日期
+            startTime= DateUtils.getLastDay("yyyy-MM-dd",-1)+" 05";//昨天前日期
             endTime= DateUtils.getDate("yyyy-MM-dd HH");//当前日期
             List<HomeDTO> listDataRead = homeV2Dao.getUseWaterThAnalysis(startTime,endTime,tableName,formatDate);
             useWaterHourReal =new ArrayList<>();
@@ -302,7 +302,7 @@ public class HomeV2Service {
                         usePowerHourReal.add(dto);
                     }
             }
-            endTime = DateUtils.getDate("yyyy-MM-dd")+" 06";
+            endTime = DateUtils.getDate("yyyy-MM-dd")+" 04";
             resutMap.put("useWaterReal",FullZero.getHourFullZero(startTime,endTime,useWaterHourReal));
             resutMap.put("usePowerReal",FullZero.getHourFullZero(startTime,endTime,usePowerHourReal));
         }

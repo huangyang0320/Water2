@@ -185,8 +185,39 @@ var delObject = "";
             });
         });
     });
-
+    setTimeout(showDetails,6000);
+    setTicketId("1");
 }(jQuery));
+
+var isShow=true;
+function showDetails(){
+    $.post(CONTEXT_PATH + "/biz/notice/getDetails", function(result) {
+        if(isShow){
+            if(result>0){
+                $(".alarmTips2").animate({bottom: "0px"}, 1000, function() {
+                    $(this).find("iframe").prop("src", "showDetails.html");
+                    $(this).find("iframe").attr('id','showDetailsHtml');
+                });
+            }else{
+                    closeDetailsTips()
+            }
+            setTimeout(showDetails,6000);
+        }
+    });
+}
+
+function setTicketId(mark){
+    $.ajax({
+        type:"POST",
+        url: CONTEXT_PATH+'/ticket/getTicketId',
+        async: false,
+        datatype:"JSON",
+        data:{ticketType:mark},
+        success: function (res) {
+            $("#ticketId").val(res);
+        }
+    })
+}
 
 function getTreeType(isloading){
     window.treeTypeStatus = false
@@ -215,6 +246,10 @@ function getTreeType(isloading){
 function closeTips(){
     $(".alarmTips").animate({bottom: "-300px"}, 500);
 }
+function closeDetailsTips(){
+    $(".alarmTips2").animate({bottom: "-300px"}, 500);
+}
+
 
 function leftmenu() {
     $('#main-menu').metisMenu();
@@ -655,7 +690,7 @@ function getLeftMenuData() {
             // 显示menu
             $(".showRightMenu").click(function(){
                 $(this).fadeOut();
-                $(".right-menu").animate({top: '102px'}).show();
+                $(".right-menu").animate({top: '65px'}).show();
             });
             $.get(ROOT_PATH + "/static/assets/js/leftmenu-" + GLOBAL_LOGIN_USER["map"] + ".json", function (result) {
                 $(".sidebar-collapse").load("leftmenu.html", function() {
@@ -801,6 +836,8 @@ function pageChange(isJsOpen) {
         // 显示复选框
         if(isInArray(_page_url_check_list, GLOBAL_URL_ADDRESS)){
             ztreeBulid.checkBoxSH(true)
+            // ztreeBulid.checkBoxSH(false)
+
         }else{
             ztreeBulid.checkBoxSH(false)
         }
@@ -943,8 +980,9 @@ function rightMenuMsg() {
                 areaName = nodearea['name'];
             }
         }
-        $("#selectedDevice").text(massage + ": " + areaName + "/" + pumpHouseName + "/" + deviceName).show();
+        $("#selectedDevice").text(massage + ":" + areaName + "/" + pumpHouseName + "/" + deviceName).show();
     }
+    // $("#selectedDevice").text(massage + ": " + areaName + "/" + pumpHouseName + "/" + deviceName).show();
 }
 
 
@@ -999,7 +1037,8 @@ function alarmIgnore(id,delObj) {
             }
         });
     	$(delObj).parent().parent().remove();
-        showErrorMsgVideo("忽略成功");
+        // showErrorMsgVideo("忽略成功");
+        //showErrorMsgVideo("忽略成功");
     	openAlertModel("myModalAlert" , "忽略成功")
     });
 }
@@ -1183,11 +1222,17 @@ function formValidator() {
     });
 }
 
+function hideCreateBtn() {
+    $("#createBtn").hide();
+}
+function showCreateBtn() {
+    $("#createBtn").show();
+}
+
 function myModalWorkOrder(row) {
 
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept();
-    console.log(1111111111111111111111111)
     $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
     $("#alarmTime").val(row.startDate);
     $("#phName").val(row.phName);
@@ -1345,6 +1390,10 @@ function submitWorkOrder(){
                     $('#myWorkModal').modal('hide'); // 关闭模态框
                     $('#alertErrorMessage').html(data.message);
                     $('#alertError').modal('show');
+                    $(".alarmTips").animate({bottom: "0px"}, 1000, function() {
+                        $(this).find("iframe").prop("src", "warn.html");
+                        $(this).find("iframe").attr('id','warnHtml');
+                    });
                 }else{
                     $('#alertErrorMessage').html(data.message);
                     $('#alertError').modal('show');

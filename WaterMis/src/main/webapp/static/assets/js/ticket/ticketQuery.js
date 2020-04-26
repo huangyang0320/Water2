@@ -6,6 +6,7 @@ var alarmInitCount = 0;
 var alarmPage = "1";
 var alarm_higth = 1;
 var ischeck = false;
+var userId=null;
 $(function(){
     alarmInitCount = 0;
     //初始化时间
@@ -15,7 +16,11 @@ $(function(){
     var url = CONTEXT_PATH+"/ticket/getAllTicketListPage?"+Math.random();
 
 
-    initBootTable(url);
+    $.post(CONTEXT_PATH+"/ticket/getUserId",function (res) {
+        userId=res;
+        initBootTable(url);
+    })
+
 
     //查询事件
     $("#query").click(function(){
@@ -112,28 +117,29 @@ function initBootTable(url){
     });
     $('#dataTables-example').bootstrapTable({
         url: url,
-        cache: false,
-        striped: true,
-        height: calcHeight() + 55,//设定高度，固定头部
+        cache:false,
+        striped:true,
+        height:calcHeight()+55,//设定高度，固定头部
         search: false,//是否搜索
-        queryParamsType: '',
-        queryParams: queryParams,
-        pageSize: 20,
-        pageNumber: 1,
-        sortName: "createDate",//排序字段
-        sortOrder: "desc",//排序
-        sidePagination: 'server',
+        queryParamsType:'',
+        queryParams:queryParams,
+        pageSize:20,
+        pageNumber:1,
+        sidePagination:'server',
         pagination: true,//是否分页
         showColumns: true,//列选择按钮
-        minimumCountColumns: 2,
-        pageList: [20,30,50,100],
+        minimumCountColumns:2,
+        pageList:[20,30,50,100],
         searchOnEnterKey: false,//回车搜索
-        clickToSelect: true,
+        clickToSelect:true,
         showRefresh: false,//刷新按钮
-        smartDisplay: true,
-        showExport: true,
-        exportDataType: 'all',
-        rowStyle: rowStyle,
+        showColumns: true,//列选择按钮
+        smartDisplay:true,
+        showExport:true,
+        exportDataType:'all',
+        exportOptions: {
+            ignoreColumn: [0] //忽略某一列的索引
+        },
         onLoadSuccess:function(data){
             LOADING.hide();
             total = data.total;
@@ -190,12 +196,12 @@ function initBootTable(url){
             title: '设备名称',
             align: 'center',
             sortable: true
-        },{
+        },/*{
             field: 'address',
             title: '泵房地址',
             align: 'center',
             sortable: true
-        },{
+        },*/{
             field: 'allHandleUser',
             title: '待处理人',
             align: 'center',
@@ -218,6 +224,8 @@ function initBootTable(url){
             html.push('<p class="detail-view">' + '工单计划结束时间' + ' : ' + toTrim(row.endTime) + '</p>');
             html.push('<p class="detail-view">' + '告警时间' + ' : ' + toTrim(row.eventTime) + '</p>');
            html.push('<p class="detail-view">' + '告警等级' + ' : ' + toTrim(row.ticketLevel) + '</p>');
+            html.push('<p class="detail-view">' + '泵房名称' + ' : ' + toTrim(row.pumpName) + '</p>');
+            html.push('<p class="detail-view">' + '设备名称' + ' : ' + toTrim(row.deviceName) + '</p>');
             html.push('<p class="detail-view">' + '可能原因' + ' : ' + toTrim(row.ticketReason) + '</p>');
             html.push('<p class="detail-view">' + '解决方案' + ' : ' + toTrim(row.ticketDescription) + '</p>');
             return html.join('');
@@ -227,8 +235,12 @@ function initBootTable(url){
 }
 
 function operateFormatter(value, row, index) {
-    //status: 2 待接单   3处理中  4审核中  5完成
-        return ['<button type="button" onclick="ticketInfo(\''+row.ticketId+'\')" class="btn btn-primary">详情</button>'].join('');
+    //status:1 待分发 2 待接单   3处理中  4审核中  5完成
+        var str="";
+        if((row.status=='1'||row.status=='2')&&row.createByStr==userId){
+            str+='<button type="button" onclick="deleteTicket(\''+row.ticketId+'\')" class="btn btn-primary">删除</button>'
+        }
+        return [str,'<button type="button" onclick="ticketInfo(\''+row.ticketId+'\')" class="btn btn-primary">详情</button>'].join('');
 
 
 }
@@ -255,6 +267,19 @@ function ticketInfo(ticketId){
     });
 }
 
+function deleteTicket(ticketId){
+    //只能删除自己名下的数据行
+    $.post(CONTEXT_PATH+"/ticket/deleteTicket",{"ticketId":ticketId},function (res){
+        if(res==true){
+            $('#alertShowMessage').html('工单删除成功!!!');
+            $('#alertShow').modal('show');
+        }else{
+            $('#alertShowMessage').html('工单删除失败!!!');
+            $('#alertShow').modal('show');
+        }
+        $('#dataTables-example').bootstrapTable('refresh');
+    })
+}
 
 function toTrim(str){
     if(undefined == str || null == str){
@@ -270,10 +295,15 @@ function queryParams(params) {
     }
     alertType = '1';
     //配置参数
+    var ticketId = $("#ticketId").val();
     var ticketType = $("#ticketType").val();
     var pumpName = $("#pumpName").val();
     var alarmContent = $("#alarmContent").val();
-
+    var status=$("#status").val();
+    var address=$("#address").val();
+    var deviceName=$("#deviceName").val();
+    var allHandleUser=$("#allHandleUser").val();
+    var createName=$("#createName").val();
     var createBeginTime =$("#createBeginTime").val();
     if(createBeginTime!=""){
         createBeginTime = createBeginTime+" 00:00:00";
@@ -321,9 +351,15 @@ function queryParams(params) {
         offset : params.offset,
         sortName : sortName,
         sortOrder : params.sortOrder,
+        ticketId : ticketId,
         ticketType: ticketType,
         pumpName: pumpName,
         title: alarmContent,
+        status:status,
+        address:address,
+        deviceName:deviceName,
+        createName:createName,
+        allHandleUser:allHandleUser,
         createBeginTime: createBeginTime,
         createEndTime: createEndTime,
         startBeginTime: startBeginTime,

@@ -15,17 +15,13 @@ import static com.wapwag.woss.modules.config.RestResult.successDor;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.util.TextUtils;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +67,8 @@ import com.wapwag.woss.modules.monitor.pumpNode.VideoInfo;
 import com.wapwag.woss.modules.sys.dao.UserDao;
 import com.wapwag.woss.modules.sys.entity.UserTreeSelection;
 import com.wapwag.woss.modules.sys.service.CountService;
+
+import javax.xml.soap.Text;
 
 /**
  * @author ChangWei Li
@@ -304,6 +302,11 @@ public class PumpConfigurationService {
             code.add("No2TankLevel");
             code.add("TankLevel");
 
+
+            code.add("flow_total");//
+            code.add("hourtotal_pump11");//运行时长
+            code.add("hourtotal_pump12");//运行时长
+            code.add("hourtotal_pump13");//运行时长
 
             code.add("tubeburst_outwater");//
             code.add("stop_electric");//
@@ -836,4 +839,79 @@ public class PumpConfigurationService {
         return pumpConfigurationMapper.selectSysDictByType(type);
     }
 
+    public Map<String,Object>  getDynamicPressureData(){
+        Map<String,Object> map =new HashMap<String,Object>();
+        List<String> list1=new ArrayList<String>();
+        List<String> list2=new ArrayList<String>();
+        List<String> list3=new ArrayList<String>();
+        List<String> list4 = new ArrayList<String>();
+        //当前天的实时tableName
+        String tableName="service_values_hour_"+DateUtils.formatDateTimeByFormat(new Date(),"yyyyMMdd");
+
+        List<PumpService> listData = pumpConfigurationMapper.getDatePv(tableName);
+        for(PumpService p:listData){
+            list4.add(p.getDateTime());
+                if(p.getNum()>0){
+                    float res=((Float.parseFloat(p.getPv())*100)/p.getNum())/100;
+                    if("pressure_szjs1".equals(p.getCode())){
+                        list1.add(res+"");
+                    }
+                    if("pressure_szjs2".equals(p.getCode())){
+                        list2.add(res+"");
+                    }
+                    if("pressurein_lowset".equals(p.getCode())){
+                        list3.add(res+"");
+                    }
+                }
+        }
+        map.put("szjs1",list1);
+        map.put("szjs2",list2);
+        map.put("lowset",list3);
+        map.put("date",list4);
+        return map;
+    }
+
+    public Map<String,Object> getPumpHouseDynamicPressureData(){
+        Map<String,Object> map =new HashMap<String,Object>();
+        List<String> list1=new ArrayList<String>();
+        List<String> list2=new ArrayList<String>();
+        List<String> list3=new ArrayList<String>();
+        List<String> list4 = new ArrayList<String>();
+        List<PumpService> listData = pumpConfigurationMapper.getPName();
+        for(PumpService l:listData){
+            //添加所有的泵房
+            list4.add(l.getPumpName());
+            List<PumpService> pvData = pumpConfigurationMapper.getPvData(l.getPumpName());
+            for(PumpService p:pvData){
+                if("pressure_szjs1".equals(p.getCode())){
+                    list1.add(p.getPv());
+                }
+                if("pressure_szjs2".equals(p.getCode())){
+                    list2.add(p.getPv());
+                }
+                if("pressurein_lowset".equals(p.getCode())){
+                    list3.add(p.getPv());
+                }
+            }
+            int n1=list1.size();
+            int n2=list2.size();
+            int n3=list3.size();
+            if(!(n1==n2&&n2==n3)){
+                int m = ((n1 < n2) ? n1 : n2)<n3?((n1 < n2) ? n1 : n2):n3;
+                if(m==n1){
+                    list1.add("0");
+                }else if(m==n2){
+                    list2.add("0");
+                }else if(m==n3){
+                    list3.add("0");
+                }
+            }
+        }
+
+        map.put("szjs1",list1);
+        map.put("szjs2",list2);
+        map.put("lowset",list3);
+        map.put("pumpName",list4);
+        return map;
+    }
 }

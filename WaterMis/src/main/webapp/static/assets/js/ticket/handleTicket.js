@@ -15,7 +15,8 @@ var CONTEXT_PATH = ROOT_PATH + "/a";
 
    var ticketId= GetQueryiframe("ticketId");
    var status= GetQueryiframe("status");
-
+   var flag=1;
+   var result='';
     getTicketLogList(ticketId);
     getTicketInfo(ticketId);
 
@@ -23,6 +24,14 @@ initDetails();
 
 showBtn();
 
+function showDevice(){
+    var type=$("#workType").val();
+    if(type=="巡检工单"){
+        $("#device").hide();
+    }else if(type=="维保工单"){
+        $("#device").show();
+    }
+}
 function getTicketInfo(ticketId){
     var url = CONTEXT_PATH+"/ticket/getTicketInfo?"+ Math.random();
     jQuery.ajax({
@@ -33,9 +42,15 @@ function getTicketInfo(ticketId){
         data: {"ticketId":ticketId},
         success : function(data) {
 
+            if(data.ticketType=="2"){//巡检
+                $("#showTicketPartsTable").hide();
+            }else{
+                $("#showTicketPartsTable").show();
+            }
 
             $("#ticketId").val(data.ticketId);
             $("#workType").val(data.ticketTypeName);
+            $("#channelName").val(data.channelName);
             $("#alarmContent").val(data.title);
             $("#phName").val(data.pumpName);
             $("#address").val(data.address);
@@ -52,14 +67,20 @@ function getTicketInfo(ticketId){
             $("#status").val(data.status);
             $("#deptId").val(data.deptId);
 
+            showDevice()
 
+            $("#ok").hide()
+            $("#no").hide()
+            $("#approval").show();
             $("#buttonId").html(data.currentStatusName);
             if(data.status==4){//增加审核操作
                 //隐藏退回按钮
                 $("#backButton").hide();
 
-                $("#buttonId").html("审核");
-                $("#approveOperationKZ").html("<div class=\"col-md-5\">\n" +
+                $("#ok").show()
+                $("#no").show()
+                $("#approval").hide();
+                /*$("#approveOperationKZ").html("<div class=\"col-md-5\">\n" +
                     "                            <div class=\"form-group\">\n" +
                     "                                <label for=\"approveOperation\">审核:</label>\n" +
                     "                                <select id=\"approveOperation\">\n" +
@@ -68,9 +89,9 @@ function getTicketInfo(ticketId){
                     "                                    <option value=\"N\">不同意</option>\n" +
                     "                                </select>\n" +
                     "                            </div>\n" +
-                    "                        </div>");
+                    "                        </div>");*/
             }else{
-                $("#buttonId").html(data.currentStatusName);
+                $("#buttonId").html("处理");
             }
             //非告警工单  去掉不要的信息
             if(data.ticketType!=1){
@@ -83,27 +104,77 @@ function getTicketInfo(ticketId){
 
 
 
-function approval(flag){
-    var ticketId= $("#ticketId").val();
-    var status= $("#status").val();
-    var approveOpinion= $("#approveOpinion").val();
-    var approveOperation=$("#approveOperation").val();
-    var deptId= $("#deptId").val();
-    var json="";
+function approval(flag2,result){
+    var status = $("#status").val();
+    var approveOpinion = $("#approveOpinion").val();
+    var row = $('#reportTable').bootstrapTable('getData');
+
+    if (approveOpinion == "") {
+        $('#alertShowMessage').html('处理结果不能为空!!!');
+        $('#alertShow').modal('show');
+        return false;
+    }
+    /*if (status == 4 && $("#approveOperation").val() == "") {
+        $('#alertShowMessage').html('审核结果不能为空!!!');
+        $('#alertShow').modal('show');
+        return false;
+    }*/
+    if(!validRow(row)){
+        return false;
+    }
+    var str="";
+    if(status=="1"){
+        str = "分发";
+    }else if(status=="2"){
+        str = "退单";
+    }else if(status=="3"){
+        str = "处理";
+    }else if(status=="4"){
+        str = "审核";
+    }
+    if(flag2=="0"){
+        str="退单"
+    }
+    this.flag=flag2
+    this.result=result;
+    $('#alertWorkMessage').html("确认要"+str+"工单?");
+    $('#alertWork').modal('show');
+}
+
+function clickOk(){
+    save();
+    var ticketId = $("#ticketId").val();
+    var approveOpinion = $("#approveOpinion").val();
+    /*var approveOperation = $("#approveOperation").val();*/
+    var deptId = $("#deptId").val();
+    var json = "";
+
 
     //回退
-    if(flag==0){
-        json={"ticketId":ticketId,"approveOpinion":approveOpinion,"handleStatus":"02","deptId":deptId};
-    }else{
+    if (flag == 0) {
+        json = {"ticketId": ticketId, "approveOpinion": approveOpinion, "handleStatus": "02", "deptId": deptId};
+    } else {
         //处理 前往待审核
-        if(approveOperation=="" || approveOperation==undefined){
+        if (this.result == "") {
             //处理  发往待审核
-            json={"ticketId":ticketId,"approveOpinion":approveOpinion,"handleStatus":"03","deptId":deptId};
-        }else{
-            if(approveOperation=="N"){
-                json={"ticketId":ticketId,"approveOpinion":approveOpinion,"approveOperation":approveOperation,"handleStatus":"04","deptId":deptId};
-            }else if(approveOperation=="Y"){
-                json={"ticketId":ticketId,"approveOpinion":approveOpinion,"approveOperation":approveOperation,"handleStatus":"05","deptId":deptId};
+            json = {"ticketId": ticketId, "approveOpinion": approveOpinion, "handleStatus": "03", "deptId": deptId};
+        } else {
+            if (this.result == "N") {
+                json = {
+                    "ticketId": ticketId,
+                    "approveOpinion": approveOpinion,
+                    "approveOperation": this.result,
+                    "handleStatus": "04",
+                    "deptId": deptId
+                };
+            } else if (this.result == "Y") {
+                json = {
+                    "ticketId": ticketId,
+                    "approveOpinion": approveOpinion,
+                    "approveOperation": this.result,
+                    "handleStatus": "05",
+                    "deptId": deptId
+                };
             }
 
         }
@@ -111,30 +182,24 @@ function approval(flag){
 
 
 
-    if(approveOpinion==""){
-        alert("处理结果不能为空!");
-        return false;
-    }if(status==4 && $("#approveOperation").val()==""){
-            alert("审核结果不能为空!");
-            return false;
-    }else{
-        var url = CONTEXT_PATH+"/ticket/handleWorkOrder?"+ Math.random();
-        jQuery.ajax({
-            type : 'POST',
-            contentType : 'application/json',
-            url : url,
-            dataType : 'json',
-            data:  JSON.stringify(json),
-            success : function(data) {
-                if(data.status == "success"){
-                    frameElement.api.close();
-                    alert(data.message);
-                }else{
-                    alert(data.message);
-                }
+    var url = CONTEXT_PATH + "/ticket/handleWorkOrder?" + Math.random();
+    jQuery.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: url,
+        dataType: 'json',
+        data: JSON.stringify(json),
+        async:false,
+        success: function (data) {
+            if (data.status == "success") {
+
+                frameElement.api.close();
+                alert(data.message);
+            } else {
+               /* alert(data.message);*/
             }
-        });
-    }
+        }
+    });
 
 }
 
@@ -444,18 +509,35 @@ function initDetails(){
         //数据来源的网址
         url:CONTEXT_PATH+'/ticketParts/getTicketPartsList?ticketId='+ticketId+"&"+Math.random(),
         method: 'post',
+        height:'300',
         editable:true,//开启编辑模式
         clickToSelect: true,
-        showPaginationSwitch:true, //显示分页切换按钮
-        search: true,  //显示检索框
-        showRefresh: true,  //显示刷新按钮
-        showToggle:true, //显示切换按钮来切换列表/卡片视图
+        showPaginationSwitch:false, //显示分页切换按钮
+        search: false,  //显示检索框
+        showRefresh: false,  //显示刷新按钮
+        showToggle:false, //显示切换按钮来切换列表/卡片视图
         pagination: true,
-        pageList:  [20,30,50,100],
-        pageSize:20,
+        pageList:  [10],
+        pageSize:10,
         pageNumber:1,
-        columns: [{checkbox: true},
-            {field:"type",edit:{
+        formatShowingRows:function(){
+            return ''
+        },
+        formatNoMatches:function(){
+            return '点击上方‘添加’按钮录入配件'
+        },
+        columns: [
+            {checkbox: true},/*{
+                field: 'index',
+                align: 'center',
+                title: '序号',
+                formatter: function (value, row, index) {
+                    return index + 1;
+                }
+            },*/
+            {
+                field:"type",
+                edit:{
                     type:'select',//下拉框
                     //数据来源地址
                     //url:'user/getUser.htm',
@@ -465,20 +547,31 @@ function initDetails(){
                     onSelect:function(val,rec){
                         console.log(val,rec);
                     }
-                },title:"类型",align:"center",width:"200px"},
-            {field:"name",edit:{
-                    type:'select',//下拉框
-                    //数据来源地址
-                    //url:'user/getUser.htm',
+                },
+                title:"类型",
+                align:"center",
+                width:"200px"
+            },
+            {
+                field:"name",
+                edit:{
+                    type:'select',
                     data:[{id:1,text:'水泵装置1'},{id:2,text:'水泵装置2'}],
                     valueField:'id',
                     textField:'text',
                     onSelect:function(val,rec){
                         console.log(val,rec);
                     }
-                },title:"名称",align:"center",width:"200px"},
-
-            {field:"nums",title:"数量",align:"center",edit: {
+                },
+                title:"名称",
+                align:"center",
+                width:"200px"
+            },
+            {
+                field:"nums",
+                title:"数量",
+                align:"center",
+                edit: {
                     type: 'text',
                     title: '数量',
                     validate: function (v) {
@@ -486,8 +579,13 @@ function initDetails(){
                         var age = parseInt(v);
                         if (age <= 0) return '数量必须是正整数';
                     }
-                }},
-            {field:"price",title:"单价",align:"center",edit: {
+                }
+            },
+            {
+                field:"price",
+                title:"单价",
+                align:"center",
+                edit: {
                     type: 'text',
                     title: '单价',
                     validate: function (v) {
@@ -495,27 +593,45 @@ function initDetails(){
                         var price = parseFloat(v);
                         if (price <= 0) return '数量必须是正数';
                     }
-                }}
+                }
+            }
         ],
         onClickCell: function(field, value, row, $element) {
-            $element.attr('contenteditable', true);
-            $element.blur(function() {
-                let index = $element.parent().data('index');
-                let tdValue = $element.html();
-
-                saveDataTable(index, field, tdValue);
-            })
+            if(status!=4){
+                $element.attr('contenteditable', true);
+                $element.blur(function() {
+                    let index = $element.parent().data('index');
+                    let tdValue = $element.html();
+                    saveDataTable(index, field, tdValue);
+                })
+            }
+        }/*,onCheck:function(row,$element){
+            var indexs=$element.data('index');
+            if($element.prop("checked")){
+                aryIndexs.push(indexs);
+            }
+        },onUncheck:function(row,$element){
+            var indexs=$element.data('index');
+            if(aryIndexs.indexOf(indexs)>-1) {
+                for(var i=0;i<aryIndexs.length;i++){
+                    if(indexs==aryIndexs[i]){
+                        aryIndexs.splice(i, 1);
+                    }
+                }
+            }
+        }*/,onCheckAll: function (rowsAfter,rowsBefore) {
+            flagCheckAll=true;
+        },onUncheckAll: function (rowsAfter,rowsBefore) {
+            flagCheckAll=false;
         }
     });
     $('#addRowbtn').click(function(){
         var count = $('#reportTable').bootstrapTable('getData').length;
-        $('#reportTable').bootstrapTable('insertRow',{index:count,row: {
-                id: '',
-                type: '',
-                name: '',
-                nums: '',
-                price: ''
-            }});
+        $('#reportTable').bootstrapTable(
+            'insertRow',
+            {index:count,row: {id: '',type: '', name: '', nums: '', price: ''}}
+        );
+        flagCheckAll=false;
     });
 
 
@@ -527,110 +643,158 @@ function saveDataTable(index, field, value) {
         value: value        //cell值
     })
 }
-function deleteRow(){
-    var row = $('#reportTable').bootstrapTable('getSelections');
-    if(row.length==1){
-        var id=row[0]["id"];
-        if(id==null||id==""||id==undefined){
-            $('#reportTable').bootstrapTable("refresh");
-            alert("配件记录删除成功!");
-        }else{
-            $.ajax({
-                url: CONTEXT_PATH +'/ticketParts/deleteTicketParts',
-                type: 'post',
-                traditional: true,
-                dataType: 'json',
-                data: {"id":id},
-                success: function (data) {
-                    if (data.status == "success") {
-                        alert(data.message);
-                        $('#reportTable').bootstrapTable("refresh");
-                    }
-                },
-                error: function () {
-                    alert(data.message);
-                }
-            })
-        }
+/*function delRows(){
+    var num;
+    var isChecked = $('#reportTable').bootstrapTable('getSelections');
+    var len = isChecked.length;
+    for(var i=len-1;i>=0;i--){
+            num=i+2;
+            var tempTable=document.getElementsByTagName("table")[0]//表示页面中第几个表格，在页面中从上往下数第一个索引就是0
+            var tempTd=tempTable.getElementsByTagName("tr")[num]//取到第几个行
+            tempTd.style.display="none"//隐藏该行
+    }
 
+}*/
+/*var aryIndexs=new Array();*/
+var flagCheckAll=false;
+function deleteRow(){
+    var data=$('#reportTable').bootstrapTable('getData');
+    var row = $('#reportTable').bootstrapTable('getSelections');
+    if(row.length>0){
+        if(flagCheckAll){
+            $('#reportTable').bootstrapTable("refresh");
+        }else{
+            $("#reportTable tbody tr[class='selected']").each(function(index,element){
+                $(this).remove();
+            })
+            for(var i=0;i<row.length;i++){
+                data.splice(data.indexOf(row[i]),1);
+            }
+            $('#reportTable').bootstrapTable('refreshOptions',{data:data});
+        }
+       /* $('#reportTable').bootstrapTable('remove', {
+            field: "index",
+            values:[1]
+        });*/
+      /* alert(aryIndexs)
+       alert(flagCheckAll)
+        if(flagCheckAll){
+            $('#reportTable').bootstrapTable("refresh");
+        }else{
+            $('#reportTable').bootstrapTable('remove', {
+                field: "index",
+                values: aryIndexs
+            });
+        }*/
+        //$('#reportTable').bootstrapTable('remove',{field:"0", values:["true"]});
+        /*for(var i=0;i<row.length;i++){
+            var id=row[i]["id"];
+            if(!(id==null||id==""||id==undefined)){
+                $.ajax({
+                    url: CONTEXT_PATH +'/ticketParts/deleteTicketParts',
+                    type: 'post',
+                    traditional: true,
+                    dataType: 'json',
+                    data: {"id":id},
+                    async: false,
+                    success: function (data) {
+                        if (data.status == "success") {
+                            $('#reportTable').bootstrapTable("refresh");
+                        }
+                    },
+                    error: function () {
+                        alert(data.message);
+                    }
+                })
+            }
+        }*/
+        $('#alertShowMessage').html('配件记录删除成功!!!');
+        $('#alertShow').modal('show');
     }else{
-        alert("请选中一行")
+        $('#alertShowMessage').html('请至少选中一行删除！！！');
+        $('#alertShow').modal('show');
     }
 }
 function validRow(row) {
-    var name = row[0]["name"];
-    var type = row[0]["type"];
-    var nums = row[0]["nums"];
-    var price = row[0]["price"];
-    if(type==null||type==""||type==undefined){
-        alert("类型不能为空!")
-        return false;
-    }
-    if(name==null||name==""||name==undefined){
-        alert("名称不能为空!")
-        return false;
-    }
-    if(nums==null||nums==""||nums==undefined){
-        alert("数量不能为空!")
-        return false;
-    }else{
-        if (isNaN(nums)){
-            alert("数量必须是数字!")
+    for(var i=0;i<row.length;i++){
+        var name = row[i]["name"];
+        var type = row[i]["type"];
+        var nums = row[i]["nums"];
+        var price = row[i]["price"];
+        if(type==null||type==""||type==undefined){
+            $('#alertShowMessge').html('第'+(i+1)+'行，类型不能为空！！！');
+            $('#alertShow').modal('show');
             return false;
         }
-        if (!(/(^[1-9]\d*$)/.test(nums))) {
-            alert("数量必须是正整数!")
+        if(name==null||name==""||name==undefined){
+            $('#alertShowMessage').html('第'+(i+1)+'行，名称不能为空！！！');
+            $('#alertShow').modal('show');
             return false;
         }
-    }
+        if(nums==null||nums==""||nums==undefined){
+            $('#alertShowMessage').html('第'+(i+1)+'行，数量不能为空！！！');
+            $('#alertShow').modal('show');
+            return false;
+        }else{
+            if (isNaN(nums)){
+                $('#alertShowMessage').html('第'+(i+1)+'行，数量必须是数字！！！');
+                $('#alertShow').modal('show');
+                return false;
+            }
+            if (!(/(^[1-9]\d*$)/.test(nums))) {
+                $('#alertShowMessage').html('第'+(i+1)+'行，数量必须是正整数！！！');
+                $('#alertShow').modal('show');
+                return false;
+            }
+        }
 
-    if(price==null||price==""||price==undefined){
-        alert("单价不能为空!")
-        return false;
-    }else{
-        if (isNaN(price)){
-            alert("单价必须是数字!")
+        if(price==null||price==""||price==undefined){
+            $('#alertShowMessage').html('第'+(i+1)+'行，单价不能为空！！！');
+            $('#alertShow').modal('show');
             return false;
-        }
-        var priceInt = parseFloat(price);
-        if (priceInt <= 0){
-            alert("单价数量必须是正数!")
-            return false;
+        }else{
+            if (isNaN(price)){
+                $('#alertShowMessage').html('第'+(i+1)+'行，单价必须是数字！！！');
+                $('#alertShow').modal('show');
+                return false;
+            }
+            var priceInt = parseFloat(price);
+            if (priceInt <= 0){
+                $('#alertShowMessage').html('第'+(i+1)+'行，单价数量必须是正数！！！');
+                $('#alertShow').modal('show');
+                return false;
+            }
         }
     }
-
     return true
-
 }
 function save(){
-    var row = $('#reportTable').bootstrapTable('getSelections');
-    if(row.length==1){
-        if(!validRow(row)){
-            return
-        }
-        var id=row[0]["id"];
-        if(id==null||id==""||id==undefined){
-            id=null;
+    var row = $('#reportTable').bootstrapTable('getData');
+    if(row.length>0){
+        var objs=new Array();
+        for(var i=0;i<row.length;i++) {
+            row[i]["ticketId"] = ticketId;
+            var obj={"id":row[i]["id"],"name":row[i]["name"],"type":row[i]["type"],"nums":row[i]["nums"],"price":row[i]["price"],"ticketId":row[i]["ticketId"]};
+            objs.push(obj)
         }
         $.ajax({
             url: CONTEXT_PATH +'/ticketParts/addOrUpdateTicketParts',
             type: 'post',
             traditional: true,
             dataType: 'json',
-            data: {"id":id,"ticketId":ticketId,"type":row[0]["type"],"name":row[0]["name"],"nums":row[0]["nums"],"price":row[0]["price"]},
+            contentType:"application/json;charset=utf-8",
+            data:JSON.stringify(objs),
             success: function (data) {
-                console.log(data)
                 if (data.status == "success") {
-                    alert(data.message);
                     $('#reportTable').bootstrapTable("refresh");
+                    frameElement.api.close();
                 }
             },
             error: function () {
-                alert(data.message);
+                $('#alertShowMessage').html('编辑配件信息出错！！！');
+                $('#alertShow').modal('show');
             }
         })
-    }else{
-        alert("请选中一行")
     }
 }
 //新增

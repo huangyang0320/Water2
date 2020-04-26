@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.sys.dao.SortDao">
+
+    <select id="getSortValueByCode" parameterType="java.lang.String" resultType="java.lang.String">
+        select s2.ITEM_VALUE from sys_sort s1
+		LEFT JOIN sys_sort_item  s2 ON s1.SORT_CODE=s2.SORT_CODE
+		where s2.SORT_CODE=#{code}
+		and s1.DELETE_FLAG='0'
+		and s1.USE_FLAG='Y'
+		and s2.DELETE_FLAG='0'
+    </select>
+</mapper>

@@ -6,7 +6,7 @@ var alarmInitCount = 0;
 var alarmPage = "1";
 var alarm_higth = 1;
 var ischeck = false;
-var url = CONTEXT_PATH+"/alarmStatController/alarmList?'+ Math.random()";
+var url = CONTEXT_PATH+"/alarmStatController/alarmList?"+ Math.random();
 
 function qryAreaList(){
     $("#areaCode").empty();
@@ -172,43 +172,19 @@ $(function(){
     }
 
     function initBootTable(url){
-        // 初始化无滚动条
         $("#page-wrapper").css("overflow-y", "hidden");
         $("#page-inner").css("padding-right", "25px");
-   	    // table height
+        // table height
         var calcHeight = function() {
             var height = $(window).height() - $(".top-navbar").height() - $(".panel-heading").height() -
                 $(".nav-tabs").height() - 72;
             return height;
         };
-        $("#alarm-area-compare, #alarm-type-compare").height(calcHeight()/2 - 5);
-        $("#alarm-compare-graph, #alarm-compare-pie").height(calcHeight());
+
         $(window).resize(function() {
             $('#dataTables-example').bootstrapTable('resetView', {height : calcHeight() + 55});
-            $("#alarm-area-compare, #alarm-type-compare").height(calcHeight()/2 - 5);
-            $("#alarm-compare-graph, #alarm-compare-pie").height(calcHeight());
+
         });
-        window.operateEvents = {
-            'click .jumpWork': function (e, value, row, index) {
-                queryWhetherWorker(row.deviceId);
-                queryAlarmWorkTemplate();
-                queryMaintenanceWorkerUser();
-                $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
-				$("#alarmTime").val(row.startDate);
-				$("#processName").val(row.deviceName);
-                $("#processObject").val(row.deviceId);
-				$("#alarmReason").val(row.alarmReason);
-				$("#alarmLevel").val(row.alarmLevel);
-				$("#planContent").val(row.alarDescription);
-				$("#taskSource").val("二供");
-
-				//重置验证
-                $("#workOrder").data('bootstrapValidator').destroy();
-                $('#workOrder').data('bootstrapValidator',null);
-                formValidator();
-
-            }
-        };
 
    	    $('#dataTables-example').bootstrapTable({
            url:url,
@@ -234,6 +210,9 @@ $(function(){
            smartDisplay:true,
            showExport:true,
            exportDataType:'all',
+            exportOptions: {
+                ignoreColumn: [0] //忽略某一列的索引
+            },
            onLoadSuccess:function(data){
         	   successHide(1);
         	   total = data.total;
@@ -260,7 +239,12 @@ $(function(){
                sortable: true
            },{
                field: 'deviceName',
-               title: '设备名称',
+               title: '电气位置',
+               align: 'center',
+               sortable: true
+           },{
+               field: 'alarmTypeRemarks',
+               title: '设备位置',
                align: 'center',
                sortable: true
            }/*,{
@@ -281,7 +265,23 @@ $(function(){
                field: 'alarmLevel',
                title: '告警等级',
                align: 'center',
-               sortable: true
+               //cellStyle:cellStylesales,
+               sortable: true,
+               formatter:  function(value,row,index) {
+                    var a = "";
+                    if(value == "一级") {
+                        a = '<span style="background-color:#FF0000;color:#ffff">'+value+'</span>';
+                    }else if(value == "二级"){
+                        a = '<span style="background-color:#f46b1c;color:#ffff">'+value+'</span>';
+                    }else if(value == "三级") {
+                        a = '<span style="background-color:#f4e672;color:#ffff">'+value+'</span>';
+                    }else if(value == "四级") {
+                        a = '<span style="background-color:#dbf4be;color:#ffff">'+value+'</span>';
+                    }else{
+                        a = '<span style="background-color:#45d60c;color:#ffff">'+value+'</span>';
+                    }
+                    return a;
+                }
            },{
                field: 'startDate',
                title: '开始时间',
@@ -300,29 +300,129 @@ $(function(){
                field: 'createWorkOrder',
                title: '创建工单',
                align: 'center',
-               events: operateEvents,
                formatter: operateFormatter
            }],
            detailFormatter: function(index, row) {// 详情信息
                var html = [];
                html.push('<p class="detail-view">' + '操作人员' + ' : ' + toTrim(row.userName) + '</p>');
+               html.push('<p class="detail-view">' + '告警状态' + ' : ' + toTrim(row.confirmStat) + '</p>');
+               html.push('<p class="detail-view">' + '操作时间' + ' : ' + toTrim(row.confirmDate) + '</p>');
                html.push('<p class="detail-view">' + '设备编号' + ' : ' + toTrim(row.deviceId) + '</p>');
                html.push('<p class="detail-view">' + '操作原因' + ' : ' + toTrim(row.confirmReson) + '</p>');
                html.push('<p class="detail-view">' + '解决方案' + ' : ' + toTrim(row.alarDescription) + '</p>');
                return html.join('');
            }
         });
-
+//confirmStat confirmDate
         areaCount();
         alarmTypeCount();
+        setTicketId("1");
    }
 
+function cellStylesales(value, row, index) {
+    if(value!="" && value=="一级"){
+        return {css:{background:'#f44336',color:'#000'}};
+    }else if(value!="" && value=="二级"){
+        return {css:{background:'#f46b1c',color:'#000'}};
+    }else if(value!="" && value=="三级"){
+        return {css:{background:'#f4e672',color:'#000'}};
+    }else if(value!="" && value=="四级"){
+        return {css:{background:'#dbf4be',color:'#000'}};
+    }
+}
+
+function setTicketId(mark){
+    $.ajax({
+        type:"POST",
+        url: CONTEXT_PATH+'/ticket/getTicketId',
+        async: false,
+        datatype:"JSON",
+        data:{ticketType:mark},
+        success: function (res) {
+            $("#ticketId").val(res);
+        }
+    })
+}
+
+function queryMaintenanceWorkerDept() {
+    //var url = CONTEXT_PATH+"/alarmStatController/queryMaintenanceWorkerUser?"+ Math.random();
+    var url =CONTEXT_PATH+"/ticket/getDept?"+ Math.random();
+    jQuery.ajax({
+        type : 'POST',
+        contentType : 'application/json',
+        url : url,
+        dataType : 'json',
+        success : function(data) {
+            $("#deptId").html("");
+            $.each(data, function (i, item) {
+                jQuery("#deptId").append("<option value="+ item.deptId+" mgName="+item.mgName+">"+ item.deptName+"</option>");
+                if(i==0){
+                    $("#mgName").val(item.mgName);
+                }
+            });
+        }
+    });
+}
+function myModalWorkOrder(row) {
+
+    //queryAlarmWorkTemplate();
+    queryMaintenanceWorkerDept();
+    $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
+    $("#alarmTime").val(row.startDate);
+    $("#phName").val(row.phName);
+    $("#phId").val(row.phId);
+    $("#address").val(row.address);
+
+
+    $("#processName").val(row.deviceName);
+    $("#deviceId").val(row.deviceId);
+    $("#alarmReason").val(row.alarmReason);
+    $("#alarmLevel").val(row.alarmLevel);
+    $("#planContent").val(row.alarDescription);
+    $("#taskSource").val("二供");
+
+    $("#planStartTime").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        minuteStep:1,
+        minView:1,
+        language: 'zh-CN',
+        pickerPosition:'bottom-right',
+        autoclose:true,
+        startDate: new Date()
+    }).on("click",function(){
+        $("#planStartTime").datetimepicker("setEndDate",$("#planEndTime").val());
+    });
+
+    $("#planEndTime").datetimepicker({
+        format: 'yyyy-mm-dd hh:ii:ss',
+        minuteStep:1,
+        minView:'hour',
+        language: 'zh-CN',
+        autoclose:true
+    }).on("click",function(){
+        $("#planEndTime").datetimepicker("setStartDate",$("#planStartTime").val());
+    });
+
+    var myDate = new Date();
+    $("#planStartTime").val(myDate.Format("yyyy-MM-dd HH:mm:ss"));
+    myDate.setDate(myDate.getDate() + 7)
+    $("#planEndTime").val(myDate.Format("yyyy-MM-dd HH:mm:ss"));
+
+    formValidator();
+    //重置验证
+    $("#workOrder").data('bootstrapValidator').destroy();
+    $('#workOrder').data('bootstrapValidator',null);
+    formValidator();
+}
+
 	function operateFormatter(value, row, index) {
-		    if(row.ticketId){
-                return ['<button type="button" onclick="alertError()"  class="btn btn-warning">创建工单</button>'].join('');
-            }else {
-                return ['<button type="button"  class="jumpWork btn btn-primary">创建工单</button>'].join('');
-            };
+            let str = ''
+            if(!row.ticketId){
+                str = '<button id="createWorkOrder" type="button" class="btn btn-info" onclick="createWorkOrder1(\''+row+'\')">创建工单</button>'
+            }else{
+                 str = '<button id="showWorkOrder" type="button" class="btn btn-warning" onclick="showWorkOrder1(\''+row+'\')">查看工单</button>'
+            }
+            return str;
 
 	}
 	function alertError() {
@@ -331,6 +431,34 @@ $(function(){
         $('#alertError').modal('show');
     }
 
+    function hideCreateBtn() {
+        $("#createBtn").hide();
+    }
+    function showCreateBtn() {
+        $("#createBtn").show();
+    }
+    function createWorkOrder1(self) {
+        let sdata = self
+        //创建按钮显示
+        showCreateBtn();
+        //打开创建工单页面
+        $('#myWorkModal1').modal('show');
+        //工单页面赋值
+        myModalWorkOrder(sdata);
+        //给工单编号赋值
+        setTicketId("1");
+    }
+
+    function showWorkOrder1(self) {
+        let sdata = self
+        //创建按钮隐藏
+        hideCreateBtn();
+        //打开创建工单页面
+        $('#myWorkModal1').modal('show');
+        //工单页面赋值
+        myModalWorkOrder(sdata);
+
+    }
 	function toTrim(str){
 		if(undefined == str || null == str){
 			return "-";
@@ -518,7 +646,7 @@ $(function(){
                 dataType : 'json',
                 success : function(data){
                     if(data.status == "success"){
-                        $('#myWorkModal').modal('hide'); // 关闭模态框
+                        $('#myWorkModal1').modal('hide'); // 关闭模态框
                         $('#alertErrorMessage').html(data.message);
                         $('#alertError').modal('show');
                     }else{
@@ -571,7 +699,9 @@ $(function(){
     }
 
     function queryWhetherWorker(deviceId) {
-        var url = CONTEXT_PATH+"/alarmStatController/queryWhetherWorker?"+ Math.random();
+        $('#myWorkModal1').modal('show');
+
+       /* var url = CONTEXT_PATH+"/alarmStatController/queryWhetherWorker?"+ Math.random();
         jQuery.ajax({
             type : 'POST',
             contentType : 'application/json',
@@ -588,7 +718,7 @@ $(function(){
                     openAlertModel("myModalAlert" , data.message);
                 }
             }
-        });
+        });*/
     }
    function render(countObj,dataMsg,titleName){
 	   /* 大区报警对比 */

@@ -8,6 +8,8 @@ import com.wapwag.woss.modules.biz.entity.NoticeDto;
 import com.wapwag.woss.modules.sys.entity.User;
 import com.wapwag.woss.modules.sys.utils.UserUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.weaver.ast.Not;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,9 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class NoticeService extends CrudService<NoticeDao, NoticeDto> {
 
+    @Autowired
+    private NoticeDao noticeDao;
+
     public NoticeDto get(String id) {
         return super.get(id);
     }
@@ -32,6 +37,15 @@ public class NoticeService extends CrudService<NoticeDao, NoticeDto> {
 
     public Page<NoticeDto> findPage(Page<NoticeDto> page, NoticeDto noticeDto) {
         return super.findPage(page, noticeDto);
+    }
+
+    @Transactional(readOnly = false)
+    public void insertNoticeDetails(NoticeDto noticeDto){
+        try {
+            super.save(noticeDto);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Transactional(readOnly = false)
@@ -78,5 +92,17 @@ public class NoticeService extends CrudService<NoticeDao, NoticeDto> {
         result.put("status",true);
         result.put("message","操作成功!");
         return result;
+    }
+
+    public int findDetailsCount(String userId){
+        return noticeDao.findDetailsCount(userId);
+    }
+
+    public List<NoticeDto> findDetails(NoticeDto noticeDto){
+        return noticeDao.findDetails(noticeDto);
+    }
+    @Transactional(readOnly = false)
+    public int updateNoticeDto(NoticeDto noticeDto){
+        return noticeDao.update(noticeDto);
     }
 }

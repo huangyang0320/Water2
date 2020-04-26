@@ -35,6 +35,9 @@
             <if test="title != null  and title != ''" >
                 title,
             </if>
+            <if test="channel != null  and channel != ''" >
+                channel,
+            </if>
             <if test="ticketLevel != null  and ticketLevel != ''" >
                 ticket_level,
             </if>
@@ -99,6 +102,9 @@
             </if>
             <if test="title != null  and title != ''" >
                 #{title},
+            </if>
+            <if test="channel != null  and channel != ''" >
+                #{channel},
             </if>
             <if test="ticketLevel != null  and ticketLevel != ''" >
                 #{ticketLevel},
@@ -349,9 +355,15 @@
 
     <update id="updateTicketInfo" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
         update ticket a
-        set a.`status`= #{status}
+        <set>
+            <if test="status!=null and status!=''">
+                a.`status`= #{status},
+            </if>
+            <if test="validFlag!=null and validFlag!=''">
+                a.valid_Flag= #{validFlag},
+            </if>
+        </set>
         where a.ticket_id=#{ticketId}
-
     </update>
 
     <!--获取对应工单的最后处理人-->
@@ -430,6 +442,7 @@
         ticket t
         LEFT JOIN device de ON de.ID = t.device_code
         LEFT JOIN pump_house p ON p.id = de.ID_PUMP_HOUSE
+        LEFT JOIN sys_user su on su.id=t.create_by
         <if test=" handleUserId !=null and handleUserId!='' " >
             INNER JOIN ticket_to_do td ON td.ticket_id = t.ticket_id
             and td.user_Id = #{handleUserId}
@@ -439,11 +452,23 @@
         <if test="title !=null and title!='' " >
         and t.title like concat('%',#{title},'%')
         </if>
+        <if test="status !=null and status!='' " >
+            and t.status =#{status}
+        </if>
+        <if test="address !=null and address!='' " >
+            and t.address like concat('%',#{address},'%')
+        </if>
         <if test="pumpName !=null and pumpName!='' " >
         and p.`NAME` like concat('%',#{pumpName},'%')
         </if>
         <if test="ticketType !=null and ticketType!='' " >
             and t.ticket_type = #{ticketType}
+        </if>
+        <if test="ticketId !=null and ticketId!='' " >
+            and t.ticket_id like concat('%',#{ticketId},'%')
+        </if>
+        <if test="createName !=null and createName!='' " >
+            and su.name like concat('%',#{createName},'%')
         </if>
         <if test="createBeginTime !=null and createBeginTime!='' " >
             and t.create_Date >= #{createBeginTime}
@@ -530,13 +555,32 @@
         LEFT JOIN pump_house p ON p.id = de.ID_PUMP_HOUSE
         LEFT JOIN ticket_to_do td ON td.ticket_id = t.ticket_id
         LEFT JOIN sys_user u ON u.id=td.user_id
+        LEFT JOIN sys_user su on su.id=t.create_by
         WHERE
         t.valid_flag = '1'
         <if test="title !=null and title!='' " >
             and t.title like concat('%',#{title},'%')
         </if>
+        <if test="status !=null and status!='' " >
+            and t.status =#{status}
+        </if>
+        <if test="address !=null and address!='' " >
+            and t.address like concat('%',#{address},'%')
+        </if>
+        <if test="allHandleUser !=null and allHandleUser!='' " >
+            and u.`name` like concat('%',#{allHandleUser},'%')
+        </if>
+        <if test="createName !=null and createName!='' " >
+            and su.name like concat('%',#{createName},'%')
+        </if>
+        <if test="deviceName !=null and deviceName!='' " >
+            and de.`NAME` like concat('%',#{deviceName},'%')
+        </if>
         <if test="pumpName !=null and pumpName!='' " >
             and p.`NAME` like concat('%',#{pumpName},'%')
+        </if>
+        <if test="ticketId !=null and ticketId!='' " >
+            and t.ticket_id like concat('%',#{ticketId},'%')
         </if>
         <if test="ticketType !=null and ticketType!='' " >
             and t.ticket_type = #{ticketType}
@@ -675,6 +719,18 @@
         t.pump_id pumpId,
         t.area_id areaId,
         t.channel channel,
+        (
+        CASE
+        WHEN t.channel = '1' THEN
+        '系统报警'
+        WHEN t.channel = '2' THEN
+        '二供平台'
+        WHEN t.channel = '3' THEN
+        '定期计划'
+        WHEN t.channel = '4' THEN
+        '物业保修' ELSE ''
+        END
+        ) channelName,
         t.report_name reportName,
         t.report_phone reportPhone,
         t.start_time startTime,
@@ -717,7 +773,21 @@
         </if>
 
     </select>
-
+      <select id="getTicketInfoForObj" resultType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+        SELECT
+        t.ticket_id ticketId
+        FROM
+        ticket t
+        <where>
+        1=1
+        and TO_DAYS(`create_Date`)=TO_DAYS(NOW())
+        <if test="ticketType !=null and ticketType!='' " >
+            and t.ticket_type=#{ticketType}
+        </if>
+        </where>
+        order by create_date desc
+        limit 1
+    </select>
 
     <select id="getTicketLogList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketLogDto" parameterType="java.lang.String">
         SELECT

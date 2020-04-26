@@ -18,7 +18,7 @@ $(function () {
     };
 
    $.getJSON(ROOT_PATH + "/static/assets/js/map/pump_house.json", function(result) {
-       var pumpHouses = result["RECORDS"];
+       var pumpHouses = result["RECORDS"]
 
        if (pumpHouses && pumpHouses.length > 0) {
            var geoCoder = new BMap.Geocoder();
