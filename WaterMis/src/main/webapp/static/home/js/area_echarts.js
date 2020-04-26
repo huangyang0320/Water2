@@ -1,7 +1,8 @@
 
 $(function () {
     //map();
-    getPumpMapData();
+    // getPumpMapData();
+    getUseWaterOrUsrPowerData('m3')
 })
 
 function setButtonCss(obj){
@@ -60,7 +61,7 @@ function getPumpMapFreeWater(obj) {
                 for(var i=0;i<data.m3.length;i++){
                     total+=parseFloat(data.m3[i].value);
                 }
-                var subtext="实时蓄水量统计:"+total.toFixed(3)+"(m3)";
+                var subtext="实时蓄水量统计:"+total.toFixed(0)+"(m3)";
                 var unit="(m3)"
                 wuhu_amp(data.m3,subtext,unit,0,1000);
             }
@@ -91,7 +92,7 @@ function getUseWaterOrUsrPowerData(type,obj) {
                     for(var i=0;i<data.m3.length;i++){
                         total+=parseFloat(data.m3[i].value);
                     }
-                    var subtext="当月用水量统计:"+total.toFixed(3)+"(m3)";
+                    var subtext="当月用水量统计:"+total.toFixed(0)+"(m3)";
                     var unit="(m3)"
                      wuhu_amp(data.m3,subtext,unit,0,600);
                 } if(type=="kWh"){
@@ -99,7 +100,7 @@ function getUseWaterOrUsrPowerData(type,obj) {
                     for(var i=0;i<data.kWh.length;i++){
                         total+=parseFloat(data.kWh[i].value);
                     }
-                    var subtext="当月耗电量统计:"+total.toFixed(3)+"(kWh)";
+                    var subtext="当月耗电量统计:"+total.toFixed(0)+"(kWh)";
                     var unit="(kWh)"
                     wuhu_amp(data.kWh,subtext,unit,0,1000);
                 }
@@ -112,7 +113,7 @@ function getUseWaterOrUsrPowerData(type,obj) {
     });
 }
 
-
+// 地图
 function wuhu_amp(data,subtext,unit,min,max){
  	var myChart = echarts.init(document.getElementById('map_1'));
  	//获取  地图数据   地址：  https://gallery.echartsjs.com/editor.html?c=x4snrWXFGe
@@ -1186,11 +1187,11 @@ function wuhu_amp(data,subtext,unit,min,max){
         tooltip: {
             trigger: 'item',
             formatter: function (params) {
-                console.log(params)
+                // console.log(params)
                 if(typeof(params.value)[2] == "undefined"){
-                    return params.name + ' : ' + params.value ;
+                    return params.name + ' : ' + params.value.toFixed(0) ;
                 }else{
-                    return params.name + ' : ' + params.value[2];
+                    return params.name + ' : ' + parseInt(params.value[2]).toFixed(0);
                 }
             }
         },
@@ -1250,7 +1251,7 @@ function wuhu_amp(data,subtext,unit,min,max){
                     show: false,
                 },
             },
-            roam: true,
+            roam: false,
             itemStyle: {
                 normal: {
                     areaColor: '#031525',
@@ -1262,6 +1263,7 @@ function wuhu_amp(data,subtext,unit,min,max){
             }
         },
         series : [
+            // 標記點和值
             {
                 name: 'credit_pm2.5',
                 type: 'scatter',
@@ -1321,18 +1323,17 @@ function wuhu_amp(data,subtext,unit,min,max){
                         },
                         formatter: function (params) {
                             if(params.name=="镜湖区"){
-                                return  '{color2|' + params.value[2] +'}';
+                                return  '{color2|' + parseInt(params.value[2]).toFixed(0) +'}';
                             }
-                            return '{color2|' + params.value[2]+ '}';},
+                            return '{color2|' + parseInt(params.value[2]).toFixed(0)+ '}';},
                         shadowColor: 'white',
                         rich: {
                             color1: {
                                 // color: '#fff',
                                 fontSize: '16',
-                                lineHeight: '20',
                                 fontWeight: '600'
                             },
-                            olor2: {
+                            color2: {
                                 // color: '#fff',
                                 fontSize: '16',
                                 fontWeight: '600'
@@ -1374,21 +1375,21 @@ function wuhu_amp(data,subtext,unit,min,max){
                         },
                         formatter: function (params) {
                               if(params.name=="镜湖区"){
-                                   return  '{color2|' + params.value[2]+unit + '}';
+                                   return  '{color2|' + parseInt(params.value[2]).toFixed(0) + '}';
                               }
-                              return '{color2|' + params.value[2]+unit + '}';},
+                              return '{color2|' + parseInt(params.value[2]).toFixed(0) + '}';},
                         shadowColor: 'white',
                               rich: {
                                     color1: {
                                          // color: '#fff',
-                                         fontSize: '16',
+                                         fontSize: '20',
                                           lineHeight: '20',
                                            fontWeight: '600'
                                             },
-                                     olor2: {
-                                          // color: '#fff',
-                                           fontSize: '16',
-                                           fontWeight: '600'
+                                     color2: {
+                                          color: '#fff',
+                                           fontSize: '20',
+                                           fontWeight: '500'
                                      }
                                },
                     }
@@ -1411,7 +1412,27 @@ function wuhu_amp(data,subtext,unit,min,max){
 
 
 
+// 动态压力
+function getDynamicPressureData(obj) {
+    setButtonCss(obj);
+    jQuery.ajax({
+        type : 'get',
+        contentType : 'application/json',
+        url : 'a/monitor/configuration/getDynamicPressureData',
+        dataType : 'json',
+        success : function(data) {
+            console.log(data)
+        },
+        error : function(data) {
 
+        }
+    });
+}
+// 压力平均值
+function getPumpHouseDynamicPressureData(obj) {
+    setButtonCss(obj);
+    
+}
 
 
 
