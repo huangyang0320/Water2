@@ -61,6 +61,7 @@
 
 
                             <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
+                            <button class="btn btn-primary query-btn" onclick="exportData()" type="button" id="exportBtn">导出数据</button>
                         </div>
                    </form>
                 </div>
@@ -69,12 +70,16 @@
                     <ul id="myTab" class="nav nav-tabs">
                         <li class="active"><a id="alarmList" href="#alarm-datalist" data-toggle="tab">告警信息列表</a></li>
                         <li><a id="alarmDetail" href="#alarm-compare-chart" data-toggle="tab">告警数统计</a></li>
+
                     </ul>
                     <div id="myTabContent" class="tab-content" style="margin-top: 15px;">
                         <div class="tab-pane fade in active" id="alarm-datalist">
                             <!-- Advanced Tables -->
-                            <div class="col-md-9 col-xs-9" style="padding-left: 0;height:400px;overflow-y:auto">
+                            <div class="col-md-9 col-xs-9" style="padding-left: 0;overflow-y:auto">
                                 <div class="table-responsive">
+                                    <div id="toolbar">
+                                    </div>
+                                    <!--<button type="button" onclick="exportData()" class='btn btn-mini btn-info'>导出</button>-->
                                     <table class="table table-hover" id="dataTables-example" data-reorderable-columns="true" data-sortable="true" data-sort-class="table-active">
                                     </table>
                                 </div>
@@ -291,6 +296,7 @@
 <!-- Script -->
 <script src="static/common/common.js"></script>
 <script src="static/assets/js/countAnalysis/alarmQuery.js"></script>
+<script src="static/assets/js/moment.js"></script>
 <script>
     //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
     /* 点击input框时加载监听事件*/

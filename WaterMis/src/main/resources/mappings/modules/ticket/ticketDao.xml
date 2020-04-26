@@ -362,6 +362,24 @@
             <if test="validFlag!=null and validFlag!=''">
                 a.valid_Flag= #{validFlag},
             </if>
+            <if test="ticketLevel!=null and ticketLevel!=''">
+                a.ticket_Level= #{ticketLevel},
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                a.start_time= #{startTime},
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                a.end_time= #{endTime},
+            </if>
+            <if test="ticketReason!=null and ticketReason!=''">
+                a.ticket_reason= #{ticketReason},
+            </if>
+            <if test="ticketDescription!=null and ticketDescription!=''">
+                a.ticket_description= #{ticketDescription},
+            </if>
+            <if test="deptId!=null and deptId!=''">
+                a.dept_id= #{deptId},
+            </if>
         </set>
         where a.ticket_id=#{ticketId}
     </update>
@@ -420,6 +438,7 @@
         t.ticket_reason ticketReason,
         t.ticket_description ticketDescription,
         t.`status` AS STATUS,
+        t.dept_id as deptId,
         (
         CASE
 
@@ -530,6 +549,7 @@
         t.ticket_reason ticketReason,
         t.ticket_description ticketDescription,
         t.`status` AS STATUS,
+        t.dept_id as deptId,
         (
         CASE
 

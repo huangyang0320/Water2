@@ -44,7 +44,7 @@ $(function(){
 
 
     qryAreaList();
-    
+
     //查询事件
     $("#query").click(function(){
         ischeck = true;
@@ -61,24 +61,28 @@ $(function(){
     		alarmTypeCountDetail();
     	}
     });
-    
+    // 告警信息列表
     $("#alarmList").click(function(){
+        $('#exportBtn')[0].style.display = 'inline-block'
     	if("1" ==alarmPage){
     		return;
     	}
     	alarmPage = "1";
-    	$('#dataTables-example').bootstrapTable('removeAll');
-    	$('#dataTables-example').bootstrapTable('refresh');
-    	areaCount();
-        alarmTypeCount();
+        initBootTable(url);
+    	// $('#dataTables-example').bootstrapTable('removeAll');
+    	// $('#dataTables-example').bootstrapTable('refresh');
+    	areaCount();  // 告警等级对比
+        // alarmTypeCount(); // 告警类型对比
     });
+    // 告警数统计
     $("#alarmDetail").click(function(){
+        $('#exportBtn')[0].style.display = 'none'
     	if("2" ==alarmPage){
     		return;
     	}
     	alarmPage = "2";
-    	countAlarmTimes();
-    	alarmTypeCountDetail();
+    	countAlarmTimes();  /*设备每天告警次数对比*/
+    	alarmTypeCountDetail();  // 告警类型对比
     });
     
     // datetimepicker init
@@ -170,7 +174,19 @@ $(function(){
             }
         });
     }
-
+    // 自定义按钮导出数据
+    function exportData(){
+        $('#dataTables-example').tableExport({
+            type: 'excel',
+            exportDataType: "all",
+            ignoreColumn: [0],//忽略某一列的索引
+            fileName: '告警信息列表' + moment().format('YYYY-MM-DD'),//下载文件名称
+            onCellHtmlData: function (cell, row, col, data){//处理导出内容,自定义某一行、某一列、某个单元格的内容
+                console.info(data);
+                return data;
+            },
+        });
+    }
     function initBootTable(url){
         $("#page-wrapper").css("overflow-y", "hidden");
         $("#page-inner").css("padding-right", "25px");
@@ -178,6 +194,7 @@ $(function(){
         var calcHeight = function() {
             var height = $(window).height() - $(".top-navbar").height() - $(".panel-heading").height() -
                 $(".nav-tabs").height() - 72;
+            console.log(height)
             return height;
         };
 
@@ -186,11 +203,36 @@ $(function(){
 
         });
 
+
+            function operateFormatter(value, row, index) {
+                if(!row.ticketId){
+                    return ['<button type="button" id="createWorkOrder" class="btn btn-info">创建工单</button>'].join('');
+                }else{
+                    return ['<button type="button" id="showWorkOrder" class="btn btn-warning">查看工单</button>'].join('');
+                }
+
+            }
+            window.operateEvents = {
+                'click #createWorkOrder': function (e, value, row, index) {
+                    if(row.ticketId){
+                        alertError(row)
+                    }else{
+                        createWorkOrder1(row)
+                    }
+                },
+                 'click #showWorkOrder': function (e, value, row, index) {
+                     showWorkOrder1(row)
+                 }
+            };
+
+
+
+
    	    $('#dataTables-example').bootstrapTable({
            url:url,
        	   cache:false,
        	   striped:true,
-           // height:calcHeight() + 55,//设定高度，固定头部
+           height:calcHeight() + 55,//设定高度，固定头部
            search: false,//是否搜索
            queryParamsType:'',
            queryParams:queryParams,
@@ -208,11 +250,12 @@ $(function(){
            showRefresh: false,//刷新按钮
            showColumns: true,//列选择按钮
            smartDisplay:true,
-           showExport:true,
-           exportDataType:'all',
-            exportOptions: {
-                ignoreColumn: [0] //忽略某一列的索引
-            },
+            // toolbar: "#toolbar",//显示工具栏
+            // showExport: true,//工具栏上显示导出按钮
+            // exportTypes: ['json', 'xml', 'png', 'csv', 'txt', 'sql', 'doc', 'excel', 'xlsx', 'pdf'],//导出格式
+            // exportOptions: {//导出设置
+            //     fileName: 'Tablexxx',//下载文件名称
+            // },
            onLoadSuccess:function(data){
         	   successHide(1);
         	   total = data.total;
@@ -300,6 +343,7 @@ $(function(){
                field: 'createWorkOrder',
                title: '创建工单',
                align: 'center',
+               events: operateEvents,//给按钮注册事件
                formatter: operateFormatter
            }],
            detailFormatter: function(index, row) {// 详情信息
@@ -363,7 +407,7 @@ function queryMaintenanceWorkerDept() {
         }
     });
 }
-function myModalWorkOrder(row) {
+function myModalWorkOrder(row,flag) {
 
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept();
@@ -372,6 +416,10 @@ function myModalWorkOrder(row) {
     $("#phName").val(row.phName);
     $("#phId").val(row.phId);
     $("#address").val(row.address);
+
+    if(row.ticketId!=null&&row.ticketId!=''){
+        $("#ticketId").val(row.ticketId);
+    }
 
 
     $("#processName").val(row.deviceName);
@@ -413,18 +461,32 @@ function myModalWorkOrder(row) {
     $("#workOrder").data('bootstrapValidator').destroy();
     $('#workOrder').data('bootstrapValidator',null);
     formValidator();
+
+    //查看 0  创建 1
+    if(flag=="1"){
+        disShow();
+    }else if(flag=="0"){
+        disHide();
+    }
+}
+function disShow(){
+
+    $("#alarmLevel").removeAttr("readonly");
+    $("#planStartTime").removeAttr("disabled");
+    $("#planEndTime").removeAttr("disabled");
+    $("#alarmReason").removeAttr("disabled");
+    $("#planContent").removeAttr("disabled");
+    $("#deptId").removeAttr("disabled");
+}
+function disHide(){
+    $("#alarmLevel").attr("readonly","true");
+    $("#planStartTime").attr("disabled","true");
+    $("#planEndTime").attr("disabled","true");
+    $("#alarmReason").attr("disabled","true");
+    $("#planContent").attr("disabled","true");
+    $("#deptId").attr("disabled","true");
 }
 
-	function operateFormatter(value, row, index) {
-            let str = ''
-            if(!row.ticketId){
-                str = '<button id="createWorkOrder" type="button" class="btn btn-info" onclick="createWorkOrder1(\''+row+'\')">创建工单</button>'
-            }else{
-                 str = '<button id="showWorkOrder" type="button" class="btn btn-warning" onclick="showWorkOrder1(\''+row+'\')">查看工单</button>'
-            }
-            return str;
-
-	}
 	function alertError() {
         $('#alertErrorMessage').html('该告警已经创建工单,无法创建');
         $('#alertErrorMessage').css("color","red");
@@ -438,25 +500,23 @@ function myModalWorkOrder(row) {
         $("#createBtn").show();
     }
     function createWorkOrder1(self) {
-        let sdata = self
         //创建按钮显示
         showCreateBtn();
         //打开创建工单页面
         $('#myWorkModal1').modal('show');
         //工单页面赋值
-        myModalWorkOrder(sdata);
+        myModalWorkOrder(self,"1");
         //给工单编号赋值
         setTicketId("1");
     }
 
     function showWorkOrder1(self) {
-        let sdata = self
         //创建按钮隐藏
         hideCreateBtn();
         //打开创建工单页面
         $('#myWorkModal1').modal('show');
         //工单页面赋值
-        myModalWorkOrder(sdata);
+        myModalWorkOrder(self,"0");
 
     }
 	function toTrim(str){

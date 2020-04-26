@@ -138,6 +138,11 @@ public class TicketController {
                     l.setPumpName(pumpStr);
                 }
             }
+
+            if("1".equals(l.getTicketType())){
+                l.setDeviceName1(l.getDeviceName());
+            }
+
             if(!TextUtils.isEmpty(deviceCode)){
                 List<String> deviceCodeAry = Arrays.asList(deviceCode.split(","));
                 String deviceCodeStr="";
@@ -198,6 +203,11 @@ public class TicketController {
                     l.setPumpName(pumpStr);
                 }
             }
+
+            if("1".equals(l.getTicketType())){
+                l.setDeviceName1(l.getDeviceName());
+            }
+
             if(!TextUtils.isEmpty(deviceCode)){
                 List<String> deviceCodeAry = Arrays.asList(deviceCode.split(","));
                 String deviceCodeStr="";
@@ -240,6 +250,10 @@ public class TicketController {
     @ApiOperation(value = "获取工单", httpMethod = "POST", response =WorkOrder.class , notes = "根据ticketI获取工单数据")
     public Object getTicketInfo(@RequestParam(value = "ticketId")String ticketId){
         TicketDto ticketInfo = ticketService.getTicketInfo(ticketId);
+        //如果是告警就把对应的设备值赋给它
+        if("1".equals(ticketInfo.getTicketType())){
+            ticketInfo.setDeviceName1(ticketInfo.getDeviceName());
+        }
         List<PumpHouse> pumpList = deviceService.findPumpHouse(null);
         List<ProductComponentData> productList = productComponentService.findAllList();
         Map<String,String> pumpMap=new HashMap<String,String>();
@@ -393,5 +407,19 @@ public class TicketController {
     public boolean deleteTicket(TicketDto ticketDto){
         ticketDto.setValidFlag("0");
         return ticketService.updateTicketInfo(ticketDto);
+    }
+
+    @RequestMapping("/updateTicketInfo")
+    @ResponseBody
+    @ApiOperation(value = "修改工单", httpMethod = "POST" ,response = TicketDto.class)
+    public Object updateTicketInfo(WorkOrder workOrder, User user){
+        Object msg;
+        try {
+            return ticketService.updateWorkOrder(getTicketDto(workOrder,user));
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = e.getMessage();
+        }
+        return msg;
     }
 }

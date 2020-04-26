@@ -491,8 +491,8 @@
                         <div class="row">
                             <div class="col-md-11">
                                 <div class="form-group">
-                                    <label for="alarmReason">告警原因</label>
-                                    <textarea class="form-control" rows="3" id="alarmReason" name="alarmReason"></textarea>
+                                    <label for="alarmReason">发起原因</label>
+                                    <textarea class="form-control" rows="3" id="alarmReason" name="alarmReason"  style="resize: none;"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -500,7 +500,7 @@
                             <div class="col-md-11">
                                 <div class="form-group">
                                     <label for="planContent">解决方案</label>
-                                    <textarea class="form-control" rows="3" id="planContent" name="planContent"></textarea>
+                                    <textarea class="form-control" rows="3" id="planContent" name="planContent"  style="resize: none;"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -656,7 +656,17 @@
     <script type="text/javascript" src="static/assets/js/aesYxn/lib-typedarrays.js"></script>
     <script type="text/javascript" src="static/assets/js/aesYxn/aes-min.js"></script>
     <script type="text/javascript" src="static/assets/js/aesYxn/aes.js"></script>
+    <script>
+        //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
+        /* 点击input框时加载监听事件*/
+        $(".timepicker").each(function () {
+            this.addEventListener('click',myfunc);
+        })
 
+        function myfunc(e){
+            e.currentTarget.blur();
+        }
+    </script>
 
 </body>
 

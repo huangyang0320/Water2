@@ -1,8 +1,10 @@
 package com.wapwag.woss.modules.ticket.service;
 
 import com.wapwag.woss.common.service.CrudService;
+import com.wapwag.woss.modules.biz.entity.ProductComponent;
 import com.wapwag.woss.modules.ticket.Entity.ProductComponentData;
 import com.wapwag.woss.modules.ticket.dao.ProductComponentDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,5 +20,9 @@ public class ProductComponentService extends CrudService<ProductComponentDao, Pr
 
 	public List<ProductComponentData> findAllList(){
 		return productComponentDao.findAllProductComponentList();
+	}
+
+	public List<ProductComponent> findProductComponentReasonListById(String deviceIds){
+		return productComponentDao.findProductComponentReasonListById(deviceIds);
 	}
 }
