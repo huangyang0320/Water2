@@ -1250,7 +1250,7 @@ function wuhu_amp(data,subtext,unit,min,max){
                     show: false,
                 },
             },
-            roam: true,
+            roam: false,
             itemStyle: {
                 normal: {
                     areaColor: '#031525',
@@ -1262,6 +1262,7 @@ function wuhu_amp(data,subtext,unit,min,max){
             }
         },
         series : [
+            // 標記點和值
             {
                 name: 'credit_pm2.5',
                 type: 'scatter',
@@ -1329,10 +1330,9 @@ function wuhu_amp(data,subtext,unit,min,max){
                             color1: {
                                 // color: '#fff',
                                 fontSize: '16',
-                                lineHeight: '20',
                                 fontWeight: '600'
                             },
-                            olor2: {
+                            color2: {
                                 // color: '#fff',
                                 fontSize: '16',
                                 fontWeight: '600'
@@ -1374,21 +1374,21 @@ function wuhu_amp(data,subtext,unit,min,max){
                         },
                         formatter: function (params) {
                               if(params.name=="镜湖区"){
-                                   return  '{color2|' + params.value[2]+unit + '}';
+                                   return  '{color2|' + params.value[2] + '}';
                               }
-                              return '{color2|' + params.value[2]+unit + '}';},
+                              return '{color2|' + params.value[2] + '}';},
                         shadowColor: 'white',
                               rich: {
                                     color1: {
                                          // color: '#fff',
-                                         fontSize: '16',
+                                         fontSize: '20',
                                           lineHeight: '20',
                                            fontWeight: '600'
                                             },
-                                     olor2: {
-                                          // color: '#fff',
-                                           fontSize: '16',
-                                           fontWeight: '600'
+                                     color2: {
+                                          color: '#fff',
+                                           fontSize: '20',
+                                           fontWeight: '500'
                                      }
                                },
                     }

@@ -74,13 +74,31 @@
 /*.ztree li span ..pumpIcon{*/
     /*right: 78px;*/
 /*}*/
+.ztree li span.button.switch{
+    width: 30%;
+    height: 100%;
+    margin: 0;
+    border-left: 1px solid #5909b0;
+}
+.ztree li span.switch {
+    background-size: 30%;
+    background-position: 50% 12px
+}
+.ztree li span.button.center_close {
+    background-size: 30%;
+    background-position: 50% 12px
+}
+.ztree li span.button.bottom_close {
+    background-size: 30%;
+    background-position: 50% 12px
+}
 .pumpOut{
     background: url('static/assets/img/outline.png') no-repeat;
     background-size: 100%;
 }
 .pumpOff{
     background: url('static/assets/img/offline.png') no-repeat;
-    background-size: 100%;
+background-size: 100%;
 }
 #jquery-accordion-menu .searchClearCtent{
     right: 68px;
@@ -318,6 +336,8 @@ var ztreeBulid = {
 function onClick(e,treeId, treeNode) {
     console.log(treeNode)
     if(!treeNode.isParent && !ztreeBulid.isShowCheck){
+        // 点击具体泵房地址
+        console.log('点击',treeNode.name)
         GLOBAL_SELECT_LIST_CHO0SE = []
         GLOBAL_SELECT_LIST = []
         treeNode.name =  treeNode.title;
@@ -325,15 +345,18 @@ function onClick(e,treeId, treeNode) {
         GLOBAL_SELECT_LIST_CHO0SE.push(treeNode);
         GLOBAL_SELECT_LIST.push(treeNode);
         refreshDevice(treeNode)
+        toAreaPump2(treeNode, '3')
     }else{
         if(treeNode.level == 0){
             //点击芜湖
             $('#selectedDevice').html('当前选择:芜湖')
+            // 展示所有泵房事件
             showAllPumphouses()
         }else if(treeNode.level == 1){
             //点击区
             $('#selectedDevice').html('当前选择:芜湖/'+treeNode.name)
-            toAreaPump2(treeNode)
+            // 区域搜索
+            toAreaPump2(treeNode, '2')
         }else {
             //有柜子的页面点击事件
             var zTree = $.fn.zTree.getZTreeObj(ztreeBulid.treeDomId);
