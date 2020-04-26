@@ -146,7 +146,8 @@ public class AlarmStatController {
 	public List<AlarmStat> getAlarmByPumpIds(@RequestBody AlarmStat alarmObj, User user) {
 		alarmObj.setUserId(user.getUserId());
 		// false 屏蔽告警信息
-		boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
+		//boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
+		boolean  isAlarm = user.getAlarmRate().equals("0")?false:true;
 		List<AlarmStat> list=list= new ArrayList<>();
 		if(isAlarm){
 			list = alarmService.getAlarmDetail(alarmObj);
@@ -164,7 +165,8 @@ public class AlarmStatController {
 	public List<AlarmStat> getAlarmDetail(AlarmStat alarmStat, User user, HttpServletRequest request) {
 		alarmStat.setUserId(user.getUserId());
 		// false 屏蔽告警信息
-		boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
+		//boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
+		boolean  isAlarm = user.getAlarmRate().equals("0")?false:true;
 		List<AlarmStat> list= new ArrayList<>();
 		if(isAlarm){
 			list = alarmService.getAlarmDetail(alarmStat);
@@ -182,7 +184,8 @@ public class AlarmStatController {
 	@ApiOperation(value = "告警量统计", httpMethod = "POST" ,notes = "")
 	public String countAlarms(User user) {
 		// false 屏蔽告警信息
-		boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
+		//boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
+		boolean  isAlarm = user.getAlarmRate().equals("0")?false:true;
 		if(isAlarm){
 			return alarmService.countAlarms(user.getUserId());
 		}
