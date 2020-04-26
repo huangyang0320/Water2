@@ -18,13 +18,23 @@ var CONTEXT_PATH = ROOT_PATH + "/a";
     getTicketLogList(ticketId);
     getTicketInfo(ticketId);
     initDetails();
-    function showDevice(ticketType){
-        if(ticketType=="2"){
-            $("#device").hide();
-        }else if(ticketType=="3"){
-            $("#device").show();
-        }
+function showDevice(ticketType){
+    if(ticketType=="2"){
+        $("#device").hide();
+    }else{
+        $("#device").show();
     }
+}
+function showChannelOrAddress(ticketType){
+    var type=$("#workType").val();
+    if(ticketType=="1"){
+        $("#channelShow").hide();
+        $("#addressShow").show();
+    }else{
+        $("#addressShow").hide();
+        $("#channelShow").show();
+    }
+}
 function initDetails(){
     //编辑表格
     $('#reportTable').bootstrapTable({
@@ -139,6 +149,7 @@ function getTicketInfo(ticketId){
                 }
             }
             showDevice(data.ticketType);
+            showChannelOrAddress(data.ticketType)
 
             $("#ticketId").val(data.ticketId);
             $("#workType").val(data.ticketTypeName);
@@ -150,7 +161,12 @@ function getTicketInfo(ticketId){
             $("#alarmTime").val(data.eventTime);
             $("#alarmStatus").val(data.currentStatusName);
             $("#alarmLevel").val(data.ticketLevel);
-            $("#processName").val(data.deviceName);
+            if(data.ticketType=="1"){//告警的设备
+                $("#processName").val(data.deviceName1);
+            }else{
+                $("#processName").val(data.deviceName);
+            }
+
 
             $("#planStartTime").val(data.startTime);
             $("#planEndTime").val(data.endTime);

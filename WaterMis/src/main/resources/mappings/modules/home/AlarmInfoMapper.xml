@@ -254,6 +254,7 @@
 		    DL.name phName,
 		    D.name deviceName,
 		    D.id deviceId,
+		    DL.address,
 		    ATD.FUNCTION_REMARKS alarmInfo,
 		    ATD.task_description alarDescription,
 		    atd.alarm_type_remarks as alarmTypeRemarks,
