@@ -1,7 +1,8 @@
 
 $(function () {
     //map();
-    getPumpMapData();
+    // getPumpMapData();
+    getUseWaterOrUsrPowerData('m3')
 })
 
 function setButtonCss(obj){
