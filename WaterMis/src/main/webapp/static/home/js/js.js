@@ -1,7 +1,7 @@
 ﻿
 $(function () {
 //echarts_4();
-echarts_31();
+// echarts_31();
 /*echarts_32();*/
 /*echarts_33();*/
 /*echarts_5();*/
