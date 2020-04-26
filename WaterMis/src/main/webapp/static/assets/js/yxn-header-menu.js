@@ -166,7 +166,6 @@ var delObject = "";
                 resize: true,
                 fixed: true
             });*/
-            alert(1)
             console.log(window)
 
            $(".alarmTips").animate({bottom: "0px"}, 1000, function() {

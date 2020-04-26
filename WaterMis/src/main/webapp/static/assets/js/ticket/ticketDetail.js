@@ -266,7 +266,7 @@ function getTicketLogList(ticketId){
                     html+="<div class=\"col-md-11\">\n" +
                         "                            <div class=\"form-group\">\n" +
                         "                                <label for=\"approveOpinion\">操作时间:"+ data[i].createDate +"|操作人:"+data[i].ticketLogName+"|"+nodeId+"</label>\n" +
-                        "                                <textarea class=\"form-control\" rows=\"3\" readonly >"+approveOpinion+"</textarea>\n" +
+                        "                                <textarea class=\"form-control\" rows=\"3\" readonly style=\"resize: none;\">"+approveOpinion+"</textarea>\n" +
                         "                            </div>\n" +
                         "                        </div>"
                 }

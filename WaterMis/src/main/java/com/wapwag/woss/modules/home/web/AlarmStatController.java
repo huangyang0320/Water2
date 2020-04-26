@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.wapwag.woss.modules.biz.entity.WorkOrder;
 import com.wapwag.woss.modules.home.entity.SysDict;
+import com.wapwag.woss.modules.home.service.UserService;
 import com.wapwag.woss.modules.sys.service.SortService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,6 +42,10 @@ public class AlarmStatController {
 
 	@Autowired
 	private SortService sortService;
+
+    @Autowired
+    private UserService userService;
+
 
 	/**
 	 * 分页、导出统计
@@ -147,7 +152,7 @@ public class AlarmStatController {
 		alarmObj.setUserId(user.getUserId());
 		// false 屏蔽告警信息
 		//boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
-		boolean  isAlarm = user.getAlarmRate().equals("0")?false:true;
+		boolean isAlarm = isAlarm(user);
 		List<AlarmStat> list=list= new ArrayList<>();
 		if(isAlarm){
 			list = alarmService.getAlarmDetail(alarmObj);
@@ -166,7 +171,7 @@ public class AlarmStatController {
 		alarmStat.setUserId(user.getUserId());
 		// false 屏蔽告警信息
 		//boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
-		boolean  isAlarm = user.getAlarmRate().equals("0")?false:true;
+		boolean isAlarm = isAlarm(user);
 		List<AlarmStat> list= new ArrayList<>();
 		if(isAlarm){
 			list = alarmService.getAlarmDetail(alarmStat);
@@ -185,13 +190,18 @@ public class AlarmStatController {
 	public String countAlarms(User user) {
 		// false 屏蔽告警信息
 		//boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
-		boolean  isAlarm = user.getAlarmRate().equals("0")?false:true;
+		boolean isAlarm = isAlarm(user);
 		if(isAlarm){
 			return alarmService.countAlarms(user.getUserId());
 		}
 		return null;
 	}
-	
+
+	private boolean isAlarm(User user) {
+		User userInfo = userService.login(user.getLoginName(), "");
+		return userInfo.getAlarmRate().equals("0")?false:true;
+	}
+
 	/**
 	 * 告警时间统计
 	 * @param info

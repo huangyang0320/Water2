@@ -237,6 +237,7 @@ function initBootTable(url){
             field: 'operateSatus',
             title: '操作',
             align: 'center',
+            width:150,
              events: operateEvents,
             formatter: operateFormatter
         }],
