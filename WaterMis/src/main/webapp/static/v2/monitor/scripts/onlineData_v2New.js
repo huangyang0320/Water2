@@ -237,6 +237,9 @@ parent.pageLoading(initData);
 function initData() {
     initLayout()
     var selectDevices = parent.GLOBAL_SELECT_LIST;
+    // console.log(parent.GLOBAL_SELECT_LIST)
+    // console.log(parent.GLOBAL_SELECT_DEVICE)
+    selectDevices = [parent.GLOBAL_SELECT_DEVICE]
 /*    if(parent.PUMPGUIDE_DEVICEID.length>0){
     	//从泵房导航跳转过来
     	for (var i=0;i<parent.GLOBAL_REGION_LIST.length;i++){
@@ -310,6 +313,8 @@ function initData() {
  */
 var getSendData = function() {
     var chooseList = parent.GLOBAL_SELECT_LIST;
+    chooseList = [parent.GLOBAL_SELECT_DEVICE]
+    // console.log('111111',chooseList)
     onlineData.loading.show();
     if(chooseList){
         var deviceIdsTmp = [];
@@ -341,7 +346,7 @@ function initMetaDeviceList(){
             	|| value.type == "ftT" || value.type == "ftTL" || value.dataType=='uint' || value.dataType== 'real'){
                 var li = $("<li class='list-group-item'><label></label></li>");
                 var li1 = li.clone();
-                var input = $("<input type='checkbox'>")
+                var input = $("<input type='radio'>")
                     .prop("name", "sameCompare")
                     .prop("value", value["name"])
                     .addClass("minimal");
@@ -359,7 +364,7 @@ function initMetaDeviceList(){
                 $deviceNormData.append(li);
         	}
         });
-        $("input[type='checkbox'].minimal").icheck({
+        $("input[type='radio'].minimal").icheck({
             checkboxClass: 'icheckbox_minimal-blue',
             radioClass: 'iradio_minimal-blue'
         }).on("click", function () {

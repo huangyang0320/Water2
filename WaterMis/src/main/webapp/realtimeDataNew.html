@@ -44,7 +44,10 @@
         }
     }
     function callRefresh () {
-        return false;
+        if(window.onlineDataPage.getSendData){
+            window.onlineDataPage.getSendData();
+        }
+        // return false;
     }
 
 </script>
