@@ -19,7 +19,7 @@ public interface ProductComponentDao extends CrudDao<ProductComponentData> {
 
     List<ProductComponentData> findAllProductComponentList();
 
-    List<ProductComponent> findProductComponentReasonListById(@Param("deviceIds")String deviceIds);
+    List<ProductComponentData> findProductComponentReasonListById(List<String> list);
 
 
 }
