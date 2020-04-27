@@ -200,5 +200,21 @@
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
+
+	<!-- 核查用户是否存在告警忽略权限-->
+	<select id="checkWarnPower" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+		  DISTINCT(s.menu_id) menuId
+		FROM
+		  sys_role_menu s
+		WHERE
+		  s.role_id IN
+			(SELECT
+				t.role_id
+			FROM
+				sys_user_role t
+			WHERE
+				t.user_id = #{userId})
+	</select>
 	
 </mapper>

@@ -264,4 +264,18 @@ public class RoleController extends BaseController {
 		return "false";
 	}
 
+	/**
+	 * 核查用户是否存在告警忽略权限
+	 * @param userId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "checkWarnPower")
+	public Object checkWarnPower(String userId)
+	{
+        return systemService.checkWarnPower(userId);
+	}
+
+
+
 }

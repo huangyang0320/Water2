@@ -4,6 +4,8 @@ import com.wapwag.woss.common.persistence.CrudDao;
 import com.wapwag.woss.common.persistence.annotation.MyBatisDao;
 import com.wapwag.woss.modules.sys.entity.Role;
 
+import java.util.List;
+
 /**
  * 角色DAO接口
  */
@@ -11,6 +13,8 @@ import com.wapwag.woss.modules.sys.entity.Role;
 public interface RoleDao extends CrudDao<Role> {
 
 	public Role getByName(Role role);
+
+	List<String> checkWarnPower(String userId);
 	
 	//public Role getByEnname(Role role);
 
