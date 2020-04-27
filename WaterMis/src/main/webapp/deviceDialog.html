@@ -317,7 +317,7 @@
                         <li class="list-group-item">瞬时流量：<span id="title11"></span></li>
                         <li class="list-group-item">进水余氯：<span id="title12"></span></li>
                         <li class="list-group-item">进水浊度：<span id="title13"></span></li>
-                        <li class="list-group-item">告警信息：<span id="showWarnInfo"></span><span id="clickHa" class="alarmMore" style="cursor:pointer">&nbsp;&nbsp;更多...</span></li>
+                        <li class="list-group-item">告警信息：<span id="showWarnInfo"></span><span id="clickHa" class="alarmMore" style="cursor:pointer">&nbsp;&nbsp;.</span></li>
                     </ul>
                 </div>
             </div>
@@ -413,10 +413,14 @@
                     data: JSON.stringify({
                         "pumpHouseName": pumpHouse["pumpHouseName"]
                     }),*/
+                $("#showWarnInfo").html("");
+                $(".alarmMore").hide();
                  $.get(parent.CONTEXT_PATH + '/alarmStatController/indexAlarm?pumpHouseName='+pumpHouse["pumpHouseName"], function(data) {
                         if (data && data.length > 0) {
                             $("#showWarnInfo").html(data[0].alarmInfo);
                             $("#showWarnInfo").css("background-color","yellow");
+                            $(".alarmMore").show()
+                            $(".alarmMore").html('更多...')
 
                         }else{
                             $("#showWarnInfo").html("无...");

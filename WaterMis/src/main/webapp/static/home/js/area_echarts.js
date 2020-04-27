@@ -1,8 +1,8 @@
 
 $(function () {
     //map();
-    // getPumpMapData();
-    getUseWaterOrUsrPowerData('m3')
+    getPumpMapData();
+    // getUseWaterOrUsrPowerData('m3')
     getDynamicPressureData()
 })
 
@@ -1154,7 +1154,7 @@ function wuhu_amp(data,subtext,unit,min,max){
         '鸠江区':[118.260467, 31.372422],
         '三山区':[118.248668, 31.200091],
     }
-    var max = 480, min = 9; // todo
+    // var max = 480, min = 9; // todo
     var maxSize4Pin = 100, minSize4Pin = 20;
 
     var convertData = function (data) {
@@ -1216,6 +1216,7 @@ function wuhu_amp(data,subtext,unit,min,max){
             calculable: true,
             seriesIndex: [1],
             inRange: {
+                color:   ['#1488CC', 'yellow', '#F5001D']
                 // color: ['#3B5077', '#031525'] // 蓝黑
                 // color: ['#ffc0cb', '#800080'] // 红紫
                 // color: ['#3C3B3F', '#605C3C'] // 黑绿
@@ -1227,8 +1228,8 @@ function wuhu_amp(data,subtext,unit,min,max){
                 // color: ['#00467F', '#A5CC82'] // 蓝绿
                 // color: ['#00467F', '#A5CC82'] // 蓝绿
                 // color: ['#00467F', '#A5CC82'] // 蓝绿
-                color:   ['#9fb5ea', '#e6ac53', '#74e2ca', '#85daef', '#9feaa5', '#5475f5']
-            }
+                // color:   ['#1488CC',  '#85daef', '#9feaa5', '#5475f5']
+            },
         },
         // toolbox: {
         //     show: true,
@@ -1255,8 +1256,13 @@ function wuhu_amp(data,subtext,unit,min,max){
             roam: false,
             itemStyle: {
                 normal: {
-                    areaColor: '#031525',
-                    borderColor: '#3B5077',
+                    // areaColor: '#031525',
+                    // borderColor: '#fff',
+                    // borderWith: 2,
+                    areaColor: '#006fff',
+                    borderWidth: 0,
+                    shadowColor: 'rgba(0,54,255, 1)',
+                    shadowBlur: 5
                 },
                 emphasis: {
                     areaColor: '#2B91B7',
@@ -1427,7 +1433,7 @@ function getDynamicPressureData(obj) {
             // 基于准备好的dom，初始化echarts实例
             let myChart = echarts.init(document.getElementById('fb1'));
             let option = {
-                color:['#CC66CC','#33CC00','#CCFF00'],
+                color:['#85e647'],
                 // backgroundColor: 'rgba(1,202,217,.2)',
                 grid: {
                     left: '5%',
@@ -1440,8 +1446,9 @@ function getDynamicPressureData(obj) {
                     trigger: 'axis'
                 },
                 legend: {
+                    orient: 'horizontal',
                     top:'0%',
-                    icon: 'rectangle',
+                    // icon: 'rectangle',
                     data:['进口压力1','进口压力2','设定值'],
                     // width:'35%',
                     textStyle: {
@@ -1455,7 +1462,8 @@ function getDynamicPressureData(obj) {
                     axisLine:{
                         lineStyle:{
                             color:'rgba(255,255,255,.2)'
-                        }
+                        },
+                        internal: 0  // 展示全部值
                     },
                     splitLine:{
                         lineStyle:{
@@ -1488,37 +1496,76 @@ function getDynamicPressureData(obj) {
                     {
                         name:'进口压力1',
                         type:'bar',
-                        barWidth: 20,
+                        // barWidth: 20,
+                        barMaxWidth: 12,
                         lineStyle: {
                             normal: {
-                                color: '#CC66CC',
+                                color: '#218de0',
                                 width: 2
                             }
                         },
-                        data:data.szjs1
+                        data:data.szjs1,
+                        itemStyle: {
+                            //柱形图圆角，鼠标移上去效果，如果只是一个数字则说明四个参数全部设置为那么多
+                            emphasis: {
+                                barBorderRadius: 8
+                            },
+                            normal: {
+                                //柱形图圆角，初始化效果
+                                barBorderRadius:8,
+                                // 颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+                                color: new echarts.graphic.LinearGradient(
+                                    0, 1, 0, 0,
+                                    [
+                                        {offset: 0, color: '#33CCFF'},
+                                        {offset: 1, color: '#218de0'}
+                                    ]
+                                )
+                            }
+                        }
                     },
                     {
                         name:'进口压力2',
                         type:'bar',
-                        barWidth: 20,
+                        // barWidth: 20,
+                        barMaxWidth: 12,
                         lineStyle: {
                             normal: {
-                                color: '#33CC00',
+                                color: '#5d5cda',
                                 width: 2
                             }
                         },
-                        data:data.szjs2
-                    },{
+                        data:data.szjs2,
+                        itemStyle: {
+                            //柱形图圆角，鼠标移上去效果，如果只是一个数字则说明四个参数全部设置为那么多
+                            emphasis: {
+                                barBorderRadius: 8
+                            },
+                            normal: {
+                                //柱形图圆角，初始化效果
+                                barBorderRadius:8,
+                                // 颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+                                color: new echarts.graphic.LinearGradient(
+                                    0, 1, 0, 0,
+                                    [
+                                        {offset: 0, color: '#66CCFF'},
+                                        {offset: 1, color: '#5d5cda'}
+                                    ]
+                                )
+                            }
+                        }
+                    },
+                    {
                         name:'设定值',
                         type:'line',
-
+                        symbol: 'circle',
                         lineStyle: {
                             normal: {
-                                color: '#CCFF00',
+                                color: '#85e647',
                                 width: 2
                             }
                         },
-                        data:data.lowset
+                        data:data.lowset,
                     }
 
                 ],
