@@ -221,7 +221,7 @@
 
     //點擊 左上角的事件 -- 2 在线；3 离线； 4 告警
     function redrawMap(type) {
-        console.log(saveMapList)
+        console.log('保存的',saveMapList)
         MAP.clearOverlays();
         if(type == 2) {
             for(let i=0;i<saveMapList.online.length;i++){
@@ -242,7 +242,7 @@
             }
         } else if(type == 3) {
             for(let i=0;i<saveMapList.offline.length;i++){
-                let v = saveMapList.online[i]
+                let v = saveMapList.offline[i]
                 var pointM = new BMap.Point(v.longi, v.lati);
                 var pumpHouse = {
                     "pumpHouseId":v.pumpHouseId,
@@ -259,7 +259,7 @@
             }
         }else if(type == 4) {
             for(let i=0;i<saveMapList.warning.length;i++){
-                let v = saveMapList.online[i]
+                let v = saveMapList.warning[i]
                 var pointM = new BMap.Point(v.longi, v.lati);
                 var pumpHouse = {
                     "pumpHouseId":v.pumpHouseId,
@@ -659,7 +659,7 @@
                 if(val["name"].indexOf(pumpHouse.pumpHouseName)>0){
                     GLOBAL_REGION_LIST.map(function (v) {
                         if(v.id==val.pId) {
-                            setArea(v["name"], color[k++])
+                            // setArea(v["name"], color[k++])
                         }
                     })
                 }
@@ -782,6 +782,8 @@
             data: JSON.stringify(allPumpArray) ,
             dataType: 'JSON',
             success: function (res) {
+                //清理之前的渲染图层
+                MAP.clearOverlays();
                 console.log('online----', res)
                 console.log('ala----',alarmList)
                 console.log('list----',window.pumpList)
@@ -846,7 +848,7 @@
         saveMapList.offline = []
         clickStatus='1';
         var allPumpArray = [];
-        console.log(window.pumpList)
+        // console.log(window.pumpList)
         window.pumpList.map(function (v) {
             if(type == 2) {
                 if(areaId==v.pId){
@@ -858,7 +860,7 @@
                 }
             }
         })
-        console.log(allPumpArray)
+        console.log('所有',allPumpArray)
         selectpumps = allPumpArray
 
         getAlarmByPumpIds(allPumpArray);
@@ -873,6 +875,8 @@
             data: JSON.stringify(allPumpArray) ,
             dataType: 'JSON',
             success: function (res) {
+                //清理之前的渲染图层
+                MAP.clearOverlays();
                     let pumpnum1 = 0,pumpnum2 = 0,pumpnum3 = 0,pumpnum4=0;
                     window.pumpList.map(function (v) {
                         console.log(areaId, v.pId, v.id)
@@ -1048,7 +1052,7 @@
         if($("#areaId").val()!="" && "请选择区域"!=$("#areaId").val() ){
             var areaObj = $.parseJSON( $("#areaId").val() );
             if(areaObj!=undefined && areaObj.areaName!=undefined){
-                setArea(areaObj.areaName,color[3]);
+                // setArea(areaObj.areaName,color[3]);
             }
 
         }
@@ -1091,6 +1095,8 @@
                 data: JSON.stringify(allPumpArray) ,
                 dataType: 'JSON',
                 success: function (res) {
+                    //清理之前的渲染图层
+                    MAP.clearOverlays();
                     // console.log('刷新-在线',res)
                     // console.log('刷新-告警',alarmList)
                     // console.log('刷新-list',window.pumpList)

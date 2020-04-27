@@ -177,6 +177,9 @@ function initBootTable(url){
         locale: "zh-CN",//中文支持
         detailView: true, //是否显示详情折叠
         columns: [{
+            field: 'ck',
+            checkbox:true
+        },{
             field: 'ticketId',
             title: '工单编号',
             align: 'center',
@@ -338,7 +341,6 @@ function toTrim(str){
 }
 
 function myModalWorkOrder(row) {
-    console.log(row)
     queryMaintenanceWorkerDept(row.deptId);
     $("#alarmTime2").val(row.startTime);
     $("#phName2").val(row.pumpName);
@@ -619,6 +621,27 @@ function hideColumn(){
 
 function doClean() {
 
+}
+
+function exportPdf(){
+    var rows=$('#dataTables-example').bootstrapTable('getSelections');
+    if(rows!=null&&rows.length>0){
+        var form =$("<form method='POST'></form>");
+        form.attr("action",CONTEXT_PATH+"/ticket/exportTicketsPdf");
+        form.appendTo(document.body);
+        var ids = "";
+        for (var i = 0; i < rows.length; i++) {
+            ids += rows[i].ticketId + ",";
+        }
+        ids = ids.substr(0, ids.length - 1);
+        form.append("<input name='ids' value='"+ids+"'>")
+
+        form.submit();
+        form.remove();
+    }else{
+        $('#alertShowMessage').html('请选择一行导出PDF文件!!!');
+        $('#alertShow').modal('show');
+    }
 }
 
 

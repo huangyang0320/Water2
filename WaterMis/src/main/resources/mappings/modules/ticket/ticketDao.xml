@@ -672,6 +672,18 @@
         t.pump_id pumpId,
         t.area_id areaId,
         t.channel channel,
+        (
+        CASE
+        WHEN t.channel = '1' THEN
+        '系统报警'
+        WHEN t.channel = '2' THEN
+        '二供平台'
+        WHEN t.channel = '3' THEN
+        '定期计划'
+        WHEN t.channel = '4' THEN
+        '物业保修' ELSE ''
+        END
+        ) channelName,
         t.report_name reportName,
         t.report_phone reportPhone,
         t.start_time startTime,
@@ -683,6 +695,7 @@
         t.ticket_reason ticketReason,
         t.ticket_description ticketDescription,
         t.`status` AS STATUS,
+        t.dept_id as deptId,
         (
         CASE
 
@@ -699,36 +712,56 @@
         END
         ) currentStatusName,
         t.biz_id bizId,
-        de.`NAME` deviceName,
-        p.`NAME` pumpName,
-        g.approveOpinion,
-        g.approveOperation,
-        u.`name` ticketLogName
+        de.`NAME` deviceName1,
+        p.`NAME` pumpName
         FROM
         ticket t
         LEFT JOIN device de ON de.ID = t.device_code
         LEFT JOIN pump_house p ON p.id = de.ID_PUMP_HOUSE
-        LEft JOIN ticket_log g ON t.ticket_id= g.ticket_id
-        LEFT JOIN sys_user u ON u.id=g.create_by
-
+        LEFT JOIN sys_user su on su.id=t.create_by
         WHERE
         t.valid_flag = '1'
-        <if test="title !=null and title!='' " >
-            and t.title like concat('%',#{title},'%')
+        <if test="idsList!=null and idsList.size>0">
+            and t.ticket_id in
+            <foreach collection="idsList" open="(" close=")" index="index" separator="," item="item">
+                #{item}
+            </foreach>
         </if>
-        <if test="pumpName !=null and pumpName!='' " >
-            and p.`NAME` like concat('%',#{pumpName},'%')
+        <if test="idsList==null">
+            <if test="title !=null and title!='' " >
+                and t.title like concat('%',#{title},'%')
+            </if>
+            <if test="status !=null and status!='' " >
+                and t.status =#{status}
+            </if>
+            <if test="address !=null and address!='' " >
+                and t.address like concat('%',#{address},'%')
+            </if>
+            <if test="pumpName !=null and pumpName!='' " >
+                and p.`NAME` like concat('%',#{pumpName},'%')
+            </if>
+            <if test="ticketType !=null and ticketType!='' " >
+                and t.ticket_type = #{ticketType}
+            </if>
+            <if test="ticketId !=null and ticketId!='' " >
+                and t.ticket_id like concat('%',#{ticketId},'%')
+            </if>
+            <if test="createName !=null and createName!='' " >
+                and su.name like concat('%',#{createName},'%')
+            </if>
+            <if test="createBeginTime !=null and createBeginTime!='' " >
+                and t.create_Date >= #{createBeginTime}
+            </if>
+            <if test="createEndTime !=null and createEndTime!='' " >
+                and t.create_Date <![CDATA[ <= ]]> #{createEndTime}
+            </if>
+            <if test="startBeginTime !=null and startBeginTime!='' " >
+                and t.start_time >= #{startBeginTime}
+            </if>
+            <if test="startEndTime !=null and startEndTime!='' " >
+                and t.start_time <![CDATA[ <= ]]> #{startEndTime}
+            </if>
         </if>
-        <if test="ticketType !=null and ticketType!='' " >
-            and t.ticket_type = #{ticketType}
-        </if>
-        <if test="createBeginTime !=null and createBeginTime!='' " >
-            and t.create_Date >= #{createBeginTime}
-        </if>
-        <if test="createEndTime !=null and createEndTime!='' " >
-            and t.create_Date <![CDATA[ <= ]]> #{createEndTime}
-        </if>
-
     </select>
 
     <select id="getTicketInfo" resultType="com.wapwag.woss.modules.ticket.Entity.TicketDto" parameterType="java.lang.String">

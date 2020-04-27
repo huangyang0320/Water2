@@ -399,14 +399,15 @@ function getDeviceList(id){
 }
 
 function getReasonListByIds(){
-    var deviceIds = jQuery("#deviceId");
+    var deviceIds = jQuery("#deviceId").val();
+    console.log("-------------------------------------");
     var deviceIdStr ="";
     if(deviceIds!=null && deviceIds.length>0){
         for(var i in deviceIds){
             deviceIdStr +=deviceIds[i]+","
         }
 
-        var url = CONTEXT_PATH+"/productComponent/findProductComponentReasonListById/"+deviceIdStr+"?"+ Math.random();
+        var url = CONTEXT_PATH+"/productComponent/getProductReasonList/"+deviceIdStr+"?"+ Math.random();
         jQuery.ajax({
             type : 'POST',
             contentType : 'application/json',
@@ -414,10 +415,14 @@ function getReasonListByIds(){
             dataType : 'json',
             async:false,
             success : function(data) {
-               console.log(data);
+               $("#alarmReason").val(data[0].wbReason);
+                $("#planContent").val(data[0].wbProgramme);
             }
         });
 
+    }else{
+        $("#alarmReason").val("");
+        $("#planContent").val("");
     }
 
 }
@@ -538,8 +543,8 @@ function initCheck(){
 }
 
 function intiWb(){
-    var alarmReason="倒流防止器";
-    var planContent="先行封堵后上报，拆卸、安装";
+    var alarmReason="";
+    var planContent="";
     $("#alarmReason").val(alarmReason);
     $("#planContent").val(planContent);
 }
