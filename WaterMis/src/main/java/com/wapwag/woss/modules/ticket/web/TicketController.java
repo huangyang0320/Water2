@@ -99,7 +99,7 @@ public class TicketController {
 
     @RequestMapping("/getHandleTicketList")
     @ResponseBody
-    @ApiOperation(value = "获取代办工单集合", httpMethod = "POST", response =WorkOrder.class , notes = "通过类型/级别/内容获取工单集合")
+    @ApiOperation(value = "获取代办工单 集合", httpMethod = "POST", response =WorkOrder.class , notes = "通过类型/级别/内容获取工单集合")
     public Object getHandleTicketList(TicketDto ticketDto, User user, Model model, HttpServletRequest request, HttpServletResponse response){
         ticketDto.setIsMyHandle("1");//代办标记
         if(StringUtils.isBlank(ticketDto.getHandleUserId())){
