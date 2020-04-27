@@ -1,8 +1,9 @@
 package com.wapwag.woss.modules.home.entity;
 
 import com.wapwag.woss.common.persistence.DataEntity;
-
 import org.apache.ibatis.type.Alias;
+
+import java.util.Date;
 
 /**
  * User entity
@@ -39,6 +40,16 @@ public class User extends DataEntity<User> {
      * 一定记得加密
      */
     private String encryPassword;
+
+    /**
+     * 密码错误次数
+     */
+    private int failureNum;
+
+    /**
+     * 冻结时间
+     */
+    private Date freezeTime;
 
     public String getUserId() {
         return userId;
@@ -131,5 +142,21 @@ public class User extends DataEntity<User> {
 
     public void setAlarmReceptionLevel(String alarmReceptionLevel) {
         this.alarmReceptionLevel = alarmReceptionLevel;
+    }
+
+    public int getFailureNum() {
+        return failureNum;
+    }
+
+    public void setFailureNum(int failureNum) {
+        this.failureNum = failureNum;
+    }
+
+    public Date getFreezeTime() {
+        return freezeTime;
+    }
+
+    public void setFreezeTime(Date freezeTime) {
+        this.freezeTime = freezeTime;
     }
 }

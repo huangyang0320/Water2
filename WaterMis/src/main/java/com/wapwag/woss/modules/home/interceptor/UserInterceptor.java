@@ -22,12 +22,12 @@ public class UserInterceptor implements HandlerInterceptor {
         String servletPath = request.getServletPath();
 
         //首页
-        if(servletPath.contains("a/treeType/getTreeDataByType") || servletPath.contains("a/alarmStatController/indexAlarmSize")
+        /*if(servletPath.contains("a/treeType/getTreeDataByType") || servletPath.contains("a/alarmStatController/indexAlarmSize")
            || servletPath.contains("themeStatNew.html") || servletPath.contains("a/homeV2") || servletPath.contains("themeNew.html"))  return true;
 
         //泵房地图&组态监控
         if(servletPath.contains("home-map-baiduNew.html") || servletPath.contains("a/monitor")
-           || servletPath.contains("a/alarmStatController") || servletPath.contains("configuration.html")) return true;
+           || servletPath.contains("a/alarmStatController") || servletPath.contains("configuration.html")) return true;*/
 
         if (currentUser == null || StringUtils.isBlank(currentUser.getUserId())) {
             String loginUrl = request.getContextPath() + "/login.html";

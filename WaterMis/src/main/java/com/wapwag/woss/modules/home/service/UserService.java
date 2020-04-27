@@ -52,4 +52,9 @@ public class UserService {
     public List<User> getAlarmSendUserList(List<String> list){
         return userDao.getAlarmSendUserList(list);
     }
+
+    public void freezeOperation(User user)
+    {
+        userDao.freezeOperation(user);
+    }
 }
