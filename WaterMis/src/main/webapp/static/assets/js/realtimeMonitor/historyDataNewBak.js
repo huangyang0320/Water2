@@ -414,10 +414,121 @@ function initChart(){
 
     HISTORY_DATA.DEMO.exporting.filename =  "历史数据-"+$("#queryForm").find("input[name='endDate']").val();
     $.post(CONTEXT_PATH + "/monitor/statistic/history?" + $("#queryForm").serialize(),function(result){
+
         HISTORY_DATA.DEMO.series = result
-        $("#highcharts-history-data").highcharts(HISTORY_DATA.DEMO);
+
+        if(document.querySelector('#highcharts-history-data').style.display!='none'){
+            //初始化图
+            $("#highcharts-history-data").highcharts(HISTORY_DATA.DEMO);
+        }else{
+            //初始化表
+            drawTable(result)
+
+        }
         LOADING.hide();
     });
+}
+function  drawTable(result) {
+    function footeravg(data){
+        console.log(data)
+        field = this.field
+        let n = 0,max = -99999,maxindex=0,min = 99999,minindex = 0,sum = 0
+        // let r = data.reduce(function (sum,row) {
+        //     if(row[field]){
+        //         if(row[field]>max){
+        //             max = row[field]
+        //             maxindex = field
+        //         }
+        //         if(row[field]<min){
+        //             min = row[field]
+        //             minindex = field
+        //         }
+        //         n++
+        //         return sum + row[field]
+        //     }
+        //     return sum
+        // },0)
+        for(let i = 0 ;i<data.length;i++){
+            if(data[i][field]){
+                n++
+                sum += data[i][field]
+                if(data[i][field]>max){
+                    max =  data[i][field]
+                    maxindex = i
+                }
+                if(data[i][field]<min){
+                    min =  data[i][field]
+                    minindex = i
+                }
+            }
+        }
+
+        let avg = (sum/n).toFixed(3)
+
+        return `
+            ${avg}
+        `
+    }
+    let columns = []
+    let data = []
+    if(result[0]){
+        columns.push({field:'name', title:'名称', sortable:'true',align:'center',width:400,footerFormatter:function () {return '平均值'}})
+        if(result[result.length-1].data){
+            for(let i=0;i<result[result.length-1].data.length;i++){
+                columns.push({field:i+'', title:i+'', sortable:'true',align:'center',width:300,footerFormatter:footeravg})
+            }
+        }
+        columns.push({field:'avg', title:'平均值', sortable:'true',align:'center',width:400})
+        columns.push({field:'max', title:'最大值', sortable:'true',align:'center',width:400})
+        columns.push({field:'maxname', title:'最大值时刻', sortable:'true',align:'center',width:400})
+        columns.push({field:'min', title:'最小值', sortable:'true',align:'center',width:400})
+        columns.push({field:'minname', title:'最小值时刻', sortable:'true',align:'center',width:400})
+    }
+    for(let i = 0;i<result.length;i++){
+        let dataitem = {}
+        dataitem.name = result[i].name
+        if(result[i].data){
+            let max =-99999,maxname='',min=99999,minname='',avg=0,sum=0
+            for(let j = 0;j<result[i].data.length;j++){
+                dataitem[j+''] =  result[i].data[j]
+                sum+=result[i].data[j]
+                if(result[i].data[j]>max){
+                    max = result[i].data[j]
+                    maxname=j
+                }
+                if(result[i].data[j]<min){
+                    min = result[i].data[j]
+                    minname=j
+                }
+            }
+            avg = (sum/result[i].data.length).toFixed(3)
+            dataitem['avg'] =  avg
+            dataitem['max'] =  max
+            dataitem['maxname'] =  maxname
+            dataitem['min'] =  min
+            dataitem['minname'] =  minname
+
+        }
+        data.push(dataitem)
+    }
+    let getheight = function(){
+        return document.body.clientHeight - 180
+    }
+
+    $('#history-data-Table').bootstrapTable('destroy')
+    $('#history-data-Table').bootstrapTable({
+        height:getheight(),
+        striped: true,
+        columns:columns,
+        data:data,
+        showFooter:true,
+        formatNoMatches: function () {  //没有匹配的结果
+            return '无符合条件的记录';
+        },
+    })
+}
+function toAreaPump2(){
+    return
 }
 /**
  * delete global variable and prevent conflict function and variable
