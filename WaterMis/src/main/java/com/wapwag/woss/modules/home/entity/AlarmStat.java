@@ -44,6 +44,8 @@ public class AlarmStat {
 	private String alarmCode;
 	private String ticketId;
 
+	private String deptId;
+
 	private String areaCode;
 	private String pumpHouseName;
 	private String userId;
@@ -317,5 +319,13 @@ public class AlarmStat {
 
 	public void setConfirmDate(String confirmDate) {
 		this.confirmDate = confirmDate;
+	}
+
+	public String getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(String deptId) {
+		this.deptId = deptId;
 	}
 }

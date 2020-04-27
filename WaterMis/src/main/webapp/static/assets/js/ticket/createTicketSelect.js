@@ -203,10 +203,13 @@ function getTicketInfo(ticketId){
             //初始话部门对应的处理人 列表
             getApprovalUserList(data.deptId);
             $("#buttonId").html("分发");
-            var arys=data.deviceCode.split(",");
-            $("#deviceId").val(arys);
-            $("#deviceStr").val(data.deviceCode);
-            alert(data.ticketType)
+            //selectpicker设置多选值
+            if(data.ticketType=="3"){
+                var arys=data.deviceCode.split(",");
+                $('#deviceId').selectpicker('val',arys);//默认选中
+                $('#deviceId').selectpicker('refresh');
+                $("#deviceStr").val(data.deviceCode);
+            }
             showDevice(data.ticketType)
         }
     });
