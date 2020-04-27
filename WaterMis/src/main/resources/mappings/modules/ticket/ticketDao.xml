@@ -356,6 +356,21 @@
     <update id="updateTicketInfo" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
         update ticket a
         <set>
+            <if test="ticketType!=null and ticketType!=''">
+                a.ticket_type= #{ticketType},
+            </if>
+            <if test="pumpId!=null and pumpId!=''">
+                a.pump_id= #{pumpId},
+            </if>
+            <if test="title!=null and title!=''">
+                a.title= #{title},
+            </if>
+            <if test="channel!=null and channel!=''">
+                a.channel= #{channel},
+            </if>
+            <if test="deviceCode!=null and deviceCode!=''">
+                a.device_code= #{deviceCode},
+            </if>
             <if test="status!=null and status!=''">
                 a.`status`= #{status},
             </if>
