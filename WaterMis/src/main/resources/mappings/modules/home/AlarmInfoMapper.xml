@@ -273,7 +273,8 @@
 		     alarm.org_user_name userName,
 		     alarm.confirm_reason confirmReson,
 			 date_format(confirm_date,'%Y-%m-%d %H:%i:%s') confirmDate,
-			 alarm.ticketId ticketId
+			 alarm.ticketId ticketId,
+			 t.dept_id as deptId
 		FROM
 		    alarm_statistics alarm
 		        JOIN
@@ -282,6 +283,7 @@
 		    device d ON d.id = alarm.device_code
 		        JOIN
 		    pump_house dl ON dl.id = d.id_pump_house
+		    LEFT JOIN ticket t on t.ticket_id=alarm.ticketId
 		WHERE
 			d.id IN (
 				SELECT 

@@ -422,7 +422,7 @@ function setTicketId(mark){
     })
 }
 
-function queryMaintenanceWorkerDept() {
+function queryMaintenanceWorkerDept(deptId) {
     //var url = CONTEXT_PATH+"/alarmStatController/queryMaintenanceWorkerUser?"+ Math.random();
     var url =CONTEXT_PATH+"/ticket/getDept?"+ Math.random();
     jQuery.ajax({
@@ -438,24 +438,25 @@ function queryMaintenanceWorkerDept() {
                     $("#mgName").val(item.mgName);
                 }
             });
+            if(deptId!=null&&deptId!=''&&deptId!=undefined){
+                $("#deptId").val(deptId);
+                $("#mgName").val(jQuery("#deptId option:selected").attr("mgName"));
+            }
         }
     });
 }
 function myModalWorkOrder(row,flag) {
 
     //queryAlarmWorkTemplate();
-    queryMaintenanceWorkerDept();
+    queryMaintenanceWorkerDept(row.deptId);
     $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
     $("#alarmTime").val(row.startDate);
     $("#phName").val(row.phName);
     $("#phId").val(row.phId);
     $("#address").val(row.address);
-
     if(row.ticketId!=null&&row.ticketId!=''){
         $("#ticketId").val(row.ticketId);
     }
-
-
     $("#processName").val(row.deviceName);
     $("#deviceId").val(row.deviceId);
     $("#alarmReason").val(row.alarmReason);

@@ -7,6 +7,7 @@
     <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
 
+
 <!--    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">-->
     <style type="text/css">
         body {
@@ -185,6 +186,10 @@
     <!--&lt;!&ndash; Bootstrap Js &ndash;&gt;-->
     <script src="static/assets/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+
+<!--    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.js"></script>-->
+    <link href="https://cdn.bootcdn.net/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
     <script>
         $(function () {
             qryAreaList();
@@ -416,21 +421,30 @@
         function ignore(obj){
         	// var item = $(obj).attr('name');
             let item = obj.id
-
-            if(confirm('确定要忽略此条告警吗？')){
-                // window.parent.window.alarmIgnore(item);
-                // setTimeout(()=>{
-                //     getAlarmList()
-                // },2000)
-                $.post(parent.CONTEXT_PATH + '/alarmStatController/indexConfig',{
-                    "id": obj.id,
-                    "alarmType": "2"   //1：确认，2：忽略
-                }, function(data) {
-                    parent.showErrorMsgVideo("忽略成功")
-                    // $('#alarmtable').bootstrapTable('resetView')
-                    getAlarmList()
-                });
-            }
+            $.confirm({
+                title: '确认',
+                content: '确定要忽略此条告警吗？',
+                buttons: {
+                    ok: {
+                        text: '确认',
+                        btnClass: 'btn-primary',
+                        action: function () {
+                            $.post(parent.CONTEXT_PATH + '/alarmStatController/indexConfig',{
+                                "id": obj.id,
+                                "alarmType": "2"   //1：确认，2：忽略
+                            }, function(data) {
+                                parent.showErrorMsgVideo("忽略成功")
+                                // $('#alarmtable').bootstrapTable('resetView')
+                                getAlarmList()
+                            });
+                        }
+                    },
+                    cancel: {
+                        text: '取消',
+                        btnClass: 'btn-primary'
+                    }
+                }
+            })
         }
         function ignoreAll(){
             //获取单个忽略的所有对象，循环触发单个忽略

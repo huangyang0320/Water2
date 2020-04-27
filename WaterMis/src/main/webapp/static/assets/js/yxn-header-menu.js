@@ -154,23 +154,6 @@ var delObject = "";
             });
         });*/
         $("#showWarnDialog").click(function(){
-
-   /*         $.dialog({
-                id: 'SCADA_Page1',
-                title: '告警信息列表',
-                content: 'url:/HYWater/warn.html',
-                width: 1024,
-                height: 615,
-                max: true,
-                min: true,
-                resize: true,
-                fixed: true
-            });*/
-            console.log($.dialog.list)
-            // console.log($.dialog({id:'SCADA_Page1'}))
-            // $.dialog({id:'SCADA_Page1'}).close();
-            // console.log($('#SCADA_Page1').dialog('close'))
-
            $(".alarmTips").animate({bottom: "0px"}, 1000, function() {
                 $(this).find("iframe").prop("src", "warn.html");
                 $(this).find("iframe").attr('id','warnHtml');
