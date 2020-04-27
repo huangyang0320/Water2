@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wapwag.woss.common.persistence.DataEntity;
 
 import java.util.Date;
+import java.util.List;
 
 public class TicketDto extends DataEntity<TicketDto> {
     private String sortName;
     private String sortOrder;
 
     private String ticketId;
+    private String ids;
+    private List<String> idsList;
     private String ticketType;
     private String ticketTypeName;
     private String title;
@@ -49,6 +52,12 @@ public class TicketDto extends DataEntity<TicketDto> {
     private String updateBySre;
 
     private String isMyHandle;//待处理标志
+
+    private String alarmStatus;
+
+    private Date alarmTime;
+
+    private String alarmLevel;
     /**
      * 01：分发业务到人修改为处理状态3、
      * 02回退业务分子修改为待分发状态2、
@@ -434,5 +443,45 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setDeviceName1(String deviceName1) {
         this.deviceName1 = deviceName1;
+    }
+
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
+
+    public List<String> getIdsList() {
+        return idsList;
+    }
+
+    public void setIdsList(List<String> idsList) {
+        this.idsList = idsList;
+    }
+
+    public String getAlarmStatus() {
+        return alarmStatus;
+    }
+
+    public void setAlarmStatus(String alarmStatus) {
+        this.alarmStatus = alarmStatus;
+    }
+
+    public Date getAlarmTime() {
+        return alarmTime;
+    }
+
+    public void setAlarmTime(Date alarmTime) {
+        this.alarmTime = alarmTime;
+    }
+
+    public String getAlarmLevel() {
+        return alarmLevel;
+    }
+
+    public void setAlarmLevel(String alarmLevel) {
+        this.alarmLevel = alarmLevel;
     }
 }

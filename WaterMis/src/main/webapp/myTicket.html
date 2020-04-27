@@ -42,6 +42,7 @@
                             <input id="address" placeholder="泵房地址" name="address" class="device-id form-control input-text1">-->
                             <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
                             <button onclick="createTicket()" type="button" class="btn btn-primary query-btn">创建工单</button>
+                            <button onclick="exportPdf()" type="button" class="btn btn-primary query-btn">导出PDF</button>
                         </div>
                         <div class="query-parameter">
                             <label>创建人 : </label>
@@ -67,7 +68,22 @@
     </div>
     <!-- /. ROW  -->
 </div>
-
+<div class="modal fade" tabindex="-1" role="dialog" id="alertShow">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+                <p id="alertShowMessage" style="color: red"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <!-- Script -->
 <script src="static/assets/js/ticket/myTicket.js"></script>
 <script>
@@ -94,7 +110,6 @@
             }
         });
     }
-
 
 
     //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
