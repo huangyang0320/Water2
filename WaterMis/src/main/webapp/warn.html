@@ -301,6 +301,7 @@
                      },
                      'click #ignore': function (e, value, row, index) {
                          ignore(row)
+
                      },
                      'click #createWorkOrder': function (e, value, row, index) {
                          if(row.ticketId){
@@ -415,7 +416,7 @@
         function ignore(obj){
         	// var item = $(obj).attr('name');
             let item = obj.id
-        	if(confirm('确定要忽略此条告警吗？')){
+            if(confirm('确定要忽略此条告警吗？')){
                 // window.parent.window.alarmIgnore(item);
                 // setTimeout(()=>{
                 //     getAlarmList()
