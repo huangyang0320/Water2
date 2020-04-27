@@ -51,4 +51,15 @@
           group by u.id
     </select>
 
+    <!-- 账号冻结相关操作-->
+    <update id="freezeOperation" parameterType="com.wapwag.woss.modules.home.entity.User">
+        UPDATE
+          sys_user
+        SET
+          failure_num = #{failureNum},
+          freeze_time = #{freezeTime}
+        WHERE
+          id = #{userId}
+    </update>
+
 </mapper>
