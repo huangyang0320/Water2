@@ -32,7 +32,7 @@
 
 	<select id="findProductComponentReasonListById" resultType="com.wapwag.woss.modules.biz.entity.ProductComponent">
         select
-        a.id,a.component_name,a.wb_Reason wbReason,a.wb_Programme wbProgramme
+		a.id,a.component_name,GROUP_CONCAT(a.wb_Reason) wbReason,GROUP_CONCAT(a.wb_Programme) wbProgramme
         from product_component a
         <where>
 			d.id IN

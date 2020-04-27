@@ -30,10 +30,10 @@ public class ProductComponentController extends BaseController {
 		return productComponentService.findAllList();
 	}
 
-	@RequestMapping("/getProductReasonList")
+	@RequestMapping("/getProductReasonList/{deviceIds}")
 	@ResponseBody
 	@ApiOperation(value = "获取对应泵房设备配件的维保原因/方案集合", httpMethod = "POST", response = ProductComponent.class )
-	public List<ProductComponent> findProductComponentReasonListById(String deviceIds){
+	public List<ProductComponent> findProductComponentReasonListById(@PathVariable(value = "deviceIds") String deviceIds){
 		return productComponentService.findProductComponentReasonListById(deviceIds);
 	}
 

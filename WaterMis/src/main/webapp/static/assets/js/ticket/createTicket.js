@@ -398,6 +398,31 @@ function getDeviceList(id){
     });
 }
 
+function getReasonListByIds(){
+    var deviceIds = jQuery("#deviceId");
+    var deviceIdStr ="";
+    if(deviceIds!=null && deviceIds.length>0){
+        for(var i in deviceIds){
+            deviceIdStr +=deviceIds[i]+","
+        }
+
+        var url = CONTEXT_PATH+"/productComponent/findProductComponentReasonListById/"+deviceIdStr+"?"+ Math.random();
+        jQuery.ajax({
+            type : 'POST',
+            contentType : 'application/json',
+            url : url,
+            dataType : 'json',
+            async:false,
+            success : function(data) {
+               console.log(data);
+            }
+        });
+
+    }
+
+}
+
+
 
 function queryMaintenanceWorkerDept() {
     //var url = CONTEXT_PATH+"/alarmStatController/queryMaintenanceWorkerUser?"+ Math.random();
