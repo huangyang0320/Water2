@@ -25,7 +25,7 @@
 	</sql>
     <select id="findAllProductComponentList" resultMap="BaseResultMap">
         select
-        a.id,a.component_name,
+        a.id,a.component_name
         from product_component a
         order by a.sort asc
     </select>
