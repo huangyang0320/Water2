@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.wapwag.woss.modules.home.web;
 
@@ -60,7 +60,7 @@ public class AlarmStatController {
 
 		qryObject.setUserId(user.getUserId());
 		qryObject.setKeyword((StringUtils.getQryMsg(qryObject.getKeyword())));
-		
+
 		if ("1".equals(qryObject.getExportType())) {
 			return alarmService.expList(qryObject);
 		}
@@ -115,7 +115,7 @@ public class AlarmStatController {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 告警时间统计
 	 * @param qryObject
@@ -169,16 +169,17 @@ public class AlarmStatController {
 	@ApiOperation(value = "首页屏蔽告警提示/列表信息", httpMethod = "POST",response = AlarmStat.class ,notes = "")
 	public List<AlarmStat> getAlarmDetail(AlarmStat alarmStat, User user, HttpServletRequest request) {
 		alarmStat.setUserId(user.getUserId());
+		List<AlarmStat> list= new ArrayList<>();
 		// false 屏蔽告警信息
 		//boolean isAlarm = sortService.getSortValueByCode("ALARM_CONTROL");
-		boolean isAlarm = isAlarm(user);
-		List<AlarmStat> list= new ArrayList<>();
-		if(isAlarm){
+		/*boolean isAlarm = isAlarm(user);
+
+		if(isAlarm){*/
 			list = alarmService.getAlarmDetail(alarmStat);
-		}
+		//}
 		return list;
 	}
-	
+
 	/**
 	 * 告警时间统计
 	 * @param user
@@ -219,7 +220,7 @@ public class AlarmStatController {
 		}
 		return alarmService.indexConfig(info);
 	}
-	
+
 	/**
 	 * 查看一个告警根据
 	 * @param info

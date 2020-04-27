@@ -73,8 +73,8 @@ public class UserController {
 
         if (user == null) {
             resultMap.put("result", LOGIN_FAIL);
-        }else if (user.getFailureNum()>=5 && new Date().getTime()-user.getFreezeTime().getTime()<=15*60*1000){
-            resultMap.put("result", "该账号处于冻结状态!");
+        }else if (user.getFailureNum()>=4 && new Date().getTime()-user.getFreezeTime().getTime()<=15*60*1000){
+            resultMap.put("result", "密码错误过多，请在15分钟后再试，或联系管理员解锁!");
         }else if ("admin".equals(loginName) && !SystemService.validatePassword(password, user.getPassword())) {
             //AD域名验证用户密码是否正确
             resultMap.put("result", "用户名或密码错误!");
@@ -82,7 +82,7 @@ public class UserController {
             user.setFailureNum(user.getFailureNum()+1);
             user.setFreezeTime(new Date());
             userService.freezeOperation(user);
-            resultMap.put("result", "用户名或密码错误!");
+            resultMap.put("result", "用户名或密码错误(还剩"+(5-user.getFailureNum())+"次输入机会)!");
         }
         else {
 
