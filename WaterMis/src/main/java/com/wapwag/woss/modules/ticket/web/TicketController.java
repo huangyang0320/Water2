@@ -174,10 +174,20 @@ public class TicketController {
         if (StringUtils.isBlank(ticketDto.getHandleUserId())) {
             ticketDto.setHandleUserId(user.getUserId());
         }
+
+        List<PumpHouse> pumpList = deviceService.findPumpHouse(null);
+        List<String> ids=new ArrayList<>();
+        for(PumpHouse p:pumpList){
+            if(StringUtils.isNotBlank(ticketDto.getPumpName()) && p.getPumpHouseName().indexOf(ticketDto.getPumpName())>-1){
+                ids.add(p.getPumpHouseId());
+            }
+        }
+        ticketDto.setPumpHouseIds(ids);
+
+
         Page<TicketDto> pages = ticketService.findAllListPage(new Page<TicketDto>(request, response), ticketDto);
         //循环给对应的泵房,设备设置值
         List<TicketDto> list = pages.getList();
-        List<PumpHouse> pumpList = deviceService.findPumpHouse(null);
         List<ProductComponentData> productList = productComponentService.findAllList();
         Map<String, String> pumpMap = new HashMap<String, String>();
         Map<String, String> productMap = new HashMap<String, String>();

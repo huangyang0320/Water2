@@ -377,6 +377,9 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		//getLastMonthFirstDay();
 		//System.out.println(getLastDay());
 
-		System.out.println(getCurrentYear());
+		System.out.println(DateUtils.getLastDay("yyyy-MM-dd",-1)+" 05");
+
+		System.out.println(DateUtils.getDateTime("yyyy-MM-dd"));
+		System.out.println(DateUtils.getLastDay("yyyy-MM-dd",-1));
 	}
 }

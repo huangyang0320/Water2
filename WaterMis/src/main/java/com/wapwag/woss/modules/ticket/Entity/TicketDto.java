@@ -77,6 +77,8 @@ public class TicketDto extends DataEntity<TicketDto> {
     private String approveOpinion;//处理结果及其意见
     private String approveOperation;//处理类型 同意不同意
 
+    private List<String> PumpHouseIds;
+
 
 
     public String getTicketId() {
@@ -493,5 +495,13 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setConfirmStatus(String confirmStatus) {
         this.confirmStatus = confirmStatus;
+    }
+
+    public List<String> getPumpHouseIds() {
+        return PumpHouseIds;
+    }
+
+    public void setPumpHouseIds(List<String> pumpHouseIds) {
+        PumpHouseIds = pumpHouseIds;
     }
 }
