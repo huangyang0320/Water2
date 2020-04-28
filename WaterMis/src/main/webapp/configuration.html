@@ -1147,7 +1147,12 @@ function setSvg(reloading) {
                     var devicePosition =  conctolPs.deviceInfo[i].devicePosition
                     if( devicePosition!= "" && devicePosition != "undefined" &&devicePosition != "null" ){
                        /* setText(v, conctolPs.deviceInfo[i].devicePosition, "control")*/
-                        setText(v, "门禁", "control")
+                        for(let n = 0;n<window.serviceValue.length;n++){
+                            if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\security_signal1'){
+                                setText(v, "门禁"+window.serviceValue[n].pv=='1'?'开':"关" , "control")
+                            }
+                        }
+                        // setText(v, "门禁", "control")
                         for(let i = 0;i<videolist.length;i++){
                             // setText({x:v.x , y:v.y + 40*i + 20}, videolist[i].name, "control")
                             // setText({x:v.x , y:v.y + 40*i + 40}, videolist[i].name + ' 回放', "control")
