@@ -1294,7 +1294,11 @@ function setSvg(reloading) {
 
                         for(let n = 0;n<window.serviceValue.length;n++){
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\flow_instant'){
-                                flow_instantVal = '瞬时流量：'+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                                let str = window.serviceValue[n].pv
+                                if(str.charAt(str.length-1) == '.') {
+                                    str = str.substring(0,str.length - 1)
+                                }
+                                flow_instantVal = '瞬时流量：'+ str + window.serviceValue[n].unit
                                 let text1 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text1str = $(text1).attr({
                                     x:  v.x-180,
@@ -1308,7 +1312,11 @@ function setSvg(reloading) {
                                 svrStr.append(text1str);
                             }
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\flow_total'){
-                                flow_total = '累计流量：'+ window.serviceValue[n].pv + 'm³'
+                                let str = window.serviceValue[n].pv
+                                if(str.charAt(str.length-1) == '.') {
+                                    str = str.substring(0,str.length - 1)
+                                }
+                                flow_total = '累计流量：'+ str + 'm³'
                                 let text2 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text2str = $(text2).attr({
                                     x:  v.x-180,
@@ -1333,8 +1341,12 @@ function setSvg(reloading) {
                         let flowinstant_outwaterVal,frequency_pump11Val,frequency_pump12Val,frequency_pump13Val,
                             frequency_pump11Time='运行时间：',frequency_pump12Time='运行时间：',frequency_pump13Time='运行时间：'
                         for(let n = 0;n<window.serviceValue.length;n++){
+                            let str = window.serviceValue[n].pv
+                            if(str.charAt(str.length-1) == '.') {
+                                str = str.substring(0,str.length - 1)
+                            }
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\flowinstant_outwater'){
-                                flowinstant_outwaterVal =  '瞬时流量：'+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                                flowinstant_outwaterVal =  '瞬时流量：'+ str + window.serviceValue[n].unit
                                 let text1 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text1str = $(text1).attr({x:  v.x-180, y:  v.y+10, fill:  "#fff",})
                                 $(text1).text(flowinstant_outwaterVal)
@@ -1344,7 +1356,7 @@ function setSvg(reloading) {
                                 svrStr.append(text1str);
                             }
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\frequency_pump11'){
-                                frequency_pump11Val = '1# 频率      ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                                frequency_pump11Val = '1# 频率      ：       '+ str + window.serviceValue[n].unit
                                 let text2 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text2str = $(text2).attr({x:  v.x-180, y:  v.y+30, fill:  "#fff",})
                                 $(text2).text(frequency_pump11Val)
@@ -1354,7 +1366,7 @@ function setSvg(reloading) {
                                 svrStr.append(text2str);
                             }
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\frequency_pump12'){
-                                frequency_pump12Val = '2# 频率      ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                                frequency_pump12Val = '2# 频率      ：       '+ str + window.serviceValue[n].unit
                                 let text3 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text3str = $(text3).attr({x:  v.x-180, y:  v.y+70, fill:  "#fff",})
                                 $(text3).text(frequency_pump12Val)
@@ -1364,7 +1376,7 @@ function setSvg(reloading) {
                                 svrStr.append(text3str);
                             }
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\frequency_pump13'){
-                                frequency_pump13Val = '3# 频率      ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                                frequency_pump13Val = '3# 频率      ：       '+ str + window.serviceValue[n].unit
                                 let text4 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text4str = $(text4).attr({x:  v.x-180, y:  v.y+110, fill:  "#fff",})
                                 $(text4).text(frequency_pump13Val)
@@ -1374,21 +1386,21 @@ function setSvg(reloading) {
                                 svrStr.append(text4str);
                             }
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\hourtotal_pump11'){
-                                frequency_pump11Time = '运行时间      ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                                frequency_pump11Time = '运行时间      ：       '+ str + window.serviceValue[n].unit
                                 let text2Time = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text2Timestr = $(text2Time).attr({x:  v.x-180,y:  v.y+50,fill:  "#fff",})
                                 $(text2Time).text(frequency_pump11Time)
                                 svrStr.append(text2Timestr);
                             }
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\hourtotal_pump12'){
-                                frequency_pump12Time = '运行时间      ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                                frequency_pump12Time = '运行时间      ：       '+ str + window.serviceValue[n].unit
                                 let text3Time = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text3Timestr = $(text3Time).attr({x:  v.x-180,y:  v.y+90,fill:  "#fff",})
                                 $(text3Time).text(frequency_pump12Time)
                                 svrStr.append(text3Timestr);
                             }
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\hourtotal_pump13'){
-                                frequency_pump13Time = '运行时间       ：       '+ window.serviceValue[n].pv + window.serviceValue[n].unit
+                                frequency_pump13Time = '运行时间       ：       '+ str + window.serviceValue[n].unit
                                 let text4Time = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text4Timestr = $(text4Time).attr({x:  v.x-180,y:  v.y+130,fill:  "#fff",})
                                 $(text4Time).text(frequency_pump13Time)
