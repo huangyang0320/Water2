@@ -89,6 +89,9 @@ public class ProductComponentData extends DataEntity<ProductComponentData> {
      */
 	private String weight;
 
+	private String  wbReason;
+	private String wbProgramme;
+
 	public ProductComponentData() {
 		super();
 	}
@@ -96,7 +99,7 @@ public class ProductComponentData extends DataEntity<ProductComponentData> {
 	public ProductComponentData(String id){
 		super(id);
 	}
-	
+
 	public String getComponentName() {
 		return componentName;
 	}
@@ -208,13 +211,29 @@ public class ProductComponentData extends DataEntity<ProductComponentData> {
 	public void setWeight(String weight) {
 		this.weight = weight;
 	}
-	
+
 	public String getKeyWord() {
 		return keyWord;
 	}
 
 	public void setKeyWord(String keyWord) {
 		this.keyWord = keyWord;
+	}
+
+	public String getWbReason() {
+		return wbReason;
+	}
+
+	public void setWbReason(String wbReason) {
+		this.wbReason = wbReason;
+	}
+
+	public String getWbProgramme() {
+		return wbProgramme;
+	}
+
+	public void setWbProgramme(String wbProgramme) {
+		this.wbProgramme = wbProgramme;
 	}
 
 	@Override

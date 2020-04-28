@@ -119,7 +119,7 @@ function initBootTable(url){
         //status:1 待分发 2 待接单   3处理中  4审核中  5完成
         var str="";
         if((row.status=='1')&&row.createByStr==userId){
-            /*str+='<button type="button" id="editGJ" class="btn btn-primary">编辑</button>'*/
+            str+='<button type="button" id="editGJ" class="btn btn-primary">编辑</button>'
             str+='<button type="button" onclick="deleteTicket(\''+row.ticketId+'\')" class="btn btn-primary">删除</button>'
         }
         return [str,'<button type="button" onclick="ticketInfo(\''+row.ticketId+'\')" class="btn btn-primary">详情</button>'].join('');
@@ -177,6 +177,9 @@ function initBootTable(url){
         locale: "zh-CN",//中文支持
         detailView: true, //是否显示详情折叠
         columns: [{
+            field: 'ck',
+            checkbox:true
+        },{
             field: 'ticketId',
             title: '工单编号',
             align: 'center',
@@ -237,7 +240,7 @@ function initBootTable(url){
             field: 'operateSatus',
             title: '操作',
             align: 'center',
-            width:150,
+            width:200,
              events: operateEvents,
             formatter: operateFormatter
         }],
@@ -301,19 +304,26 @@ function ticketInfo(ticketId){
         }
     });
 }
-
+var delTicketId;
 function deleteTicket(ticketId){
-    //只能删除自己名下的数据行
-    $.post(CONTEXT_PATH+"/ticket/deleteTicket",{"ticketId":ticketId},function (res){
-        if(res==true){
-            $('#alertShowMessage').html('工单删除成功!!!');
+    $('#alertWorkMessage').html('确认要删除工单?');
+    $('#alertWork').modal('show');
+    delTicketId=ticketId
+}
+function clickOk(){
+    if(delTicketId!=null&&delTicketId!=''&&delTicketId!=undefined){
+        //只能删除自己名下的数据行
+        $.post(CONTEXT_PATH+"/ticket/deleteTicket",{"ticketId":delTicketId},function (res){
+            if(res==true){
+                $('#alertShowMessage').html('工单删除成功!!!');
+            }else{
+                $('#alertShowMessage').html('工单删除失败!!!');
+            }
+            $('#alertWork').modal('hide');
             $('#alertShow').modal('show');
-        }else{
-            $('#alertShowMessage').html('工单删除失败!!!');
-            $('#alertShow').modal('show');
-        }
-        $('#dataTables-example').bootstrapTable('refresh');
-    })
+            $('#dataTables-example').bootstrapTable('refresh');
+        })
+    }
 }
 
 function editTicket(row){
@@ -331,7 +341,6 @@ function toTrim(str){
 }
 
 function myModalWorkOrder(row) {
-    console.log(row)
     queryMaintenanceWorkerDept(row.deptId);
     $("#alarmTime2").val(row.startTime);
     $("#phName2").val(row.pumpName);
@@ -440,8 +449,8 @@ function submitWorkOrder(){
         var deptId=$("#deptId2").val();
         //只能删除自己名下的数据行
         $.post(CONTEXT_PATH+"/ticket/updateTicketInfo",{"ticketId":ticketId,"alarmLevel":alarmLevel,"planStartTime":planStartTime,"planEndTime":planEndTime,"alarmReason":alarmReason,"planContent":planContent,"deptId":deptId},function (res){
-                $('#alertErrorMessage').html(res.message);
-                $('#alertError').modal('show');
+                $('#alertShowMessage').html(res.message);
+                $('#alertShow').modal('show');
                 $('#dataTables-example').bootstrapTable('refresh');
                 $('#myWorkModal2').modal('hide'); // 关闭模态框
         })
@@ -612,6 +621,27 @@ function hideColumn(){
 
 function doClean() {
 
+}
+
+function exportPdf(){
+    var rows=$('#dataTables-example').bootstrapTable('getSelections');
+    if(rows!=null&&rows.length>0){
+        var form =$("<form method='POST'></form>");
+        form.attr("action",CONTEXT_PATH+"/ticket/exportTicketsPdf");
+        form.appendTo(document.body);
+        var ids = "";
+        for (var i = 0; i < rows.length; i++) {
+            ids += rows[i].ticketId + ",";
+        }
+        ids = ids.substr(0, ids.length - 1);
+        form.append("<input name='ids' value='"+ids+"'>")
+
+        form.submit();
+        form.remove();
+    }else{
+        $('#alertShowMessage').html('请选择一行导出PDF文件!!!');
+        $('#alertShow').modal('show');
+    }
 }
 
 

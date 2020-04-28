@@ -119,6 +119,12 @@
     border: none;
     cursor: pointer;
 }
+	.bootstrap-table .table, .bootstrap-table .table>tbody>tr>td, .bootstrap-table .table>tbody>tr>th, .bootstrap-table .table>tfoot>tr>td, .bootstrap-table .table>tfoot>tr>th, .bootstrap-table .table>thead>tr>td{
+		padding: 0px!important;
+	}
+	.fixed-table-container tbody td .th-inner, .fixed-table-container thead th .th-inner {
+		padding: 8px 0;
+	}
 </style>
 <form id="queryForm" style="display: none">
 	<input name="deviceIds" type="hidden">
@@ -128,14 +134,41 @@
 	<input name="endDate" type="hidden">
     <input name="addOnDate" type="hidden">
 </form>
+<script>
+	//datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
+	/* 点击input框时加载监听事件*/
+	$(".timepicker").each(function () {
+		this.addEventListener('click',myfunc);
+	})
+
+	function myfunc(e){
+		e.currentTarget.blur();
+	}
+
+	function showTu() {
+		document.querySelector("#tabToTu").style.display = 'none'
+		document.querySelector("#tabToBiao").style.display = 'inline-block'
+		document.querySelector("#highcharts-history-data").style.display = 'block'
+		document.querySelector("#tablewrap").style.display = 'none'
+		initChart()
+	}
+	function showBiao() {
+		document.querySelector("#tabToTu").style.display = 'inline-block'
+		document.querySelector("#tabToBiao").style.display = 'none'
+		document.querySelector("#highcharts-history-data").style.display = 'none'
+		document.querySelector("#tablewrap").style.display = 'block'
+		initChart()
+	}
+</script>
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
 <div id="page-inner">
 	<div class="row">
         <div class="col-xs-12 col-md-12">
             <div id="selectedDevice"></div>
         </div>
     </div>
-	<div class="row">
-		<div class="col-xs-12 col-md-12">
+	<div class="row" >
+		<div class="col-xs-12 col-md-12" >
 			<div class="chart-time">
 				<div class="time-length" id="time-length">
 					<label>统计时长: </label>
@@ -159,17 +192,22 @@
 						<select class="superposition" id="addOnTime" style="width:50px"></select>
 					</div>
 					<button class="download-data btn-primary" id="export">导出数据</button>
+					<button class="download-data btn-primary" id="tabToTu" onclick="showTu()" style="display: none">切换到图</button>
+					<button class="download-data btn-primary" id="tabToBiao" onclick="showBiao()">切换到表</button>
 				</div>
 			</div>
 		</div>
 	</div>
     <!--/.row-->
-    <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="col-md-9 col-sm-12 col-xs-12">
+    <div class="row" style="height: calc(100% - 100px);">
+        <div class="col-md-12 col-sm-12 col-xs-12" style="height: 100%">
+            <div class="panel panel-default" style="height: 100%">
+                <div class="panel-body" style="height: 100%">
+                    <div class="col-md-9 col-sm-12 col-xs-12" style="height: 100%">
                         <div id="highcharts-history-data" class="chart-height"></div>
+						<div id="tablewrap" style="display: none" style="height:100px">
+							<table id="history-data-Table"></table>
+						</div>
                         <!-- tongbi chart -->
                     </div>
                     <div class="col-md-3 col-sm-12 col-xs-12">
@@ -187,14 +225,3 @@
 </div>
 <!-- /. PAGE INNER  -->
 <script src="static/assets/js/realtimeMonitor/historyDataNewBak.js"></script>
-<script>
-	//datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
-	/* 点击input框时加载监听事件*/
-	$(".timepicker").each(function () {
-		this.addEventListener('click',myfunc);
-	})
-
-	function myfunc(e){
-		e.currentTarget.blur();
-	}
-</script>
