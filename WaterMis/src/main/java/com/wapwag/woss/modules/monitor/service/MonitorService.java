@@ -333,7 +333,7 @@ public class MonitorService {
 						ChartSeriesDto charDto = new ChartSeriesDto();
 						String dateTab = addTime>0?getTimeLab(hisDto)+"-":"";
 						String nuit = StringUtils.isEmpty(servicesList.get(0).getUnit())?"":"("+servicesList.get(0).getUnit()+")";
-						charDto.setName(device.getPumpName()+"-"+device.getDeviceName()+"-"+dateTab+servicesList.get(0).getName()+nuit);
+						charDto.setName(/*device.getPumpName()+"-"+device.getDeviceName()+"-"+*/dateTab+servicesList.get(0).getName()+nuit);
 						charDto.setData(values);
 						returnObj.add(charDto);
 					}

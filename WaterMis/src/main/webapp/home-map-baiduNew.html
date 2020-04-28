@@ -587,7 +587,7 @@
             var marker = new BMap.Marker(point, {icon: myIcon});
             // map.clearOverlays()
             map.addOverlay(marker);
-            map.centerAndZoom(point, 14);
+            //map.centerAndZoom(point, 14);
 
             marker.pumpHouse = pumpHouse;
 
@@ -1042,7 +1042,7 @@
                         }
                         clearTimeout(showSummaryDelay);
                     }
-                    MAP.setZoom(13); // 设置缩放级别
+                    //MAP.setZoom(13); // 设置缩放级别
                     marker.openInfoWindow(window.infoWindow);
                     LOADING.hide();
                 }

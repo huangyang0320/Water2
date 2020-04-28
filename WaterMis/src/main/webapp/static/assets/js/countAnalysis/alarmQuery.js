@@ -734,7 +734,8 @@ function disHide(){
         //手动触发验证
         bootstrapValidator.validate();
         if(bootstrapValidator.isValid()){
-            var _url = CONTEXT_PATH+"/alarmStatController/submitWorkOrder?"+ Math.random();
+           // var _url = CONTEXT_PATH+"/alarmStatController/submitWorkOrder?"+ Math.random();
+            var _url = CONTEXT_PATH+"/ticket/createWorkOrder?"+ Math.random();
             $("#workOrder").ajaxSubmit( {
                 type : 'POST',
                 url : _url,

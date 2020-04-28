@@ -9,10 +9,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.common.collect.Lists;
@@ -34,6 +31,7 @@ import com.wapwag.woss.modules.sys.utils.UserUtils;
  */
 @Controller
 @RequestMapping(value = "${adminPath}/sys/role")
+@SessionAttributes("user")
 public class RoleController extends BaseController {
 
 	@Autowired
@@ -266,14 +264,13 @@ public class RoleController extends BaseController {
 
 	/**
 	 * 核查用户是否存在告警忽略权限
-	 * @param userId
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "checkWarnPower")
-	public Object checkWarnPower(String userId)
+	public Object checkWarnPower(com.wapwag.woss.modules.home.entity.User user)
 	{
-        return systemService.checkWarnPower(userId);
+        return systemService.checkWarnPower(user.getUserId());
 	}
 
 
