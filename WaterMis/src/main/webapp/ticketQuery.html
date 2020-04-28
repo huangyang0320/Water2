@@ -23,8 +23,8 @@
                             <select id="ticketType" name="ticketType" class="device-id form-control input-text2">
                                 <option value="">全部工单</option>
                                 <option value="1">告警工单</option>
-                                <option value="2">维保工单</option>
-                                <option value="3">巡检工单</option>
+                                <option value="2">巡检工单</option>
+                                <option value="3">维保工单</option>
                             </select>
                            <!-- <label>告警类型 : </label>
                             <select id="alarmType" name="alarmType" class="device-id form-control input-small">
@@ -77,6 +77,8 @@
                             <input id="startEndTime" name="startEndTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-end timepicker">
                             <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
                             <button onclick="exportPdf()" type="button" class="btn btn-primary query-btn">导出PDF</button>
+                                <button onclick="exportExcel()" type="button" class="btn btn-primary query-btn">导出表格</button>
+
                                 <!--<label>告警时间 : </label>-->
                             <!--<input id ="beginTime" name="beginTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-begin timepicker">- -->
                             <!--<input id="endTime" name="endTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-end timepicker">-->
@@ -278,6 +280,7 @@
 
 <!-- Script -->
 <script src="static/assets/js/ticket/ticketQuery.js"></script>
+<script src="static/assets/js/moment.js"></script>
 <script>
     //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
     /* 点击input框时加载监听事件*/

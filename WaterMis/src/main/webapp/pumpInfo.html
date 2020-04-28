@@ -19,6 +19,7 @@
          border: 1px solid rgba(193, 193, 193, 0.21); !* 整体表格边框 *!
      }*/
 </style>
+<link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
 <div id="page-inner">
     <div class="row">
         <div class="col-md-12 col-xs-12">
@@ -45,7 +46,8 @@
                 <div class="panel-body">
                     <div class="col-md-9 col-xs-9">
                         <div class="table-responsive">
-                            <table class="table table-hover" id="dataTables-example" data-reorderable-columns="true">
+
+                            <table class="table table-hover" id="dataTables-example" data-reorderable-columns="true" data-sortable="true" data-sort-class="table-active">
                             </table>
                         </div>
                     </div>

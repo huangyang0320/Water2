@@ -1449,7 +1449,7 @@ function getDynamicPressureData(obj) {
                     // orient: 'horizontal',
                     top:'0%',
                     // icon: 'rectangle',
-                    data:['进口压力1','进口压力2','设定值'],
+                    data:['滤前压力','滤后压力','设定值'],
                     // width:'35%',
                     textStyle: {
                         color: 'rgba(255,255,255,.5)',
@@ -1498,7 +1498,7 @@ function getDynamicPressureData(obj) {
                     }],
                 series: [
                     {
-                        name:'进口压力1',
+                        name:'滤前压力',
                         type:'bar',
                         // barWidth: 20,
                         barMaxWidth: 12,
@@ -1529,7 +1529,7 @@ function getDynamicPressureData(obj) {
                         }
                     },
                     {
-                        name:'进口压力2',
+                        name:'滤后压力',
                         type:'bar',
                         // barWidth: 20,
                         barMaxWidth: 12,
@@ -1650,7 +1650,7 @@ function getPumpHouseDynamicPressureData(obj) {
                 legend: {
                     top:'0%',
                     // icon: 'rectangle',
-                    data:['进口压力1','进口压力2','设定值'],
+                    data:['滤前压力','滤后压力','设定值'],
                     // width:'35%',
                     textStyle: {
                         color: 'rgba(255,255,255,.5)',
@@ -1702,7 +1702,7 @@ function getPumpHouseDynamicPressureData(obj) {
                     }],
                 series: [
                     {
-                        name:'进口压力1',
+                        name:'滤前压力',
                         type:'line',
                         symbol: 'circle',
                         // barWidth: 20,
@@ -1715,7 +1715,7 @@ function getPumpHouseDynamicPressureData(obj) {
                         data:data.szjs1
                     },
                     {
-                        name:'进口压力2',
+                        name:'滤后压力',
                         type:'line',
                         symbol: 'circle',
                         // barWidth: 20,

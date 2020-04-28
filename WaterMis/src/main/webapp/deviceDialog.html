@@ -356,9 +356,9 @@
 
 
                 $("#clickHa").click(function(){
-                        parent.document.querySelector('.alarmTips').style.bottom='-300px'
-                        $(this).find("iframe").prop("src", "warn.html");
-                        $(this).find("iframe").attr('id','warnHtml');
+                        parent.document.querySelector('.alarmTips').style.bottom='-300px';
+                        parent.$(".alarmTips").find("iframe").prop("src", "warn.html");
+                        parent.$(".alarmTips").find("iframe").attr('id','warnHtml');
                         parent.$(".alarmTips").animate({bottom: "0px"}, 1000, function() {
 
                         });

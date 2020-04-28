@@ -9,7 +9,7 @@ $(function(){
 	//初始化地区信息
 	qryAreaList();
 	//默认查询告警信息
-	var url = CONTEXT_PATH+"/device/pumpHouse?'+ Math.random()";
+	var url = CONTEXT_PATH+"/device/pumpHouse?"+ Math.random()
     initBootTable(url);
     
     //查询事件
@@ -50,162 +50,366 @@ $(function(){
             $('#dataTables-example').bootstrapTable('resetView', {height : calcHeight()+55});
             $("#alarm-area-compare, #alarm-type-compare").height(calcHeight()/2 - 5);
         });
+        console.log(url)
+        jQuery.ajax({
+            type: 'get',
+            ayscn: false,
+            contentType: 'application/json',
+            url: url,
+            data:{
+                pageSize: 20,   //页面大小
+                pageNumber: 1,  //页码
+                areaId: $("#areaId").val(),
+                projectId: $("#projectId").val(),
+                name: jQuery.base64.encode($("#name").val()),
+                exportMustNum:EXPORT_MUST_NUM
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#dataTables-example').bootstrapTable({
+                    data:data.rows,
+                    // url: url,
+                    // cache:false,
+                    striped:true,
+                    height:calcHeight()+55,//设定高度，固定头部
+                    // search: false,//是否搜索
+                    // queryParamsType:'',
+                    // pageSize:20,
+                    // pageNumber:1,
+                    // sidePagination:'server',
+                    pagination: true,//是否分页
+                    showColumns: true,//列选择按钮
+                    // minimumCountColumns:2,
+                    // pageList:[20,30,50,100],
+                    // searchOnEnterKey: false,//回车搜索
+                    // clickToSelect:true,
+                    // showRefresh: false,//刷新按钮
+                    // showColumns: true,//列选择按钮
+                    // smartDisplay:true,
+                    // showExport:false,
+                    // exportDataType:'all',
+                    // exportOptions: {
+                    //     ignoreColumn: [0] //忽略某一列的索引
+                    // },
+                    onLoadSuccess:function(data){
+                        successHide(1);
+                        total = data.total;
+                        if(alertType == '1'){
+                            alertType = '0';
+                        }
+                    },
+                    onLoadError:function(data){
+                        LOADING.hide();
+                        alertType = '0';
+                        $("tbody").html('<tr class="no-records-found"><td colspan="12">没有找到匹配的记录</td></tr>');
+                    },
+                    locale: "zh-CN",//中文支持
+                    detailView: true, //是否显示详情折叠
+                    columns: [
+                        {
+                            field: 'areaId',
+                            title: '所属区域',
+                            align: 'center',
+                            sortable: true,
+                        },
+                        //     field: 'projectId',
+                        //     title: '项目名称',
+                        //     align: 'center'
+                        // },  //     {
 
-   	  $('#dataTables-example').bootstrapTable({
-           url:url,
-       	   cache:false,
-       	   striped:true,
-           height:calcHeight()+55,//设定高度，固定头部
-           search: false,//是否搜索
-           queryParamsType:'',
-           queryParams:queryParams,
-           pageSize:20,
-           pageNumber:1,
-           sidePagination:'server',
-           pagination: true,//是否分页
-           showColumns: true,//列选择按钮
-           minimumCountColumns:2,
-           pageList:[20,30,50,100],
-           searchOnEnterKey: false,//回车搜索
-           clickToSelect:true,
-           showRefresh: false,//刷新按钮
-           showColumns: false,//列选择按钮
-           // smartDisplay:true,
-           // showExport:true,
-           exportDataType:'all',
-           exportOptions: {
-               ignoreColumn: [0] //忽略某一列的索引
-           },
-           onLoadSuccess:function(data){
-        	   successHide(1);
-        	   total = data.total;
-        	   if(alertType == '1'){
-        		   alertType = '0';
-        	   }
-           },
-           onLoadError:function(data){
-          	   LOADING.hide();
-          	   alertType = '0';
-          	   $("tbody").html('<tr class="no-records-found"><td colspan="12">没有找到匹配的记录</td></tr>');
-           },
-           locale: "zh-CN",//中文支持
-           detailView: true, //是否显示详情折叠
-           columns: [
-               {
-                   field: 'areaId',
-                   title: '所属区域',
-                   align: 'center'
-               },
-                   //     field: 'projectId',
-                   //     title: '项目名称',
-                   //     align: 'center'
-                   // },  //     {
+                        {
+                            field: 'pumpHouseName',
+                            title: '泵房名称',
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'id',
+                            title: '泵房编码',
+                            visible:false,
+                            align: 'center'
+                        },{
+                            field: 'cellAdress',
+                            title: '泵房地址',
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'cellName',
+                            title: '小区名称',
+                            align: 'center',
+                            visible:false,
+                        },
+                        /*{
+                            field: 'cellAdress',
+                            title: '小区地址',
+                            visible:false,
+                            visible:false,
+                            align: 'center'
+                        },*/{
+                            field: 'deviceManufacturers',
+                            title: '设备厂家',
+                            visible:false,
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'deviceManufacturersInformation',
+                            title: '设备厂家联系方式',
+                            visible:false,
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'selfControlManufacturers',
+                            title: '自控改造厂家',
+                            visible:false,
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'selfControlManufacturersInformation',
+                            title: '自控改造厂家联系方式',
+                            visible:false,
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'constructionSide',
+                            title: '运维方',
+                            visible:true,
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'constructionSideInformation',
+                            title: '运维方联系方式',
+                            visible:true,
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'construction',
+                            title: '施工方',
+                            visible:false,
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'constructionInformation',
+                            title: '施工方联系方式',
+                            visible:false,
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'property',
+                            title: '物业',
+                            visible:false,
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'propertyInformation',
+                            title: '物业联系方式',
+                            visible:false,
+                            align: 'center',
+                            sortable: true,
+                        },{
+                            field: 'handoverTime',
+                            title: '移交时间',
+                            visible:true,
+                            align: 'center',
+                            sortable: true,
+                        }
+                    ],
+                    detailFormatter: function(index, row) {// 详情信息
+                        var html = [];
+                        html.push('<p class="detail-view">' + '所属区域' + ' : ' + toTrim(row.areaId) + '</p>');
+                        // html.push('<p class="detail-view">' + '项目名称' + ' : ' + toTrim(row.projectId) + '</p>');
+                        html.push('<p class="detail-view">' + '泵房名称' + ' : ' + toTrim(row.pumpHouseName) + '</p>');
+                        html.push('<p class="detail-view">' + '泵房编码' + ' : ' + toTrim(row.id) + '</p>');
+                        html.push('<p class="detail-view">' + '泵房地址' + ' : ' + toTrim(row.pumpHouseAddress) + '</p>');
+                        html.push('<p class="detail-view">' + '小区名称' + ' : ' + toTrim(row.cellName) + '</p>');
+                        html.push('<p class="detail-view">' + '小区地址' + ' : ' + toTrim(row.cellAdress) + '</p>');
+                        html.push('<p class="detail-view">' + '运维方' + ' : ' + toTrim(row.constructionSide) + '</p>');
+                        html.push('<p class="detail-view">' + '运维方联系方式' + ' : ' + toTrim(row.constructionSideInformation) + '</p>');
+                        html.push('<p class="detail-view">' + '物业' + ' : ' + toTrim(row.property) + '</p>');
+                        html.push('<p class="detail-view">' + '物业联系方式' + ' : ' + toTrim(row.propertyInformation) + '</p>');
+                        html.push('<p class="detail-view">' + '施工方' + ' : ' + toTrim(row.construction) + '</p>');
+                        html.push('<p class="detail-view">' + '施工方联系方式' + ' : ' + toTrim(row.constructionInformation) + '</p>');
+                        html.push('<p class="detail-view">' + '自控改造厂家' + ' : ' + toTrim(row.selfControlManufacturers) + '</p>');
+                        html.push('<p class="detail-view">' + '自控改造厂家联系方式' + ' : ' + toTrim(row.selfControlManufacturersInformation) + '</p>');
+                        html.push('<p class="detail-view">' + '设备厂家' + ' : ' + toTrim(row.deviceManufacturers) + '</p>');
+                        html.push('<p class="detail-view">' + '设备厂家联系方式' + ' : ' + toTrim(row.deviceManufacturersInformation) + '</p>');
+                        html.push('<p class="detail-view">' + '移交时间' + ' : ' + toTrim(row.handoverTime) + '</p>');
+                        html.push('<p class="detail-view">' + '备注' + ' : ' + toTrim(row.memo) + '</p>');
+                        return html.join('');
+                    }
+                });
+            }
+        })
 
-               {
-                   field: 'pumpHouseName',
-                   title: '泵房名称',
-                   align: 'center'
-               },{
-                   field: 'id',
-                   title: '泵房编码',
-                   visible:false,
-                   align: 'center'
-               },{
-                   field: 'cellAdress',
-                   title: '泵房地址',
-                   align: 'center'
-               },{
-                   field: 'cellName',
-                   title: '小区名称',
-                   align: 'center'
-               },/*{
-                   field: 'cellAdress',
-                   title: '小区地址',
-                   visible:false,
-                   visible:false,
-                   align: 'center'
-               },*/{
-                   field: 'deviceManufacturers',
-                   title: '设备厂家',
-                   visible:false,
-                   align: 'center'
-               },{
-                   field: 'deviceManufacturersInformation',
-                   title: '设备厂家联系方式',
-                   visible:false,
-                   align: 'center'
-               },{
-                   field: 'selfControlManufacturers',
-                   title: '自控改造厂家',
-                   visible:false,
-                   align: 'center'
-               },{
-                   field: 'selfControlManufacturersInformation',
-                   title: '自控改造厂家联系方式',
-                   visible:false,
-                   align: 'center'
-               },{
-                   field: 'constructionSide',
-                   title: '运维方',
-                   visible:false,
-                   align: 'center'
-               },{
-                   field: 'constructionSideInformation',
-                   title: '运维方联系方式',
-                   visible:false,
-                   align: 'center'
-               },{
-                   field: 'construction',
-                   title: '施工方',
-                   visible:false,
-                   align: 'center'
-               },{
-                   field: 'constructionInformation',
-                   title: '施工方联系方式',
-                   visible:false,
-                   align: 'center'
-               },{
-                   field: 'property',
-                   title: '物业',
-                   visible:false,
-                   align: 'center'
-               },{
-                   field: 'propertyInformation',
-                   title: '物业联系方式',
-                   visible:false,
-                   align: 'center'
-               },{
-                   field: 'handoverTime',
-                   title: '移交时间',
-                   visible:false,
-                   align: 'center'
-               }
-           ],
-           detailFormatter: function(index, row) {// 详情信息
-               var html = [];
-               html.push('<p class="detail-view">' + '所属区域' + ' : ' + toTrim(row.areaId) + '</p>');
-               // html.push('<p class="detail-view">' + '项目名称' + ' : ' + toTrim(row.projectId) + '</p>');
-               html.push('<p class="detail-view">' + '泵房名称' + ' : ' + toTrim(row.pumpHouseName) + '</p>');
-               html.push('<p class="detail-view">' + '泵房编码' + ' : ' + toTrim(row.id) + '</p>');
-               html.push('<p class="detail-view">' + '泵房地址' + ' : ' + toTrim(row.pumpHouseAddress) + '</p>');
-               html.push('<p class="detail-view">' + '小区名称' + ' : ' + toTrim(row.cellName) + '</p>');
-               html.push('<p class="detail-view">' + '小区地址' + ' : ' + toTrim(row.cellAdress) + '</p>');
-               html.push('<p class="detail-view">' + '运维方' + ' : ' + toTrim(row.constructionSide) + '</p>');
-               html.push('<p class="detail-view">' + '运维方联系方式' + ' : ' + toTrim(row.constructionSideInformation) + '</p>');
-               html.push('<p class="detail-view">' + '物业' + ' : ' + toTrim(row.property) + '</p>');
-               html.push('<p class="detail-view">' + '物业联系方式' + ' : ' + toTrim(row.propertyInformation) + '</p>');
-               html.push('<p class="detail-view">' + '施工方' + ' : ' + toTrim(row.construction) + '</p>');
-               html.push('<p class="detail-view">' + '施工方联系方式' + ' : ' + toTrim(row.constructionInformation) + '</p>');
-               html.push('<p class="detail-view">' + '自控改造厂家' + ' : ' + toTrim(row.selfControlManufacturers) + '</p>');
-               html.push('<p class="detail-view">' + '自控改造厂家联系方式' + ' : ' + toTrim(row.selfControlManufacturersInformation) + '</p>');
-               html.push('<p class="detail-view">' + '设备厂家' + ' : ' + toTrim(row.deviceManufacturers) + '</p>');
-               html.push('<p class="detail-view">' + '设备厂家联系方式' + ' : ' + toTrim(row.deviceManufacturersInformation) + '</p>');
-               html.push('<p class="detail-view">' + '移交时间' + ' : ' + toTrim(row.handoverTime) + '</p>');
-               html.push('<p class="detail-view">' + '备注' + ' : ' + toTrim(row.memo) + '</p>');
-               return html.join('');
-           }
-       });
-
+        // $('#dataTables-example').bootstrapTable({
+        //     // data:data,
+        //     url: url,
+        //     // cache:false,
+        //     striped:true,
+        //     height:calcHeight()+55,//设定高度，固定头部
+        //     search: false,//是否搜索
+        //     queryParamsType:'',
+        //     queryParams:queryParams,
+        //     pageSize:20,
+        //     pageNumber:1,
+        //     sidePagination:'server',
+        //     pagination: true,//是否分页
+        //     showColumns: true,//列选择按钮
+        //     minimumCountColumns:2,
+        //     pageList:[20,30,50,100],
+        //     searchOnEnterKey: false,//回车搜索
+        //     clickToSelect:true,
+        //     showRefresh: false,//刷新按钮
+        //     showColumns: true,//列选择按钮
+        //     smartDisplay:true,
+        //     showExport:false,
+        //     exportDataType:'all',
+        //     exportOptions: {
+        //         ignoreColumn: [0] //忽略某一列的索引
+        //     },
+        //     onLoadSuccess:function(data){
+        //         successHide(1);
+        //         total = data.total;
+        //         if(alertType == '1'){
+        //             alertType = '0';
+        //         }
+        //     },
+        //     onLoadError:function(data){
+        //         LOADING.hide();
+        //         alertType = '0';
+        //         $("tbody").html('<tr class="no-records-found"><td colspan="12">没有找到匹配的记录</td></tr>');
+        //     },
+        //     locale: "zh-CN",//中文支持
+        //     detailView: true, //是否显示详情折叠
+        //     columns: [
+        //         {
+        //             field: 'areaId',
+        //             title: '所属区域',
+        //             align: 'center',
+        //             sortable: true,
+        //         },
+        //         //     field: 'projectId',
+        //         //     title: '项目名称',
+        //         //     align: 'center'
+        //         // },  //     {
+        //
+        //         {
+        //             field: 'pumpHouseName',
+        //             title: '泵房名称',
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'id',
+        //             title: '泵房编码',
+        //             visible:false,
+        //             align: 'center'
+        //         },{
+        //             field: 'cellAdress',
+        //             title: '泵房地址',
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'cellName',
+        //             title: '小区名称',
+        //             align: 'center',
+        //             visible:false,
+        //         },
+        //         /*{
+        //             field: 'cellAdress',
+        //             title: '小区地址',
+        //             visible:false,
+        //             visible:false,
+        //             align: 'center'
+        //         },*/{
+        //             field: 'deviceManufacturers',
+        //             title: '设备厂家',
+        //             visible:false,
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'deviceManufacturersInformation',
+        //             title: '设备厂家联系方式',
+        //             visible:false,
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'selfControlManufacturers',
+        //             title: '自控改造厂家',
+        //             visible:false,
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'selfControlManufacturersInformation',
+        //             title: '自控改造厂家联系方式',
+        //             visible:false,
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'constructionSide',
+        //             title: '运维方',
+        //             visible:true,
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'constructionSideInformation',
+        //             title: '运维方联系方式',
+        //             visible:true,
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'construction',
+        //             title: '施工方',
+        //             visible:false,
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'constructionInformation',
+        //             title: '施工方联系方式',
+        //             visible:false,
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'property',
+        //             title: '物业',
+        //             visible:false,
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'propertyInformation',
+        //             title: '物业联系方式',
+        //             visible:false,
+        //             align: 'center',
+        //             sortable: true,
+        //         },{
+        //             field: 'handoverTime',
+        //             title: '移交时间',
+        //             visible:true,
+        //             align: 'center',
+        //             sortable: true,
+        //         }
+        //     ],
+        //     detailFormatter: function(index, row) {// 详情信息
+        //         var html = [];
+        //         html.push('<p class="detail-view">' + '所属区域' + ' : ' + toTrim(row.areaId) + '</p>');
+        //         // html.push('<p class="detail-view">' + '项目名称' + ' : ' + toTrim(row.projectId) + '</p>');
+        //         html.push('<p class="detail-view">' + '泵房名称' + ' : ' + toTrim(row.pumpHouseName) + '</p>');
+        //         html.push('<p class="detail-view">' + '泵房编码' + ' : ' + toTrim(row.id) + '</p>');
+        //         html.push('<p class="detail-view">' + '泵房地址' + ' : ' + toTrim(row.pumpHouseAddress) + '</p>');
+        //         html.push('<p class="detail-view">' + '小区名称' + ' : ' + toTrim(row.cellName) + '</p>');
+        //         html.push('<p class="detail-view">' + '小区地址' + ' : ' + toTrim(row.cellAdress) + '</p>');
+        //         html.push('<p class="detail-view">' + '运维方' + ' : ' + toTrim(row.constructionSide) + '</p>');
+        //         html.push('<p class="detail-view">' + '运维方联系方式' + ' : ' + toTrim(row.constructionSideInformation) + '</p>');
+        //         html.push('<p class="detail-view">' + '物业' + ' : ' + toTrim(row.property) + '</p>');
+        //         html.push('<p class="detail-view">' + '物业联系方式' + ' : ' + toTrim(row.propertyInformation) + '</p>');
+        //         html.push('<p class="detail-view">' + '施工方' + ' : ' + toTrim(row.construction) + '</p>');
+        //         html.push('<p class="detail-view">' + '施工方联系方式' + ' : ' + toTrim(row.constructionInformation) + '</p>');
+        //         html.push('<p class="detail-view">' + '自控改造厂家' + ' : ' + toTrim(row.selfControlManufacturers) + '</p>');
+        //         html.push('<p class="detail-view">' + '自控改造厂家联系方式' + ' : ' + toTrim(row.selfControlManufacturersInformation) + '</p>');
+        //         html.push('<p class="detail-view">' + '设备厂家' + ' : ' + toTrim(row.deviceManufacturers) + '</p>');
+        //         html.push('<p class="detail-view">' + '设备厂家联系方式' + ' : ' + toTrim(row.deviceManufacturersInformation) + '</p>');
+        //         html.push('<p class="detail-view">' + '移交时间' + ' : ' + toTrim(row.handoverTime) + '</p>');
+        //         html.push('<p class="detail-view">' + '备注' + ' : ' + toTrim(row.memo) + '</p>');
+        //         return html.join('');
+        //     }
+        // });
         /* 报警对比 */
         areaCount();
         alarmTypeCount();
