@@ -1446,10 +1446,10 @@ function getDynamicPressureData(obj) {
                     trigger: 'axis'
                 },
                 legend: {
-                    orient: 'horizontal',
+                    // orient: 'horizontal',
                     top:'0%',
                     // icon: 'rectangle',
-                    data:['进口压力1','进口压力2','设定值'],
+                    data:['滤前压力','滤后压力','设定值'],
                     // width:'35%',
                     textStyle: {
                         color: 'rgba(255,255,255,.5)',
@@ -1498,7 +1498,7 @@ function getDynamicPressureData(obj) {
                     }],
                 series: [
                     {
-                        name:'进口压力1',
+                        name:'滤前压力',
                         type:'bar',
                         // barWidth: 20,
                         barMaxWidth: 12,
@@ -1529,7 +1529,7 @@ function getDynamicPressureData(obj) {
                         }
                     },
                     {
-                        name:'进口压力2',
+                        name:'滤后压力',
                         type:'bar',
                         // barWidth: 20,
                         barMaxWidth: 12,
@@ -1620,7 +1620,7 @@ function getPumpHouseDynamicPressureData(obj) {
         success: function (data) {
             setButtonCss(obj);
             let xArr = []
-            for(let i=5;i<25;i++){
+            for(let i=5;i<24;i++){
                 if(i<10){
                     let n = '0' +i
                     xArr.push(n)
@@ -1635,7 +1635,7 @@ function getPumpHouseDynamicPressureData(obj) {
             // 基于准备好的dom，初始化echarts实例
             let myChart2 = echarts.init(document.getElementById('fb1'));
             let option2 = {
-                color:['#CC66CC','#33CC00','#CCFF00'],
+                color:['#218de0','#5d5cda','#85e647'],
                 // backgroundColor: 'rgba(1,202,217,.2)',
                 grid: {
                     left: '5%',
@@ -1650,7 +1650,7 @@ function getPumpHouseDynamicPressureData(obj) {
                 legend: {
                     top:'0%',
                     // icon: 'rectangle',
-                    data:['进口压力1','进口压力2','设定值'],
+                    data:['滤前压力','滤后压力','设定值'],
                     // width:'35%',
                     textStyle: {
                         color: 'rgba(255,255,255,.5)',
@@ -1702,24 +1702,26 @@ function getPumpHouseDynamicPressureData(obj) {
                     }],
                 series: [
                     {
-                        name:'进口压力1',
+                        name:'滤前压力',
                         type:'line',
+                        symbol: 'circle',
                         // barWidth: 20,
                         lineStyle: {
                             normal: {
-                                color: '#FF66CC',
+                                color: '#218de0',
                                 width: 2
                             }
                         },
                         data:data.szjs1
                     },
                     {
-                        name:'进口压力2',
+                        name:'滤后压力',
                         type:'line',
+                        symbol: 'circle',
                         // barWidth: 20,
                         lineStyle: {
                             normal: {
-                                color: '#00FF33',
+                                color: '#5d5cda',
                                 width: 2
                             }
                         },
@@ -1727,9 +1729,10 @@ function getPumpHouseDynamicPressureData(obj) {
                     },{
                         name:'设定值',
                         type:'line',
+                        symbol: 'circle',
                         lineStyle: {
                             normal: {
-                                color: '#CCFF00',
+                                color: '#85e647',
                                 width: 2
                             }
                         },

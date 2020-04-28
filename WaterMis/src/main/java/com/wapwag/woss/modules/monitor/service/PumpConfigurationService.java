@@ -308,6 +308,12 @@ public class PumpConfigurationService {
             code.add("hourtotal_pump12");//运行时长
             code.add("hourtotal_pump13");//运行时长
 
+
+            code.add("security_signal1");//门禁
+            code.add("current_a");
+            code.add("current_b");
+            code.add("current_c");
+
             code.add("tubeburst_outwater");//
             code.add("stop_electric");//
             code.add("overpressure_pumptotal");//

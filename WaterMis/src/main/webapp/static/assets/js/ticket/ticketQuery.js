@@ -97,6 +97,28 @@ $(function(){
         }
     });
 });
+function formatTableUnit(value, row, index) {
+    return {
+        css: {
+            "white-space": "nowrap",
+            "text-overflow": "ellipsis",
+            "overflow": "hidden",
+            "max-width": "120px"
+        }
+    }
+}
+function exportExcel() {
+    $('#dataTables-example').tableExport({
+        type: 'excel',
+        exportDataType: "all",
+        ignoreColumn: [0],//忽略某一列的索引
+        fileName: '工单列表' + moment().format('YYYY-MM-DD'),//下载文件名称
+        onCellHtmlData: function (cell, row, col, data){//处理导出内容,自定义某一行、某一列、某个单元格的内容
+            console.info(data);
+            return data;
+        },
+    });
+}
 
 function initBootTable(url){
     var url = CONTEXT_PATH+"/ticket/getAllTicketListPage?"+Math.random();
@@ -157,7 +179,7 @@ function initBootTable(url){
         showRefresh: false,//刷新按钮
         showColumns: true,//列选择按钮
         smartDisplay:true,
-        showExport:true,
+        showExport:false,
         exportDataType:'all',
         exportOptions: {
             ignoreColumn: [0] //忽略某一列的索引
@@ -183,17 +205,20 @@ function initBootTable(url){
             field: 'ticketId',
             title: '工单编号',
             align: 'center',
-            sortable: true
+            sortable: true,
+            cellStyle: formatTableUnit
         },{
             field: 'ticketTypeName',
             title: '工单类型',
             align: 'center',
-            sortable: true
+            sortable: true,
+            cellStyle: formatTableUnit
         },{
             field: 'title',
             title: '工单内容',
             align: 'center',
-            sortable: true
+            sortable: true,
+            cellStyle: formatTableUnit
         },/*{
             field: 'currentNodeName',
             title: '当前节点名称',
@@ -202,7 +227,8 @@ function initBootTable(url){
             field: 'currentStatusName',
             title: '当前工单状态',
             align: 'center',
-            sortable: true
+            sortable: true,
+            cellStyle: formatTableUnit
         },/*{
             field: 'currentUser',
             title: '当前操作人',
@@ -215,12 +241,14 @@ function initBootTable(url){
             field: 'pumpName',
             title: '泵房名称',
             align: 'center',
-            sortable : true
+            sortable : true,
+            cellStyle: formatTableUnit
         },{
             field: 'deviceName',
             title: '设备名称',
             align: 'center',
-            sortable: true
+            sortable: true,
+            cellStyle: formatTableUnit
         },/*{
             field: 'address',
             title: '泵房地址',
@@ -230,18 +258,21 @@ function initBootTable(url){
             field: 'allHandleUser',
             title: '待处理人',
             align: 'center',
-            sortable : true
+            sortable : true,
+            cellStyle: formatTableUnit
         },{
             field: 'createName',
             title: '工单创建人',
             visible:false,
             align: 'center',
-            sortable : true
+            sortable : true,
+            cellStyle: formatTableUnit
         },{
             field: 'createDate',
             title: '工单创建时间',
             align: 'center',
-            sortable : true
+            sortable : true,
+            cellStyle: formatTableUnit
         },{
             field: 'operateSatus',
             title: '操作',
@@ -306,7 +337,7 @@ function ticketInfo(ticketId){
         ok: false,
         drag: false,
         close : function() {
-            $("#query").click();
+            // $("#query").click();
         }
     });
 }

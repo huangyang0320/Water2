@@ -596,6 +596,7 @@
 
             $.post("/HYWater/config/getProjectPic", function(result) {
                 $("#topPic").attr("src", "static/configResourse/"+result.projectPic+"/top_title.png");
+                // $("#topPic").attr("src", "static/configResourse/"+result.projectPic+"/Logo.png");
                 $("#iconPic").attr("href", "static/configResourse/"+result.projectPic+"/favicon.ico");
             });
         });

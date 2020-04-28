@@ -216,7 +216,7 @@ function echarts_02(data) {
 				}
 			}
 		},
-		calculable: true,
+		// calculable: true,
 		series: [ {
 			// stack: 'a',
 			type: 'pie',
