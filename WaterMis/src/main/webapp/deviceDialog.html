@@ -357,9 +357,10 @@
 
                 $("#clickHa").click(function(){
                         parent.document.querySelector('.alarmTips').style.bottom='-300px'
+                        $(this).find("iframe").prop("src", "warn.html");
+                        $(this).find("iframe").attr('id','warnHtml');
                         parent.$(".alarmTips").animate({bottom: "0px"}, 1000, function() {
-                            $(this).find("iframe").prop("src", "warn.html");
-                            $(this).find("iframe").attr('id','warnHtml');
+
                         });
                         // $.dialog({
                         //          id: 'SCADA_Page1',

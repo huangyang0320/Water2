@@ -238,187 +238,207 @@
            getAlarmList();
      }
      function getAlarmList() {
-         // alert('getAlarmList')
-         $('#alarmtable').bootstrapTable('destroy')
-         // alert('destroy')
-         //  $.get(parent.CONTEXT_PATH + '/alarmStatController/indexAlarm', function(data) {
-         $("#alarmForm").ajaxSubmit({
-             type: 'POST',
-             url: parent.CONTEXT_PATH + '/alarmStatController/indexAlarm',
+            let checkWarnPower = null
+         jQuery.ajax({
+             type: 'get',
+             ayscn: false,
+             contentType: 'application/json',
+             url: 'a/sys/role/checkWarnPower',
              dataType: 'json',
              success: function (data) {
-                 // if (data && data.length > 0) {
-                     // $('.alarm-body ul').html('');
-                     // $('#alarmBodyNoMsg').hide();
-                     // window.deviceList=[];
-                     // $.each(data, function (i, item) {
-                     //     var ht;
-                     //     var dealData = JSON.stringify(item);
-                     //     if (item.ticketId) {
-                     //         ht = "<span onclick='alertErrors()' class='btn btn-xs btn-primary'>创建工单</span>"
-                     //     } else {
-                     //         ht = "<span onclick='createWorkOrder(this)'  data = '" + dealData + "' class='btn btn-xs btn-info'>创建工单</span>"
-                     //     }
-                     //     console.log(item);
-                     //     var $li = '<li name="' + checStr(item.phId) + '">';
-                     //     $li += '<span style="width: 15%;color: #847979">' + item.startDate + '</span>';
-                     //     $li += '<span style="width: 15%;color: #847979" onclick="modalConfig(this)" name="' + item.phId + '">' + item.phName + '</span>';
-                     //     $li += '<span style="width: 12%;color: #847979">' + checStr(item.deviceName) + '</span>';
-                     //     $li += '<span style="width: 14%;color: #847979" title="' + checStr(item.alarmInfo)+checStr(item.alarmSetValue)+'">' + checStr(item.alarmInfo)+alarmSetValue(item.alarmSetValue)+'</span>';
-                     //     $li += '<span style="width: 9%;"><span style="width: 5%;background-color: #fff141">' + checStr(item.alarmLevel) + '</span></span>';
-                     //     $li += '<span style="width: 15%;color: #847979">' + checStr(item.endDate) + '</span>';
-                     //     $li += '<span style="width: 20%;color: #847979">'
-                     //         + '<span onclick="answer(this);" class="btn btn-xs btn-info" name="' + item.alarDescription + '" alarmReason = "' + item.alarmReason + '">解决方案</span>'
-                     //       /*  + '&nbsp;'
-                     //         + '<span onclick="affirm(this);" class="btn btn-xs btn-info" name="' + item.id + '">确认</span>'*/
-                     //         + '&nbsp;'
-                     //         + '<span onclick="ignore(this);" class="btn btn-xs btn-info" name="' + item.id + '">忽略</span>'
-                     //         + '<span onclick="ignoreAll(this);" style="display: none" class="btn btn-xs btn-info ignoreAll" name="' + item.id + '">忽略</span>'
-                     //         + '&nbsp;'
-                     //         + ht
-                     //         + '</span>';
-                     //     $li += '</li>';
-                     //     $('.alarm-body ul').append($li);
-                     // });
-                     //
-                     // $('.alarm-body').myScroll({
-                     //     speed: 80, //数值越大，速度越慢
-                     //     rowHeight: 30 //li的高度
-                     // });
+                 checkWarnPower = data.code
+                 // alert('getAlarmList')
+                 $('#alarmtable').bootstrapTable('destroy')
+                 // alert('destroy')
+                 //  $.get(parent.CONTEXT_PATH + '/alarmStatController/indexAlarm', function(data) {
+                 $("#alarmForm").ajaxSubmit({
+                     type: 'POST',
+                     url: parent.CONTEXT_PATH + '/alarmStatController/indexAlarm',
+                     dataType: 'json',
+                     success: function (data) {
+                         // if (data && data.length > 0) {
+                         // $('.alarm-body ul').html('');
+                         // $('#alarmBodyNoMsg').hide();
+                         // window.deviceList=[];
+                         // $.each(data, function (i, item) {
+                         //     var ht;
+                         //     var dealData = JSON.stringify(item);
+                         //     if (item.ticketId) {
+                         //         ht = "<span onclick='alertErrors()' class='btn btn-xs btn-primary'>创建工单</span>"
+                         //     } else {
+                         //         ht = "<span onclick='createWorkOrder(this)'  data = '" + dealData + "' class='btn btn-xs btn-info'>创建工单</span>"
+                         //     }
+                         //     console.log(item);
+                         //     var $li = '<li name="' + checStr(item.phId) + '">';
+                         //     $li += '<span style="width: 15%;color: #847979">' + item.startDate + '</span>';
+                         //     $li += '<span style="width: 15%;color: #847979" onclick="modalConfig(this)" name="' + item.phId + '">' + item.phName + '</span>';
+                         //     $li += '<span style="width: 12%;color: #847979">' + checStr(item.deviceName) + '</span>';
+                         //     $li += '<span style="width: 14%;color: #847979" title="' + checStr(item.alarmInfo)+checStr(item.alarmSetValue)+'">' + checStr(item.alarmInfo)+alarmSetValue(item.alarmSetValue)+'</span>';
+                         //     $li += '<span style="width: 9%;"><span style="width: 5%;background-color: #fff141">' + checStr(item.alarmLevel) + '</span></span>';
+                         //     $li += '<span style="width: 15%;color: #847979">' + checStr(item.endDate) + '</span>';
+                         //     $li += '<span style="width: 20%;color: #847979">'
+                         //         + '<span onclick="answer(this);" class="btn btn-xs btn-info" name="' + item.alarDescription + '" alarmReason = "' + item.alarmReason + '">解决方案</span>'
+                         //       /*  + '&nbsp;'
+                         //         + '<span onclick="affirm(this);" class="btn btn-xs btn-info" name="' + item.id + '">确认</span>'*/
+                         //         + '&nbsp;'
+                         //         + '<span onclick="ignore(this);" class="btn btn-xs btn-info" name="' + item.id + '">忽略</span>'
+                         //         + '<span onclick="ignoreAll(this);" style="display: none" class="btn btn-xs btn-info ignoreAll" name="' + item.id + '">忽略</span>'
+                         //         + '&nbsp;'
+                         //         + ht
+                         //         + '</span>';
+                         //     $li += '</li>';
+                         //     $('.alarm-body ul').append($li);
+                         // });
+                         //
+                         // $('.alarm-body').myScroll({
+                         //     speed: 80, //数值越大，速度越慢
+                         //     rowHeight: 30 //li的高度
+                         // });
 
 
-                 // } else {
-                     // $('.alarm-body ul').html("<div style='text-align: center;color:red'>无告警数据...</div>");
-                     // $('#alarmBodyNoMsg').show()
-                 // }
-                 function addFunctionAlty(value, row, index) {
-                     let str = ''
-                     if(!row.ticketId){
-                         str = '<button id="createWorkOrder" type="button" class="btn btn-info">创建工单</button>'
-                     }/*else{
+                         // } else {
+                         // $('.alarm-body ul').html("<div style='text-align: center;color:red'>无告警数据...</div>");
+                         // $('#alarmBodyNoMsg').show()
+                         // }
+                         function addFunctionAlty(value, row, index) {
+                             let str = ''
+                             if(!row.ticketId){
+                                 str = '<button id="createWorkOrder" type="button" class="btn btn-info">创建工单</button>'
+                             }/*else{
                          str = '<button id="showWorkOrder" type="button" class="btn btn-warning">查看工单</button>'
                      }*/
-                     return [
-                         '<button id="answer" type="button" class="btn btn-info">解决方案</button>',
-                         '<button id="ignore" type="button" class="btn btn-info">忽略</button>',
-                         str,
-                     ].join('');
-                 }
-                 window.operateEvents = {
-                     'click #answer': function (e, value, row, index) {
-                         answer(row)
-                     },
-                     'click #ignore': function (e, value, row, index) {
-                         ignore(row)
-
-                     },
-                     'click #createWorkOrder': function (e, value, row, index) {
-                         if(row.ticketId){
-                             alertErrors(row)
-                         }else{
-                             createWorkOrder(row)
+                             // 0无权限，1有权限
+                             if(checkWarnPower  == 1) {
+                                 return [
+                                     '<button id="answer" type="button" class="btn btn-info">解决方案</button>',
+                                     '<button id="ignore" type="button" class="btn btn-info">忽略</button>',
+                                     str,
+                                 ].join('');
+                             } else if(checkWarnPower  == 0) {
+                                 return [
+                                     '<button id="answer" type="button" class="btn btn-info">解决方案</button>',
+                                     str,
+                                 ].join('');
+                             }
                          }
-                     }/*,
+                         window.operateEvents = {
+                             'click #answer': function (e, value, row, index) {
+                                 answer(row)
+                             },
+                             'click #ignore': function (e, value, row, index) {
+                                 ignore(row)
+
+                             },
+                             'click #createWorkOrder': function (e, value, row, index) {
+                                 if(row.ticketId){
+                                     alertErrors(row)
+                                 }else{
+                                     createWorkOrder(row)
+                                 }
+                             }/*,
                      'click #showWorkOrder': function (e, value, row, index) {
                          showWorkOrder(row)
                      }*/
-                 };
-                 let columns = [
-                     {
-                         field:'startDate',
-                         title:'开始时间',
-                         sortable:'true',
-                         // width: 180,
-                         align: 'center',
-                         cellStyle: formatTableUnit,
-                         formatter: paramsMatter,
-                     },
-                     {
-                         field:'phName',
-                         title:'泵房名称',
-                         sortable:'true',
-                         // width: 100,
-                         align: 'center',
-                         cellStyle: formatTableUnit,
-                         formatter: paramsMatter,
-                     },
-                     {
-                         field:'deviceName',
-                         title:'电气位置',
-                         sortable:'true',
-                         // width: 100,
-                         align: 'center',
-                         cellStyle: formatTableUnit,
-                         formatter: paramsMatter,
-                     },{
-                         field:'alarmTypeRemarks',
-                         title:'设备位置',
-                         sortable:'true',
-                         // width: 100,
-                         align: 'center',
-                         cellStyle: formatTableUnit,
-                         formatter: paramsMatter,
-                     },
-                     {
-                         field:'alarmInfo',
-                         title:'告警内容',
-                         sortable:'true',
-                         // width: 100,
-                         align: 'center',
-                         cellStyle: formatTableUnit,
-                         formatter: paramsMatter,
-                     },
-                     {
-                         field:'alarmLevel',
-                         title:'告警等级',
-                         align: 'center',
-                         // width: 100,
-                         sortable:'true',
-                         formatter:  function(value,row,index) {
-                             var a = "";
-                             if(value == "一级") {
-                                 a = '<span style="background-color:#FF0000;color:#ffff">'+value+'</span>';
-                             }else if(value == "二级"){
-                                 a = '<span style="background-color:#f46b1c;color:#ffff">'+value+'</span>';
-                             }else if(value == "三级") {
-                                 a = '<span style="background-color:#f4e672;color:#ffff">'+value+'</span>';
-                             }else if(value == "四级") {
-                                 a = '<span style="background-color:#dbf4be;color:#ffff">'+value+'</span>';
-                             }else{
-                                 a = '<span style="background-color:#45d60c;color:#ffff">'+value+'</span>';
+                         };
+                         let columns = [
+                             {
+                                 field:'startDate',
+                                 title:'开始时间',
+                                 sortable:'true',
+                                 // width: 180,
+                                 align: 'center',
+                                 cellStyle: formatTableUnit,
+                                 formatter: paramsMatter,
+                             },
+                             {
+                                 field:'phName',
+                                 title:'泵房名称',
+                                 sortable:'true',
+                                 // width: 100,
+                                 align: 'center',
+                                 cellStyle: formatTableUnit,
+                                 formatter: paramsMatter,
+                             },
+                             {
+                                 field:'deviceName',
+                                 title:'电气位置',
+                                 sortable:'true',
+                                 // width: 100,
+                                 align: 'center',
+                                 cellStyle: formatTableUnit,
+                                 formatter: paramsMatter,
+                             },{
+                                 field:'alarmTypeRemarks',
+                                 title:'设备位置',
+                                 sortable:'true',
+                                 // width: 100,
+                                 align: 'center',
+                                 cellStyle: formatTableUnit,
+                                 formatter: paramsMatter,
+                             },
+                             {
+                                 field:'alarmInfo',
+                                 title:'告警内容',
+                                 sortable:'true',
+                                 // width: 100,
+                                 align: 'center',
+                                 cellStyle: formatTableUnit,
+                                 formatter: paramsMatter,
+                             },
+                             {
+                                 field:'alarmLevel',
+                                 title:'告警等级',
+                                 align: 'center',
+                                 // width: 100,
+                                 sortable:'true',
+                                 formatter:  function(value,row,index) {
+                                     var a = "";
+                                     if(value == "一级") {
+                                         a = '<span style="background-color:#FF0000;color:#ffff">'+value+'</span>';
+                                     }else if(value == "二级"){
+                                         a = '<span style="background-color:#f46b1c;color:#ffff">'+value+'</span>';
+                                     }else if(value == "三级") {
+                                         a = '<span style="background-color:#f4e672;color:#ffff">'+value+'</span>';
+                                     }else if(value == "四级") {
+                                         a = '<span style="background-color:#dbf4be;color:#ffff">'+value+'</span>';
+                                     }else{
+                                         a = '<span style="background-color:#45d60c;color:#ffff">'+value+'</span>';
+                                     }
+                                     return a;
+                                 }
+                             },
+                             {
+                                 field:'endDate',
+                                 title:'最近报警',
+                                 sortable:'true',
+                                 // width: 180,
+                                 align: 'center',
+                                 cellStyle: formatTableUnit,
+                                 formatter: paramsMatter,
+                             },
+                             {
+                                 field: 'operate',
+                                 title: '操作',
+                                 width:300,
+                                 // align: 'center',
+                                 events: operateEvents,//给按钮注册事件
+                                 formatter: addFunctionAlty, //表格中增加按钮  
                              }
-                             return a;
-                         }
-                     },
-                     {
-                         field:'endDate',
-                         title:'最近报警',
-                         sortable:'true',
-                         // width: 180,
-                         align: 'center',
-                         cellStyle: formatTableUnit,
-                         formatter: paramsMatter,
-                     },
-                     {
-                         field: 'operate',
-                         title: '操作',
-                         width:300,
-                         // align: 'center',
-                         events: operateEvents,//给按钮注册事件
-                         formatter: addFunctionAlty, //表格中增加按钮  
+                         ]
+                         $('#alarmtable').bootstrapTable({
+                             columns:columns,
+                             cache:false,
+                             smartDisplay:true,
+                             data:data,
+                             formatNoMatches: function () {  //没有匹配的结果
+                                 return '暂时没有告警';
+                             },
+                         })
                      }
-                 ]
-                 $('#alarmtable').bootstrapTable({
-                     columns:columns,
-                     cache:false,
-                     smartDisplay:true,
-                     data:data,
-                     formatNoMatches: function () {  //没有匹配的结果
-                         return '暂时没有告警';
-                     },
-                 })
+                 });
              }
-         });
+         })
+
      }
 
         //表格超出宽度鼠标悬停显示td内容
