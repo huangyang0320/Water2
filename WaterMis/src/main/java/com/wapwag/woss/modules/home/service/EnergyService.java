@@ -441,6 +441,9 @@ public class EnergyService {
 			temps.put(pvs.get(i).getDevID(), pvs.get(i).getPv());
 		}
 
+		//需要根据id排序
+		devs.sort((a, b) -> a.getDevID().compareTo(b.getDevID()));
+
 		double m3 = 0;
 		double kwh = 0;
 
@@ -459,27 +462,25 @@ public class EnergyService {
 			if (null != temps.get(devs.get(i).getDevID() + "_m3")) {
 				m3 = temps.get(devs.get(i).getDevID() + "_m3");
 			} else {
-				continue;
+				//continue;
 			}
 
 			if (null != temps.get(devs.get(i).getDevID() + "_kWh")) {
 				kwh = temps.get(devs.get(i).getDevID() + "_kWh");
 			} else {
-				continue;
+				//continue;
 			}
 			if (null != temps.get(devs.get(i).getDevID() + "_out")) {
 				out = temps.get(devs.get(i).getDevID() + "_out");
 			} else {
-				continue;
+				//continue;
 			}
 
 			if (null != temps.get(devs.get(i).getDevID() + "_in")) {
 				input = temps.get(devs.get(i).getDevID() + "_in");
 			}
 
-			if ("17090141".equals(devs.get(i).getDevID())) {
-				System.out.println(12);
-			}
+
 			if (m3 > 0 && kwh > 0 && out > 0) {
 				vo = devs.get(i);
 				vo.setFlow(m3);

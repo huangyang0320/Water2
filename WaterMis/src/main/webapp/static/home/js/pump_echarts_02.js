@@ -1,6 +1,7 @@
 ﻿
 $(function () {
-	getPumpData();
+	// getPumpData();
+    getPumStatus()
 })
 
 function getPumpData() {
@@ -22,8 +23,98 @@ function getPumpData() {
 		}
 	});
 }
+function isInArray(arr,value){
+    for(var i = 0; i < arr.length; i++){
+        if(value === arr[i]){
+            return true;
+        }
+    }
+    return false;
+}
+// 获取泵房状态
+function getPumStatus() {
+	var alarmList = []
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        async: false,
+        url: CONTEXT_PATH + '/treeType/getTreeDataByType' + "?" + new Date().getTime(),
+        dataType: 'JSON',
+        data: JSON.stringify({
+            treeTypeValue: GLOBAL_TREE_TYPR,
+            isSpread: GLOBAL_TREE_PUMP_EQT,
+            isDeviceOrVideo: GLOBAL_TREE_VIDEO_EQT,
+        }),
+        success: function (res) {
+            GLOBAL_REGION_LIST = res
+                window.pumpList = [];
+            	let areaList = res
+                var k=0;
+                areaList.map(function (val) {
+                    if(val.pumpHouseId){
+                        window.pumpList.push(val)
+                    }
+                })
+            var allPumpArray = []
+            window.pumpList.map(function (v) {
+            	if(allPumpArray.indexOf((v.pumpHouseId)) == -1) {
+                    allPumpArray.push(v.pumpHouseId);
+				}
+            })
+            $.ajax({
+                type: 'POST',
+                async: false,
+                contentType: 'application/json',
+                url: CONTEXT_PATH + '/monitor/statistic/pumpOnlineStat',
+                data: JSON.stringify(allPumpArray),
+                dataType: 'JSON',
+                success: function (res) {
+                	console.log('222',res)
+                    //获取告警的泵房 集合
+                    var alarmListTmpe = [];
+                    $.ajax({
+                        type: 'POST',
+                        async:false,
+                        contentType: 'application/json',
+                        url: CONTEXT_PATH + '/alarmStatController/getAlarmByPumpIds',
+                        data: JSON.stringify({phIdList:allPumpArray}) ,
+                        dataType: 'JSON',
+                        //traditional : true,
+                        success: function (data) {
+                        	console.log('666666',data)
+                            if(data!=null && data.length){
+                                for (var i in data) {
+                                    alarmListTmpe.push(data[i].phId)
+                                }
+                            }
+                            alarmList = alarmListTmpe;
+                        	console.log(alarmList)
+                            let pumpnum1 = 0,pumpnum2 = 0,pumpnum3 = 0,pumpnum4 = 0
+							console.log(window.pumpList)
+                            allPumpArray.map(function (v) {
+                                if (isInArray(alarmList, v)) {
+                                    pumpnum4++
+                                } else if (isInArray(res, v)) {
+                                    pumpnum2++
+                                } else {
+                                    pumpnum3++
+                                }
+                            })
+							let statusObj = [{
+                        		"name":"在线","itemStyle":"","value":pumpnum2},
+								{"name":"离线","itemStyle":"","value":pumpnum3},
+								{"name":"告警","itemStyle":"","value":pumpnum4},]
+                            echarts_02(statusObj)
+                        }
+                    })
 
+                }
+            })
+        }
+    })
+}
 function echarts_02(data) {
+	console.log(data)
 	var colorArr=["#218de0", "#01cbb3", "#85e647", "#5d5cda", "#05c5b0", "#c29927", "#c29927","#8dc2b2","#c2bd60","#c27212"];
 	var colorAlpha=['rgba(60,170,211,0.64)','rgba(1,203,179,0.64)','rgba(133,230,71,0.65)','rgba(93,92,218,0.65)','rgba(5,197,176,0.65)','rgba(194,153,39,0.65)','rgba(93,92,218,0.64)','rgba(5,197,176,0.65)','rgba(5,197,176,0.65)']
 
@@ -127,13 +218,13 @@ function echarts_02(data) {
 		},
 		calculable: true,
 		series: [ {
-			stack: 'a',
+			// stack: 'a',
 			type: 'pie',
-			radius: '70%',
+			radius: ['45%','70%'],
 			center: ['50%', '50%'],//图型  位置
-			roseType: 'radius',
-			zlevel:10,
-			startAngle: 100,
+			// roseType: 'radius',
+			// zlevel:10,
+			// startAngle: 100,
 
 			label: {
 				normal: {
@@ -142,36 +233,35 @@ function echarts_02(data) {
 					},
 					// formatter: [ '{b}','{d}%'].join('\n'),
 					formatter:function(params){
-						console.log(params)
 						return params.name+"\n"+params.value + ' (' +params.percent+'%）'
 					},
-					rich: {
-						b: {
-							color: '#fff',
-							fontSize: 14,
-							lineHeight: 20
-						},
-						d: {
-							color: '#fff',
-							fontSize: 14,
-							height: 20
-						},
-					},
+					// rich: {
+					// 	b: {
+					// 		color: '#fff',
+					// 		fontSize: 14,
+					// 		lineHeight: 20
+					// 	},
+					// 	d: {
+					// 		color: '#fff',
+					// 		fontSize: 14,
+					// 		height: 20
+					// 	},
+					// },
 				}
 			},
 			labelLine: {
-				normal: {
-					show: true,
-					length: 10,
-					length2: 45,
-					lineStyle: {
-						color: '#aaa'
-
-					}
-				},
-				emphasis: {
-					show: false
-				}
+				// normal: {
+				// 	show: true,
+				// 	length: 10,
+				// 	length2: 45,
+				// 	lineStyle: {
+				// 		color: '#aaa'
+                //
+				// 	}
+				// },
+				// emphasis: {
+				// 	show: false
+				// }
 			},
 			data: data
 		}, ]
