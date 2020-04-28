@@ -154,9 +154,9 @@ var delObject = "";
             });
         });*/
         $("#showWarnDialog").click(function(){
+            $(".alarmTips").find("iframe").prop("src", "warn.html");
+            $(".alarmTips").find("iframe").attr('id','warnHtml');
            $(".alarmTips").animate({bottom: "0px"}, 1000, function() {
-                $(this).find("iframe").prop("src", "warn.html");
-                $(this).find("iframe").attr('id','warnHtml');
             });
         });
 
