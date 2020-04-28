@@ -454,7 +454,6 @@ function queryMaintenanceWorkerDept(deptId) {
     });
 }
 function myModalWorkOrder(row,flag) {
-
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept(row.deptId);
     $("#alarmContent").val(row.phName+"-"+row.alarmTypeRemarks+'发生了'+row.alarmInfo);

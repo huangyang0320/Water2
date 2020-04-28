@@ -579,16 +579,16 @@
             window.parent.window.setTicketId("1");
         }
 
-        /*function showWorkOrder(self) {
+        function showWorkOrder(self) {
             let sdata = self
             //创建按钮隐藏
             window.parent.window.hideCreateBtn();
             //打开创建工单页面
             window.parent.window.queryWhetherWorker(sdata.deviceId);
             //工单页面赋值
-            window.parent.window.myModalWorkOrder(sdata);
+            window.parent.window.myModalWorkOrder(sdata,'0');
 
-        }*/
+        }
         function alertErrors() {
             window.parent.window.alertError();
         }

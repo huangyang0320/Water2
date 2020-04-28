@@ -2240,7 +2240,7 @@ table th[class*="span"],
   z-index: 1000;
   display: none;
   float: left;
-  min-width: 160px;
+  min-width: 120px;
   *height: 1px;
   /* fix for IE6 min-width */
 
