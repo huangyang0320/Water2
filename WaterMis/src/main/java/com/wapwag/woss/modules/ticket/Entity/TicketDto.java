@@ -58,6 +58,8 @@ public class TicketDto extends DataEntity<TicketDto> {
     private Date alarmTime;
 
     private String alarmLevel;
+
+    private String confirmStatus;
     /**
      * 01：分发业务到人修改为处理状态3、
      * 02回退业务分子修改为待分发状态2、
@@ -483,5 +485,13 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setAlarmLevel(String alarmLevel) {
         this.alarmLevel = alarmLevel;
+    }
+
+    public String getConfirmStatus() {
+        return confirmStatus;
+    }
+
+    public void setConfirmStatus(String confirmStatus) {
+        this.confirmStatus = confirmStatus;
     }
 }

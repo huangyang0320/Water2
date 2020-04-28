@@ -346,10 +346,28 @@
 
 
     <update id="updateAlarmTicketByDeviceIdAndStartTime" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+       update alarm_statistics a
+    set a.ticketId= #{ticketId}
+    where a.device_code=#{deviceCode}
+    and a.start_date=#{eventTime}
+    </update>
+    <update id="updateAlarmData" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
         update alarm_statistics a
-        set a.ticketId= #{ticketId}
-        where a.device_code=#{deviceCode}
-        and a.start_date=#{eventTime}
+        <set>
+            <if test="confirmStatus!=null and confirmStatus!=''">
+                a.confirm_status= #{confirmStatus},
+            </if>
+            <if test="alarmStatus!=null and alarmStatus!=''">
+                a.alarm_status= #{alarmStatus},
+            </if>
+        </set>
+        <where>
+            1=1
+            <if test="ticketId!=null and ticketId!=''">
+                and a.ticketId=#{ticketId}
+            </if>
+        </where>
+
 
     </update>
 

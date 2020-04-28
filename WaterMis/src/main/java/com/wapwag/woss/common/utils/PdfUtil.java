@@ -15,11 +15,22 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.wapwag.woss.common.sms.service.impl.SendSmsOutServiceImpl;
 import com.wapwag.woss.modules.ticket.Entity.TicketDto;
+import com.wapwag.woss.modules.ticket.Entity.TicketLogDto;
+import com.wapwag.woss.modules.ticket.service.TicketService;
+import org.apache.http.util.TextUtils;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 
 public class PdfUtil {
+
+    private TicketService ticketService = SpringContextHolder.getBean(TicketService.class);
 
     private Document document;
     private Font normalFont;
@@ -104,9 +115,8 @@ public class PdfUtil {
             table.setSpacingAfter(10);
             table.setWidthPercentage(80);
             Font font2 = new Font(bfChinese);
-            font2.setColor(BaseColor.BLACK);
-            font2.setSize(16);
-            font2.setStyle(Font.BOLD);//
+            font2.setColor(BaseColor.DARK_GRAY);
+            font2.setSize(12);
             PdfPCell cell1 = new PdfPCell(new Paragraph("工单编号：" + ticketDto.getTicketId(), font2));
             cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);// 垂直居中
             cell1.setRowspan(2);//跨2行
@@ -132,15 +142,15 @@ public class PdfUtil {
             if("2".equals(ticketType)||"3".equals(ticketType)){
                 cell3 = new PdfPCell(new Paragraph("泵房名称：" + ticketDto.getPumpName(), font2));
                 cell3.setVerticalAlignment(Element.ALIGN_CENTER);// 垂直居中
-                cell3.setColspan(4);// 跨4列
+                cell3.setColspan(2);// 跨4列
                 cell3.setRowspan(4);//跨4行
                 cell3.setBorder(0);
 
 
                 if("3".equals(ticketType)){//维保多出来个所在设备
-                    cell31 = new PdfPCell(new Paragraph("所在设备：" + ticketDto.getDeviceName(), font2));
+                    cell31 = new PdfPCell(new Paragraph("\r\n所在设备：" + ticketDto.getDeviceName(), font2));
                     cell31.setVerticalAlignment(Element.ALIGN_CENTER);// 垂直居中
-                    cell31.setColspan(4);// 跨4列
+                    cell31.setColspan(2);// 跨4列
                     cell31.setRowspan(4);//跨4行
                     cell31.setBorder(0);
                 }
@@ -234,28 +244,25 @@ public class PdfUtil {
             cell71.setBorder(0);
             cell71.setMinimumHeight(40);
 
-            PdfPCell cell8 = new PdfPCell(new Paragraph("发起原因：" + ticketDto.getTicketReason(), font2));
+            PdfPCell cell8 = new PdfPCell(new Paragraph("发起原因：", font2));
             cell8.setVerticalAlignment(Element.ALIGN_CENTER);// 垂直居中
-            cell8.setColspan(6);// 跨6列
-            cell8.setRowspan(6);//跨6行
+            cell8.setColspan(2);// 跨6列
             cell8.setBorder(0);
+            PdfPCell cell81 = new PdfPCell(new Paragraph(ticketDto.getTicketReason(), font2));
+            cell81.setVerticalAlignment(Element.ALIGN_CENTER);// 垂直居中
+            cell81.setColspan(2);// 跨6列
+            cell81.setRowspan(6);//跨6行
+            cell81.setBorder(0);
 
-            PdfPCell cell9 = new PdfPCell(new Paragraph("解决方案：" + ticketDto.getTicketDescription(), font2));
+            PdfPCell cell9 = new PdfPCell(new Paragraph("\r\n解决方案：", font2));
             cell9.setVerticalAlignment(Element.ALIGN_CENTER);// 垂直居中
-            cell9.setColspan(6);// 跨6列
-            cell9.setRowspan(6);//跨6行
+            cell9.setColspan(2);// 跨6列
             cell9.setBorder(0);
-
-            PdfPCell cell10 = new PdfPCell(new Paragraph("执行部门：" + ticketDto.getDeptName(), font2));
-            cell10.setVerticalAlignment(Element.ALIGN_MIDDLE);// 垂直居中
-            cell10.setRowspan(2);//跨2行
-            cell10.setBorder(0);
-            cell10.setMinimumHeight(40);
-            PdfPCell cell11 = new PdfPCell(new Paragraph("部门负责人：" + ticketDto.getMgName(), font2));
-            cell11.setVerticalAlignment(Element.ALIGN_MIDDLE);// 垂直居中
-            cell11.setRowspan(2);//跨2行
-            cell11.setBorder(0);
-            cell11.setMinimumHeight(40);
+            PdfPCell cell91 = new PdfPCell(new Paragraph(ticketDto.getTicketDescription(), font2));
+            cell91.setVerticalAlignment(Element.ALIGN_CENTER);// 垂直居中
+            cell91.setColspan(2);// 跨6列
+            cell91.setRowspan(6);//跨6行
+            cell91.setBorder(0);
             table.addCell(cell1);
             table.addCell(cell2);
             if("2".equals(ticketType)||"3".equals(ticketType)) {
@@ -281,10 +288,45 @@ public class PdfUtil {
             table.addCell(cell61);
             table.addCell(cell71);
             table.addCell(cell8);
+            table.addCell(cell81);
             table.addCell(cell9);
+            table.addCell(cell91);
+            //循环添加操作结果数据
+            List<TicketLogDto> list = ticketService.getTicketLogList(ticketDto.getTicketId());
+            for(TicketLogDto l:list){
+                String approveOpinion="";
+                if(TextUtils.isEmpty(l.getApproveOperation())){
+                    approveOpinion ="创建工单.....";
+                }else{
+                    approveOpinion=l.getApproveOperation();
+                }
+                String nodeId=l.getNodeId()==null?"":"环节名:"+l.getNodeId();
+                PdfPCell cellD1 = new PdfPCell(new Paragraph("\r\n操作时间:"+ DateUtils.formatDateTimeByFormat(l.getCreateDate(),"yyyy-MM-dd HH:mm:ss") +"        操作人:"+l.getTicketLogName()+"        "+nodeId, font2));
+                cellD1.setVerticalAlignment(Element.ALIGN_CENTER);// 垂直居中
+                cellD1.setColspan(2);// 跨6列
+                cellD1.setBorder(0);
+                PdfPCell cellD11 = new PdfPCell(new Paragraph(approveOpinion, font2));
+                cellD11.setVerticalAlignment(Element.ALIGN_CENTER);// 垂直居中
+                cellD11.setColspan(2);// 跨6列
+                cellD11.setRowspan(6);//跨6行
+                cellD11.setBorder(0);
+                table.addCell(cellD1);
+                table.addCell(cellD11);
+            }
+            PdfPCell cell10 = new PdfPCell(new Paragraph("执行部门：" + ticketDto.getDeptName(), font2));
+            cell10.setVerticalAlignment(Element.ALIGN_MIDDLE);// 垂直居中
+            cell10.setRowspan(2);//跨2行
+            cell10.setBorder(0);
+            cell10.setMinimumHeight(40);
+            PdfPCell cell11 = new PdfPCell(new Paragraph("部门负责人：" + ticketDto.getMgName(), font2));
+            cell11.setVerticalAlignment(Element.ALIGN_MIDDLE);// 垂直居中
+            cell11.setRowspan(2);//跨2行
+            cell11.setBorder(0);
+            cell11.setMinimumHeight(40);
             table.addCell(cell10);
             table.addCell(cell11);
             document.add(table);
+            document.newPage();
         } catch (Exception e) {
             e.printStackTrace();
         }
