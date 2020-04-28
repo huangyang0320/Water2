@@ -296,22 +296,21 @@
                          field:'startDate',
                          title:'开始时间',
                          sortable:'true',
-                         width:220,
                      },
                      {
                          field:'phName',
                          title:'泵房名称',
-                         sortable:'true'
+                         sortable:'true',
                      },
                      {
                          field:'deviceName',
                          title:'设备名称',
-                         sortable:'true'
+                         sortable:'true',
                      },
                      {
                          field:'alarmInfo',
                          title:'告警内容',
-                         sortable:'true'
+                         sortable:'true',
                      },
                      {
                          field:'alarmLevel',
@@ -338,12 +337,11 @@
                          field:'endDate',
                          title:'最近报警',
                          sortable:'true',
-                         width:220,
                      },
                      {
                          field: 'operate',
                          title: '操作',
-                         width:300,
+                         width:350,
                          events: operateEvents,//给按钮注册事件
                          formatter: addFunctionAlty//表格中增加按钮  
                      }
@@ -358,7 +356,6 @@
              }
          });
      }
-
 
 
         function modalConfig(phId) {

@@ -279,6 +279,7 @@ $(function(){
                title: '泵房名称',
                align: 'center',
                sortable: true,
+               // width: 120,
                cellStyle: formatTableUnit,
                formatter: paramsMatter,
            },{
@@ -286,6 +287,7 @@ $(function(){
                title: '电气位置',
                align: 'center',
                sortable: true,
+               // width: 120,
                cellStyle: formatTableUnit,
                formatter: paramsMatter,
            },{
@@ -293,6 +295,7 @@ $(function(){
                title: '设备位置',
                align: 'center',
                sortable: true,
+               // width: 120,
                cellStyle: formatTableUnit,
                formatter: paramsMatter,
            }/*,{
@@ -304,6 +307,7 @@ $(function(){
                title: '告警内容',
                align: 'center',
                sortable: true,
+               // width: 120,
                cellStyle: formatTableUnit,
                formatter: paramsMatter,
            },{
@@ -311,12 +315,14 @@ $(function(){
                title: '告警时长(h)',
                align: 'center',
                sortable: true,
+               // width: 120,
                cellStyle: formatTableUnit,
                formatter: paramsMatter,
            },{
                field: 'alarmLevel',
                title: '告警等级',
                align: 'center',
+               // width: 120,
                //cellStyle:cellStylesales,
                sortable: true,
                formatter:  function(value,row,index) {
@@ -339,6 +345,7 @@ $(function(){
                title: '开始时间',
                align: 'center',
                sortable: true,
+               // width: 200,
                cellStyle: formatTableUnit,
                formatter: paramsMatter,
            },{
@@ -346,6 +353,7 @@ $(function(){
                title: '结束时间',
                align: 'center',
                sortable: true,
+               // width: 200,
                cellStyle: formatTableUnit,
                formatter: paramsMatter,
            },/*{
@@ -387,7 +395,7 @@ $(function(){
                     "white-space": "nowrap",
                     "text-overflow": "ellipsis",
                     "overflow": "hidden",
-                    "max-width": "60px"
+                    "max-width": "60",
                 }
             }
         }
