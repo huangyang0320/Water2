@@ -181,10 +181,12 @@ var t = null;
 
                         <td rowspan="2" width="10%"><img src="static/home/images/icon-06.png"  style="width: 70%"/></td>
                         <td  width="40%">
-                            <p class="alltitle-one" style="white-space: nowrap">同比：
+                            <p class="alltitle-one" style="white-space: nowrap">同比(%)：
 
                                 <img id="tb" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
-                                <span id="tRate" style="color: #fff;">0</span>
+                                水:<span id="tRate" style="color: #fff;">0</span>
+                                <img id="tbd" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
+                                能效:<span id="tRated" style="color: #fff;">0</span>
 
                             </p>
                         </td>
@@ -197,11 +199,12 @@ var t = null;
 
 
                         <td>
-                            <p class="alltitle-one" style="white-space: nowrap">环比：
+                            <p class="alltitle-one" style="white-space: nowrap">环比(%)：
 
                                 <img id="hb" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
-                                <span id="hRate" style="color: #fff;">0</span>
-
+                                水:<span id="hRate" style="color: #fff;">0</span>
+                                <img id="hbd" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
+                                能效:<span id="hRated" style="color: #fff;">0</span>
                             </p>
                         </td>
                     </tr>
@@ -242,7 +245,7 @@ var t = null;
             <div class="boxall" style="height: 3.66rem;">
                 <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getDynamicPressureData(this);">动态压力</span>
                 <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpHouseDynamicPressureData(this);">压力平均值</span>
-                <div class="allnav" id="fb1" style="margin-top:12px"></div>
+                <div class="allnav" id="fb1" style="height: 100%"></div>
                 <!--<div class="alltitle">动态压力</div>-->
                 <!--<div style="height:100%; width: 100%; float: left;">-->
                     <!--<div class="allnav" id="fb1"></div>-->

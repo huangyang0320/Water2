@@ -1438,8 +1438,8 @@ function getDynamicPressureData(obj) {
                 grid: {
                     left: '5%',
                     right: '8%',
-                    bottom: '7%',
-                    top:'8%',
+                    bottom:20,
+                    // top:'10%',
                     containLabel: true
                 },
                 tooltip: {
@@ -1477,7 +1477,11 @@ function getDynamicPressureData(obj) {
                 },
                 yAxis: [
                     {
+                        name: 'MPa',
                         type: 'value',
+                        nameTextStyle: {
+                            color: '#ccc',
+                        },
                         axisLine:{
                             lineStyle:{
                                 color:'rgba(255,255,255,.2)'
@@ -1616,7 +1620,7 @@ function getPumpHouseDynamicPressureData(obj) {
         success: function (data) {
             setButtonCss(obj);
             let xArr = []
-            for(let i=0;i<24;i++){
+            for(let i=5;i<25;i++){
                 if(i<10){
                     let n = '0' +i
                     xArr.push(n)
@@ -1624,7 +1628,10 @@ function getPumpHouseDynamicPressureData(obj) {
                     xArr.push(i)
                 }
             }
-            console.log(xArr)
+            for(let i=0;i<5;i++){
+                let n = '0' +i
+                xArr.push(n)
+            }
             // 基于准备好的dom，初始化echarts实例
             let myChart2 = echarts.init(document.getElementById('fb1'));
             let option2 = {
@@ -1633,8 +1640,8 @@ function getPumpHouseDynamicPressureData(obj) {
                 grid: {
                     left: '5%',
                     right: '8%',
-                    bottom: '7%',
-                    top:'8%',
+                    bottom: 20,
+                    // top:15,
                     containLabel: true
                 },
                 tooltip: {
@@ -1642,7 +1649,7 @@ function getPumpHouseDynamicPressureData(obj) {
                 },
                 legend: {
                     top:'0%',
-                    icon: 'rectangle',
+                    // icon: 'rectangle',
                     data:['进口压力1','进口压力2','设定值'],
                     // width:'35%',
                     textStyle: {
@@ -1674,7 +1681,11 @@ function getPumpHouseDynamicPressureData(obj) {
                 },
                 yAxis: [
                     {
+                        name:'MPa',
                         type: 'value',
+                        nameTextStyle: {
+                            color: '#ccc',
+                        },
                         axisLine:{
                             lineStyle:{
                                 color:'rgba(255,255,255,.2)'
