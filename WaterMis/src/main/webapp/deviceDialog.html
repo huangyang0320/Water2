@@ -482,7 +482,7 @@
                             pumpHouseId: pumpHouse.pumpHouseId
                         }),
                         success:function (res) {
-                            console.log('DIALOG_DATA_UPDATE，获取点位信息',res)
+                            // console.log('DIALOG_DATA_UPDATE，获取点位信息',res)
                             $("#pointLoading").hide();
                             var strDevice, deviceStatus, statusBtn, ponitStr;
                             if( res.length>1){
@@ -667,7 +667,7 @@
 
             //点击名称 显示组态图
             function clickTitle() {
-                console.log(parent.GLOBAL_PUMP_MSG_MAP)
+                // console.log('parent.GLOBAL_PUMP_MSG_MAP',parent.GLOBAL_PUMP_MSG_MAP)
                 parent.showPic(parent.GLOBAL_PUMP_MSG_MAP["pumpHouseId"])
             }
 
