@@ -2400,7 +2400,7 @@ function clearEcharts() {
 function setEcharts(xData,yData,dateType,markLine){
     console.log('44444444',xData,yData,dateType,markLine)
     let max = 0
-    if(dateType=='瞬时流量'){
+    if(dateType.indexOf('瞬时流量')!=-1){
         max = function (value) {
             return (value.max * 1.2).toFixed(0)
         }
