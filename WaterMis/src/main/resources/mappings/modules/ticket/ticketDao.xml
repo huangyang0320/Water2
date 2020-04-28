@@ -471,6 +471,7 @@
         ) currentStatusName,
         t.biz_id bizId,
         de.`NAME` deviceName,
+        su.name createName,
         p.`NAME` pumpName
         FROM
         ticket t
@@ -560,6 +561,7 @@
         t.create_Date createDate,
         t.update_Date updateDate,
         t.create_by createByStr,
+        su.name createName,
         t.update_by updateByStr,
         t.ticket_reason ticketReason,
         t.ticket_description ticketDescription,

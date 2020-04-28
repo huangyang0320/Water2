@@ -839,16 +839,27 @@ public class PumpConfigurationService {
         return pumpConfigurationMapper.selectSysDictByType(type);
     }
 
+    /**
+     * 昨天5点  到今天4点的数据
+     * @return
+     */
     public Map<String,Object>  getDynamicPressureData(){
         Map<String,Object> map =new HashMap<String,Object>();
         List<String> list1=new ArrayList<String>();
         List<String> list2=new ArrayList<String>();
         List<String> list3=new ArrayList<String>();
         List<String> list4 = new ArrayList<String>();
-        //当前天的实时tableName
-        String tableName="service_values_hour_"+DateUtils.formatDateTimeByFormat(new Date(),"yyyyMMdd");
+        //昨天的实时tableName
+        String tableNameZt="service_values_hour_"+DateUtils.getLastDay(DateUtils.getDateTime("yyyMMdd"),-1);
 
-        List<PumpService> listData = pumpConfigurationMapper.getDatePv(tableName);
+        //当前天的实时tableName
+        String tableNameJt="service_values_hour_"+DateUtils.formatDateTimeByFormat(new Date(),"yyyyMMdd");
+
+        String startDate=DateUtils.formatDateTimeByFormat(new Date(),"yyyy-MM-dd")+" 05";
+        String endDate=DateUtils.formatDateTimeByFormat(new Date(),"yyyy-MM-dd")+" 04";
+
+        List<PumpService> listData = pumpConfigurationMapper.getDatePv(tableNameZt,tableNameJt,startDate,endDate);
+
         for(PumpService p:listData){
             list4.add(p.getDateTime());
                 if(p.getNum()>0){
