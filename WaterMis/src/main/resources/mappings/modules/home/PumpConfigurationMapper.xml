@@ -290,6 +290,25 @@
     </select>
 
     <select id="getDatePv" resultType="com.wapwag.woss.modules.monitor.pumpNode.PumpService" parameterType="java.lang.String">
+         SELECT
+			temp.id_device idDevice,temp.id_service idService, s.name, tag_name tagName, s.unit, sum(temp.pv * case when ratio is null then 1 else ratio end) as pv, s.code,temp.date_time dateTime,count(*) num
+		FROM
+			(SELECT
+				temp1.id_device,temp1.id_service, temp1.tag_name, temp1.pv, DATE_FORMAT(temp1.date_time, '%Y-%m-%d %H') date_time
+			FROM
+				(SELECT
+				id_device,id_service, tag_name,pv,date_time
+			FROM
+				${tableNameZt}
+			where (TAG_NAME='总进水压力' or TAG_NAME='进水压力下限') and DATE_TIME >= #{startDate}
+				) temp1
+			) temp
+			left JOIN services s ON s.id = temp.id_service where s.code in ('pressure_szjs1','pressure_szjs2','pressurein_lowset')
+        GROUP BY temp.date_time,s.code
+
+
+        union all
+
 
        SELECT
 			temp.id_device idDevice,temp.id_service idService, s.name, tag_name tagName, s.unit, sum(temp.pv * case when ratio is null then 1 else ratio end) as pv, s.code,temp.date_time dateTime,count(*) num
@@ -300,8 +319,8 @@
 				(SELECT
 				id_device,id_service, tag_name,pv,date_time
 			FROM
-				${tableName}
-			where TAG_NAME='总进水压力' or TAG_NAME='进水压力下限'
+				${tableNameJt}
+			where (TAG_NAME='总进水压力' or TAG_NAME='进水压力下限') and DATE_TIME <![CDATA[<=]]>#{endDate}
 				) temp1
 			) temp
 			left JOIN services s ON s.id = temp.id_service where s.code in ('pressure_szjs1','pressure_szjs2','pressurein_lowset')

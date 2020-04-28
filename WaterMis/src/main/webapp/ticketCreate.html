@@ -138,7 +138,7 @@
                                 <label for="deviceId">所在设备</label>
                                 <!-- <input type="text" class="form-control"  id="processName" name="processName" placeholder="请输入">
                                  <input type="hidden"  class="form-control"  id="deviceId" name="deviceId" placeholder="请输入">-->
-                                <select class="selectpicker form-control" id="deviceId" multiple data-live-search="true" title="请选择所在设备">
+                                <select class="selectpicker form-control" id="deviceId" onchange="getReasonListByIds()" multiple data-live-search="true" title="请选择所在设备">
                                 </select>
                                 <input type="hidden" name="deviceId" id="deviceStr"/>
                             </div>
@@ -309,3 +309,15 @@
     <!-- Date util -->
     <script src="static/assets/js/date_time.js"></script>
     <script src="static/assets/js/ticket/createTicket.js"></script>
+
+    <script>
+        //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
+        /* 点击input框时加载监听事件*/
+        $(".timepicker").each(function () {
+            this.addEventListener('click',myfunc);
+        })
+
+        function myfunc(e){
+            e.currentTarget.blur();
+        }
+    </script>

@@ -248,7 +248,6 @@ $(function(){
            searchOnEnterKey: false,//回车搜索
            clickToSelect:true,
            showRefresh: false,//刷新按钮
-           showColumns: true,//列选择按钮
            smartDisplay:true,
             // toolbar: "#toolbar",//显示工具栏
             // showExport: true,//工具栏上显示导出按钮
@@ -279,17 +278,26 @@ $(function(){
                field: 'phName',
                title: '泵房名称',
                align: 'center',
-               sortable: true
+               sortable: true,
+               // width: 120,
+               cellStyle: formatTableUnit,
+               formatter: paramsMatter,
            },{
                field: 'deviceName',
                title: '电气位置',
                align: 'center',
-               sortable: true
+               sortable: true,
+               // width: 120,
+               cellStyle: formatTableUnit,
+               formatter: paramsMatter,
            },{
                field: 'alarmTypeRemarks',
                title: '设备位置',
                align: 'center',
-               sortable: true
+               sortable: true,
+               // width: 120,
+               cellStyle: formatTableUnit,
+               formatter: paramsMatter,
            }/*,{
                field: 'deviceId',
                title: '设备编号',
@@ -298,16 +306,23 @@ $(function(){
                field: 'alarmInfo',
                title: '告警内容',
                align: 'center',
-               sortable: true
+               sortable: true,
+               // width: 120,
+               cellStyle: formatTableUnit,
+               formatter: paramsMatter,
            },{
                field: 'alarmTime',
                title: '告警时长(h)',
                align: 'center',
-               sortable: true
+               sortable: true,
+               // width: 120,
+               cellStyle: formatTableUnit,
+               formatter: paramsMatter,
            },{
                field: 'alarmLevel',
                title: '告警等级',
                align: 'center',
+               // width: 120,
                //cellStyle:cellStylesales,
                sortable: true,
                formatter:  function(value,row,index) {
@@ -329,12 +344,18 @@ $(function(){
                field: 'startDate',
                title: '开始时间',
                align: 'center',
-               sortable: true
+               sortable: true,
+               // width: 200,
+               cellStyle: formatTableUnit,
+               formatter: paramsMatter,
            },{
                field: 'endDate',
                title: '结束时间',
                align: 'center',
-               sortable: true
+               sortable: true,
+               // width: 200,
+               cellStyle: formatTableUnit,
+               formatter: paramsMatter,
            },/*{
                field: 'confirmStat',
                title: '告警确认状态',
@@ -357,6 +378,27 @@ $(function(){
                return html.join('');
            }
         });
+        // 表格高度自适应
+        // $('#dataTables-example').bootstrapTable('resetView',{height:"auto"});
+
+        //表格超出宽度鼠标悬停显示td内容
+        function paramsMatter(value, row, index) {
+            var span = document.createElement("span");
+            span.setAttribute("title", value);
+            span.innerHTML = value;
+            return span.outerHTML;
+        }
+        //td宽度以及内容超过宽度隐藏
+        function formatTableUnit(value, row, index) {
+            return {
+                css: {
+                    "white-space": "nowrap",
+                    "text-overflow": "ellipsis",
+                    "overflow": "hidden",
+                    "max-width": "60",
+                }
+            }
+        }
 //confirmStat confirmDate
         areaCount();
         alarmTypeCount();
@@ -388,7 +430,7 @@ function setTicketId(mark){
     })
 }
 
-function queryMaintenanceWorkerDept() {
+function queryMaintenanceWorkerDept(deptId) {
     //var url = CONTEXT_PATH+"/alarmStatController/queryMaintenanceWorkerUser?"+ Math.random();
     var url =CONTEXT_PATH+"/ticket/getDept?"+ Math.random();
     jQuery.ajax({
@@ -404,24 +446,25 @@ function queryMaintenanceWorkerDept() {
                     $("#mgName").val(item.mgName);
                 }
             });
+            if(deptId!=null&&deptId!=''&&deptId!=undefined){
+                $("#deptId").val(deptId);
+                $("#mgName").val(jQuery("#deptId option:selected").attr("mgName"));
+            }
         }
     });
 }
 function myModalWorkOrder(row,flag) {
 
     //queryAlarmWorkTemplate();
-    queryMaintenanceWorkerDept();
-    $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
+    queryMaintenanceWorkerDept(row.deptId);
+    $("#alarmContent").val(row.phName+"-"+row.alarmTypeRemarks+'发生了'+row.alarmInfo);
     $("#alarmTime").val(row.startDate);
     $("#phName").val(row.phName);
     $("#phId").val(row.phId);
     $("#address").val(row.address);
-
     if(row.ticketId!=null&&row.ticketId!=''){
         $("#ticketId").val(row.ticketId);
     }
-
-
     $("#processName").val(row.deviceName);
     $("#deviceId").val(row.deviceId);
     $("#alarmReason").val(row.alarmReason);
@@ -699,7 +742,8 @@ function disHide(){
         //手动触发验证
         bootstrapValidator.validate();
         if(bootstrapValidator.isValid()){
-            var _url = CONTEXT_PATH+"/alarmStatController/submitWorkOrder?"+ Math.random();
+           // var _url = CONTEXT_PATH+"/alarmStatController/submitWorkOrder?"+ Math.random();
+            var _url = CONTEXT_PATH+"/ticket/createWorkOrder?"+ Math.random();
             $("#workOrder").ajaxSubmit( {
                 type : 'POST',
                 url : _url,

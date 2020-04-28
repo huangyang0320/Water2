@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class ProductComponentService extends CrudService<ProductComponentDao, ProductComponentData> {
-	
+
 	@Autowired
 	private ProductComponentDao productComponentDao;
 
@@ -22,7 +22,7 @@ public class ProductComponentService extends CrudService<ProductComponentDao, Pr
 		return productComponentDao.findAllProductComponentList();
 	}
 
-	public List<ProductComponent> findProductComponentReasonListById(String deviceIds){
-		return productComponentDao.findProductComponentReasonListById(deviceIds);
+	public List<ProductComponentData> findProductComponentReasonListById(List<String> list){
+		return productComponentDao.findProductComponentReasonListById(list);
 	}
 }
