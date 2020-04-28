@@ -50,7 +50,7 @@ public interface PumpConfigurationMapper {
 
     List<PumpService>  getDateHour(@Param("tableName")String tableName);
 
-    List<PumpService>  getDatePv(@Param("tableName")String tableName);
+    List<PumpService>  getDatePv(@Param("tableNameZt")String tableNameZt,@Param("tableNameJt")String tableNameJt,@Param("startDate")String startDate,@Param("endDate")String endDate);
 
     List<PumpService>  getPName();
 

@@ -24,4 +24,10 @@ public interface UserDao extends CrudDao<DeviceInfo> {
      */
     List<User> getAlarmSendUserList(@Param(value = "list") List<String> list);
 
+    /**
+     * 账号冻结相关操作
+     * @param user
+     */
+    void freezeOperation(User user);
+
 }

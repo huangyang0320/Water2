@@ -6,7 +6,6 @@ import com.wapwag.woss.modules.home.entity.User;
 import com.wapwag.woss.modules.home.service.UserService;
 import com.wapwag.woss.modules.home.util.LoginUtil;
 import com.wapwag.woss.modules.sys.service.SystemService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -73,11 +73,16 @@ public class UserController {
 
         if (user == null) {
             resultMap.put("result", LOGIN_FAIL);
+        }else if (user.getFailureNum()>=4 && new Date().getTime()-user.getFreezeTime().getTime()<=15*60*1000){
+            resultMap.put("result", "密码错误过多，请在15分钟后再试，或联系管理员解锁!");
         }else if ("admin".equals(loginName) && !SystemService.validatePassword(password, user.getPassword())) {
             //AD域名验证用户密码是否正确
             resultMap.put("result", "用户名或密码错误!");
         }else if ((!"chen_chun".equals(loginName) && !"admin".equals(loginName)) && !AdService.validateAd(loginName, password) ) {
-            resultMap.put("result", "用户名或密码错误!");
+            user.setFailureNum(user.getFailureNum()+1);
+            user.setFreezeTime(new Date());
+            userService.freezeOperation(user);
+            resultMap.put("result", "用户名或密码错误(还剩"+(5-user.getFailureNum())+"次输入机会)!");
         }
         else {
 
@@ -96,7 +101,9 @@ public class UserController {
                     if (!resultMap.containsKey("map")) {
                         resultMap.put("map", "arcgis");
                     }
-
+                    user.setFreezeTime(null);
+                    user.setFailureNum(0);
+                    userService.freezeOperation(user);
                     user.setEncryPassword(password);
                     session.setAttribute("user", user);
                     session.setAttribute("map", resultMap.get("map"));

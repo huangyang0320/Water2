@@ -17,26 +17,28 @@
 	    <result column="failure_rate_year_10" jdbcType="REAL" property="failureRateYear10" />
 	    <result column="weight" jdbcType="REAL" property="weight" />
 	    <result column="sort" jdbcType="BIGINT" property="sort" />
+		<result column="wb_Reason" jdbcType="VARCHAR" property="wbReason" />
+		<result column="wb_Programme" jdbcType="VARCHAR" property="wbProgramme" />
   	</resultMap>
 	<sql id="Base_Column_List">
-	    id, component_name, component_model, failure_rate_year_1, failure_rate_year_2, failure_rate_year_3, 
-	    failure_rate_year_4, failure_rate_year_5, failure_rate_year_6, failure_rate_year_7, 
+	    id, component_name, component_model, failure_rate_year_1, failure_rate_year_2, failure_rate_year_3,
+	    failure_rate_year_4, failure_rate_year_5, failure_rate_year_6, failure_rate_year_7,
 	    failure_rate_year_8, failure_rate_year_9, failure_rate_year_10, weight, sort
 	</sql>
     <select id="findAllProductComponentList" resultMap="BaseResultMap">
         select
-        a.id,a.component_name,
+        a.id,a.component_name
         from product_component a
         order by a.sort asc
     </select>
 
-	<select id="findProductComponentReasonListById" resultType="com.wapwag.woss.modules.biz.entity.ProductComponent">
+	<select id="findProductComponentReasonListById" resultMap="BaseResultMap">
         select
-        a.id,a.component_name,a.wb_Reason wbReason,a.wb_Programme wbProgramme
+		GROUP_CONCAT(a.wb_Reason) wbReason,GROUP_CONCAT(a.wb_Programme) wbProgramme
         from product_component a
         <where>
-			d.id IN
-			<foreach collection="deviceIds.split(',')" item="item" index="index" open="(" separator="," close=")">
+			a.id IN
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</where>

@@ -74,6 +74,8 @@ public interface TicketDao  extends CrudDao<TicketDto> {
      */
     int updateAlarmTicketByDeviceIdAndStartTime(TicketDto ticket);
 
+    int updateAlarmData(TicketDto ticket);
+
     /**
      * 修改工单信息
      * @param ticket

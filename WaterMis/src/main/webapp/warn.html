@@ -97,6 +97,9 @@
             max-height:200px;
             overflow-y:auto;
         }
+        .table {
+            table-layout: fixed
+        }
     </style>
 <!--    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
 <!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>-->
@@ -157,7 +160,8 @@
 <!--                <div id="alarmBodyNoMsg" style="width: 100%;height: 100%; text-align: center;padding-top: 60px; position: absolute;top: 0px;left: 0;z-index: 999"> 暂无数据 </div>-->
 <!--            </div>-->
 <!--        </div>-->
-        <div id="alarmtable"></div>
+        <!--<div id="alarmtable" class="table"></div>-->
+        <table id="alarmtable" class="table table-hover" data-reorderable-columns="true" data-sortable="true" data-sort-class="table-active"></table>
     </div>
 </div>
 <!--确认框-->
@@ -306,6 +310,7 @@
                      },
                      'click #ignore': function (e, value, row, index) {
                          ignore(row)
+
                      },
                      'click #createWorkOrder': function (e, value, row, index) {
                          if(row.ticketId){
@@ -323,31 +328,51 @@
                          field:'startDate',
                          title:'开始时间',
                          sortable:'true',
-                         width:220,
+                         // width: 180,
+                         align: 'center',
+                         cellStyle: formatTableUnit,
+                         formatter: paramsMatter,
                      },
                      {
                          field:'phName',
                          title:'泵房名称',
-                         sortable:'true'
+                         sortable:'true',
+                         // width: 100,
+                         align: 'center',
+                         cellStyle: formatTableUnit,
+                         formatter: paramsMatter,
                      },
                      {
                          field:'deviceName',
                          title:'电气位置',
-                         sortable:'true'
+                         sortable:'true',
+                         // width: 100,
+                         align: 'center',
+                         cellStyle: formatTableUnit,
+                         formatter: paramsMatter,
                      },{
                          field:'alarmTypeRemarks',
                          title:'设备位置',
-                         sortable:'true'
+                         sortable:'true',
+                         // width: 100,
+                         align: 'center',
+                         cellStyle: formatTableUnit,
+                         formatter: paramsMatter,
                      },
                      {
                          field:'alarmInfo',
                          title:'告警内容',
-                         sortable:'true'
+                         sortable:'true',
+                         // width: 100,
+                         align: 'center',
+                         cellStyle: formatTableUnit,
+                         formatter: paramsMatter,
                      },
                      {
                          field:'alarmLevel',
                          title:'告警等级',
                          align: 'center',
+                         // width: 100,
                          sortable:'true',
                          formatter:  function(value,row,index) {
                              var a = "";
@@ -369,18 +394,24 @@
                          field:'endDate',
                          title:'最近报警',
                          sortable:'true',
-                         width:220,
+                         // width: 180,
+                         align: 'center',
+                         cellStyle: formatTableUnit,
+                         formatter: paramsMatter,
                      },
                      {
                          field: 'operate',
                          title: '操作',
-                         width:450,
+                         width:300,
+                         // align: 'center',
                          events: operateEvents,//给按钮注册事件
-                         formatter: addFunctionAlty//表格中增加按钮  
+                         formatter: addFunctionAlty, //表格中增加按钮  
                      }
                  ]
                  $('#alarmtable').bootstrapTable({
                      columns:columns,
+                     cache:false,
+                     smartDisplay:true,
                      data:data,
                      formatNoMatches: function () {  //没有匹配的结果
                          return '暂时没有告警';
@@ -390,7 +421,24 @@
          });
      }
 
-
+        //表格超出宽度鼠标悬停显示td内容
+        function paramsMatter(value, row, index) {
+            var span = document.createElement("span");
+            span.setAttribute("title", value);
+            span.innerHTML = value;
+            return span.outerHTML;
+        }
+        //td宽度以及内容超过宽度隐藏
+        function formatTableUnit(value, row, index) {
+            return {
+                css: {
+                    "white-space": "nowrap",
+                    "text-overflow": "ellipsis",
+                    "overflow": "hidden",
+                    "max-width": "60",
+                }
+            }
+        }
 
         function modalConfig(phId) {
         	phId = $(phId).attr('name');
@@ -420,20 +468,6 @@
         function ignore(obj){
         	// var item = $(obj).attr('name');
             let item = obj.id
-        	// if($.confirm('提示','确定要忽略此条告警吗？')){
-            //     // window.parent.window.alarmIgnore(item);
-            //     // setTimeout(()=>{
-            //     //     getAlarmList()
-            //     // },2000)
-            //     $.post(parent.CONTEXT_PATH + '/alarmStatController/indexConfig',{
-            //         "id": obj.id,
-            //         "alarmType": "2"   //1：确认，2：忽略
-            //     }, function(data) {
-            //         parent.showErrorMsgVideo("忽略成功")
-            //         // $('#alarmtable').bootstrapTable('resetView')
-            //         getAlarmList()
-            //     });
-            // }
             $.confirm({
                 title: '确认',
                 content: '确定要忽略此条告警吗？',

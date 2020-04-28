@@ -25,6 +25,7 @@ import com.wapwag.woss.modules.sys.utils.MapToEntity;
 import com.wapwag.woss.modules.sys.utils.UserUtils;
 
 import com.water.ds.db.DbSqlServerHr;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -524,6 +525,31 @@ public class SystemService extends BaseService implements InitializingBean {
 		reObj.put("msg","人事系统同步失败：0 条数据...");
 		return reObj;
 
+	}
+
+	/**
+	 * 核查用户是否存在告警忽略权限
+	 * @param userId
+	 * @return
+	 */
+	public JSONObject checkWarnPower(String userId)
+	{
+		JSONObject result=new JSONObject();
+		result.put("code",0);
+		result.put("status",true);
+         List<String> list = roleDao.checkWarnPower(userId);
+         if(CollectionUtils.isNotEmpty(list))
+		 {
+			 for (String menuId:list)
+			 {
+				 if("044e8fc873ad4580b8a96073a237d45a".equals(menuId))
+				 {
+					 result.put("code",1);
+					 return result;
+				 }
+			 }
+		 }
+		 return result;
 	}
 
 	public static void main(String[] args) {

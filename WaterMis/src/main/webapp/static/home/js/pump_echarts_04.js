@@ -453,14 +453,18 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
             }
         ],
         grid: [{
-            left: 50,
-            right: 50,
-            height: '28%'
+            left: 15,
+            right:15,
+            // top:30,
+            height: '29%',
+            containLabel: true
         }, {
-            left: 50,
-            right: 50,
-            top: '56%',
-            height: '30%'
+            left: 15,
+            right: 15,
+            bottom: 5,
+            top: '62%',
+            height: '28%',
+            containLabel: true
         }],
         xAxis: [
             {
@@ -504,13 +508,15 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
         ],
         yAxis: [
             {
-                name: 'm³',
+                name: 'm³ ',
+                nameLocation:'end',
+                nameGap: 10,
                 type: 'value',
                 nameTextStyle: {
-                    color: '#ccc'
+                    color: '#ccc',
 				},
                 axisTick: {show: false},
-                			axisLine: {
+                axisLine: {
                     lineStyle: {
                         color: 'rgba(255,255,255,.1)'
                     }
@@ -521,7 +527,6 @@ function echarts_04(xData,xName,useWaterHis,usePowerHis,useWaterReal,usePowerRea
                         fontSize:12,
                     },
                 },
-
                 splitLine: {
                     lineStyle: {
                         color: 'rgba(255,255,255,.1)'
