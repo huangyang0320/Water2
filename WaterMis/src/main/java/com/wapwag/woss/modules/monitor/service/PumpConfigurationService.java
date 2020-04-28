@@ -855,7 +855,7 @@ public class PumpConfigurationService {
         //当前天的实时tableName
         String tableNameJt="service_values_hour_"+DateUtils.formatDateTimeByFormat(new Date(),"yyyyMMdd");
 
-        String startDate=DateUtils.formatDateTimeByFormat(new Date(),"yyyy-MM-dd")+" 05";
+        String startDate=DateUtils.getLastDay("yyyy-MM-dd",-1)+" 05";
         String endDate=DateUtils.formatDateTimeByFormat(new Date(),"yyyy-MM-dd")+" 04";
 
         List<PumpService> listData = pumpConfigurationMapper.getDatePv(tableNameZt,tableNameJt,startDate,endDate);
