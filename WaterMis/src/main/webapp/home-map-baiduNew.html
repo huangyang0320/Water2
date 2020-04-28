@@ -221,7 +221,6 @@
 
     //點擊 左上角的事件 -- 2 在线；3 离线； 4 告警
     function redrawMap(type) {
-        console.log('保存的',saveMapList)
         MAP.clearOverlays();
         if(type == 2) {
             for(let i=0;i<saveMapList.online.length;i++){
@@ -371,9 +370,9 @@
                 ok: false,
                 drag: false,
                 init:function () {
-                    this.iframe.contentWindow.addEventListener("dblclick", function (ev) {
-                        this.frameElement.api.close();
-                    });
+                    // this.iframe.contentWindow.addEventListener("dblclick", function (ev) {
+                    //     this.frameElement.api.close();
+                    // });
                 }
             });
         };
@@ -694,7 +693,7 @@
         MAP.setCenter(pointthis);
         MAP.panTo(pointthis);
 
-        console.log('3--',areaId)
+        // console.log('3--',areaId)
         areaMapClick(areaId,type);
 
     }
@@ -769,7 +768,7 @@
         window.pumpList.map(function (v) {
             allPumpArray.push(v.pumpHouseId);
         })
-        console.log('第一次',allPumpArray)
+        // console.log('第一次',allPumpArray)
         selectpumps = allPumpArray
 
         getAlarmByPumpIds(allPumpArray);
@@ -784,10 +783,6 @@
             success: function (res) {
                 //清理之前的渲染图层
                 MAP.clearOverlays();
-                console.log('online----', res)
-                console.log('ala----',alarmList)
-                console.log('list----',window.pumpList)
-                console.log(saveMapList)
                 let pumpnum1 = 0,pumpnum2 = 0,pumpnum3 = 0,pumpnum4 = 0
                 window.pumpList.map(function (v) {
                     var pointM = new BMap.Point(v.longi, v.lati);
@@ -823,7 +818,7 @@
                 $('#pumpnum2').html(pumpnum2)
                 $('#pumpnum3').html(pumpnum3)
                 $('#pumpnum4').html(pumpnum4)
-                console.log('保存得',saveMapList)
+                // console.log('保存得',saveMapList)
                 $.post("/HYWater/config/getMapPoint", function(result) {
                     //MAP.centerAndZoom(new BMap.Point(result.longi, result.lati), 13);
                     //118.434261,31.264748
@@ -860,7 +855,6 @@
                 }
             }
         })
-        console.log('所有',allPumpArray)
         selectpumps = allPumpArray
 
         getAlarmByPumpIds(allPumpArray);
@@ -879,7 +873,7 @@
                 MAP.clearOverlays();
                     let pumpnum1 = 0,pumpnum2 = 0,pumpnum3 = 0,pumpnum4=0;
                     window.pumpList.map(function (v) {
-                        console.log(areaId, v.pId, v.id)
+                        // console.log(areaId, v.pId, v.id)
                         if(type == 2) {
                             if (areaId == v.pId) {
                                 var pointM = new BMap.Point(v.longi, v.lati);
@@ -895,22 +889,22 @@
                                 };
                                 let mapPicUrl = ''
                                 if (isInArray(alarmList, v.pumpHouseId)) {
-                                    console.log('告警')
+                                    // console.log('告警')
                                     mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
                                     saveMapList.warning.push(v)
                                     pumpnum4++
                                 } else if (isInArray(res, v.pumpHouseId)) {
-                                    console.log('在线')
+                                    // console.log('在线')
                                     mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
                                     saveMapList.online.push(v)
                                     pumpnum2++
                                 } else {
-                                    console.log('离线')
+                                    // console.log('离线')
                                     mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
                                     saveMapList.offline.push(v)
                                     pumpnum3++
                                 }
-                                console.log(mapPicUrl)
+                                // console.log(mapPicUrl)
                                 addMarker(pointM, pumpHouse, mapPicUrl);
                             }
                         }else if(type == 3) {
@@ -928,27 +922,27 @@
                                 };
                                 let mapPicUrl = ''
                                 if (isInArray(alarmList, v.pumpHouseId)) {
-                                    console.log('告警')
+                                    // console.log('告警')
                                     mapPicUrl = ROOT_PATH + "/static/assets/img/pump03.png";
                                     saveMapList.warning.push(v)
                                     pumpnum4++
                                 } else if (isInArray(res, v.pumpHouseId)) {
-                                    console.log('在线')
+                                    // console.log('在线')
                                     mapPicUrl = ROOT_PATH + "/static/assets/img/pump02.png";
                                     saveMapList.online.push(v)
                                     pumpnum2++
                                 } else {
-                                    console.log('离线')
+                                    // console.log('离线')
                                     mapPicUrl = ROOT_PATH + "/static/assets/img/pump01.png";
                                     saveMapList.offline.push(v)
                                     pumpnum3++
                                 }
-                                console.log(mapPicUrl)
+                                // console.log(mapPicUrl)
                                 addMarker(pointM, pumpHouse, mapPicUrl);
                             }
                         }
                     })
-                    console.log('llll-' + pumpnum4 + pumpnum2 + pumpnum3)
+                    // console.log('llll-' + pumpnum4 + pumpnum2 + pumpnum3)
                     pumpnum1 = pumpnum4 + pumpnum2 + pumpnum3
                     $('#pumpnum1').html(pumpnum1)
                     $('#pumpnum2').html(pumpnum2)

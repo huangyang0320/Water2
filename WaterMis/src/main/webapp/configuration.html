@@ -1183,12 +1183,12 @@ function setSvg(reloading) {
         if(conctolPs.curDevicePos && window.level_tank){
             conctolPs.curDevicePos.tankPos.map(function (v, i) {
                 if (!reloading) {
-                    setCicle(v,conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位")
-                    setRect(v,conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位")
+                    setCicle(v,conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位(m)")
+                    setRect(v,conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位(m)")
                 }
                 var val=window.level_tank[i];
                 if (val!=undefined && val.tagName == "水箱液位" ) {
-                    setText(v, '液位：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位");
+                    setText(v, '液位：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位(m)");
                     // setText(v, ''+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"level_tank"+(i+1),"水箱液位");
                 }
             })
@@ -1200,15 +1200,15 @@ function setSvg(reloading) {
         if(conctolPs.curDevicePos && window.pressure_szjs){
             conctolPs.curDevicePos.inletPos.map(function (v, i) {
                 if (!reloading) {
-                    setCicle(v,conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力")
-                    setRect(v,conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力")
+                    setCicle(v,conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力(kPa)")
+                    setRect(v,conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力(kPa)")
                 }
                 var val=window.pressure_szjs[i];
                 if (val!=undefined && (val.idService.split('.')[1] == 'plc_main\\pressure_szjs1') ) {
-                    setText(v, '滤前：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力");
+                    setText(v, '滤前：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力(kPa)");
                 }
                 if (val!=undefined && (val.idService.split('.')[1] == 'plc_main\\pressure_szjs2') ) {
-                    setText(v, '滤后：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力");
+                    setText(v, '滤后：'+ val.pv +  val.unit,'default',conctolPs.deviceInfo[0],"pressure_szjs"+(i+1),"进口压力(kPa)");
                 }
             })
         }
@@ -1241,8 +1241,8 @@ function setSvg(reloading) {
     if(conctolPs.curDevicePos && conctolPs.curDevicePos.outletPos) {
         conctolPs.curDevicePos.outletPos.map(function (v, i) {
             if (!reloading) {
-                setCicle(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
-                setRect(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+                setCicle(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力(kPa)")
+                setRect(v,conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力(kPa)")
             }
             if(conctolPs.deviceInfo[i+1]){
                 var deviceId = conctolPs.deviceInfo[i+1].id
@@ -1258,7 +1258,7 @@ function setSvg(reloading) {
                     })
                 }
                 // setText(v, '出口压力：' + outletPos.pv + outletPos.unit,'default',conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
-                setText(v, conctolPs.deviceInfo[i+1].devicePosition+' ： ' + outletPos.pv + outletPos.unit,'default',conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力")
+                setText(v, conctolPs.deviceInfo[i+1].devicePosition+' ： ' + outletPos.pv + outletPos.unit,'default',conctolPs.deviceInfo[i+1],"pressure_outwater","出口压力(kAa)")
 
             }
         })
@@ -1297,7 +1297,7 @@ function setSvg(reloading) {
                                     fill:  "#fff",
                                 })
                                 $(text1).text(flow_instantVal)
-                                let code1 ='flow_instant',dateType1 ='瞬时流量'
+                                let code1 ='flow_instant',dateType1 ='瞬时流量(m³/h)'
                                 $(text1).attr('onclick', 'showDiv("'+window.serviceValue[n].idDevice+'","'+conctolPs.deviceInfo[i].devicePosition+'","'+code1+'","'+dateType1+'")')
                                 $(text1).css('cursor', 'pointer')
                                 svrStr.append(text1str);
@@ -1333,7 +1333,7 @@ function setSvg(reloading) {
                                 let text1 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text1str = $(text1).attr({x:  v.x-180, y:  v.y+10, fill:  "#fff",})
                                 $(text1).text(flowinstant_outwaterVal)
-                                let code1 ='flowinstant_outwater',dateType1 ='瞬时流量'
+                                let code1 ='flowinstant_outwater',dateType1 ='瞬时流量（m³/h）'
                                 $(text1).attr('onclick', 'showDiv("'+window.serviceValue[n].idDevice+'","'+conctolPs.deviceInfo[i].devicePosition+'","'+code1+'","'+dateType1+'")')
                                 $(text1).css('cursor', 'pointer')
                                 svrStr.append(text1str);
@@ -1343,7 +1343,7 @@ function setSvg(reloading) {
                                 let text2 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text2str = $(text2).attr({x:  v.x-180, y:  v.y+30, fill:  "#fff",})
                                 $(text2).text(frequency_pump11Val)
-                                let code2 ='frequency_pump11',dateType2 ='1#频率'
+                                let code2 ='frequency_pump11',dateType2 ='1#频率（Hz）'
                                 $(text2).attr('onclick', 'showDiv("'+window.serviceValue[i].idDevice+'","'+conctolPs.deviceInfo[i].devicePosition+'","'+code2+'","'+dateType2+'")')
                                 $(text2).css('cursor', 'pointer')
                                 svrStr.append(text2str);
@@ -1353,7 +1353,7 @@ function setSvg(reloading) {
                                 let text3 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text3str = $(text3).attr({x:  v.x-180, y:  v.y+70, fill:  "#fff",})
                                 $(text3).text(frequency_pump12Val)
-                                let code3 ='frequency_pump12',dateType3 ='2#频率'
+                                let code3 ='frequency_pump12',dateType3 ='2#频率（Hz）'
                                 $(text3).attr('onclick', 'showDiv("'+window.serviceValue[i].idDevice+'","'+conctolPs.deviceInfo[i].devicePosition+'","'+code3+'","'+dateType3+'")')
                                 $(text3).css('cursor', 'pointer')
                                 svrStr.append(text3str);
@@ -1363,7 +1363,7 @@ function setSvg(reloading) {
                                 let text4 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text4str = $(text4).attr({x:  v.x-180, y:  v.y+110, fill:  "#fff",})
                                 $(text4).text(frequency_pump13Val)
-                                let code4 ='frequency_pump13',dateType4 ='3#频率'
+                                let code4 ='frequency_pump13',dateType4 ='3#频率（Hz）'
                                 $(text4).attr('onclick', 'showDiv("'+window.serviceValue[i].idDevice+'","'+conctolPs.deviceInfo[i].devicePosition+'","'+code4+'","'+dateType4+'")')
                                 $(text4).css('cursor', 'pointer')
                                 svrStr.append(text4str);
@@ -1505,9 +1505,22 @@ function setSvg(reloading) {
         }else */
        if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
 
+
+           //直供水阀门
             var v={x:1190,y:260};
             setRect(v,"control")
             setText(v, '直供水阀门:',"control");
+           //添加背景色  运行蓝色  停止黄色
+           let color = z_status=='打开'?'#0097ff':'#959b00'
+           var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+           var rectStr = $(rect).attr({
+               x:  v.x + 85,
+               y:  v.y -28,
+               width: "40",
+               height: "28",
+               fill: color,
+           })
+           svrStr.append(rectStr);
            var text = document.createElementNS("http://www.w3.org/2000/svg","text");
            var textStr = $(text).attr({
                x:  v.x + 88,
@@ -1516,23 +1529,23 @@ function setSvg(reloading) {
            })
            $(text).text(z_status)
            svrStr.append(textStr);
-           //添加背景色  运行蓝色  停止黄色
-           let color = z_status=='打开'?'#00f':'#ff0'
-           var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-           var rectStr = $(rect).attr({
-               x:  v.x + 85,
-               y:  v.y -30,
-               width: "40",
-               height: "30",
-               fill: color,
-               "fill-opacity":"0.3"
-           })
-           svrStr.append(rectStr);
             //setImage('static/assets/img/fmY.png', '35', '35', 1190, 250);
 
+           //水箱阀门
             var v1={x:1090,y:190};
             setRect(v1,"control")
             setText(v1, '水箱阀门:',"control")
+           //添加背景色  运行蓝色  停止黄色
+           let color1 = box_status=='打开'?'#0097ff':'#959b00'
+           var rect1 = document.createElementNS("http://www.w3.org/2000/svg","rect");
+           var rectStr1 = $(rect1).attr({
+               x:  v1.x + 75,
+               y:  v1.y -28,
+               width: "40",
+               height: "28",
+               fill: color1,
+           })
+           svrStr.append(rectStr1);
            var text1 = document.createElementNS("http://www.w3.org/2000/svg","text");
            var textStr1 = $(text1).attr({
                x:  v1.x + 78,
@@ -1541,18 +1554,6 @@ function setSvg(reloading) {
            })
            $(text1).text(box_status)
            svrStr.append(textStr1);
-           //添加背景色  运行蓝色  停止黄色
-           let color1 = box_status=='打开'?'#00f':'#ff0'
-           var rect1 = document.createElementNS("http://www.w3.org/2000/svg","rect");
-           var rectStr1 = $(rect1).attr({
-               x:  v1.x + 75,
-               y:  v1.y -30,
-               width: "40",
-               height: "30",
-               fill: color1,
-               "fill-opacity":"0.3"
-           })
-           svrStr.append(rectStr1);
             // setImage('static/assets/img/fmY.png', '35', '35', 1060, 180);
 
         }else if(conctolParams.phName=="春江花园" || conctolParams.phName=="荣盛华府" ||conctolParams.phName=="金海龙韵"){
@@ -1560,6 +1561,18 @@ function setSvg(reloading) {
            var v={x:1050,y:250};
            setRect(v,"control")
            setText(v, '直供水阀门:',"control")
+
+           //添加背景色  运行蓝色  停止黄色
+           let color = z_status=='打开'?'#0097ff':'#959b00'
+           var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+           var rectStr = $(rect).attr({
+               x:  v.x + 85,
+               y:  v.y -28,
+               width: "40",
+               height: "28",
+               fill: color,
+           })
+           svrStr.append(rectStr);
            var text = document.createElementNS("http://www.w3.org/2000/svg","text");
            var textStr = $(text).attr({
                x:  v.x + 88,
@@ -1568,24 +1581,24 @@ function setSvg(reloading) {
            })
            $(text).text(z_status)
            svrStr.append(textStr);
-           //添加背景色  运行蓝色  停止黄色
-           let color = z_status=='打开'?'#00f':'#ff0'
-           var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-           var rectStr = $(rect).attr({
-               x:  v.x + 85,
-               y:  v.y -30,
-               width: "40",
-               height: "30",
-               fill: color,
-               "fill-opacity":"0.3"
-           })
-           svrStr.append(rectStr);
           // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
           // setImage('static/assets/img/fmY.png', '35', '35', 1080, 265);
 
            var v1={x:1020,y:155};
            setRect(v1,"control")
            setText(v1, '水箱阀门:',"control")
+
+           //添加背景色  运行蓝色  停止黄色
+           let color1 = box_status=='打开'?'#0097ff':'#959b00'
+           var rect1 = document.createElementNS("http://www.w3.org/2000/svg","rect");
+           var rectStr1 = $(rect1).attr({
+               x:  v1.x + 75,
+               y:  v1.y -28,
+               width: "40",
+               height: "28",
+               fill: color1,
+           })
+           svrStr.append(rectStr1);
            var text1 = document.createElementNS("http://www.w3.org/2000/svg","text");
            var textStr1 = $(text1).attr({
                x:  v1.x + 78,
@@ -1594,18 +1607,6 @@ function setSvg(reloading) {
            })
            $(text1).text(box_status)
            svrStr.append(textStr1);
-           //添加背景色  运行蓝色  停止黄色
-           let color1 = box_status=='打开'?'#00f':'#ff0'
-           var rect1 = document.createElementNS("http://www.w3.org/2000/svg","rect");
-           var rectStr1 = $(rect1).attr({
-               x:  v1.x + 75,
-               y:  v1.y -30,
-               width: "40",
-               height: "30",
-               fill: color1,
-               "fill-opacity":"0.3"
-           })
-           svrStr.append(rectStr1);
            // setImage('static/assets/img/fmY.png', '35', '35', 980, 165);
 
         }
@@ -2206,7 +2207,7 @@ $('#showDataInfo').on('hide.bs.modal', function () {
 function showDiv(deviceId,deviceName,code,dateType){
 
 
-    console.log('2222222222',deviceId,deviceName,code,dateType)
+    // console.log('2222222222',deviceId,deviceName,code,dateType)
     lastOnClickParams={};
     lastOnClickParams.deviceId=deviceId;
     lastOnClickParams.deviceName=deviceName;
@@ -2399,10 +2400,12 @@ function clearEcharts() {
 function setEcharts(xData,yData,dateType,markLine){
     console.log('44444444',xData,yData,dateType,markLine)
     let max = 0
-    if(dateType=='瞬时流量'){
-        max = 10
+    if(dateType.indexOf('瞬时流量')!=-1){
+        max = function (value) {
+            return (value.max * 1.2).toFixed(0)
+        }
     }else if(dateType.indexOf('频率')!=-1){
-        max = 40
+        max = 50
     }else{
         if(markLine.data){
             if(markLine.data[1]){
