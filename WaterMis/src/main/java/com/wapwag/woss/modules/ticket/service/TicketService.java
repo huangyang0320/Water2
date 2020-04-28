@@ -228,6 +228,11 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
                 log.setNodeId(NodeEnum.AGREE.getName());
                 title="工单审核同意";
                 uId="";
+                TicketDto obj=new TicketDto();
+                obj.setTicketId(ticketDto.getTicketId());
+                obj.setAlarmStatus("0");
+                obj.setConfirmStatus("1");
+                this.updateAlarmTicketByDeviceIdAndStartTime(obj);
             }
             //创建插入提示消息
             insertDetails(ticketDto.getTicketId(),title,uId);

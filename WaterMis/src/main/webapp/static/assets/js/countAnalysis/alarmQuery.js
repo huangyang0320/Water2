@@ -449,7 +449,7 @@ function myModalWorkOrder(row,flag) {
 
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept(row.deptId);
-    $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
+    $("#alarmContent").val(row.phName+"-"+row.alarmTypeRemarks+'发生了'+row.alarmInfo);
     $("#alarmTime").val(row.startDate);
     $("#phName").val(row.phName);
     $("#phId").val(row.phId);
