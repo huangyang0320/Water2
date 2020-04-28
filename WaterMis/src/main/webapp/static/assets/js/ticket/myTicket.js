@@ -151,7 +151,7 @@ function initBootTable(url){
         clickToSelect: true,
         showRefresh: false,//刷新按钮
         smartDisplay: true,
-        showExport: true,
+        showExport: false,
         exportDataType: 'all',
         rowStyle: rowStyle,
         exportOptions: {
@@ -178,17 +178,20 @@ function initBootTable(url){
             field: 'ticketId',
             title: '工单编号',
             align: 'center',
-            sortable: true
+            sortable: true,
+            cellStyle: formatTableUnit
         },{
             field: 'ticketTypeName',
             title: '工单类型',
             align: 'center',
-            sortable: true
+            sortable: true,
+            cellStyle: formatTableUnit
         },{
             field: 'title',
             title: '工单内容',
             align: 'center',
-            sortable: true
+            sortable: true,
+            cellStyle: formatTableUnit
         },/*{
             field: 'currentNodeName',
             title: '当前节点名称',
@@ -198,7 +201,8 @@ function initBootTable(url){
             title: '当前工单状态',
             align: 'center',
             sortable : true,
-            sortable: true
+            sortable: true,
+            cellStyle: formatTableUnit
         },/*{
             field: 'currentUser',
             title: '当前操作人',
@@ -233,13 +237,15 @@ function initBootTable(url){
             title: '工单创建人',
             visible:false,
             align: 'center',
-            sortable : true
+            sortable : true,
+            cellStyle: formatTableUnit
         },{
             field: 'createDate',
             title: '工单创建时间',
             align: 'center',
             sortable : true,
-            sortable: true
+            sortable: true,
+            cellStyle: formatTableUnit
         },{
             field: 'operateSatus',
             title: '操作',
@@ -272,6 +278,18 @@ function formatTableUnit(value, row, index) {
             "max-width": "120px"
         }
     }
+}
+function exportExcel() {
+    $('#dataTables-example').tableExport({
+        type: 'excel',
+        exportDataType: "all",
+        ignoreColumn: [0],//忽略某一列的索引
+        fileName: '我的工单' + moment().format('YYYY-MM-DD'),//下载文件名称
+        onCellHtmlData: function (cell, row, col, data){//处理导出内容,自定义某一行、某一列、某个单元格的内容
+            console.info(data);
+            return data;
+        },
+    });
 }
 
 function operateFormatter(value, row, index) {

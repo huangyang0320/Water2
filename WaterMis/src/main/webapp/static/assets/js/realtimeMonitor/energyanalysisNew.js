@@ -377,10 +377,10 @@ function getPieData(type, sendData) {
             if(res.minmax){
                 var minmax = res.minmax
                 if(minmax.kwh_m3){
-                    $('#energyanalysis_msg_kwh_m3').html("吨水耗电量最高："+ minmax.kwh_m3.maxName +  minmax.kwh_m3.maxVal )
+                    $('#energyanalysis_msg_kwh_m3').html("吨水耗电量最高："+ minmax.kwh_m3.maxName +  minmax.kwh_m3.maxVal +'度/吨')
                 }
                 if(minmax.m3){
-                    $('#energyanalysis_msg_m3').html("产水量最高："+ minmax.m3.maxName + " 日均产水量为" + minmax.m3.maxVal )
+                    $('#energyanalysis_msg_m3').html("产水量最高："+ minmax.m3.maxName + " 日均产水量为" + minmax.m3.maxVal +'吨')
                 }
                 if(minmax.kwh){
                      $('#energyanalysis_msg_kwh').html("耗电量最少："+ minmax.kwh.maxName +  minmax.kwh.minVal + "度")
@@ -472,8 +472,8 @@ function chartShow(type, seriesObj) {
         }else{
             ENERGY_ANALYSIS.CHART_CONFIG.colors =  charColor
         }
-        optionTitle = '千吨水耗电量趋势分析对比';
-        yAxisTitle = "千吨水耗电量(度/千吨)";
+        optionTitle = '吨水耗电量趋势分析对比';
+        yAxisTitle = "吨水耗电量(度/吨)";
         charObject = $("#energyanalysis-chart-energy" );
     }
     if(type == "kWh" ){
