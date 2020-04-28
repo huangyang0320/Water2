@@ -232,7 +232,7 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
                 obj.setTicketId(ticketDto.getTicketId());
                 obj.setAlarmStatus("0");
                 obj.setConfirmStatus("1");
-                this.updateAlarmTicketByDeviceIdAndStartTime(obj);
+                this.updateAlarmData(obj);
             }
             //创建插入提示消息
             insertDetails(ticketDto.getTicketId(),title,uId);
@@ -314,6 +314,12 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         int i=ticketDao.updateAlarmTicketByDeviceIdAndStartTime(ticket);
         return i>0;
     }
+    @Transactional(readOnly = false)
+    public boolean updateAlarmData(TicketDto ticket){
+        int i=ticketDao.updateAlarmData(ticket);
+        return i>0;
+    }
+
 
     /**
      * 修改工单信息
