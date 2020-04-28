@@ -229,6 +229,12 @@ function initBootTable(url){
             align: 'center',
             sortable: true
         },*/{
+            field: 'createName',
+            title: '工单创建人',
+            visible:false,
+            align: 'center',
+            sortable : true
+        },{
             field: 'createDate',
             title: '工单创建时间',
             align: 'center',
@@ -406,7 +412,10 @@ function queryParams(params) {
         sortName = "de.NAME"
     } else if (params.sortName=='address'){
         sortName = "t.address"
+    }else if (params.sortName=='createName'){
+        sortName = "su.name"
     }
+
     // console.log(params)
     var temp = {
         pageSize: params.pageSize,   //页面大小

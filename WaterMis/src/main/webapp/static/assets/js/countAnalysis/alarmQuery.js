@@ -457,7 +457,7 @@ function myModalWorkOrder(row,flag) {
 
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept(row.deptId);
-    $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);
+    $("#alarmContent").val(row.phName+"-"+row.alarmTypeRemarks+'发生了'+row.alarmInfo);
     $("#alarmTime").val(row.startDate);
     $("#phName").val(row.phName);
     $("#phId").val(row.phId);
@@ -742,7 +742,8 @@ function disHide(){
         //手动触发验证
         bootstrapValidator.validate();
         if(bootstrapValidator.isValid()){
-            var _url = CONTEXT_PATH+"/alarmStatController/submitWorkOrder?"+ Math.random();
+           // var _url = CONTEXT_PATH+"/alarmStatController/submitWorkOrder?"+ Math.random();
+            var _url = CONTEXT_PATH+"/ticket/createWorkOrder?"+ Math.random();
             $("#workOrder").ajaxSubmit( {
                 type : 'POST',
                 url : _url,
