@@ -850,13 +850,13 @@ public class PumpConfigurationService {
         List<String> list3=new ArrayList<String>();
         List<String> list4 = new ArrayList<String>();
         //昨天的实时tableName
-        String tableNameZt="service_values_hour_"+DateUtils.getLastDay(DateUtils.getDateTime("yyyMMdd"),-1);
+        String tableNameZt="service_values_hour_"+DateUtils.getLastDay("yyyyMMdd",-1);
 
         //当前天的实时tableName
         String tableNameJt="service_values_hour_"+DateUtils.formatDateTimeByFormat(new Date(),"yyyyMMdd");
 
-        String startDate=DateUtils.formatDateTimeByFormat(new Date(),"yyyy-MM-dd")+" 05";
-        String endDate=DateUtils.formatDateTimeByFormat(new Date(),"yyyy-MM-dd")+" 04";
+        String startDate=DateUtils.getLastDay("yyyy-MM-dd",-1)+" 05";
+        String endDate=DateUtils.formatDateTimeByFormat(new Date(),"yyyy-MM-dd")+" 05";
 
         List<PumpService> listData = pumpConfigurationMapper.getDatePv(tableNameZt,tableNameJt,startDate,endDate);
 
