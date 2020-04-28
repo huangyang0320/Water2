@@ -311,7 +311,8 @@ $('input:radio[name="optionsRadios"]').change(function(){
     GLOBAL_TREE_PUMP_EQT =  (typePumpDev == 'pump')? false : true;
     ZtreeInitG(true);
 });
-
+GLOBAL_TREE_PUMP_EQT =  false
+ZtreeInitG(true);
 /**
  * 根据日期算出该月多少天 y-m
  * @param date
@@ -535,7 +536,9 @@ function getSendData(chooseList) {
     var sendData={};
     var $queryForm = $("#queryForm");
 
-    var type = $("#queryForm").find("input[name='choose']").val()||'dev'
+    // var type = $("#queryForm").find("input[name='choose']").val()||'dev'
+    var type = 'pump'
+
     var deviceId = GLOBAL_SELECT_DEVICE["deviceId"];
     var queryType =  $("#queryForm").find("input[name='dimen']").val();
     var startDate =  $("#queryForm").find("input[name='startDate']").val();
