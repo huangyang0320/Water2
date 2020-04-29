@@ -511,9 +511,13 @@
         <if test="address !=null and address!='' " >
             and t.address like concat('%',#{address},'%')
         </if>
-        <if test="pumpName !=null and pumpName!='' " >
-        and p.`NAME` like concat('%',#{pumpName},'%')
+
+        <if test="pumpHouseIds !=null and pumpHouseIds.size()>0 " >
+            <foreach collection="pumpHouseIds" item="item" index="index" separator=" or " open=" and (" close=")">
+                LOCATE(#{item}, t.pump_id) > 0
+            </foreach>
         </if>
+
         <if test="ticketType !=null and ticketType!='' " >
             and t.ticket_type = #{ticketType}
         </if>
@@ -631,8 +635,10 @@
         <if test="deviceName !=null and deviceName!='' " >
             and de.`NAME` like concat('%',#{deviceName},'%')
         </if>
-        <if test="pumpName !=null and pumpName!='' " >
-            and p.`NAME` like concat('%',#{pumpName},'%')
+        <if test="pumpHouseIds !=null" >
+            <foreach collection="pumpHouseIds" item="item" index="index" separator=" or " open=" and (" close=")">
+                LOCATE(#{item}, t.pump_id) > 0
+            </foreach>
         </if>
         <if test="ticketId !=null and ticketId!='' " >
             and t.ticket_id like concat('%',#{ticketId},'%')

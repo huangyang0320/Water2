@@ -117,7 +117,7 @@
 				$("#playWnd").html("插件未启动，正在尝试启动，请稍候...");
 				WebControl.JS_WakeUp("VideoWebPlugin://"); // 程序未启动时执行error函数，采用wakeup来启动程序
 				initCount ++;
-				if (initCount < 3) {
+				if (initCount < 5) {
 					setTimeout(function () {
 						initPlugin();
 					}, 3000)

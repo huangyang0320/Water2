@@ -7,6 +7,7 @@ var alarmMsgFlag = false;
 var $pageWrapper = $("#page-wrapper");
 var thisUrlIsShowTree = false;
 var delObject = "";
+let menuList
 (function ($) {
 
     "use strict";
@@ -16,6 +17,17 @@ var delObject = "";
      页面加载
      ***********************************************
      */
+    // alert('aaa')
+    $('#topnav').hover(function(){
+        // alert(1)
+        $('#topnav').css('width','144px')
+        // $('#topnav').animate({width:'144px'})
+    },function(){
+        $('#topnav').css('width','50px')
+    })
+
+
+
     // 计算page-wrapper的高度
     var calcHeight = function() {
         var top = $(".top-navbar").height();
@@ -691,10 +703,11 @@ function getLeftMenuData() {
                                 continue;
                             }
                             $li = $("<li class='parent-menu'></li>");
-                            $li.append($("<a class=\"dropdown-toggle\" title=\""+menu["title"]+"\"></a>"));
+                            // $li.append($("<a  class=\"dropdown-toggle\" title=\""+menu["title"]+"\"></a>"));
+                            $li.append($("<a style='max-height: 30px;overflow: hidden' class=\"dropdown-toggle\" title=\""+menu["title"]+"\"></a>"));
                             $li.find("a").append($("<i class='fa'></i>").addClass(menu["icon"]));
 
-                            // $li.find("a").append(menu["title"]);
+                            $li.find("a").append(menu["title"]);
 
                            /* $li.find("a").append($("<span class='fa arrow'></span>"));*/
 
@@ -720,7 +733,7 @@ function getLeftMenuData() {
                                     }
                                     var liWidthPx="width: "+liWidth+"px;"
 
-                                    $subMenu = $("<ul class='dropdown-menu' style='"+liWidthPx+"'><ul>");
+                                    $subMenu = $("<ul class='dropdown-menu'></ul>");
                                     for (var j = 0; j < subMenu.length; j++) {
                                         subMenuItem = subMenu[j];
                                         if (subMenuItem.hasOwnProperty("enabled") && subMenuItem["enabled"] == "false") {
@@ -1215,7 +1228,7 @@ function showCreateBtn() {
     $("#createBtn").show();
 }
 
-function myModalWorkOrder(row) {
+function myModalWorkOrder(row,flag) {
 
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept();
@@ -1265,6 +1278,30 @@ function myModalWorkOrder(row) {
     $("#workOrder").data('bootstrapValidator').destroy();
     $('#workOrder').data('bootstrapValidator',null);
     formValidator();
+
+    //查看 0  创建 1
+    if(flag=="1"){
+        disShow();
+    }else if(flag=="0"){
+        disHide();
+    }
+}
+function disShow(){
+
+    $("#alarmLevel").removeAttr("readonly");
+    $("#planStartTime").removeAttr("disabled");
+    $("#planEndTime").removeAttr("disabled");
+    $("#alarmReason").removeAttr("disabled");
+    $("#planContent").removeAttr("disabled");
+    $("#deptId").removeAttr("disabled");
+}
+function disHide(){
+    $("#alarmLevel").attr("readonly","true");
+    $("#planStartTime").attr("disabled","true");
+    $("#planEndTime").attr("disabled","true");
+    $("#alarmReason").attr("disabled","true");
+    $("#planContent").attr("disabled","true");
+    $("#deptId").attr("disabled","true");
 }
 
 

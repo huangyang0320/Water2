@@ -221,6 +221,7 @@
 
     //點擊 左上角的事件 -- 2 在线；3 离线； 4 告警
     function redrawMap(type) {
+        clickStatus='noRef';
         MAP.clearOverlays();
         if(type == 2) {
             for(let i=0;i<saveMapList.online.length;i++){
