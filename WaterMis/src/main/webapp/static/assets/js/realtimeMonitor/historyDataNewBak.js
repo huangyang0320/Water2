@@ -176,6 +176,7 @@ function initData() {
 
 }
 var switchDevice=[];
+let type = 'zhi'
 function initMetaDeviceList(deviceIds){
     var $deviceNorm = $("#device-norm-data");
     $.post(CONTEXT_PATH + "/biz/function/getByDeviceIds",{deviceIds:deviceIds},function(result){
@@ -184,30 +185,45 @@ function initMetaDeviceList(deviceIds){
         result.forEach(function(value,index){
         	/*if(value.type == "ftMP" || value.type == "ftAC" || value.type == "ftMF"
             	|| value.type == "ftT" || value.type == "ftTL" || value.dataType=='uint' || value.dataType== 'real'){
-           */     var li = $("<li class='list-group-item'><label></label></li>");
-                var li1 = li.clone();
-                var input = $("<input type='radio'>")
-                    .prop("name", "sameCompare")
-                    .prop("value", value["name"])
-                    .addClass("minimal");
-                if(index==0){input.prop("checked",true);}
-                if(switchDevice.length>0){
-                    for(var i=0;i<switchDevice.length;i++){
-                        if(value["name"]==switchDevice[i]){
-                            input.prop("checked",true);
-                        }
+           */
+
+            var li = $("<li class='list-group-item'><label></label></li>");
+            var li1 = li.clone();
+            var input = $("<input type='radio'>")
+                .prop("name", "sameCompare")
+                .prop("value", value["name"])
+                .prop("mytype",value['type'])
+                .addClass("minimal");
+            if(index==0){input.prop("checked",true);}
+            if(switchDevice.length>0){
+                for(var i=0;i<switchDevice.length;i++){
+                    if(value["name"]==switchDevice[i]){
+                        input.prop("checked",true);
                     }
                 }
-                li.find("label").append(input);
-                li.find("label").append('<div class="colour_black_'+index%7+'">'+value["memo"]+"</div>");
-                li.find("label").prop("title", value["memo"]);
-                $deviceNormData.append(li);
-        	/*}*/
+            }
+            li.find("label").append(input);
+            li.find("label").append('<div class="colour_black_'+index%7+'">'+value["memo"]+"</div>");
+            li.find("label").prop("title", value["memo"]);
+            $deviceNormData.append(li);
+
         });
         $("input[type='radio'].minimal").icheck({
             checkboxClass: 'icheckbox_minimal-blue',
             radioClass: 'iradio_minimal-blue'
-        }).on("click", function () {
+        }).on("click", function (val) {
+            console.log(val)
+            let a = val.target.mytype
+            if(a == "ftA"){
+                // alert(1)
+                type = 'gaojing'
+            }else if(a=='ftVS'||a == "ftRS"||a == "ftPS"){
+                // alert(2)
+                type = 'zhuangtai'
+            } else{
+                // alert(3)
+                type = 'zhi'
+            }
             switchDeviceData();
         });
         switchDeviceData();
@@ -430,7 +446,7 @@ function initChart(){
 }
 function  drawTable(result) {
     function footeravg(data){
-        console.log(data)
+        // console.log(data)
         field = this.field
         let n = 0,max = -99999,maxindex=0,min = 99999,minindex = 0,sum = 0
         // let r = data.reduce(function (sum,row) {
@@ -463,7 +479,7 @@ function  drawTable(result) {
             }
         }
 
-        let avg = (sum/n).toFixed(3)
+        let avg = ((sum/n).toFixed(3))=='NaN'?'':(sum/n).toFixed(3)
 
         return `
             ${avg}
@@ -490,16 +506,28 @@ function  drawTable(result) {
         if(result[i].data){
             let max =-99999,maxname='',min=99999,minname='',avg=0,sum=0
             for(let j = 0;j<result[i].data.length;j++){
-                dataitem[j+''] =  result[i].data[j]
-                sum+=result[i].data[j]
-                if(result[i].data[j]>max){
-                    max = result[i].data[j]
-                    maxname=j
+                console.log(type)
+                if(type =='zhi'){
+                    dataitem[j+''] =  result[i].data[j]
+                    sum+=result[i].data[j]
+                    if(result[i].data[j]>max){
+                        max = result[i].data[j]
+                        maxname=j
+                    }
+                    if(result[i].data[j]<min){
+                        min = result[i].data[j]
+                        minname=j
+                    }
+                }else if(type =='gaojing'){
+                    dataitem[j+''] =  result[i].data[j]==1?'告警':'否'
+                    max = 0
+                    min = 0
+                }else if(type =='zhuangtai'){
+                    dataitem[j+''] =  result[i].data[j]==1?'打开':'关闭'
+                    max = 0
+                    min = 0
                 }
-                if(result[i].data[j]<min){
-                    min = result[i].data[j]
-                    minname=j
-                }
+
             }
             avg = (sum/result[i].data.length).toFixed(3)
             dataitem['avg'] =  avg
