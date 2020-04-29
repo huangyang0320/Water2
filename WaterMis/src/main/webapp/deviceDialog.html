@@ -132,11 +132,49 @@
                 margin-top: -30px;
             }
             #title0{
-                font-size: 18px;
+                font-size: 14px;
                 font-weight: 700;
             }
             #title0:hover{
                 color: #0B61A4;
+            }
+            .container-fluid ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .title-list li{
+                line-height: 2;
+                font-size: 14px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            #myTabContent ul li {
+                line-height: 2;
+                border-bottom: 1px solid #d6e9c6;
+                font-size: 14px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                color: #969696;
+            }
+            #myTabContent ul li span {
+                color: #4B4B4B;
+            }
+            #infos ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            #infos ul li {
+                line-height: 2;
+                border-bottom: 1px solid #d6e9c6;
+                font-size: 14px;
+                color: #969696;
+            }
+            #infos ul li span {
+                color: #4B4B4B;
             }
         </style>
     </head>
@@ -309,18 +347,79 @@
 <!--                    </div>-->
 <!--                </div>-->
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="list-group" id="device-title">
-                        <li class="list-group-item" style="cursor: pointer" onclick="clickTitle()"><span id="title0"></span></li>
-                        <li class="list-group-item">滤后压力：<span id="title10"></span></li>
-                        <li class="list-group-item">瞬时流量：<span id="title11"></span></li>
-                        <li class="list-group-item">进水余氯：<span id="title12"></span></li>
-                        <li class="list-group-item">进水浊度：<span id="title13"></span></li>
-                        <li class="list-group-item">告警信息：<span id="showWarnInfo"></span><span id="clickHa" class="alarmMore" style="cursor:pointer">&nbsp;&nbsp;.</span></li>
-                    </ul>
+            <div class="row" style="margin-top: 20px;">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <ul class="title-list">
+                            <li onclick="clickTitle()" style="cursor: pointer">泵房名称：<span id="title0"></span></li>
+                            <li>告警信息：<span id="showWarnInfo"></span><span id="clickHa" class="alarmMore" style="cursor:pointer">&nbsp;&nbsp;</span></li>
+                            <li>泵房地址: <span id="info13"></span></li>
+                        </ul>
+                    </div>
+                    <div class="panel-body" style="height: 150px" >
+                        <div id="infos">
+                            <ul style="display: none">
+                                <li>滤后压力：<span id="title10"></span></li>
+                                <li>瞬时流量：<span id="title11"></span></li>
+                                <li>进水余氯：<span id="title12"></span></li>
+                                <li>进水浊度：<span id="title13"></span></li>
+                            </ul>
+                        </div>
+
+                        <!--<ul id="myTab" class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#home" data-toggle="tab" style="font-size:14px">
+                                    泵房数据
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#ios" data-toggle="tab" style="font-size:14px">
+                                泵房信息
+                                </a>
+                            </li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div class="tab-pane fade in active" id="home">
+                                <ul>
+                                    <li>滤后压力：<span id="title10"></span></li>
+                                    <li>瞬时流量：<span id="title11"></span></li>
+                                    <li>进水余氯：<span id="title12"></span></li>
+                                    <li>进水浊度：<span id="title13"></span></li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane fade" id="ios">
+                                <ul>
+                                    <li>运维方: <span id="info1"></span></li>
+                                    <li>运维方联系方式: <span id="info2"></span></li>
+                                    <li>物业方: <span id="info3"></span></li>
+                                    <li>物业方联系方式：<span id="info4"></span></li>
+                                    <li>施工方：<span id="info5"></span></li>
+                                    <li>施工方联系方式：<span id="info6"></span></li>
+                                    <li>自控改造厂家：<span id="info7"></span></li>
+                                    <li>自控改造厂家联系方式：<span id="info8"></span></li>
+                                    <li>设备厂家：<span id="info9"></span></li>
+                                    <li>设备厂家联系方式：<span id="info10"></span></li>
+                                    <li>移交时间： <span id="info11"></span></li>
+                                </ul>
+                            </div>
+                        </div>-->
+                    </div>
                 </div>
             </div>
+            <!--old start-->
+            <!--<div class="row">-->
+                <!--<div class="col-md-12">-->
+                    <!--<ul class="list-group" id="device-title">-->
+                        <!--<li class="list-group-item" style="cursor: pointer" onclick="clickTitle()"><span id="title0"></span></li>-->
+                        <!--<li class="list-group-item">滤后压力：<span id="title10"></span></li>-->
+                        <!--<li class="list-group-item">瞬时流量：<span id="title11"></span></li>-->
+                        <!--<li class="list-group-item">进水余氯：<span id="title12"></span></li>-->
+                        <!--<li class="list-group-item">进水浊度：<span id="title13"></span></li>-->
+                        <!--<li class="list-group-item">告警信息：<span id="showWarnInfo"></span><span id="clickHa" class="alarmMore" style="cursor:pointer">&nbsp;&nbsp;.</span></li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--old end-->
         </div>
         <div style="display:none">
             <ul id="sample">
@@ -344,6 +443,7 @@
             var DIALOG_DATA_UPDATE, DIALOG_INTERVAL, DIALOG_DATA_UPDATE_TWO;
 
             $(function () {
+
                 $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
                     var userStatus = jqxhr ? jqxhr.getAllResponseHeaders() : null;
                     if (userStatus
@@ -359,6 +459,8 @@
                         parent.document.querySelector('.alarmTips').style.bottom='-300px';
                         parent.$(".alarmTips").find("iframe").prop("src", "warn.html");
                         parent.$(".alarmTips").find("iframe").attr('id','warnHtml');
+                        // 添加name标记  表示是从地图触发的
+                        parent.$(".alarmTips").find("iframe").prop('name','mapclick');
                         parent.$(".alarmTips").animate({bottom: "0px"}, 1000, function() {
 
                         });
@@ -419,9 +521,10 @@
                  $.get(parent.CONTEXT_PATH + '/alarmStatController/indexAlarm?pumpHouseName='+pumpHouse["pumpHouseName"], function(data) {
                         if (data && data.length > 0) {
                             $("#showWarnInfo").html(data[0].alarmInfo);
-                            $("#showWarnInfo").css("background-color","yellow");
+                            // $("#showWarnInfo").css("background-color","yellow");
+                            $("#showWarnInfo").css("color","#CC0000")
                             $(".alarmMore").show()
-                            $(".alarmMore").html('更多...')
+                            $(".alarmMore").html(' 更多...')
 
                         }else{
                             $("#showWarnInfo").html("无...");
@@ -562,6 +665,34 @@
                                 $deviceData.append(strDevice);
                             }
                             $("#myCarousel").show();
+                            // 点击的泵房详细信息
+                            console.log(parent.GLOBAL_PUMP_MSG_MAP)
+                            let bInfos = parent.GLOBAL_PUMP_MSG_MAP
+                            $('#info1').html(bInfos.constructionSide)
+                            $('#info2').html(bInfos.constructionSideInformation)
+                            $('#info3').html(bInfos.property)
+                            $('#info4').html(bInfos.propertyInformation)
+                            $('#info5').html(bInfos.construction)
+                            $('#info6').html(bInfos.constructionInformation)
+                            $('#info7').html(bInfos.selfControlManufacturers)
+                            $('#info8').html(bInfos.selfControlManufacturersInformation)
+                            $('#info9').html(bInfos.deviceManufacturers)
+                            $('#info10').html(bInfos.deviceManufacturersInformation)
+                            $('#info11').html(bInfos.handoverTime)
+                            $('#info13').html(bInfos.address)
+                            $('#info1').attr("title",bInfos.constructionSide);
+                            $('#info2').attr("title",bInfos.constructionSideInformation)
+                            $('#info3').attr("title",bInfos.property)
+                            $('#info4').attr("title",bInfos.propertyInformation)
+                            $('#info5').attr("title",bInfos.construction)
+                            $('#info6').attr("title",bInfos.constructionInformation)
+                            $('#info7').attr("title",bInfos.selfControlManufacturers)
+                            $('#info8').attr("title",bInfos.selfControlManufacturersInformation)
+                            $('#info9').attr("title",bInfos.deviceManufacturers)
+                            $('#info10').attr("title",bInfos.deviceManufacturersInformation)
+                            $('#info11').attr("title",bInfos.handoverTime)
+                            $('#info13').attr("title",bInfos.address)
+
 
 
                             // 20200420 新增  点击地图修改弹窗内容  xth
@@ -569,15 +700,16 @@
                                 //找到主控柜
                                 if(res[i].deviceId.indexOf('plc_main') != -1){
                                     if(!res[i].pointList){
-                                        $('#title10').html('没有点位数据')
-                                        $('#title11').html('没有点位数据')
-                                        $('#title12').html('没有点位数据')
-                                        $('#title13').html('没有点位数据')
+                                        $('#infos').html('<image src="static/assets/img/nosignal.jpg" width="100px" height="100px" style="margin:0 auto;display:inherit"><p style="font-size:14px;text-align:center;line-height: 2">泵房离线</p>')
+                                        // $('#title10').html('没有点位数据')
+                                        // $('#title11').html('没有点位数据')
+                                        // $('#title12').html('没有点位数据')
+                                        // $('#title13').html('没有点位数据')
                                     }else{
+                                        $("#infos ul").css("display","block");
                                         for(let j=0;j<res[i].pointList.length;j++){
                                             if(res[i].pointList[j].pointCode == "chlorine_js"){
                                                 //进水余氯
-                                                // alert(res[i].pointList[j].pointValue)
                                                 $('#title12').html(res[i].pointList[j].pointValue + res[i].pointList[j].unit)
                                             }
                                             if(res[i].pointList[j].pointCode == "turbidity_js"){
@@ -591,6 +723,7 @@
                                             if(res[i].pointList[j].pointCode == "pressure_szjs2"){
                                                 //滤后鸭梨
                                                 $('#title10').html(res[i].pointList[j].pointValue + res[i].pointList[j].unit)
+
 
                                             }
                                         }
