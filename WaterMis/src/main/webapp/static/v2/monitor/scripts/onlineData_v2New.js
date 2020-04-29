@@ -678,6 +678,12 @@ function initRealtimeData(){
     	return;
     }
     onlineData.loading.hide();
+    if(parent.GLOBAL_SELECT_DEVICE.deviceId.indexOf('main') != -1) {
+        $('#bengzus').html("用电")
+    } else {
+        $('#bengzus').html("泵组")
+    }
+
     if(serviceData != null){
         $("#realtimeTbody1").html("");
         $("#realtimeTbody2").html("");
