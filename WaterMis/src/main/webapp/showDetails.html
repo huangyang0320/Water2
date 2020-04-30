@@ -178,6 +178,8 @@
                 $.post(CONTEXT_PATH + "/biz/notice/resetStatus",function(res) {
                     if(res>0){
                         loadDetails();
+                        // 20200430 全部忽略时隐藏弹窗 xth
+                        window.parent.window.closeDetailsTips()
                     }
                 });
             })

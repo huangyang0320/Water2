@@ -90,6 +90,17 @@
         width: 100%;
         text-align: center;
     }
+    .bootstrap-table .table, .bootstrap-table .table>tbody>tr>td, .bootstrap-table .table>tbody>tr>th, .bootstrap-table .table>tfoot>tr>td, .bootstrap-table .table>tfoot>tr>th, .bootstrap-table .table>thead>tr>td {
+        vertical-align: middle;
+    }
+    .changebutton{
+        position: relative;
+        height: 60px;
+        line-height: 60px;
+        padding: 0 0 0 20px;
+        font-size: 15px;
+        float: left;
+    }
 </style>
 
 <form id="queryForm" style="display: none">
@@ -103,6 +114,32 @@
 	<input name="addOnDate" type="hidden">
 	<input name="choose" type="hidden">
 </form>
+<script>
+    function changeToTable() {
+        document.querySelector('#changeToTable').style.display='none'
+        document.querySelector('#changeToChart').style.display='inline-block'
+
+        document.querySelector('#energyanalysis-chart-m3').style.visibility='hidden'
+        document.querySelector('#energyanalysis-chart-m3-table-wrap').style.visibility='visible'
+        document.querySelector('#energyanalysis-chart-kWh').style.visibility='hidden'
+        document.querySelector('#energyanalysis-chart-kWh-table-wrap').style.visibility='visible'
+        document.querySelector('#energyanalysis-chart-energy').style.visibility='hidden'
+        document.querySelector('#energyanalysis-chart-energy-table-wrap').style.visibility='visible'
+
+    }
+    function changeToChart() {
+        document.querySelector('#changeToTable').style.display = 'inline-block'
+        document.querySelector('#changeToChart').style.display = 'none'
+
+        document.querySelector('#energyanalysis-chart-m3').style.visibility = 'visible'
+        document.querySelector('#energyanalysis-chart-m3-table-wrap').style.visibility = 'hidden'
+        document.querySelector('#energyanalysis-chart-kWh').style.visibility = 'visible'
+        document.querySelector('#energyanalysis-chart-kWh-table-wrap').style.visibility = 'hidden'
+        document.querySelector('#energyanalysis-chart-energy').style.visibility = 'visible'
+        document.querySelector('#energyanalysis-chart-energy-table-wrap').style.visibility = 'hidden'
+    }
+</script>
+
 <div id="page-inner">
 	<div class="row">
         <div class="col-xs-12 col-md-12" style="height: 28px">
@@ -126,6 +163,10 @@
                 <div class="time-period">
                     <label for="statisticDate">统计时段 : </label>
                     <input type="text" readonly class="form_datetime form-control timepicker" id="statisticDate">
+                </div>
+                <div class="changebutton">
+                    <button id="changeToTable" onclick="changeToTable()" type="button" class="btn btn-primary query-btn">切换到表</button>
+                    <button id="changeToChart" onclick="changeToChart()" style="display: none" type="button" class="btn btn-primary query-btn">切换到图</button>
                 </div>
                 <!--<div class="time-superposition">-->
                     <!--<label for="addOnTime">叠加时长 : </label>-->
@@ -164,14 +205,26 @@
             <div class="panel panel-default">
                 <div class="panel-body">
 					<!-- chart -->
-                    <div class="col-xs-12 col-md-12" >
-                        <div id="energyanalysis-chart-m3"></div>
+                    <div class="col-xs-12 col-md-12" style="height:400px;position: relative">
+                        <div id="energyanalysis-chart-m3" style="width:100%;height:100%;position: absolute;top: 0;left:0"></div>
+                        <div id="energyanalysis-chart-m3-table-wrap" style="width:100%;height:100%;visibility: hidden;position: absolute;top: 0;left:0">
+                            <div style="text-align: center;font-size: 18px;line-height: 30px">用水量趋势分析对比</div>
+                            <table id="energyanalysis-chart-m3-table" style="height:100%"></table>
+                        </div>
                     </div>
-                    <div class="col-xs-12 col-md-12" style="margin-top: 20px;">
+                    <div class="col-xs-12 col-md-12" style="margin-top: 20px;height:400px;position: relative">
                         <div id="energyanalysis-chart-kWh"></div>
+                        <div id="energyanalysis-chart-kWh-table-wrap" style="width:100%;height:100%;visibility: hidden;position: absolute;top: 0;left:0">
+                            <div style="text-align: center;font-size: 18px;line-height: 30px">用电量趋势对比</div>
+                            <table id="energyanalysis-chart-kWh-table" style="height:100%"></table>
+                        </div>
                     </div>
-                    <div class="col-xs-12 col-md-12" style="margin-top: 20px;">
+                    <div class="col-xs-12 col-md-12" style="margin-top: 20px;height:400px;position: relative">
                         <div id="energyanalysis-chart-energy"></div>
+                        <div id="energyanalysis-chart-energy-table-wrap" style="width:100%;height:100%;visibility: hidden;position: absolute;top: 0;left:0">
+                            <div style="text-align: center;font-size: 18px;line-height: 30px">吨水耗电量趋势分析对比</div>
+                            <table id="energyanalysis-chart-energy-table" style="height:100%"></table>
+                        </div>
                     </div>
         		</div>
             </div>
