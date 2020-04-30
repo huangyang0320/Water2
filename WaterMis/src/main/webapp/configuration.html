@@ -1149,7 +1149,7 @@ function setSvg(reloading) {
                        /* setText(v, conctolPs.deviceInfo[i].devicePosition, "control")*/
                         for(let n = 0;n<window.serviceValue.length;n++){
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\security_signal1'){
-                                setText(v, "门禁"+window.serviceValue[n].pv=='1'?'开':"关" , "control")
+                                setText(v, "门禁："+(window.serviceValue[n].pv=='1'?'开':"关"), "control")
                             }
                         }
                         // setText(v, "门禁", "control")
@@ -1158,10 +1158,11 @@ function setSvg(reloading) {
                             // setText({x:v.x , y:v.y + 40*i + 40}, videolist[i].name + ' 回放', "control")
                             var text = document.createElementNS("http://www.w3.org/2000/svg","text");
                             var textStr = $(text).attr({
-                                x:  v.x + 18,
+                                x:  v.x + 48,
                                 y:  v.y + 40*i + 20,
                                 fill:  "#fff"
                             })
+                            setImage('static/assets/img/video.png', '25', '25', v.x+20, v.y + 40*i + 3);
                             $(text).attr('onclick', 'showVideo(\''+videolist[i].hkVideoDeviceId +'\')')
                             $(text).css('cursor', 'pointer')
                             $(text).text(videolist[i].name+" 实时")
@@ -1169,10 +1170,12 @@ function setSvg(reloading) {
 
                             var text1 = document.createElementNS("http://www.w3.org/2000/svg","text");
                             var textStr1 = $(text1).attr({
-                                x:  v.x + 18,
+                                x:  v.x + 48,
                                 y:  v.y + 40*i + 40,
                                 fill:  "#fff"
                             })
+                            setImage('static/assets/img/video.png', '25', '25', v.x+20, v.y + 40*i + 23);
+
                             $(text1).attr('onclick', 'showVideoHis(\''+videolist[i].hkVideoDeviceId +'\')')
                             $(text1).css('cursor', 'pointer')
                             $(text1).text(videolist[i].name+' 回放')
@@ -1181,6 +1184,102 @@ function setSvg(reloading) {
                     }
                 }
             })
+        }
+    }
+    // 主机柜
+
+    if(!reloading){
+        let v={
+            x:400,
+            y:170
+        }
+        var rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+        var rectStr = $(rect).attr({
+            x:  v.x,
+            y:  v.y,
+            rx:  '5',
+            ry:  '5',
+            width: "150",
+            height: "150",
+            fill: "##5461",
+            stroke:"#fff",
+            "stroke-width": '1',
+            "fill-opacity":"0.3"
+        })
+        svrStr.append(rectStr);
+        for(let n = 0;n<window.serviceValue.length;n++){
+            if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\current_a'){
+                var text = document.createElementNS("http://www.w3.org/2000/svg","text");
+                var textStr = $(text).attr({
+                    x: v.x+10,
+                    y: v.y+15,
+                    fill:  "#fff"
+                })
+                $(text).text(window.serviceValue[n].tagName+':'+window.serviceValue[n].pv+window.serviceValue[n].unit)
+                svrStr.append(textStr);
+            }
+            if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\current_b'){
+                var text = document.createElementNS("http://www.w3.org/2000/svg","text");
+                var textStr = $(text).attr({
+                    x: v.x+10,
+                    y: v.y+35,
+                    fill:  "#fff"
+                })
+                $(text).text(window.serviceValue[n].tagName+':'+window.serviceValue[n].pv+window.serviceValue[n].unit)
+                svrStr.append(textStr);
+            }
+            if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\current_c'){
+                var text = document.createElementNS("http://www.w3.org/2000/svg","text");
+                var textStr = $(text).attr({
+                    x: v.x+10,
+                    y: v.y+55,
+                    fill:  "#fff"
+                })
+                $(text).text(window.serviceValue[n].tagName+':'+window.serviceValue[n].pv+window.serviceValue[n].unit)
+                svrStr.append(textStr);
+            }
+            if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\sewagepump_run1'){
+                var text = document.createElementNS("http://www.w3.org/2000/svg","text");
+                var textStr = $(text).attr({
+                    x: v.x+10,
+                    y: v.y+75,
+                    fill:  "#fff"
+                })
+                let s = window.serviceValue[n].pv == 0?'关':'开'
+                $(text).text(window.serviceValue[n].tagName+':'+s)
+                svrStr.append(textStr);
+            }
+            if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\sewagepump_run2'){
+                var text = document.createElementNS("http://www.w3.org/2000/svg","text");
+                var textStr = $(text).attr({
+                    x: v.x+10,
+                    y: v.y+95,
+                    fill:  "#fff"
+                })
+                let s = window.serviceValue[n].pv == 0?'关':'开'
+                $(text).text(window.serviceValue[n].tagName+':'+s)
+                svrStr.append(textStr);
+            }
+            if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\chlorine_js'){
+                var text = document.createElementNS("http://www.w3.org/2000/svg","text");
+                var textStr = $(text).attr({
+                    x: v.x+10,
+                    y: v.y+115,
+                    fill:  "#fff"
+                })
+                $(text).text(window.serviceValue[n].tagName+':'+window.serviceValue[n].pv+window.serviceValue[n].unit)
+                svrStr.append(textStr);
+            }
+            if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\turbidity_js'){
+                var text = document.createElementNS("http://www.w3.org/2000/svg","text");
+                var textStr = $(text).attr({
+                    x: v.x+10,
+                    y: v.y+135,
+                    fill:  "#fff"
+                })
+                $(text).text(window.serviceValue[n].tagName+':'+window.serviceValue[n].pv+window.serviceValue[n].unit)
+                svrStr.append(textStr);
+            }
         }
     }
 
@@ -1199,7 +1298,6 @@ function setSvg(reloading) {
             })
         }
     }
-
 
     if(conctolPs.deviceInfo[0].isWaterTank == 1){//非水箱只展示 进口压力
         if(conctolPs.curDevicePos && window.pressure_szjs){
@@ -1268,9 +1366,10 @@ function setSvg(reloading) {
             }
         })
     }
+
+
     // 添加设备点   修改成直供水阀门的坐标 20200420
     //修改成各区参数窗口 20200421
-    // console.log('-----------------',conctolPs)
     if(!reloading){
         if(conctolPs.curDevicePos && conctolPs.curDevicePos.deviceNamePos) {
             conctolPs.curDevicePos.deviceNamePos.map(function (v, i) {
@@ -1414,8 +1513,8 @@ function setSvg(reloading) {
             })
         }
     }
+
     // 添加泵风扇
-    console.log('--------------------------',conctolPs,runPump)
     if(!reloading){
         var k=0;
         if(conctolPs.curDevicePos && conctolPs.curDevicePos.pumpPos) {
@@ -1501,25 +1600,14 @@ function setSvg(reloading) {
 
 
     }
+
+
     // 添加阀门
     if(!reloading){
     // if(true){
         var conctolParams = window.conctolParam;
         var z_status=window.openend_directvalve.pv==1?"打开":"关闭";
         var box_status=window.openend_tankinvalve.pv==1?"打开":"关闭";
-       /* if(conctolParams.phName=="金海龙韵"){
-
-            var v={x:940,y:350};
-            setRect(v,"control")
-            setText(v, '直供水阀门:'+box_status,"control");
-            setImage('static/assets/img/fmY.png', '35', '35', 940, 360);
-
-            var v1={x:1115,y:283};
-            setRect({x:1115,y:283},"control")
-            setText(v1, '水箱阀门:'+z_status,"control")
-            setImage('static/assets/img/fmY.png', '35', '35', 1093, 258);
-
-        }else */
        if(conctolParams.phName=="高速御府" || conctolParams.phName=="皖江一号"){
 
 

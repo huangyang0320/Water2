@@ -426,6 +426,7 @@ function getChartData(type, sendData, idNamelist, chooseListPumpName) {
         data: sendData,
         dataType: 'JSON',
         success: function(res) {
+            console.log('获取chart数据',res)
             if(res){
                 var  seriesObj = [], series={}, seriesData = [];
                 for(let k in res){
@@ -449,6 +450,9 @@ function getChartData(type, sendData, idNamelist, chooseListPumpName) {
                         }
                     }
                     chartShow(k, seriesObj)
+                    //画表 20200430 xth
+                    console.log('22222',seriesObj)
+                    drawtable('#energyanalysis-chart-'+k+'-table',seriesObj)
                 }
             }
         },
@@ -456,6 +460,59 @@ function getChartData(type, sendData, idNamelist, chooseListPumpName) {
             console.log(e);
         }
     });
+}
+function drawtable(tablename,result) {
+    let columns = [],data = []
+    if(result[0]){
+        columns.push({field:'name', title:'名称', sortable:'true',align:'center',width:400})
+        if(result[result.length-1].data){
+            for(let i=0;i<result[result.length-1].data.length;i++){
+                columns.push({field:i+'', title:i+'', sortable:'true',align:'center',width:300,})
+            }
+        }
+        columns.push({field:'avg', title:'平均值', sortable:'true',align:'center',width:400})
+        columns.push({field:'max', title:'最大值', sortable:'true',align:'center',width:400})
+        columns.push({field:'maxname', title:'最大值时刻', sortable:'true',align:'center',width:400})
+        columns.push({field:'min', title:'最小值', sortable:'true',align:'center',width:400})
+        columns.push({field:'minname', title:'最小值时刻', sortable:'true',align:'center',width:400})
+    }
+    for(let i = 0;i<result.length;i++){
+        let dataitem = {}
+        dataitem.name = result[i].name
+        if(result[i].data){
+            let max =-99999,maxname='',min=99999,minname='',avg=0,sum=0
+            for(let j = 0;j<result[i].data.length;j++){
+                dataitem[j+''] =  result[i].data[j]
+                sum+=result[i].data[j]
+                if(result[i].data[j]>max){
+                    max = result[i].data[j]
+                    maxname=j
+                }
+                if(result[i].data[j]<min){
+                    min = result[i].data[j]
+                    minname=j
+                }
+            }
+            avg = (sum/result[i].data.length).toFixed(3)
+            dataitem['avg'] =  avg
+            dataitem['max'] =  max
+            dataitem['maxname'] =  maxname
+            dataitem['min'] =  min
+            dataitem['minname'] =  minname
+        }
+        data.push(dataitem)
+    }
+    $(tablename).bootstrapTable('destroy')
+    $(tablename).bootstrapTable({
+        height:'370',
+        striped: true,
+        columns:columns,
+        data:data,
+        formatNoMatches: function () {  //没有匹配的结果
+            return '无符合条件的记录';
+        },
+    })
+    console.log('表格创建了')
 }
 /**
  * chart 渲染
@@ -571,6 +628,7 @@ function refreshDeviceCheck(obj){
  * 初始化树默认调用
  */
 function defChoose(){
+    console.log(11111111)
     getSendData();
 }
 

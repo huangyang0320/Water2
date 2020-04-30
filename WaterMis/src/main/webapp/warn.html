@@ -238,6 +238,13 @@
            getAlarmList();
      }
      function getAlarmList() {
+            console.log(parent.$(".alarmTips").find("iframe").prop('name'))
+         // 如果是点击地图查看告警信息的，就把泵房名称赋值到页面
+         if(parent.$(".alarmTips").find("iframe").prop('name') == "mapclick") {
+             $('#pumpHouseName').val(parent.parent.GLOBAL_PUMP_MSG_MAP.pumpHouseName)
+             parent.$(".alarmTips").find("iframe").prop('name',"")
+         }
+
             let checkWarnPower = null
          jQuery.ajax({
              type: 'get',
@@ -436,6 +443,7 @@
                          })
                      }
                  });
+
              }
          })
 

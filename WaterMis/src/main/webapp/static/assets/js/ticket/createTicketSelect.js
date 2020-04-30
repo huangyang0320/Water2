@@ -208,12 +208,14 @@ function getTicketInfo(ticketId){
             $("#buttonId").html("分发");
             //selectpicker设置多选值
             if(data.ticketType=="3"){
+                // 所在设备
                 var arys=data.deviceCode.split(",");
                 $('#deviceId').selectpicker('val',arys);//默认选中
                 $('#deviceId').selectpicker('refresh');
                 $("#deviceStr").val(data.deviceCode);
             }
             showDevice(data.ticketType)
+            //status:1 待分发 2 待接单   3处理中  4审核中  5完成
         }
     });
 }
@@ -525,6 +527,7 @@ function onChangType(){
 }
 
 function showDevice(type){
+    // 所在设备
     if(type=="2"){
         $("#device").hide();
     }else if(type=="3"){

@@ -565,7 +565,7 @@
         };
 
         if (pumpHouse["longi"] && pumpHouse["lati"]) {
-            var content = "<iframe id='deviceDialog"+ pump.pumpHouseId + "' style='top: 102px' width='250px' height='245px' frameborder='no' border='0' " +
+            var content = "<iframe id='deviceDialog"+ pump.pumpHouseId + "' style='top: 102px' width='350px' height='280px' frameborder='no' border='0' " +
                 "marginwidth='0' marginheight='0' scrolling='no' " +
                 "src='deviceDialog.html'></iframe>";
             var infoWindow = new BMap.InfoWindow(content);
@@ -753,14 +753,17 @@
      *  展示所有泵房
      */
     function showAllPumphouses() {
-        saveMapList.warning = []
-        saveMapList.online.length= 0
-        saveMapList.offline = []
+        saveMapList = {
+            warning: [],
+            online: [],
+            offline: []
+        }
+        console.log(saveMapList)
         clickStatus='0';
         MAP.clearOverlays();//清空上一次  地图 底图
         $("#areaId").val('');//清空边界线
         LOADING.show();
-        var content = "<iframe id='deviceDialog' width='250px' height='245px' frameborder='no' border='0' " +
+        var content = "<iframe id='deviceDialog' width='350px' height='280px' frameborder='no' border='0' " +
             "marginwidth='0' marginheight='0' scrolling='no' " +
             "src='deviceDialog.html'></iframe>";
         var infoWindow = new BMap.InfoWindow(content);
@@ -839,9 +842,14 @@
     }
 
     function areaMapClick(areaId,type = null) {
-        saveMapList.warning = []
-        saveMapList.online = []
-        saveMapList.offline = []
+        saveMapList = {
+            warning: [],
+            online: [],
+            offline: []
+        }
+        // saveMapList.warning = []
+        // saveMapList.online = []
+        // saveMapList.offline = []
         clickStatus='1';
         var allPumpArray = [];
         // console.log(window.pumpList)
