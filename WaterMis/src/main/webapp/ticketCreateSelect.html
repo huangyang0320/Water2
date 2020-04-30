@@ -57,7 +57,7 @@
                         <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
                                 <label for="workType">工单类型</label>
-                                <select id="workType" onchange="onChangType()" name="workType" class="form-control">
+                                <select id="workType" onchange="onChangType()" name="workType" disabled="true" class="form-control">
                                     <option value="2">巡检</option>
                                     <option value="3">维保</option>
                                 </select>
@@ -138,7 +138,7 @@
                                 <label for="deviceId">所在设备</label>
                                 <!-- <input type="text" class="form-control"  id="processName" name="processName" placeholder="请输入">
                                  <input type="hidden"  class="form-control"  id="deviceId" name="deviceId" placeholder="请输入">-->
-                                <select class="selectpicker form-control" id="deviceId" multiple data-live-search="true" title="请选择所在设备">
+                                <select class="selectpicker form-control" id="deviceId" multiple data-live-search="true" onchange="getReasonListByIds()" title="请选择所在设备">
                                 </select>
                                 <input type="hidden" name="deviceId" id="deviceStr"/>
                             </div>

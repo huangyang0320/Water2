@@ -81,6 +81,25 @@ public class TicketController {
         return msg;
     }
 
+    @RequestMapping("/startWorkOrder")
+    @ResponseBody
+    @ApiOperation(value = "待办列表中创建工单", httpMethod = "POST", response = WorkOrder.class, notes = "待办列表中创建工单")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "成功"),
+            @ApiResponse(code = 500, message = "服务错误", response = WorkOrder.class)})
+    public Object startWorkOrder(@RequestParam(value = "ticketId") String ticketId,@RequestParam(value = "deptId") String deptId, User user) {
+        Object msg;
+        try {
+            com.wapwag.woss.modules.sys.entity.User u = new com.wapwag.woss.modules.sys.entity.User();
+            u.setId(user.getUserId());
+            return ticketService.startWorkOrder(ticketId,deptId,u);
+        } catch (Exception e) {
+            e.printStackTrace();
+            msg = e.getMessage();
+        }
+        return msg;
+    }
+
 
 /*
     @RequestMapping("/getTicketList")

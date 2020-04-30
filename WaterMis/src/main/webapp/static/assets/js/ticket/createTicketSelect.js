@@ -25,6 +25,9 @@ setTicketId("2");
 var ticketId= GetQueryiframe("ticketId");
 getTicketInfo(ticketId);
 
+//初始化设备对应的  发起原因  与  解决方案
+getReasonListByIds();
+
 var url = CONTEXT_PATH+"/device/pumpHouse?'+ Math.random()";
 initBootTable(url);
 
@@ -545,11 +548,41 @@ function initCheck(){
     $("#planContent").val("巡检路线:"+planContent);
 }
 
+
 function intiWb(){
-    var alarmReason="倒流防止器";
-    var planContent="先行封堵后上报，拆卸、安装";
+    var alarmReason="";
+    var planContent="";
     $("#alarmReason").val(alarmReason);
     $("#planContent").val(planContent);
+}
+
+function getReasonListByIds(){
+    var deviceIds = jQuery("#deviceId").val();
+    console.log("-------------------------------------");
+    var deviceIdStr ="";
+    if(deviceIds!=null && deviceIds.length>0){
+        for(var i in deviceIds){
+            deviceIdStr +=deviceIds[i]+","
+        }
+
+        var url = CONTEXT_PATH+"/productComponent/getProductReasonList/"+deviceIdStr+"?"+ Math.random();
+        jQuery.ajax({
+            type : 'POST',
+            contentType : 'application/json',
+            url : url,
+            dataType : 'json',
+            async:false,
+            success : function(data) {
+                $("#alarmReason").val(data[0].wbReason);
+                $("#planContent").val(data[0].wbProgramme);
+            }
+        });
+
+    }else{
+        $("#alarmReason").val("");
+        $("#planContent").val("");
+    }
+
 }
 
 

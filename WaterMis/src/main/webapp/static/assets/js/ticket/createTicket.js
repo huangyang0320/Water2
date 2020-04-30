@@ -453,7 +453,13 @@ function changerDept() {
     $("#mgName").val(jQuery("#deptId option:selected").attr("mgName"));
 }
 
-function createLxTicket(){
+function createLxTicket(v){
+    var titleInfo="'确认要创建工单?'";
+    if(v!=undefined && v=="save"){
+        $("#saveOrCreateFlag").val(v)
+        $("#status").val("0");
+        titleInfo="'确认要暂存该工单?'";
+    }
     //保存设置泵房多选
     var id = arysId;
     if (id != '' && id != null && id != undefined) {
@@ -484,7 +490,7 @@ function createLxTicket(){
 
     }
 
-    $('#alertWorkMessage').html('确认要创建工单?');
+    $('#alertWorkMessage').html(titleInfo);
     $('#alertWork').modal('show');
 }
 function clickOk(){
