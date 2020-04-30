@@ -51,6 +51,8 @@ public class TicketDto extends DataEntity<TicketDto> {
     private String createByStr;
     private String updateBySre;
 
+    private String saveOrCreateFlag;//保存还是创建
+
     private String isMyHandle;//待处理标志
 
     private String alarmStatus;
@@ -503,5 +505,13 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setPumpHouseIds(List<String> pumpHouseIds) {
         PumpHouseIds = pumpHouseIds;
+    }
+
+    public String getSaveOrCreateFlag() {
+        return saveOrCreateFlag;
+    }
+
+    public void setSaveOrCreateFlag(String saveOrCreateFlag) {
+        this.saveOrCreateFlag = saveOrCreateFlag;
     }
 }
