@@ -1040,7 +1040,7 @@ span.active {
     height: 300px;
     bottom: -300px;
     /*right: 10px;*/
-    margin-left: 230px;
+    margin-left: 20%;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     background-color: #fff;

@@ -704,10 +704,10 @@ function getLeftMenuData() {
                             }
                             $li = $("<li class='parent-menu'></li>");
                             // $li.append($("<a  class=\"dropdown-toggle\" title=\""+menu["title"]+"\"></a>"));
-                            $li.append($("<a style='max-height: 30px;overflow: hidden' class=\"dropdown-toggle\" title=\""+menu["title"]+"\"></a>"));
+                            $li.append($("<a style='max-height: 30px;overflow: hidden;padding-top: 6px' class=\"dropdown-toggle\" title=\""+menu["title"]+"\"></a>"));
                             $li.find("a").append($("<i class='fa'></i>").addClass(menu["icon"]));
 
-                            $li.find("a").append(menu["title"]);
+                            $li.find("a").append("  "+menu["title"]);
 
                            /* $li.find("a").append($("<span class='fa arrow'></span>"));*/
 
