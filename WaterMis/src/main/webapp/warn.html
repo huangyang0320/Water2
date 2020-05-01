@@ -499,33 +499,54 @@
         	var item = $(obj).attr('name');
         	window.parent.window.openAlarmConfirm(item,obj);
         }
+        let clickOkid
+
+        function clickOk(){
+            $('#alertWork').modal('hide');
+
+            $.post(parent.CONTEXT_PATH + '/alarmStatController/indexConfig',{
+                "id": clickOkid,
+                "alarmType": "2"   //1：确认，2：忽略
+            }, function(data) {
+
+                parent.showErrorMsgVideo("忽略成功")
+                getAlarmList()
+                // $('#alertShowMessage').html('忽略成功!!!');
+                // $('#alertShow').modal('show');
+            });
+        }
         function ignore(obj){
         	// var item = $(obj).attr('name');
             let item = obj.id
-            $.confirm({
-                title: '确认',
-                content: '确定要忽略此条告警吗？',
-                buttons: {
-                    ok: {
-                        text: '确认',
-                        btnClass: 'btn-primary',
-                        action: function () {
-                            $.post(parent.CONTEXT_PATH + '/alarmStatController/indexConfig',{
-                                "id": obj.id,
-                                "alarmType": "2"   //1：确认，2：忽略
-                            }, function(data) {
-                                parent.showErrorMsgVideo("忽略成功")
-                                // $('#alarmtable').bootstrapTable('resetView')
-                                getAlarmList()
-                            });
-                        }
-                    },
-                    cancel: {
-                        text: '取消',
-                        btnClass: 'btn-primary'
-                    }
-                }
-            })
+            clickOkid = obj.id
+
+            $('#alertWorkMessage').html('确定要忽略此条告警吗?');
+            $('#alertWork').modal('show');
+
+            // $.confirm({
+            //     title: '确认',
+            //     content: '确定要忽略此条告警吗？',
+            //     buttons: {
+            //         ok: {
+            //             text: '确认',
+            //             btnClass: 'btn-primary',
+            //             action: function () {
+            //                 $.post(parent.CONTEXT_PATH + '/alarmStatController/indexConfig',{
+            //                     "id": obj.id,
+            //                     "alarmType": "2"   //1：确认，2：忽略
+            //                 }, function(data) {
+            //                     parent.showErrorMsgVideo("忽略成功")
+            //                     // $('#alarmtable').bootstrapTable('resetView')
+            //                     getAlarmList()
+            //                 });
+            //             }
+            //         },
+            //         cancel: {
+            //             text: '取消',
+            //             btnClass: 'btn-primary'
+            //         }
+            //     }
+            // })
         }
         function ignoreAll(){
             //获取单个忽略的所有对象，循环触发单个忽略
