@@ -166,6 +166,7 @@ let menuList
             });
         });*/
         $("#showWarnDialog").click(function(){
+            openAlertModel("alarmTipsInfo" , "");
             $(".alarmTips").find("iframe").prop("src", "warn.html");
             $(".alarmTips").find("iframe").attr('id','warnHtml');
            $(".alarmTips").animate({bottom: "0px"}, 1000, function() {
@@ -242,7 +243,9 @@ function getTreeType(isloading){
 }
 
 function closeTips(){
-    $(".alarmTips").animate({bottom: "-300px"}, 500);
+    $(".alarmTips").css('top','')
+    $(".alarmTips").css('bottom','-300px')
+    // $(".alarmTips").animate({bottom: "-300px"}, 500);
 }
 function closeDetailsTips(){
     $(".alarmTips2").animate({bottom: "-300px"}, 500);

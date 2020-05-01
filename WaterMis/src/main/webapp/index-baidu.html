@@ -248,10 +248,17 @@
         </nav>
 
         <!-- /. RIGHT MENU -->
-
-        <div class="alarmTips">
+            <div class="alarmTips" id="alarmBox">
+                <div class="alarmTitle" style="cursor:move;color: #fff;height: 36px;font-size: 16px;padding: 8px;background: #0278E7;box-sizing: border-box;border-bottom: 1px solid #e0e4e6;
+                     ">
+                    告警信息列表
+                    <span class="closeTips" onclick="window.parent.window.closeTips()" title="关闭" style="    color: #fff;">X</span>
+                </div>
                 <iframe frameborder="0" width="100%" height="100%"></iframe>
-        </div>
+            </div>
+
+
+
         <div class="alarmTips2">
             <iframe frameborder="0" width="100%" height="100%"></iframe>
         </div>
@@ -259,6 +266,12 @@
     </div>
 
     <!-- Modal -->
+    <!--<div class="modal fade" id="alarmTipsInfo" role="dialog">-->
+        <!--<div class="alarmTips">-->
+            <!--<iframe frameborder="0" width="100%" height="100%"></iframe>-->
+        <!--</div>-->
+    <!--</div>-->
+
     <div class="modal fade" id="myModalAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="z-index: 99991">
         <iframe  src="about:blank" frameBorder=0 allowtransparency="yes"  marginHeight=0 marginWidth=0 style="overflow: hidden; border-radius: 11px; position:absolute;visibility:inherit; top:0px;left:0px;height:100%;width:100%;z-index:-1;background-color: rgba(0, 0, 0, 0)">
         </iframe>
@@ -583,10 +596,12 @@
     <!-- JS Scripts-->
     <!-- jQuery Js -->
     <script src="static/assets/js/jquery-1.9.1.min.js"></script>
-
+    <!--<script src="static/assets/js/jquery-1.10.2.js"></script>-->
+    <script src="static/assets/js/jquery-ui.min.js"></script>
     <script>
         var SYSTEM_LOADING;
         $(function() {
+            $(".alarmTips").draggable()
             // loading bar
             var barLen = 0;
             SYSTEM_LOADING = setInterval(function(){
@@ -609,6 +624,7 @@
     <script src="static/assets/js/jQuery.base64.js"></script>
     <!-- Bootstrap Js -->
     <script src="static/assets/js/bootstrap.min.js"></script>
+
     <!-- BOOTSTRAP SCRIPTS -->
     <script src="static/assets/js/bootstrap-table/bootstrap-table.min.js"></script>
     <script src="static/assets/js/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
@@ -665,6 +681,7 @@
     <script type="text/javascript" src="static/assets/js/aesYxn/aes-min.js"></script>
     <script type="text/javascript" src="static/assets/js/aesYxn/aes.js"></script>
     <script>
+
         //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
         /* 点击input框时加载监听事件*/
         $(".timepicker").each(function () {
@@ -674,6 +691,7 @@
         function myfunc(e){
             e.currentTarget.blur();
         }
+
     </script>
 
 </body>

@@ -282,35 +282,42 @@ $(function(){
                // width: 120,
                cellStyle: formatTableUnit,
                formatter: paramsMatter,
-           },{
+           }, {
                field: 'deviceName',
                title: '电气位置',
                align: 'center',
                sortable: true,
                // width: 120,
                cellStyle: formatTableUnit,
-               formatter: paramsMatter,
-           },{
-               field: 'alarmTypeRemarks',
-               title: '设备位置',
-               align: 'center',
-               sortable: true,
-               // width: 120,
-               cellStyle: formatTableUnit,
-               formatter: paramsMatter,
-           }/*,{
-               field: 'deviceId',
-               title: '设备编号',
-               align: 'center'
-           }*/,{
-               field: 'alarmInfo',
-               title: '告警内容',
-               align: 'center',
-               sortable: true,
-               // width: 120,
-               cellStyle: formatTableUnit,
-               formatter: paramsMatter,
-           },{
+               formatter: function (value, row, index) {
+                   var span = document.createElement("span");
+                   span.setAttribute("title", row.deviceName + row.alarmTypeRemarks + row.alarmInfo);
+                   span.innerHTML = row.deviceName + row.alarmTypeRemarks + row.alarmInfo;
+                   return span.outerHTML;
+               }
+           },
+           // },{
+           //     field: 'alarmTypeRemarks',
+           //     title: '设备位置',
+           //     align: 'center',
+           //     sortable: true,
+           //     // width: 120,
+           //     cellStyle: formatTableUnit,
+           //     formatter: paramsMatter,
+           // }/*,{
+           //     field: 'deviceId',
+           //     title: '设备编号',
+           //     align: 'center'
+           // }*/,{
+           //     field: 'alarmInfo',
+           //     title: '告警内容',
+           //     align: 'center',
+           //     sortable: true,
+           //     // width: 120,
+           //     cellStyle: formatTableUnit,
+           //     formatter: paramsMatter,
+           // },
+               {
                field: 'alarmTime',
                title: '告警时长(h)',
                align: 'center',
@@ -319,6 +326,14 @@ $(function(){
                cellStyle: formatTableUnit,
                formatter: paramsMatter,
            },{
+               field: 'confirmStat',
+               title: '告警状态',
+               align: 'center',
+               sortable: true,
+               width: 120,
+               formatter: paramsMatter,
+           },
+               {
                field: 'alarmLevel',
                title: '告警等级',
                align: 'center',
@@ -378,6 +393,7 @@ $(function(){
                return html.join('');
            }
         });
+        // $('#dataTables-example').colResizable()
         // 表格高度自适应
         // $('#dataTables-example').bootstrapTable('resetView',{height:"auto"});
 
@@ -395,7 +411,7 @@ $(function(){
                     "white-space": "nowrap",
                     "text-overflow": "ellipsis",
                     "overflow": "hidden",
-                    "max-width": "60",
+                    // "max-width": "60",
                 }
             }
         }

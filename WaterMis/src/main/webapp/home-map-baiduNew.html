@@ -119,7 +119,7 @@
         width:15px;
     }
 </style>
-<div class="row">
+<div class="row" style="height: 100%;">
     <div class="container-bg choose-bg" style="visibility: hidden"></div>
 	<div class="container-choose choose-button" style="visibility: hidden">
 <!--        <button class="btn btn-default" onclick="showSCADA()">SCADA</button>-->
@@ -168,7 +168,7 @@
     </div>
 
     <!-- /.CHOOSE BUTTON -->
-    <div id="baiduMap"></div>
+    <div id="baiduMap" style="height: 100%;width: 100%;position: absolute"></div>
 </div>
 <!-- Baidu Map Js -->
 <script type="text/javascript">
@@ -330,18 +330,20 @@
         var top = $(".top-navbar").height()+20;
         var height = $(window).height() - top;
         var $baiduMap = $("#baiduMap");
-        $baiduMap.height(height + 5);
+        // $baiduMap.height(height + 5);
         $baiduMap.css("overflow", "hidden");
         $("#page-wrapper").css("overflow-y", "hidden");
 
         $(window).resize(function() {
-            $("#baiduMap").height(height + 5);
+            // $("#baiduMap").height(height + 5);
         });
-        MAP = new BMap.Map("baiduMap");
+        MAP = new BMap.Map("baiduMap",{
+            enableMapClick: false // 禁用点击景点弹出详细信息窗口则使用
+        });
         // 百度地图API功能
         var point = new BMap.Point(118.434261,31.264748);
         MAP.centerAndZoom(point, 13);
-
+        MAP.enableAutoResize();//设置当地图容器发生改变时地图自动适应
         var myStyleJson = [
             {
                 "featureType": "mountain",
