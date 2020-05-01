@@ -1223,9 +1223,11 @@ function formValidator() {
 
 function hideCreateBtn() {
     $("#createBtn").hide();
+    $("#saveBtn").hide();
 }
 function showCreateBtn() {
     $("#createBtn").show();
+    $("#saveBtn").show();
 }
 
 function myModalWorkOrder(row,flag) {
@@ -1397,11 +1399,15 @@ function alertError() {
     $('#alertError').modal('show');
 }
 
-function submitWorkOrder(){
+function submitWorkOrder(v){
     var bootstrapValidator = $("#workOrder").data('bootstrapValidator');
     //手动触发验证
     bootstrapValidator.validate();
     if(bootstrapValidator.isValid()){
+        if(v!=undefined && v=="save"){
+            $("#saveOrCreateFlag").val(v)
+            $("#status").val("0");
+        }
        // var _url = CONTEXT_PATH+"/alarmStatController/submitWorkOrder?"+ Math.random();
         var _url = CONTEXT_PATH+"/ticket/createWorkOrder?"+ Math.random();
         $("#workOrder").ajaxSubmit( {

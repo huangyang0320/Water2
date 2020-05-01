@@ -472,6 +472,9 @@
                                 <div class="form-group">
                                     <label for="processName">告警等级</label>
                                     <input type="text" class="form-control" id="alarmLevel" name="alarmLevel" placeholder="请输入">
+                                    <!--保存还是创建-->
+                                    <input type="hidden" class="form-control" readonly id="saveOrCreateFlag" name="saveOrCreateFlag" >
+
                                 </div>
                             </div>
 
@@ -529,7 +532,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" id="createBtn" onclick="submitWorkOrder()">创建</button>
+                    <button type="button" class="btn btn-primary" id="saveBtn" onclick="submitWorkOrder('save')">暂存工单</button>
+                    <button type="button" class="btn btn-primary" id="createBtn" onclick="submitWorkOrder()">创建工单</button>
                 </div>
             </div>
         </div>
@@ -649,6 +653,7 @@
     <!--<script src="static/assets/js/custom.js"></script>-->
 
     <script src="static/assets/js/yxn-header-menu.js"></script>
+    <script src="static/assets/js/tips.js"></script>
 
     <script type="text/javascript" src="static/chPlayer/chplayer.min.js"></script>
 

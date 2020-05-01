@@ -466,8 +466,9 @@ function createLxTicket(){
     } else {
         if($("#phStr").val()==null||$("#phStr").val()==''||$("#phStr").val()==undefined){
             $("#phStr").val(null);
-            $('#alertShowMessage').html('请至少选择一个泵房!!!');
-            $('#alertShow').modal('show');
+            /*$('#alertShowMessage').html('请至少选择一个泵房!!!');
+            $('#alertShow').modal('show');*/
+            Ewin.alert('请至少选择一个泵房!');
             return
         }
     }
@@ -485,15 +486,16 @@ function createLxTicket(){
             $("#deviceStr").val(null);
             var type = $("#workType").val();
             if (type == "3") {
-                $('#alertShowMessage').html('请至少选择一个设备!!!');
-                $('#alertShow').modal('show');
+               /* $('#alertShowMessage').html('请至少选择一个设备!!!');
+                $('#alertShow').modal('show');*/
+                Ewin.alert('请至少选择一个设备!');
                 return
             }
         }
     }
 
-    $('#alertWorkMessage').html('确认要创建工单?');
-    $('#alertWork').modal('show');
+        clickOk();
+
 }
 function clickOk(){
     var _url = CONTEXT_PATH + "/ticket/updateTicketInfo?" + Math.random();
@@ -505,9 +507,9 @@ function clickOk(){
         success: function (data) {
             if (data.status == "success") {
                 frameElement.api.close();
-                alert(data.message);
+                Ewin.alert(data.message);
             } else {
-                alert(data.message);
+                Ewin.alert(data.message);
             }
 
         }

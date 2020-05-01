@@ -447,7 +447,7 @@ public class TicketController {
     @ApiOperation(value = "删除工单", httpMethod = "POST", response = TicketDto.class)
     public boolean deleteTicket(TicketDto ticketDto) {
         ticketDto.setValidFlag("0");
-        return ticketService.updateTicketInfo(ticketDto);
+        return ticketService.delTicketInfo(ticketDto);
     }
 
     @RequestMapping("/updateTicketInfo")

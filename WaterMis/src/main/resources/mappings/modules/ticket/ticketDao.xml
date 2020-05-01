@@ -360,6 +360,9 @@
             <if test="alarmStatus!=null and alarmStatus!=''">
                 a.alarm_status= #{alarmStatus},
             </if>
+            <if test="clearTicketId!=null and clearTicketId!=''">
+                a.ticketId= '',
+            </if>
         </set>
         <where>
             1=1
@@ -608,16 +611,17 @@
         ) currentStatusName,
         t.biz_id bizId,
         de.`NAME` deviceName,
-        p.`NAME` pumpName,
-        group_concat(u.`name`) allHandleUser
+        p.`NAME` pumpName
         FROM
         ticket t
         LEFT JOIN device de ON de.ID = t.device_code
         LEFT JOIN pump_house p ON p.id = de.ID_PUMP_HOUSE
-        LEFT JOIN ticket_to_do td ON td.ticket_id = t.ticket_id
+        <!--
+         LEFT JOIN ticket_to_do td ON td.ticket_id = t.ticket_id
         LEFT JOIN sys_user u ON u.id=td.user_id
+        -->
         LEFT JOIN sys_user su on su.id=t.create_by
-        INNER JOIN ticket_log  log ON 	t.ticket_id=log.TICKET_ID and td.user_Id = #{handleUserId}
+        INNER JOIN ticket_log  log ON 	t.ticket_id=log.TICKET_ID and log.CREATE_BY = #{handleUserId}
         WHERE
         t.valid_flag = '1'
         <if test="title !=null and title!='' " >

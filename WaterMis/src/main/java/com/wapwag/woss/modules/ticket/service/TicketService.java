@@ -381,6 +381,18 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         return i>0;
     }
 
+    @Transactional(readOnly = false)
+    public boolean delTicketInfo(TicketDto ticket){
+        int i=ticketDao.updateTicketInfo(ticket);
+        //删除告警工单时，需要清空告警表中 关联的工单ID
+        TicketDto obj=new TicketDto();
+        obj.setTicketId(ticket.getTicketId());
+        obj.setClearTicketId(ticket.getTicketId());
+        this.updateAlarmData(obj);
+        return i>0;
+    }
+
+
     /**
      * 编辑工单
      * @param ticketDto
@@ -389,51 +401,17 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
     @Transactional(readOnly = false)
     public JSONObject updateWorkOrder(TicketDto ticketDto) throws Exception {
         JSONObject result=new JSONObject();
-        ticketDto.setValidFlag("1");
-        this.updateTicketInfo(ticketDto);
-        //日志
-        TicketLogDto log=new TicketLogDto();
-        log.setId(UUID.randomUUID().toString());
-        log.setTicketId(ticketDto.getTicketId());
-        log.setStatus("1");
-        log.setCreateBy(ticketDto.getCreateBy());
-        log.setCreateDate(new Date());
-        log.setUpdateBy(ticketDto.getUpdateBy());
-        log.setUpdateDate(new Date());
-        this.insertTicketLog(log);
-        //关联告警表（特殊处理）
-        if("1".equals(ticketDto.getTicketType())){
-            this.updateAlarmTicketByDeviceIdAndStartTime(ticketDto);
-        }
-        //创建插入提示消息
-        List<String> mgUser= this.getUserIdByDeptId(ticketDto.getDeptId());
-        String uId=mgUser.get(0);
-        insertDetails(ticketDto.getTicketId(),"工单编辑",uId);
-
-        //需求变更，发给部门负责人
-        //根据部门ID获取负责人
-        List<String> userList= this.getUserIdByDeptId(ticketDto.getDeptId());
-        //代办（部门下的人多能看到，状态为在签收）
-        //1.先获取部门下有效所有人
-        // List<User> userList = this.getUserListByDeptId(ticketDto.getDeptId());
-        //2.把人员插入代办表
-        if(userList!=null && userList.size()>0){
-            TicketToDoDto ticketToDoDto=null;
-            for(String userId:userList){
-                //status :0待分发  1签收  (直接接受，不需要签收)
-                ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketDto.getTicketId(),"","1",userId,"1",new Date(),new Date(),ticketDto.getUpdateBy(),ticketDto.getCreateBy());
-                ticketDao.delTicketToDoByTicketId(ticketToDoDto.getTicketId());
-                this.insertTicketToDo(ticketToDoDto);
-                result.put("code","201");
-                result.put("status","success");
-                result.put("message","工单编辑成功!");
-            }
-        }else{
+        try {
+            ticketDto.setValidFlag("1");
+            this.updateTicketInfo(ticketDto);
+            result.put("code","201");
+            result.put("status","success");
+            result.put("message","工单编辑成功!");
+        }catch (Exception e){
             result.put("code","3001");
             result.put("message","该部门下没有配置负责人员，请联系管理员!");
             throw new ServiceException(result.toJSONString());
         }
-
         return result;
     }
 

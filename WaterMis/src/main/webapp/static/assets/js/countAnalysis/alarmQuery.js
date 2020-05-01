@@ -537,9 +537,11 @@ function disHide(){
 
     function hideCreateBtn() {
         $("#createBtn").hide();
+        $("#saveBtn").hide();
     }
     function showCreateBtn() {
         $("#createBtn").show();
+        $("#saveBtn").show();
     }
     function createWorkOrder1(self) {
         //创建按钮显示
@@ -736,11 +738,16 @@ function disHide(){
  		  });
    }
 
-    function submitWorkOrder(){
+    function submitWorkOrder(v){
         var bootstrapValidator = $("#workOrder").data('bootstrapValidator');
         //手动触发验证
         bootstrapValidator.validate();
         if(bootstrapValidator.isValid()){
+
+            if(v!=undefined && v=="save"){
+                $("#saveOrCreateFlag").val(v)
+                $("#status").val("0");
+            }
            // var _url = CONTEXT_PATH+"/alarmStatController/submitWorkOrder?"+ Math.random();
             var _url = CONTEXT_PATH+"/ticket/createWorkOrder?"+ Math.random();
             $("#workOrder").ajaxSubmit( {

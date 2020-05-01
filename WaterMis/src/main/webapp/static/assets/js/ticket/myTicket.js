@@ -46,7 +46,7 @@ $(function(){
         if(createBeginTime!="" && createEndTime!=""){
             if(createBeginTime>createEndTime){
                 $("#createBeginTime").val('');
-                showErrorMsg("开始时间不能大于结束时间!");
+                Ewin.alert("开始时间不能大于结束时间!");
                 return false;
             }
         }
@@ -59,7 +59,7 @@ $(function(){
         if(createBeginTime!="" && createEndTime!=""){
             if(createBeginTime>createEndTime){
                 $("#createEndTime").val('');
-                showErrorMsg("结束时间不能小于开始时间!");
+                Ewin.alert("结束时间不能小于开始时间!");
                 return false;
             }
         }
@@ -72,7 +72,7 @@ $(function(){
         if(startBeginTime!="" && startEndTime!=""){
             if(startBeginTime>startEndTime){
                 $("#startBeginTime").val('');
-                showErrorMsg("开始时间不能大于结束时间!");
+                Ewin.alert("开始时间不能大于结束时间!");
                 return false;
             }
         }
@@ -85,7 +85,7 @@ $(function(){
         if(startBeginTime!="" && startEndTime!=""){
             if(startBeginTime>startEndTime){
                 $("#startEndTime").val('');
-                showErrorMsg("结束时间不能小于开始时间!");
+                Ewin.alert("结束时间不能小于开始时间!");
                 return false;
             }
         }
@@ -108,8 +108,9 @@ function exportPdf(){
         form.submit();
         form.remove();
     }else{
-        $('#alertShowMessage').html('请选择一行导出PDF文件!!!');
-        $('#alertShow').modal('show');
+        Ewin.alert('请选择一行导出PDF文件!');
+       /* $('#alertShowMessage').html('请选择一行导出PDF文件!!!');
+        $('#alertShow').modal('show');*/
     }
 }
 
@@ -642,59 +643,61 @@ function editTicketWBOrXJ(row) {
 
 function startTicket(ticketId,deptId){
 
-    $.post(CONTEXT_PATH + '/ticket/startWorkOrder',{
-        "ticketId": ticketId,
-        "deptId": deptId
-    }, function(data) {
-        parent.showErrorMsgVideo("发起成功")
-        $('#dataTables-example').bootstrapTable('refresh');
+    Ewin.confirm({ message: "确认要发起该工单吗？" }).on(function (e) {
+        if (!e) {
+            return;
+        }
+        $.post(CONTEXT_PATH + '/ticket/startWorkOrder',{
+            "ticketId": ticketId,
+            "deptId": deptId
+        }, function(data) {
+            Ewin.alert("发起成功")
+            $('#dataTables-example').bootstrapTable('refresh');
+        });
     });
 
-   /* $.confirm({
-        title: '确认',
-        content: '确定要发起该工单吗？',
-        buttons: {
-            ok: {
-                text: '确认',
-                btnClass: 'btn-primary',
-                action: function () {
-                    $.post(CONTEXT_PATH + '/ticket/startWorkOrder',{
-                        "ticketId": ticketId,
-                        "deptId": deptId
-                    }, function(data) {
-                        parent.showErrorMsgVideo("发起成功")
-                        // $('#alarmtable').bootstrapTable('resetView')
-                        getAlarmList()
-                    });
-                }
-            },
-            cancel: {
-                text: '取消',
-                btnClass: 'btn-primary'
-            }
-        }
-    })*/
+
 }
 
 
-var delTicketId;
 function deleteTicket(ticketId){
-    $('#alertWorkMessage').html('确认要删除工单?');
-    $('#alertWork').modal('show');
-    delTicketId=ticketId
-}
-function clickOk(){
-    if(delTicketId!=null&&delTicketId!=''&&delTicketId!=undefined){
-        //只能删除自己名下的数据行
-        $.post(CONTEXT_PATH+"/ticket/deleteTicket",{"ticketId":delTicketId},function (res){
+    Ewin.confirm({ message: "确认要删除该工单吗？" }).on(function (e) {
+        if (!e) {
+            return;
+        }
+        $.post(CONTEXT_PATH+"/ticket/deleteTicket",{"ticketId":ticketId},function (res){
             if(res==true){
-                $('#alertShowMessage').html('工单删除成功!!!');
+                Ewin.alert('工单删除成功!!!');
             }else{
-                $('#alertShowMessage').html('工单删除失败!!!');
+                Ewin.alert('工单删除失败!!!');
             }
-            $('#alertWork').modal('hide');
-            $('#alertShow').modal('show');
             $('#dataTables-example').bootstrapTable('refresh');
         })
-    }
+    });
+}
+
+function changerDept() {
+    $("#mgName2").val(jQuery("#deptId2 option:selected").attr("mgName"));
+}
+
+function queryMaintenanceWorkerDept(deptId) {
+    //var url = CONTEXT_PATH+"/alarmStatController/queryMaintenanceWorkerUser?"+ Math.random();
+    var url =CONTEXT_PATH+"/ticket/getDept?"+ Math.random();
+    jQuery.ajax({
+        type : 'POST',
+        contentType : 'application/json',
+        url : url,
+        dataType : 'json',
+        success : function(data) {
+            $("#deptId2").html("");
+            $.each(data, function (i, item) {
+                jQuery("#deptId2").append("<option value="+ item.deptId+" mgName="+item.mgName+">"+ item.deptName+"</option>");
+                if(i==0){
+                    $("#mgName2").val(item.mgName);
+                }
+            });
+            $("#deptId2").val(deptId);
+            $("#mgName2").val(jQuery("#deptId2 option:selected").attr("mgName"));
+        }
+    });
 }
