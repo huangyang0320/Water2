@@ -67,4 +67,9 @@
     }
 
     ]
+},{
+  "title": "组态测试",
+  "icon": "fa-random",
+  "liLen":"2",
+  "url": "zutaitest"
 }]

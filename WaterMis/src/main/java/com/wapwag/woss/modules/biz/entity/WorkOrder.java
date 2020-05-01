@@ -22,6 +22,8 @@ public class WorkOrder {
     private String alarmLevel;        //告警等级
     private String create;        //创建人
 
+    private String saveOrCreateFlag; //保存  创建  标记
+
     private String phId;
     private String deviceId;
     private String areaId;
@@ -217,5 +219,13 @@ public class WorkOrder {
 
     public void setChannel(String channel) {
         this.channel = channel;
+    }
+
+    public String getSaveOrCreateFlag() {
+        return saveOrCreateFlag;
+    }
+
+    public void setSaveOrCreateFlag(String saveOrCreateFlag) {
+        this.saveOrCreateFlag = saveOrCreateFlag;
     }
 }
