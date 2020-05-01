@@ -248,7 +248,15 @@ function initBootTable(url){
             title: '设备名称',
             align: 'center',
             sortable: true,
-            cellStyle: formatTableUnit
+            cellStyle: formatTableUnit,
+            formatter: function (value, row, index) {
+                console.log(value)
+                if(value == 'null') {
+                    return '-'
+                }else {
+                    return value
+                }
+            }
         },/*{
             field: 'address',
             title: '泵房地址',

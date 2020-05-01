@@ -1040,7 +1040,7 @@ span.active {
     height: 300px;
     bottom: -300px;
     /*right: 10px;*/
-    margin-left: 230px;
+    margin-left: 20%;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     background-color: #fff;
@@ -1051,8 +1051,8 @@ span.active {
     width: 450px;
     height: 300px;
     bottom: -300px;
-    /*right: 10px;*/
-    margin-left: 70%;
+    right: 10px;
+    /*margin-left: 70%;*/
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     background-color: #fff;
@@ -1073,15 +1073,15 @@ span.active {
     width: 20px;
     height: 20px;
     right: 10px;
-    top: 0px;
+    top: 5px;
     line-height: 20px;
     text-align: center;
     border-radius: 50%;
     cursor: pointer;
 }
 .alarmTips .alarmTitle .closeTips:hover {
-    background-color: #fff;
-    color: #09c;
+    background: #cfd1d3;
+    color: #fff;
 }
 .alarmTips .content {
     position: relative;

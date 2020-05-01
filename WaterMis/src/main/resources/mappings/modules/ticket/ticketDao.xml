@@ -474,7 +474,8 @@
         t.dept_id as deptId,
         (
         CASE
-
+        WHEN t.`status` = '0' THEN
+        '暂存'
         WHEN t.`status` = '1' THEN
         '新建'
         WHEN t.`status` = '2' THEN
@@ -591,7 +592,8 @@
         t.dept_id as deptId,
         (
         CASE
-
+        WHEN t.`status` = '0' THEN
+        '暂存'
         WHEN t.`status` = '1' THEN
         '新建'
         WHEN t.`status` = '2' THEN
@@ -615,6 +617,7 @@
         LEFT JOIN ticket_to_do td ON td.ticket_id = t.ticket_id
         LEFT JOIN sys_user u ON u.id=td.user_id
         LEFT JOIN sys_user su on su.id=t.create_by
+        INNER JOIN ticket_log  log ON 	t.ticket_id=log.TICKET_ID and td.user_Id = #{handleUserId}
         WHERE
         t.valid_flag = '1'
         <if test="title !=null and title!='' " >
@@ -666,7 +669,6 @@
         <if test="sortName ==null or sortName =='' " >
             order by t.create_Date desc
         </if>
-
 
 
 
@@ -724,7 +726,8 @@
         t.dept_id as deptId,
         (
         CASE
-
+        WHEN t.`status` = '0' THEN
+        '暂存'
         WHEN t.`status` = '1' THEN
         '新建'
         WHEN t.`status` = '2' THEN
@@ -838,7 +841,8 @@
         t.`status` AS status,
         (
         CASE
-
+        WHEN t.`status` = '0' THEN
+        '暂存'
         WHEN t.`status` = '1' THEN
         '新建'
         WHEN t.`status` = '2' THEN

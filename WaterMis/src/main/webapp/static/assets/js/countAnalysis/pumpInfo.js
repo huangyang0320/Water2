@@ -35,7 +35,19 @@ $(function(){
     });
 
     });
-
+// 自定义按钮导出数据
+function exportData(){
+    $('#dataTables-example').tableExport({
+        type: 'excel',
+        exportDataType: "all",
+        ignoreColumn: [0],//忽略某一列的索引
+        fileName: '泵房信息列表' + moment().format('YYYY-MM-DD'),//下载文件名称
+        onCellHtmlData: function (cell, row, col, data){//处理导出内容,自定义某一行、某一列、某个单元格的内容
+            console.info(data);
+            return data;
+        },
+    });
+}
     function initBootTable(url){
         // 初始化无滚动条
         $("#page-wrapper").css("overflow-y", "hidden");
@@ -86,7 +98,7 @@ $(function(){
                     // showRefresh: false,//刷新按钮
                     // showColumns: true,//列选择按钮
                     // smartDisplay:true,
-                    // showExport:false,
+                    showExport:false,
                     // exportDataType:'all',
                     // exportOptions: {
                     //     ignoreColumn: [0] //忽略某一列的索引
@@ -213,31 +225,55 @@ $(function(){
                         }
                     ],
                     detailFormatter: function(index, row) {// 详情信息
-                        var html = [];
-                        html.push('<p class="detail-view">' + '所属区域' + ' : ' + toTrim(row.areaId) + '</p>');
-                        // html.push('<p class="detail-view">' + '项目名称' + ' : ' + toTrim(row.projectId) + '</p>');
-                        html.push('<p class="detail-view">' + '泵房名称' + ' : ' + toTrim(row.pumpHouseName) + '</p>');
-                        html.push('<p class="detail-view">' + '泵房编码' + ' : ' + toTrim(row.id) + '</p>');
-                        html.push('<p class="detail-view">' + '泵房地址' + ' : ' + toTrim(row.pumpHouseAddress) + '</p>');
-                        html.push('<p class="detail-view">' + '小区名称' + ' : ' + toTrim(row.cellName) + '</p>');
-                        html.push('<p class="detail-view">' + '小区地址' + ' : ' + toTrim(row.cellAdress) + '</p>');
-                        html.push('<p class="detail-view">' + '运维方' + ' : ' + toTrim(row.constructionSide) + '</p>');
-                        html.push('<p class="detail-view">' + '运维方联系方式' + ' : ' + toTrim(row.constructionSideInformation) + '</p>');
-                        html.push('<p class="detail-view">' + '物业' + ' : ' + toTrim(row.property) + '</p>');
-                        html.push('<p class="detail-view">' + '物业联系方式' + ' : ' + toTrim(row.propertyInformation) + '</p>');
-                        html.push('<p class="detail-view">' + '施工方' + ' : ' + toTrim(row.construction) + '</p>');
-                        html.push('<p class="detail-view">' + '施工方联系方式' + ' : ' + toTrim(row.constructionInformation) + '</p>');
-                        html.push('<p class="detail-view">' + '自控改造厂家' + ' : ' + toTrim(row.selfControlManufacturers) + '</p>');
-                        html.push('<p class="detail-view">' + '自控改造厂家联系方式' + ' : ' + toTrim(row.selfControlManufacturersInformation) + '</p>');
-                        html.push('<p class="detail-view">' + '设备厂家' + ' : ' + toTrim(row.deviceManufacturers) + '</p>');
-                        html.push('<p class="detail-view">' + '设备厂家联系方式' + ' : ' + toTrim(row.deviceManufacturersInformation) + '</p>');
-                        html.push('<p class="detail-view">' + '移交时间' + ' : ' + toTrim(row.handoverTime) + '</p>');
-                        html.push('<p class="detail-view">' + '备注' + ' : ' + toTrim(row.memo) + '</p>');
-                        return html.join('');
+                        let html =  ''
+
+                        html = '<ul id="detailList">'+
+                            '<li><span class="name"> '+ '所属区域'+ '</span>'+ ' :       ' + toTrim(row.areaId) +'</li>'+
+                            '<li><span class="name"> '+ '泵房名称' + '</span>'+ ' : ' + toTrim(row.pumpHouseName) +'</li>'+
+                            '<li><span class="name"> '+ '泵房编码'  + '</span>'+ ' : '+ toTrim(row.id) +'</li>'+
+                            '<li><span class="name"> '+ '泵房地址' + '</span>'+ ' : ' + toTrim(row.pumpHouseAddress) +'</li>'+
+                            '<li><span class="name"> '+ '小区名称' + '</span>'+ ' : '+ toTrim(row.cellName) +'</li>'+
+                            '<li><span class="name"> '+ '小区地址' + '</span>'+ ' : ' + toTrim(row.cellAdress)+'</li>'+
+                            '<li><span class="name"> '+ '运维方'+ '</span>'+ ' : ' + toTrim(row.constructionSide)+'</li>'+
+                            '<li><span class="name"> '+ '运维方联系方式' + '</span>'+ ' : ' + toTrim(row.constructionSideInformation) +'</li>'+
+                            '<li><span class="name"> '+  '物业'+ '</span>'+ ' : ' + toTrim(row.property)+'</li>'+
+                            '<li><span class="name"> '+ '物业联系方式' + '</span>'+ ' : ' + toTrim(row.propertyInformation) +'</li>'+
+                            '<li><span class="name"> '+ '施工方' + '</span>'+ ' : ' + toTrim(row.construction) +'</li>'+
+                            '<li><span class="name"> '+ '施工方联系方式' + '</span>'+ ' : '+ toTrim(row.constructionInformation)+'</li>'+
+                            '<li><span class="name"> '+ '自控改造厂家'+ '</span>'+ ' : ' + toTrim(row.selfControlManufacturers)+'</li>'+
+                            '<li><span class="name"> '+ '自控改造厂家联系方式' + '</span>'+ ' : ' + toTrim(row.selfControlManufacturersInformation) +'</li>'+
+                            '<li><span class="name"> '+ '设备厂家'+ '</span>' + ' : '+ toTrim(row.deviceManufacturers) +'</li>'+
+                            '<li><span class="name"> '+ '设备厂家联系方式' + '</span>'+ ' : '+ toTrim(row.deviceManufacturersInformation) +'</li>'+
+                            '<li><span class="name"> '+ '移交时间' + '</span>'+ ' : ' + toTrim(row.handoverTime) +'</li>'+
+                            '<li><span class="name"> '+ '备注' + '</span>'+ ' : '+ toTrim(row.memo)+'</li>'+
+                            '</ul>'
+                        return html
+                        // var html = [];
+                        // html.push('<p class="detail-view">' + '所属区域' + ' : ' + toTrim(row.areaId) + '</p>');
+                        // // html.push('<p class="detail-view">' + '项目名称' + ' : ' + toTrim(row.projectId) + '</p>');
+                        // html.push('<p class="detail-view">' + '泵房名称' + ' : ' + toTrim(row.pumpHouseName) + '</p>');
+                        // html.push('<p class="detail-view">' + '泵房编码' + ' : ' + toTrim(row.id) + '</p>');
+                        // html.push('<p class="detail-view">' + '泵房地址' + ' : ' + toTrim(row.pumpHouseAddress) + '</p>');
+                        // html.push('<p class="detail-view">' + '小区名称' + ' : ' + toTrim(row.cellName) + '</p>');
+                        // html.push('<p class="detail-view">' + '小区地址' + ' : ' + toTrim(row.cellAdress) + '</p>');
+                        // html.push('<p class="detail-view">' + '运维方' + ' : ' + toTrim(row.constructionSide) + '</p>');
+                        // html.push('<p class="detail-view">' + '运维方联系方式' + ' : ' + toTrim(row.constructionSideInformation) + '</p>');
+                        // html.push('<p class="detail-view">' + '物业' + ' : ' + toTrim(row.property) + '</p>');
+                        // html.push('<p class="detail-view">' + '物业联系方式' + ' : ' + toTrim(row.propertyInformation) + '</p>');
+                        // html.push('<p class="detail-view">' + '施工方' + ' : ' + toTrim(row.construction) + '</p>');
+                        // html.push('<p class="detail-view">' + '施工方联系方式' + ' : ' + toTrim(row.constructionInformation) + '</p>');
+                        // html.push('<p class="detail-view">' + '自控改造厂家' + ' : ' + toTrim(row.selfControlManufacturers) + '</p>');
+                        // html.push('<p class="detail-view">' + '自控改造厂家联系方式' + ' : ' + toTrim(row.selfControlManufacturersInformation) + '</p>');
+                        // html.push('<p class="detail-view">' + '设备厂家' + ' : ' + toTrim(row.deviceManufacturers) + '</p>');
+                        // html.push('<p class="detail-view">' + '设备厂家联系方式' + ' : ' + toTrim(row.deviceManufacturersInformation) + '</p>');
+                        // html.push('<p class="detail-view">' + '移交时间' + ' : ' + toTrim(row.handoverTime) + '</p>');
+                        // html.push('<p class="detail-view">' + '备注' + ' : ' + toTrim(row.memo) + '</p>');
+                        // return html.join('');
                     }
                 });
             }
         })
+
 
         // $('#dataTables-example').bootstrapTable({
         //     // data:data,
@@ -531,7 +567,7 @@ $(function(){
     	    		dataMsg[i][0] = data[i].alarmId +"(" + data[i].remarks + ")";
     	    		dataMsg[i][1] = parseInt(data[i].remarks);
     	    	}
-    	    	render(countObj,dataMsg,"设备区位对比","设备区位");
+    	    	render(countObj,dataMsg,"运维单位对比","设备区位");
 		    },
 		    error : function(data)
 	   	    {
@@ -542,79 +578,147 @@ $(function(){
    }
    function render(countObj,dataMsg,titleName,remarkName){
 	   /* 大区报警对比 */
-      countObj.highcharts({
-           colors: ['#24CBE5', '#64E572', '#FF9655', '#058DC7', '#50B432', '#ED561B', '#DDDF00', '#FFF263', '#6AF9C4'],
+       countObj.highcharts({
+           // colors: ['#24CBE5', '#64E572', '#FF9655', '#058DC7', '#50B432', '#ED561B', '#DDDF00', '#FFF263', '#6AF9C4'],
            chart: {
-               backgroundColor: {
-                   linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-                   stops: [
-                       [0, 'rgb(255, 255, 255)'],
-                       [1, 'rgb(240, 240, 255)']
-                   ]
+               type: 'pie',
+               options3d: {
+                   enabled: true,
+                   alpha: 45,
+                   beta: 0
                },
+               backgroundColor: {
+                                linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+                                stops: [
+                                    [0, 'rgb(255, 255, 255)'],
+                                    [1, 'rgb(240, 240, 255)']
+                                ]
+                            },
                borderWidth: 1,
-               plotBackgroundColor: 'rgba(255, 255, 255, .9)',
-               plotShadow: true,
-               plotBorderWidth: 1
-           },
-           exporting: {
-               enabled: false
+                        plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+                        plotShadow: true,
+                        plotBorderWidth: 1
            },
            title: {
-               text: titleName,
+               text:  titleName,
                style: {
-                   color: '#000',
-                   font: 'bold 12px "Trebuchet MS", Verdana, Microsoft YaHei'
-               }
-           },
-           legend: {
-               itemStyle: {
-                   font: '9pt Trebuchet MS, Verdana, Microsoft YaHei',
-                   color: 'black'
-
-               },
-               itemHoverStyle: {
-                   color: '#039'
-               },
-               itemHiddenStyle: {
-                   color: 'gray'
-               }
-           },
-           labels: {
-               style: {
-                   color: '#99b'
-               }
+                                color: '#000',
+                                font: 'bold 12px "Trebuchet MS", Verdana, Microsoft YaHei'
+                            }
            },
            tooltip: {
                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-           },
-           navigation: {
-               buttonOptions: {
-                   theme: {
-                       stroke: '#CCCCCC'
-                   }
-               }
            },
            plotOptions: {
                pie: {
                    allowPointSelect: true,
                    cursor: 'pointer',
+                   depth: 35,
                    dataLabels: {
-                       enabled: false,
-                       format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                       enabled: true,
+                       format: '{point.name}'
                    },
                    showInLegend: true
                }
            },
            series: [{
                type: 'pie',
-               name: remarkName,
+               name: '区域泵房',
                data: dataMsg
            }],
            credits: {
-               enabled: false//不显示highCharts版权信息
-           }     
+                        enabled: false  //不显示highCharts版权信息
+                    },
+           exporting: {
+                        enabled: false  // 不显示下载
+                    },
+           legend: {
+                        itemStyle: {
+                            font: '9pt Trebuchet MS, Verdana, Microsoft YaHei',
+                            color: 'black'
+
+                        },
+                        itemHoverStyle: {
+                            color: '#039'
+                        },
+                        itemHiddenStyle: {
+                            color: 'gray'
+                        }
+                    },
        });
+      // countObj.highcharts({
+      //      colors: ['#24CBE5', '#64E572', '#FF9655', '#058DC7', '#50B432', '#ED561B', '#DDDF00', '#FFF263', '#6AF9C4'],
+      //      chart: {
+      //          backgroundColor: {
+      //              linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+      //              stops: [
+      //                  [0, 'rgb(255, 255, 255)'],
+      //                  [1, 'rgb(240, 240, 255)']
+      //              ]
+      //          },
+      //          borderWidth: 1,
+      //          plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+      //          plotShadow: true,
+      //          plotBorderWidth: 1
+      //      },
+      //      exporting: {
+      //          enabled: false
+      //      },
+      //      title: {
+      //          text: titleName,
+      //          style: {
+      //              color: '#000',
+      //              font: 'bold 12px "Trebuchet MS", Verdana, Microsoft YaHei'
+      //          }
+      //      },
+      //      legend: {
+      //          itemStyle: {
+      //              font: '9pt Trebuchet MS, Verdana, Microsoft YaHei',
+      //              color: 'black'
+      //
+      //          },
+      //          itemHoverStyle: {
+      //              color: '#039'
+      //          },
+      //          itemHiddenStyle: {
+      //              color: 'gray'
+      //          }
+      //      },
+      //      labels: {
+      //          style: {
+      //              color: '#99b'
+      //          }
+      //      },
+      //      tooltip: {
+      //          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      //      },
+      //      navigation: {
+      //          buttonOptions: {
+      //              theme: {
+      //                  stroke: '#CCCCCC'
+      //              }
+      //          }
+      //      },
+      //      plotOptions: {
+      //          pie: {
+      //              allowPointSelect: true,
+      //              cursor: 'pointer',
+      //              dataLabels: {
+      //                  enabled: false,
+      //                  format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+      //              },
+      //              showInLegend: true
+      //          }
+      //      },
+      //      series: [{
+      //          type: 'pie',
+      //          name: remarkName,
+      //          data: dataMsg
+      //      }],
+      //      credits: {
+      //          enabled: false//不显示highCharts版权信息
+      //      }
+      //  });
 
    } 
    function showAllColumns(){

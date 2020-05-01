@@ -106,11 +106,11 @@
 
 </head>
 <body>
-<div>
-    <div class="alarmTitle" style="color: #fff;">
+<div >
+    <!--<div class="alarmTitle" style="color: #fff;">
         告警信息列表
         <span class="closeTips" onclick="window.parent.window.closeTips()" title="关闭" style="    color: #fff;">X</span>
-    </div>
+    </div>-->
     <div class="panel-heading" style=" text-align:center">
         <form name="alarmForm" id="alarmForm">
             <div class="query-parameter" style=" text-align:center" >
@@ -192,8 +192,9 @@
     <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
 
 <!--    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.js"></script>-->
-    <link href="https://cdn.bootcdn.net/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css" rel="stylesheet">
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+<script src="static/assets/js/jquery-ui.min.js"></script>
+    <script src="static/assets/js/bootstrap-table/bootstrap-table-resizable.min.js"></script>
+    <script src="static/assets/js/colResizable-1.6.min.js"></script>
     <script>
         $(function () {
             qryAreaList();
@@ -207,6 +208,8 @@
                 getAlarmList();
 
             });
+
+
 
         })
         function getPar(par){
@@ -238,6 +241,13 @@
            getAlarmList();
      }
      function getAlarmList() {
+            // console.log(parent.$(".alarmTips").find("iframe").prop('name'))
+         // 如果是点击地图查看告警信息的，就把泵房名称赋值到页面
+         if(parent.$(".alarmTips").find("iframe").prop('name') == "mapclick") {
+             $('#pumpHouseName').val(parent.parent.GLOBAL_PUMP_MSG_MAP.pumpHouseName)
+             parent.$(".alarmTips").find("iframe").prop('name',"")
+         }
+
             let checkWarnPower = null
          jQuery.ajax({
              type: 'get',
@@ -304,9 +314,9 @@
                              let str = ''
                              if(!row.ticketId){
                                  str = '<button id="createWorkOrder" type="button" class="btn btn-info">创建工单</button>'
-                             }/*else{
-                         str = '<button id="showWorkOrder" type="button" class="btn btn-warning">查看工单</button>'
-                     }*/
+                             }else{
+								 str = '<button id="showWorkOrder" type="button" class="btn btn-warning">查看工单</button>'
+							 }
                              // 0无权限，1有权限
                              if(checkWarnPower  == 1) {
                                  return [
@@ -335,10 +345,10 @@
                                  }else{
                                      createWorkOrder(row)
                                  }
-                             }/*,
-                     'click #showWorkOrder': function (e, value, row, index) {
-                         showWorkOrder(row)
-                     }*/
+                             },
+							 'click #showWorkOrder': function (e, value, row, index) {
+								 showWorkOrder(row)
+							 }
                          };
                          let columns = [
                              {
@@ -425,6 +435,7 @@
                                  formatter: addFunctionAlty, //表格中增加按钮  
                              }
                          ]
+
                          $('#alarmtable').bootstrapTable({
                              columns:columns,
                              cache:false,
@@ -434,8 +445,11 @@
                                  return '暂时没有告警';
                              },
                          })
+                         $('#alarmtable').colResizable()
+
                      }
                  });
+
              }
          })
 
@@ -455,7 +469,7 @@
                     "white-space": "nowrap",
                     "text-overflow": "ellipsis",
                     "overflow": "hidden",
-                    "max-width": "60",
+                    // "max-width": "60",
                 }
             }
         }

@@ -99,12 +99,22 @@ public class TicketController {
 
     @RequestMapping("/getHandleTicketList")
     @ResponseBody
-    @ApiOperation(value = "获取代办工单集合", httpMethod = "POST", response = WorkOrder.class, notes = "通过类型/级别/内容获取工单集合")
+    @ApiOperation(value = "获取待办工单集合", httpMethod = "POST", response = WorkOrder.class, notes = "通过类型/级别/内容获取工单集合")
     public Object getHandleTicketList(TicketDto ticketDto, User user, Model model, HttpServletRequest request, HttpServletResponse response) {
         ticketDto.setIsMyHandle("1");//代办标记
         if (StringUtils.isBlank(ticketDto.getHandleUserId())) {
             ticketDto.setHandleUserId(user.getUserId());
         }
+
+        List<PumpHouse> pumpList = deviceService.findPumpHouse(null);
+        List<String> ids=new ArrayList<>();
+        for(PumpHouse p:pumpList){
+            if(StringUtils.isNotBlank(ticketDto.getPumpName()) && p.getPumpHouseName().indexOf(ticketDto.getPumpName())>-1){
+                ids.add(p.getPumpHouseId());
+            }
+        }
+        ticketDto.setPumpHouseIds(ids);
+
         String sortName = request.getParameter("sortName");
         String sortOrder = request.getParameter("sortOrder");
 
@@ -112,7 +122,6 @@ public class TicketController {
 
         //循环给对应的泵房,设备设置值
         List<TicketDto> list = pages.getList();
-        List<PumpHouse> pumpList = deviceService.findPumpHouse(null);
         List<ProductComponentData> productList = productComponentService.findAllList();
         Map<String, String> pumpMap = new HashMap<String, String>();
         Map<String, String> productMap = new HashMap<String, String>();
@@ -367,6 +376,7 @@ public class TicketController {
             t.setTicketLevel(workOrder.getAlarmLevel());
             t.setAddress(workOrder.getAddress());
             t.setChannel(workOrder.getChannel());
+            t.setSaveOrCreateFlag(workOrder.getSaveOrCreateFlag());
             if (workOrder.getAlarmTime() != null) {
                 t.setEventTime(sdf.parse(workOrder.getAlarmTime()));
             }
