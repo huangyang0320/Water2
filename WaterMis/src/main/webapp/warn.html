@@ -6,6 +6,7 @@
     <title>报警信息</title>
     <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
+    <link href="static/assets/css/scrollBar.css" rel="stylesheet" />
 
 
 <!--    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">-->
@@ -192,9 +193,11 @@
     <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
 
 <!--    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.js"></script>-->
-<script src="static/assets/js/jquery-ui.min.js"></script>
+<!--<script src="static/assets/js/jquery-ui.min.js"></script>-->
+<script src="static/assets/js/jquery.resizableColumns.min.js"></script>
     <script src="static/assets/js/bootstrap-table/bootstrap-table-resizable.min.js"></script>
     <script src="static/assets/js/colResizable-1.6.min.js"></script>
+<script src="static/assets/js/tips.js"></script>
     <script>
         $(function () {
             qryAreaList();
@@ -357,7 +360,7 @@
                                  field:'startDate',
                                  title:'开始时间',
                                  sortable:'true',
-                                 // width: 180,
+                                 width: 160,
                                  align: 'center',
                                  cellStyle: formatTableUnit,
                                  formatter: paramsMatter,
@@ -371,7 +374,7 @@
                                  cellStyle: formatTableUnit,
                                  formatter: paramsMatter,
                              },
-                             {
+                             /*{
                                  field:'deviceName',
                                  title:'电气位置',
                                  sortable:'true',
@@ -387,7 +390,7 @@
                                  align: 'center',
                                  cellStyle: formatTableUnit,
                                  formatter: paramsMatter,
-                             },
+                             },*/
                              {
                                  field:'alarmInfo',
                                  title:'告警内容',
@@ -395,7 +398,17 @@
                                  // width: 100,
                                  align: 'center',
                                  cellStyle: formatTableUnit,
-                                 formatter: paramsMatter,
+                                 formatter: function paramsMatter(value, row, index) {
+                                     var span = document.createElement("span");
+                                     let name = ''
+                                     if(row.deviceId.split('.')[1] != 'plc_main') {
+                                        console.log(row.deviceName)
+                                        name = row.deviceName.substring(0,2)
+                                     }
+                                     span.setAttribute("title", name + row.alarmInfo);
+                                     span.innerHTML = name +row.alarmInfo;
+                                     return span.outerHTML;
+                                 },
                              },
                              {
                                  field:'alarmLevel',
@@ -421,9 +434,9 @@
                              },
                              {
                                  field:'endDate',
-                                 title:'最近报警',
+                                 title:'结束时间',
                                  sortable:'true',
-                                 // width: 180,
+                                 width: 160,
                                  align: 'center',
                                  cellStyle: formatTableUnit,
                                  formatter: paramsMatter,
@@ -434,6 +447,16 @@
                                  width:300,
                                  // align: 'center',
                                  events: operateEvents,//给按钮注册事件
+                                 cellStyle: function formatTableUnit(value, row, index) {
+                                     return {
+                                         css: {
+                                             "white-space": "nowrap",
+                                             "text-overflow": "ellipsis",
+                                             "overflow": "hidden",
+                                             // "max-width": "60",
+                                         }
+                                     }
+                                 },
                                  formatter: addFunctionAlty, //表格中增加按钮  
                              }
                          ]
@@ -447,7 +470,17 @@
                                  return '暂时没有告警';
                              },
                          })
-                         $('#alarmtable').colResizable()
+                         /*$('#alarmtable').colResizable({
+                             headerOnly: true,
+                             liveDrag:true,//拖动列时更新表布局
+                             // gripInnerHtml:"<div class='grip'></div>",
+                             // draggingClass:"dragging",
+                             resizeMode:'overflow',//允许溢出父容器
+                             //拖动事件
+                             // onDrag: function () {
+                             //     $('#alarmtable').bootstrapTable("resetView")
+                             // }
+                         })*/
 
                      }
                  });
@@ -511,7 +544,9 @@
                 "alarmType": "2"   //1：确认，2：忽略
             }, function(data) {
 
-                parent.showErrorMsgVideo("忽略成功")
+                // parent.showErrorMsgVideo("忽略成功")
+                Ewin.alert('忽略成功');
+
                 getAlarmList()
                 // $('#alertShowMessage').html('忽略成功!!!');
                 // $('#alertShow').modal('show');
@@ -522,8 +557,15 @@
             let item = obj.id
             clickOkid = obj.id
 
-            $('#alertWorkMessage').html('确定要忽略此条告警吗?');
-            $('#alertWork').modal('show');
+            // $('#alertWorkMessage').html('确定要忽略此条告警吗?');
+            // $('#alertWork').modal('show');
+            Ewin.confirm({ message: '确定要忽略此条告警吗?' }).on(function (e) {
+                if (!e) {
+                    return;
+                }
+                clickOk();
+            });
+
 
             // $.confirm({
             //     title: '确认',

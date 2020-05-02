@@ -583,7 +583,8 @@ $(function(){
         if(startDate!="" && statisticDate!=""){
             if(startDate>statisticDate){
                 $("#startDate").val('');
-                showErrorMsg("开始时间不能大于结束时间!");
+                // showErrorMsg("开始时间不能大于结束时间!");
+                Ewin.alert('开始时间不能大于结束时间!');
                 return false;
             }
         }
@@ -596,7 +597,8 @@ $(function(){
         if(startDate!="" && statisticDate!=""){
             if(startDate>statisticDate){
                 $("#statisticDate").val('');
-                showErrorMsg("结束时间不能小于开始时间!");
+                // showErrorMsg("结束时间不能小于开始时间!");
+                Ewin.alert("结束时间不能小于开始时间!")
                 return false;
             }
         }

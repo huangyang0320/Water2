@@ -164,10 +164,13 @@ var ztreeBulid = {
          },
          data: {
              simpleData: {
-                 enable: true
+                 enable: true,  //true 、 false 分别表示 使用 、 不使用 简单数据模式
+                 idKey: "id",  //节点数据中保存唯一标识的属性名称
+                 pIdKey: "pId",    //节点数据中保存其父节点唯一标识的属性名称
+                 // rootPId: -1  //用于修正根节点父节点数据，即 pIdKey 指定的属性值
              },
              key:{
-                 title:"title"
+                 title:"name"  //zTree 节点数据保存节点名称的属性名称  默认值："name"
              }
          },
          callback: {
@@ -308,6 +311,9 @@ var ztreeBulid = {
         GLOBAL_SELECT_LIST_ISSHOWCHECK = isShowChecked;
     },
     'init':function () {
+        // console.log('setting',this.setting)
+        // console.log('22222',this.treeDomId)
+        // console.log('33333',this.zNodes)
         this.zTreeObj = $.fn.zTree.init($("#"+ this.treeDomId +""), this.setting, this.zNodes);
 
         if(GLOBAL_SELECT_LIST_CHO0SE.length > 0 ){
@@ -323,6 +329,7 @@ var ztreeBulid = {
             if(GLOBAL_TREE_PUMP_EQT && GLOBAL_TREE_VIDEO_EQT==2) GLOBAL_SELECT_LIST_TYPE = 'video';
             if(!GLOBAL_TREE_PUMP_EQT) GLOBAL_SELECT_LIST_TYPE = 'pump';
         }
+        console.log(ztreeBulid.searchDomId)
         this.key = $("#"+ ztreeBulid.searchDomId +"");
         this.key.bind("input", inputKey)
                 .bind("mouseenter ", inputKey)
@@ -334,7 +341,6 @@ var ztreeBulid = {
 }
 /* 单击展开子节点 */
 function onClick(e,treeId, treeNode) {
-    console.log(treeNode)
     if(!treeNode.isParent && !ztreeBulid.isShowCheck){
         // 点击具体泵房地址
         console.log('点击',treeNode.name)
