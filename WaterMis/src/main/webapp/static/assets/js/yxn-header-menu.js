@@ -1234,9 +1234,13 @@ function showCreateBtn() {
 }
 
 function myModalWorkOrder(row,flag) {
-
+console.log('工单页面赋值yxn');
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept();
+    if(row.ticketId!=undefined){//查看页面进来，直接赋值
+        $("#ticketId").val(row.ticketId);
+    }
+
     $("#alarmContent").val(row.phName+"-"+row.alarmTypeRemarks+'发生了'+row.alarmInfo);
     $("#alarmTime").val(row.startDate);
     $("#phName").val(row.phName);

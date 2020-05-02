@@ -512,9 +512,10 @@
         <if test="status !=null and status!='' " >
             and t.status =#{status}
         </if>
-        <if test="address !=null and address!='' " >
+       <!-- <if test="address !=null and address!='' " >
             and t.address like concat('%',#{address},'%')
         </if>
+        -->
 
         <if test="pumpHouseIds !=null and pumpHouseIds.size()>0 " >
             <foreach collection="pumpHouseIds" item="item" index="index" separator=" or " open=" and (" close=")">
@@ -630,9 +631,9 @@
         <if test="status !=null and status!='' " >
             and t.status =#{status}
         </if>
-        <if test="address !=null and address!='' " >
+       <!-- <if test="address !=null and address!='' " >
             and t.address like concat('%',#{address},'%')
-        </if>
+        </if>-->
         <if test="allHandleUser !=null and allHandleUser!='' " >
             and u.`name` like concat('%',#{allHandleUser},'%')
         </if>
