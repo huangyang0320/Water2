@@ -1,5 +1,6 @@
 package com.wapwag.woss.modules.home.web;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.wapwag.woss.common.ad.AdService;
 import com.wapwag.woss.modules.home.entity.User;
@@ -12,9 +13,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -27,6 +26,7 @@ import java.util.Map;
  */
 @Controller("com.wapwag.woss.modules.home.web.UserController")
 @RequestMapping("${adminPath}/user")
+@SessionAttributes("user")
 @Api(description = "用户相关API")
 public class UserController {
 
@@ -112,6 +112,24 @@ public class UserController {
             resultMap.put("result", result);
         }
         return resultMap;
+    }
+
+
+
+    @RequestMapping("/updateAlarmRateByUser/{isReceiveAlarm}")
+    @ResponseBody
+    public String updateAlarmRateByUser(HttpServletRequest request, User user, @PathVariable(value = "isReceiveAlarm") String isReceiveAlarm) {
+        User u=new User();
+        u.setUserId(user.getUserId());
+        u.setAlarmRate(isReceiveAlarm);
+        boolean bol = userService.updateAlarmRateByUserId(u);
+        JSONObject object=new JSONObject();
+        if(bol){
+            object.put("msg","设置成功!");
+        }else{
+            object.put("msg","设置失败!");
+        }
+        return object.toJSONString();
     }
 
     @RequestMapping("/logout")
