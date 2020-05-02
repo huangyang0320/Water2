@@ -603,19 +603,20 @@
             // var data = $(self).attr('data');
             // var sdata =  JSON.parse(data);
 
-            let sdata = self
+            var sdata = self
             //创建按钮显示
             window.parent.window.showCreateBtn();
             //打开创建工单页面
+            console.log('打开创建工单页面');
             window.parent.window.queryWhetherWorker(sdata.deviceId);
             //工单页面赋值
-            window.parent.window.myModalWorkOrder(sdata);
+            window.parent.window.myModalWorkOrder(sdata,'1');
             //给工单编号赋值
             window.parent.window.setTicketId("1");
         }
 
         function showWorkOrder(self) {
-            let sdata = self
+            var sdata = self
             //创建按钮隐藏
             window.parent.window.hideCreateBtn();
             //打开创建工单页面

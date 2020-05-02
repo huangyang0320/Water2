@@ -50,10 +50,10 @@
     "icon": "fa-wrench",
     "liLen":"1",
     "subMenu": [{
-      "title": "我的工单",
+      "title": "待办工单",
       "url": "myTicket"
     },{
-      "title": "工单查询",
+      "title": "已办工单",
       "url": "ticketQuery"
     }]
   }, {

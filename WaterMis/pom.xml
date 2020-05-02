@@ -626,14 +626,14 @@
 			<properties>
 				<!-- add CDATA to avoid & escape in xml -->
 				<profile.jdbc.url><![CDATA[jdbc:mysql://10.61.95.34:3306/water_db?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true]]></profile.jdbc.url>
-				<profile.log.level>INFO</profile.log.level>
+				<profile.log.level>DEBUG</profile.log.level>
 			</properties>
 		</profile>
 		<profile>
 			<id>pro</id>
 			<properties>
 				<profile.jdbc.url><![CDATA[jdbc:mysql://10.61.95.34:3306/water_db?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true]]></profile.jdbc.url>
-				<profile.log.level>INFO</profile.log.level>
+				<profile.log.level>DEBUG</profile.log.level>
 			</properties>
 		</profile>
 	</profiles>

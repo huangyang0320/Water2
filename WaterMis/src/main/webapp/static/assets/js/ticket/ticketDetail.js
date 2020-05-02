@@ -56,7 +56,7 @@ function initDetails(){
             return ''
         },
         formatNoMatches:function(){
-            return '点击上方‘添加’按钮录入配件'
+            return '点击上方‘增加’按钮录入配件'
         },
         columns: [
             {checkbox: true},/*{
@@ -175,7 +175,7 @@ function getTicketInfo(ticketId){
             $("#status").val(data.status);
 
             $("#buttonId").html(data.currentStatusName);
-            if(data.status==4){//增加审核操作
+            /*if(data.status==4){//增加审核操作
                 $("#buttonId").html("审核");
                 $("#approveOperationKZ").html("<div class=\"col-md-5\">\n" +
                     "                            <div class=\"form-group\">\n" +
@@ -187,9 +187,9 @@ function getTicketInfo(ticketId){
                     "                                </select>\n" +
                     "                            </div>\n" +
                     "                        </div>");
-            }else{
+            }else{*/
                 $("#buttonId").html(data.currentStatusName);
-            }
+           // }
             //非告警工单  去掉不要的信息
             if(data.ticketType!=1){
                 $("#alarmTimeAndAlarmLevel").css("display","none");
@@ -257,7 +257,7 @@ function getTicketLogList(ticketId){
                 for(var i=0;i<data.length;i++){
                     var approveOpinion="";
                     if(data[i].approveOpinion==undefined){
-                        approveOpinion ="创建工单.....";
+                        approveOpinion ="创建工单";
                     }else{
                         approveOpinion=data[i].approveOpinion;
                     }
