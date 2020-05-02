@@ -552,6 +552,25 @@ public class SystemService extends BaseService implements InitializingBean {
 		 return result;
 	}
 
+
+	/**
+	 * 获取角色下的所有人
+	 * @param roleId
+	 * @return
+	 */
+	public List<String> getUserIdByRoleId(String roleId){
+		return roleDao.getUserIdByRoleId(roleId);
+	}
+
+	/**
+	 *获取所有角色
+	 * @return
+	 */
+	public List<Role> getAllRole(){
+		return roleDao.getAllRole();
+	}
+
+
 	public static void main(String[] args) {
 		List<Map<String,Object>> list = DbSqlServerHr.syncHrData();
 		if(list!=null && list.size()>0){

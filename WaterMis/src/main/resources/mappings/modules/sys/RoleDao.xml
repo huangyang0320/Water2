@@ -216,5 +216,22 @@
 			WHERE
 				t.user_id = #{userId})
 	</select>
-	
+
+
+	<!--根据角色  获取角色下的所有人-->
+	<select id="getUserIdByRoleId" resultType="java.lang.String"  parameterType="java.lang.String">
+		select u.id from sys_user_role sur
+		LEFT JOIN sys_user u on sur.user_id=u.id
+		where sur.role_id=#{roleId}
+	</select>
+
+	<!--获取所有的角色-->
+	<select id="getAllRole" resultType="com.wapwag.woss.modules.sys.entity.Role">
+		select id,`name` from sys_role where del_flag='0'
+	</select>
+
+
+
+
+
 </mapper>
