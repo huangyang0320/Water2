@@ -701,3 +701,26 @@ function queryMaintenanceWorkerDept(deptId) {
         }
     });
 }
+
+
+function submitWorkOrder(){
+    var bootstrapValidator = $("#workOrder").data('bootstrapValidator');
+    //手动触发验证
+    bootstrapValidator.validate();
+    if(bootstrapValidator.isValid()){
+        var ticketId=$("#ticketId2").val();
+        var alarmLevel=$("#alarmLevel2").val();
+        var planStartTime=$("#planStartTime2").val();
+        var planEndTime=$("#planEndTime2").val();
+        var alarmReason=$("#alarmReason2").val();
+        var planContent=$("#planContent2").val();
+        var deptId=$("#deptId2").val();
+        //只能删除自己名下的数据行
+        $.post(CONTEXT_PATH+"/ticket/updateTicketInfo",{"ticketId":ticketId,"alarmLevel":alarmLevel,"planStartTime":planStartTime,"planEndTime":planEndTime,"alarmReason":alarmReason,"planContent":planContent,"deptId":deptId},function (res){
+            Ewin.alert(res.message);
+            $('#dataTables-example').bootstrapTable('refresh');
+            $('#myWorkModal2').modal('hide'); // 关闭模态框
+        })
+    }
+
+}

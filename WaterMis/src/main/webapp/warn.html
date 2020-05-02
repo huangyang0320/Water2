@@ -346,11 +346,13 @@
                                  if(row.ticketId){
                                      alertErrors(row)
                                  }else{
-                                     createWorkOrder(row)
+                                    // createWorkOrder(row)
+                                     window.parent.window.createTicketAlarm(row);
                                  }
                              },
 							 'click #showWorkOrder': function (e, value, row, index) {
-								 showWorkOrder(row)
+                                 window.parent.window.createTicketAlarm(row);
+								 //showWorkOrder(row)
 							 }
                          };
                          let columns = [

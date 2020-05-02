@@ -33,9 +33,13 @@
 
     <link rel="stylesheet" type="text/css" href="theme/css/load.css">
 
+<!--    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/extensions/fixed-columns/bootstrap-table-fixed-columns.min.css" rel="stylesheet">-->
+<!--    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/extensions/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>-->
 
-<!--	<script src="static/assets/vide/preview.js"></script>
-    <script src="static/assets/vide/playback.js"></script>-->
+
+
+    <!--	<script src="static/assets/vide/preview.js"></script>
+        <script src="static/assets/vide/playback.js"></script>-->
     <style>
         .showRightMenu:after{
             background-color:transparent;
@@ -510,7 +514,7 @@
                             <div class="col-md-11">
                                 <div class="form-group">
                                     <label for="alarmReason">发起原因</label>
-                                    <textarea class="form-control" rows="3" id="alarmReason" name="alarmReason"  style="resize: none;"></textarea>
+                                    <textarea class="form-control" rows="6" id="alarmReason" name="alarmReason"  style="resize: none;"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -518,7 +522,7 @@
                             <div class="col-md-11">
                                 <div class="form-group">
                                     <label for="planContent">解决方案</label>
-                                    <textarea class="form-control" rows="3" id="planContent" name="planContent"  style="resize: none;"></textarea>
+                                    <textarea class="form-control" rows="6" id="planContent" name="planContent"  style="resize: none;"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -598,7 +602,34 @@
     <script src="static/assets/js/jquery-1.9.1.min.js"></script>
     <!--<script src="static/assets/js/jquery-1.10.2.js"></script>-->
     <script src="static/assets/js/jquery-ui.min.js"></script>
+    <script src="static/assets/js/tips.js"></script>
     <script>
+        let  openstate = false
+        $(document).keyup(function(event){
+            if (event.ctrlKey && event.keyCode === 13 && !openstate){
+                // alert('你按下了CTRL+回车');
+                openstate = true
+                Ewin.confirm({ message: '需要打开告警提示吗？' }).on(function (e) {
+                    openstate = false
+                    if (!e) {
+                        return;
+                    }
+
+                });
+            }
+            if (event.shiftKey && event.keyCode === 13 && !openstate){
+                // alert('shift+回车');
+                openstate = true
+                Ewin.confirm({ message: '需要关闭告警提示吗？' }).on(function (e) {
+                    openstate = false
+                    if (!e) {
+                        return;
+                    }
+
+                });
+            }
+        });
+
         var SYSTEM_LOADING;
         $(function() {
             $(".alarmTips").draggable()
@@ -619,7 +650,38 @@
                 $("#iconPic").attr("href", "static/configResourse/"+result.projectPic+"/favicon.ico");
             });
         });
+
+
+        function createTicketAlarm(row){
+            $.dialog({
+                id: 'ticket-create',
+                title: '创建工单',
+                content: 'url:ticketCreateAlarm.html?rnd=' + new Date().getTime(),
+                data:row,
+                width: 1000,
+                height: 450,
+                fixed: true,
+                max: true,
+                min: false,
+                resize: false,
+                lock: false,
+                top:120,
+                background: '#000',
+                opacity: 0.65,
+                ok: false,
+                drag: false,
+                close : function() {
+                    $(".alarmTips").animate({bottom: "0px"}, 1000, function() {
+                        $(this).find("iframe").prop("src", "warn.html");
+                        $(this).find("iframe").attr('id','warnHtml');
+                    });
+                }
+            });
+        }
+
     </script>
+
+
     <script src="static/assets/js/jquery-form.js"></script>
     <script src="static/assets/js/jQuery.base64.js"></script>
     <!-- Bootstrap Js -->

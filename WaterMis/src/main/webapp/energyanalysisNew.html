@@ -101,8 +101,59 @@
         font-size: 15px;
         float: left;
     }
+    .W120 .th-inner {
+        width:140px !important;
+    }
+    .W160 .th-inner {
+        width:140px !important;
+    }
 </style>
 
+<!--<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.css" rel="stylesheet">-->
+<link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/bootstrap-table.css" rel="stylesheet">
+<link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/extensions/fixed-columns/bootstrap-table-fixed-columns.min.css" rel="stylesheet">
+
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.js"></script>-->
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.js"></script>-->
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/bootstrap-table.js"></script>-->
+<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/extensions/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>
+<!--<script>-->
+<!--    $('#table').bootstrapTable({-->
+<!--        pagination: true,-->
+<!--        fixedColumns: true,-->
+<!--        height:270,-->
+<!--        fixedNumber: 1,-->
+<!--        data:[-->
+<!--            {q:111111111,w:11111111111,e:1111111111111,r:11111111111,t:1111111111,y:6111111111,u:711111111,i:8111111111,9:1111111111,p:1111111111,a:111111111111,s:31111111111},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--        ],-->
+<!--        columns: [-->
+<!--            {field:'q',title:'q',width:'300'},-->
+<!--            {field:'w',title:'w',width:'300'},-->
+<!--            {field:'e',title:'e',width:'300'},-->
+<!--            {field:'r',title:'r',width:'300'},-->
+<!--            {field:'t',title:'t'},-->
+<!--            {field:'y',title:'y'},-->
+<!--            {field:'u',title:'u'},-->
+<!--            {field:'i',title:'i'},-->
+<!--            {field:'o',title:'o'},-->
+<!--            {field:'p',title:'p'},-->
+<!--            {field:'a',title:'a'},-->
+<!--            {field:'s',title:'s'},-->
+<!--        ]-->
+<!--    })-->
+<!--</script>-->
+<!--<div style='width:700px'>-->
+<!--    <div style='height:30px'></div>-->
+<!--    <table id='table' ></table>-->
+<!--</div>-->
 <form id="queryForm" style="display: none">
 	<input name="deviceId" type="hidden">
 	<input name="deviceIds" type="hidden">
@@ -114,10 +165,12 @@
 	<input name="addOnDate" type="hidden">
 	<input name="choose" type="hidden">
 </form>
+<script src="static/assets/js/moment.js"></script>
 <script>
     function changeToTable() {
         document.querySelector('#changeToTable').style.display='none'
         document.querySelector('#changeToChart').style.display='inline-block'
+        document.querySelector('#exportExcel').style.display = 'inline-block'
 
         document.querySelector('#energyanalysis-chart-m3').style.visibility='hidden'
         document.querySelector('#energyanalysis-chart-m3-table-wrap').style.visibility='visible'
@@ -130,6 +183,7 @@
     function changeToChart() {
         document.querySelector('#changeToTable').style.display = 'inline-block'
         document.querySelector('#changeToChart').style.display = 'none'
+        document.querySelector('#exportExcel').style.display = 'none'
 
         document.querySelector('#energyanalysis-chart-m3').style.visibility = 'visible'
         document.querySelector('#energyanalysis-chart-m3-table-wrap').style.visibility = 'hidden'
@@ -167,6 +221,8 @@
                 <div class="changebutton">
                     <button id="changeToTable" onclick="changeToTable()" type="button" class="btn btn-primary query-btn">切换到表</button>
                     <button id="changeToChart" onclick="changeToChart()" style="display: none" type="button" class="btn btn-primary query-btn">切换到图</button>
+                    <button id="exportExcel" class="btn btn-primary query-btn" style="display: none" onclick="exportExcel()">导出数据</button>
+
                 </div>
                 <!--<div class="time-superposition">-->
                     <!--<label for="addOnTime">叠加时长 : </label>-->
@@ -233,6 +289,7 @@
 </div>
 <!-- /. PAGE INNER  -->
 <script src="static/assets/js/realtimeMonitor/energyanalysisNew.js"></script>
+
 <script>
     //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
     /* 点击input框时加载监听事件*/
