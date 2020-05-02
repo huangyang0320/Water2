@@ -57,7 +57,7 @@
                         <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
                                 <label for="workType">工单类型</label>
-                                <select id="workType" onchange="onChangType()" name="workType" class="form-control">
+                                <select id="workType" onchange="onChangType()" name="workType" disabled="true" class="form-control">
                                     <option value="2">巡检</option>
                                     <option value="3">维保</option>
                                 </select>
@@ -116,9 +116,9 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="alarmStatus">当前状态</label>
-                                <input type="text" class="form-control" readonly  id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
+                                <input type="text" class="form-control" readonly  id="alarmStatus" name="alarmStatus" value="暂存"  placeholder="请输入">
                                 <!--2：待接单-->
-                                <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="1"  placeholder="请输入">
+                                <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="0"  placeholder="请输入">
 
                                 <!--<label for="processName">告警等级</label>
                                 <input type="text" class="form-control"  id="alarmLevel" name="alarmLevel" placeholder="请输入">-->
@@ -138,7 +138,7 @@
                                 <label for="deviceId">所在设备</label>
                                 <!-- <input type="text" class="form-control"  id="processName" name="processName" placeholder="请输入">
                                  <input type="hidden"  class="form-control"  id="deviceId" name="deviceId" placeholder="请输入">-->
-                                <select class="selectpicker form-control" id="deviceId" multiple data-live-search="true" title="请选择所在设备">
+                                <select class="selectpicker form-control" id="deviceId" multiple data-live-search="true" onchange="getReasonListByIds()" title="请选择所在设备">
                                 </select>
                                 <input type="hidden" name="deviceId" id="deviceStr"/>
                             </div>
@@ -306,6 +306,7 @@
     <script src="static/assets/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
     <script src="static/assets/js/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="static/assets/js/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="static/assets/js/tips.js"></script>
     <!-- Date util -->
     <script src="static/assets/js/date_time.js"></script>
     <script src="static/assets/js/ticket/createTicketSelect.js"></script>
