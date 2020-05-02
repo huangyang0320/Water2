@@ -515,7 +515,6 @@ public class TicketDto extends DataEntity<TicketDto> {
     public void setSaveOrCreateFlag(String saveOrCreateFlag) {
         this.saveOrCreateFlag = saveOrCreateFlag;
     }
-
     public String getClearTicketId() {
         return clearTicketId;
     }
