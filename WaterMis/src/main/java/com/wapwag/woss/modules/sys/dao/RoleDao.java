@@ -3,6 +3,7 @@ package com.wapwag.woss.modules.sys.dao;
 import com.wapwag.woss.common.persistence.CrudDao;
 import com.wapwag.woss.common.persistence.annotation.MyBatisDao;
 import com.wapwag.woss.modules.sys.entity.Role;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -35,5 +36,18 @@ public interface RoleDao extends CrudDao<Role> {
 	/*public int deleteRoleOffice(Role role);
 
 	public int insertRoleOffice(Role role);*/
+
+	/**
+	 * 获取角色下的所有人
+	 * @param roleId
+	 * @return
+	 */
+	public List<String> getUserIdByRoleId(@Param(value = "roleId") String roleId);
+
+	/**
+	 *获取所有角色
+	 * @return
+	 */
+	public List<Role> getAllRole();
 
 }

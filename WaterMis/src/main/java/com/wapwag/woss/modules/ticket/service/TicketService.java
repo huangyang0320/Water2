@@ -8,6 +8,7 @@ import com.wapwag.woss.common.utils.DateUtils;
 import com.wapwag.woss.modules.biz.entity.NoticeDto;
 import com.wapwag.woss.modules.biz.service.NoticeService;
 import com.wapwag.woss.modules.sys.entity.User;
+import com.wapwag.woss.modules.sys.service.SystemService;
 import com.wapwag.woss.modules.ticket.Entity.TicketComDto;
 import com.wapwag.woss.modules.ticket.Entity.TicketDto;
 import com.wapwag.woss.modules.ticket.Entity.TicketLogDto;
@@ -35,6 +36,9 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
 
     @Autowired
     private NoticeService noticeService;
+
+    @Autowired
+    private SystemService systemService;
 
     /**
      * 获取所有部门组织
@@ -170,6 +174,11 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
             insertDetails(ticketDto.getTicketId(),"工单创建",uId);
 
             //需求变更，发给部门负责人
+
+            //获取角色下的 所有用户
+            /*systemService.getUserIdByRoleId("");
+            systemService.getAllRole();*/
+
             //根据部门ID获取负责人
             List<String> userList= this.getUserIdByDeptId(ticketDto.getDeptId());
             //代办（部门下的人多能看到，状态为在签收）

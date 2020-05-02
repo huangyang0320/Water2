@@ -62,4 +62,14 @@
           id = #{userId}
     </update>
 
+    <!-- 账号  是否接收告警信息-->
+    <update id="updateAlarmRateByUserId" parameterType="com.wapwag.woss.modules.home.entity.User">
+        UPDATE
+          sys_user
+        SET
+          alarmRate = #{alarmRate}
+        WHERE
+          id = #{userId}
+    </update>
+
 </mapper>
