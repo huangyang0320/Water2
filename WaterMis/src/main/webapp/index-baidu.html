@@ -604,18 +604,29 @@
     <script src="static/assets/js/jquery-ui.min.js"></script>
     <script src="static/assets/js/tips.js"></script>
     <script>
+        let  openstate = false
         $(document).keyup(function(event){
-            if (event.ctrlKey && event.keyCode === 13){
+            if (event.ctrlKey && event.keyCode === 13 && !openstate){
                 // alert('你按下了CTRL+回车');
+                openstate = true
                 Ewin.confirm({ message: '需要打开告警提示吗？' }).on(function (e) {
+                    openstate = false
                     if (!e) {
                         return;
                     }
-                    clickOk();
+
                 });
             }
-            if (event.shiftKey && event.keyCode === 13){
-                alert('shift+回车');
+            if (event.shiftKey && event.keyCode === 13 && !openstate){
+                // alert('shift+回车');
+                openstate = true
+                Ewin.confirm({ message: '需要关闭告警提示吗？' }).on(function (e) {
+                    openstate = false
+                    if (!e) {
+                        return;
+                    }
+
+                });
             }
         });
 
