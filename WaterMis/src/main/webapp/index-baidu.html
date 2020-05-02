@@ -33,9 +33,13 @@
 
     <link rel="stylesheet" type="text/css" href="theme/css/load.css">
 
+<!--    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/extensions/fixed-columns/bootstrap-table-fixed-columns.min.css" rel="stylesheet">-->
+<!--    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/extensions/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>-->
 
-<!--	<script src="static/assets/vide/preview.js"></script>
-    <script src="static/assets/vide/playback.js"></script>-->
+
+
+    <!--	<script src="static/assets/vide/preview.js"></script>
+        <script src="static/assets/vide/playback.js"></script>-->
     <style>
         .showRightMenu:after{
             background-color:transparent;
@@ -598,7 +602,34 @@
     <script src="static/assets/js/jquery-1.9.1.min.js"></script>
     <!--<script src="static/assets/js/jquery-1.10.2.js"></script>-->
     <script src="static/assets/js/jquery-ui.min.js"></script>
+    <script src="static/assets/js/tips.js"></script>
     <script>
+        let  openstate = false
+        $(document).keyup(function(event){
+            if (event.ctrlKey && event.keyCode === 13 && !openstate){
+                // alert('你按下了CTRL+回车');
+                openstate = true
+                Ewin.confirm({ message: '需要打开告警提示吗？' }).on(function (e) {
+                    openstate = false
+                    if (!e) {
+                        return;
+                    }
+
+                });
+            }
+            if (event.shiftKey && event.keyCode === 13 && !openstate){
+                // alert('shift+回车');
+                openstate = true
+                Ewin.confirm({ message: '需要关闭告警提示吗？' }).on(function (e) {
+                    openstate = false
+                    if (!e) {
+                        return;
+                    }
+
+                });
+            }
+        });
+
         var SYSTEM_LOADING;
         $(function() {
             $(".alarmTips").draggable()
@@ -649,6 +680,8 @@
         }
 
     </script>
+
+
     <script src="static/assets/js/jquery-form.js"></script>
     <script src="static/assets/js/jQuery.base64.js"></script>
     <!-- Bootstrap Js -->

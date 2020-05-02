@@ -461,20 +461,66 @@ function getChartData(type, sendData, idNamelist, chooseListPumpName) {
         }
     });
 }
+function exportExcel(){
+    // var $chart1 = $("#energyanalysis-chart-m3");
+    // $chart1.highcharts().downloadXLS()[0];
+    // setTimeout(()=>{
+    //     var $chart2 = $("#energyanalysis-chart-kWh");
+    //     $chart2.highcharts().downloadXLS()[1];
+    // },3000)
+    // setTimeout(()=>{
+    //     var $chart3 = $("#energyanalysis-chart-energy");
+    //     $chart3.highcharts().downloadXLS()[2];
+    // },6000)
+
+
+    $('#energyanalysis-chart-m3-table').tableExport({
+        type: 'excel',
+        exportDataType: "all",
+        fileName: '用水量趋势分析' + moment().format('YYYY-MM-DD'),//下载文件名称
+        onCellHtmlData: function (cell, row, col, data){//处理导出内容,自定义某一行、某一列、某个单元格的内容
+            console.info(data);
+            return data;
+        },
+    });
+    setTimeout(()=>{
+        $('#energyanalysis-chart-kWh-table').tableExport({
+            type: 'excel',
+            exportDataType: "all",
+            fileName: '用电量趋势分析' + moment().format('YYYY-MM-DD'),//下载文件名称
+            onCellHtmlData: function (cell, row, col, data){//处理导出内容,自定义某一行、某一列、某个单元格的内容
+                console.info(data);
+                return data;
+            },
+        });
+    },1000)
+    setTimeout(()=>{
+        $('#energyanalysis-chart-energy-table').tableExport({
+            type: 'excel',
+            exportDataType: "all",
+            fileName: '吨水耗电量趋势分析' + moment().format('YYYY-MM-DD'),//下载文件名称
+            onCellHtmlData: function (cell, row, col, data){//处理导出内容,自定义某一行、某一列、某个单元格的内容
+                console.info(data);
+                return data;
+            },
+        });
+    },2000)
+
+}
 function drawtable(tablename,result) {
     let columns = [],data = []
     if(result[0]){
-        columns.push({field:'name', title:'名称', sortable:'true',align:'center',width:400})
+        columns.push({field:'name', title:'名称',align:'center',width:400,class: 'W160',})
         if(result[result.length-1].data){
             for(let i=0;i<result[result.length-1].data.length;i++){
-                columns.push({field:i+'', title:i+'', sortable:'true',align:'center',width:300,})
+                columns.push({field:i+'', title:i+'',align:'center',width:300,class: 'W120',})
             }
         }
-        columns.push({field:'avg', title:'平均值', sortable:'true',align:'center',width:400})
-        columns.push({field:'max', title:'最大值', sortable:'true',align:'center',width:400})
-        columns.push({field:'maxname', title:'最大值时刻', sortable:'true',align:'center',width:400})
-        columns.push({field:'min', title:'最小值', sortable:'true',align:'center',width:400})
-        columns.push({field:'minname', title:'最小值时刻', sortable:'true',align:'center',width:400})
+        columns.push({field:'avg', title:'平均值',align:'center',width:400,class: 'W120'})
+        columns.push({field:'max', title:'最大值',align:'center',width:400,class: 'W120'})
+        columns.push({field:'maxname', title:'最大值时刻',align:'center',width:400,class: 'W120'})
+        columns.push({field:'min', title:'最小值',align:'center',width:400,class: 'W120'})
+        columns.push({field:'minname', title:'最小值时刻',align:'center',width:400,class: 'W120'})
     }
     for(let i = 0;i<result.length;i++){
         let dataitem = {}
@@ -502,17 +548,55 @@ function drawtable(tablename,result) {
         }
         data.push(dataitem)
     }
+    if(result[0].data){
+        let avgitem = {name:'平均值'}
+        let maxitem = {name:'最大值'}
+        let minitem = {name:'最小值'}
+        let maxitemname = {name:'最大值名称'}
+        let minitemname = {name:'最小值名称'}
+        for(let i = 0;i<result[0].data.length;i++){
+            let sum = 0 ,max=-9999,min=9999,n=0,maxname='-',minname='-'
+            for(let j = 0;j<result.length;j++){
+                if(result[j].data[i]){
+                    sum += result[j].data[i]
+                    n++
+                    if(result[j].data[i]>max){
+                        max = result[j].data[i]
+                        maxname = result[j].name
+                    }
+                    if(result[j].data[i]<min){
+                        min = result[j].data[i]
+                        minname = result[j].name
+                    }
+                }
+            }
+            if(max==-9999){max='-'}
+            if(min== 9999){min='-'}
+            avgitem[i+""] = (sum/n).toFixed(3)=='NaN'?'-':(sum/n).toFixed(3)
+            maxitem[i+""] = max
+            maxitemname[i+""] = maxname
+
+            minitem[i+""] = min
+            minitemname[i+''] = minname
+        }
+        data.push(avgitem)
+        data.push(maxitem)
+        data.push(maxitemname)
+        data.push(minitem)
+        data.push(minitemname)
+    }
     $(tablename).bootstrapTable('destroy')
     $(tablename).bootstrapTable({
         height:'370',
         striped: true,
         columns:columns,
         data:data,
-        formatNoMatches: function () {  //没有匹配的结果
+        fixedColumns: true,
+        fixedNumber: 1 ,//固定列数，
+        formatNoMatches: function () {  //没有匹配的结
             return '无符合条件的记录';
-        },
+        }
     })
-    console.log('表格创建了')
 }
 /**
  * chart 渲染
