@@ -1394,9 +1394,9 @@ function setSvg(reloading) {
                         for(let n = 0;n<window.serviceValue.length;n++){
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\flow_instant'){
                                 let str = window.serviceValue[n].pv
-                                if(str.charAt(str.length-1) == '.') {
+                               /* if(str.charAt(str.length-1) == '.') {
                                     str = str.substring(0,str.length - 1)
-                                }
+                                }*/
                                 flow_instantVal = '瞬时流量：'+ str + window.serviceValue[n].unit
                                 let text1 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text1str = $(text1).attr({
@@ -1412,9 +1412,9 @@ function setSvg(reloading) {
                             }
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_main\\flow_total'){
                                 let str = window.serviceValue[n].pv
-                                if(str.charAt(str.length-1) == '.') {
+                                /*if(str.charAt(str.length-1) == '.') {
                                     str = str.substring(0,str.length - 1)
-                                }
+                                }*/
                                 flow_total = '累计流量：'+ str + 'm³'
                                 let text2 = document.createElementNS("http://www.w3.org/2000/svg","text");
                                 var text2str = $(text2).attr({
@@ -1441,9 +1441,9 @@ function setSvg(reloading) {
                             frequency_pump11Time='运行时间：',frequency_pump12Time='运行时间：',frequency_pump13Time='运行时间：'
                         for(let n = 0;n<window.serviceValue.length;n++){
                             let str = window.serviceValue[n].pv
-                            if(str.charAt(str.length-1) == '.') {
+                            /*if(str.charAt(str.length-1) == '.') {
                                 str = str.substring(0,str.length - 1)
-                            }
+                            }*/
                             if(window.serviceValue[n].idService.split('.')[1] == 'plc_pump'+ i +'\\flowinstant_outwater'){
                                 flowinstant_outwaterVal =  '瞬时流量：'+ str + window.serviceValue[n].unit
                                 let text1 = document.createElementNS("http://www.w3.org/2000/svg","text");
