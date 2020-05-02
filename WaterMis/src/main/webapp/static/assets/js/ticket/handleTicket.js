@@ -125,8 +125,7 @@ function approval(flag2,result){
     var row = $('#reportTable').bootstrapTable('getData');
 
     if (approveOpinion == "") {
-        $('#alertShowMessage').html('处理结果不能为空!!!');
-        $('#alertShow').modal('show');
+        Ewin.alert('处理结果不能为空!!!');
         return false;
     }
     /*if (status == 4 && $("#approveOperation").val() == "") {
@@ -152,8 +151,15 @@ function approval(flag2,result){
     }
     this.flag=flag2
     this.result=result;
-    $('#alertWorkMessage').html("确认要"+str+"工单?");
-    $('#alertWork').modal('show');
+    Ewin.confirm({ message: "确认要"+str+"工单?" }).on(function (e) {
+        if (!e) {
+            return;
+        }
+        clickOk();
+    });
+
+ /*   $('#alertWorkMessage').html("确认要"+str+"工单?");
+    $('#alertWork').modal('show');*/
 }
 
 function clickOk(){
@@ -235,7 +241,7 @@ function getTicketLogList(ticketId){
                 for(var i=0;i<data.length;i++){
                     var approveOpinion="";
                     if(data[i].approveOpinion==undefined){
-                        approveOpinion ="创建工单.....";
+                        approveOpinion ="创建工单";
                     }else{
                         approveOpinion=data[i].approveOpinion;
                     }
@@ -539,7 +545,7 @@ function initDetails(){
             return ''
         },
         formatNoMatches:function(){
-            return '点击上方‘添加’按钮录入配件'
+            return '点击上方‘增加’按钮录入配件'
         },
         columns: [
             {checkbox: true},/*{
@@ -723,11 +729,13 @@ function deleteRow(){
                 })
             }
         }*/
-        $('#alertShowMessage').html('配件记录删除成功!!!');
-        $('#alertShow').modal('show');
+       /* $('#alertShowMessage').html('配件记录删除成功!!!');
+        $('#alertShow').modal('show');*/
+        Ewin.alert('配件记录删除成功!');
     }else{
-        $('#alertShowMessage').html('请至少选中一行删除！！！');
-        $('#alertShow').modal('show');
+        Ewin.alert('请至少选中一行删除!');
+       /* $('#alertShowMessage').html('请至少选中一行删除！！！');
+        $('#alertShow').modal('show');*/
     }
 }
 function validRow(row) {
@@ -738,45 +746,45 @@ function validRow(row) {
         var price = row[i]["price"];
         if(type==null||type==""||type==undefined){
             $('#alertShowMessge').html('第'+(i+1)+'行，类型不能为空！！！');
-            $('#alertShow').modal('show');
+            /*$('#alertShow').modal('show');*/
             return false;
         }
         if(name==null||name==""||name==undefined){
-            $('#alertShowMessage').html('第'+(i+1)+'行，名称不能为空！！！');
-            $('#alertShow').modal('show');
+            Ewin.alert('第'+(i+1)+'行，名称不能为空！！！');
+           /* $('#alertShow').modal('show');*/
             return false;
         }
         if(nums==null||nums==""||nums==undefined){
-            $('#alertShowMessage').html('第'+(i+1)+'行，数量不能为空！！！');
-            $('#alertShow').modal('show');
+            Ewin.alert('第'+(i+1)+'行，数量不能为空！！！');
+            /*$('#alertShow').modal('show');*/
             return false;
         }else{
             if (isNaN(nums)){
-                $('#alertShowMessage').html('第'+(i+1)+'行，数量必须是数字！！！');
-                $('#alertShow').modal('show');
+                Ewin.alert('第'+(i+1)+'行，数量必须是数字！！！');
+                //$('#alertShow').modal('show');
                 return false;
             }
             if (!(/(^[1-9]\d*$)/.test(nums))) {
-                $('#alertShowMessage').html('第'+(i+1)+'行，数量必须是正整数！！！');
-                $('#alertShow').modal('show');
+                Ewin.alert('第'+(i+1)+'行，数量必须是正整数！！！');
+               // $('#alertShow').modal('show');
                 return false;
             }
         }
 
         if(price==null||price==""||price==undefined){
-            $('#alertShowMessage').html('第'+(i+1)+'行，单价不能为空！！！');
-            $('#alertShow').modal('show');
+            Ewin.alert('第'+(i+1)+'行，单价不能为空！！！');
+            //$('#alertShow').modal('show');
             return false;
         }else{
             if (isNaN(price)){
-                $('#alertShowMessage').html('第'+(i+1)+'行，单价必须是数字！！！');
-                $('#alertShow').modal('show');
+                Ewin.alert('第'+(i+1)+'行，单价必须是数字！！！');
+               // $('#alertShow').modal('show');
                 return false;
             }
             var priceInt = parseFloat(price);
             if (priceInt <= 0){
-                $('#alertShowMessage').html('第'+(i+1)+'行，单价数量必须是正数！！！');
-                $('#alertShow').modal('show');
+                Ewin.alert('第'+(i+1)+'行，单价数量必须是正数！！！');
+                //$('#alertShow').modal('show');
                 return false;
             }
         }
@@ -806,8 +814,8 @@ function save(){
                 }
             },
             error: function () {
-                $('#alertShowMessage').html('编辑配件信息出错！！！');
-                $('#alertShow').modal('show');
+                Ewin.alert('编辑配件信息出错！！！');
+               // $('#alertShow').modal('show');
             }
         })
     }

@@ -553,9 +553,11 @@ function disHide(){
 
     function hideCreateBtn() {
         $("#createBtn").hide();
+        $("#saveBtn").hide();
     }
     function showCreateBtn() {
         $("#createBtn").show();
+        $("#saveBtn").show();
     }
     function createWorkOrder1(self) {
         //创建按钮显示
@@ -752,27 +754,40 @@ function disHide(){
  		  });
    }
 
-    function submitWorkOrder(){
+    function submitWorkOrder(v){
         var bootstrapValidator = $("#workOrder").data('bootstrapValidator');
         //手动触发验证
         bootstrapValidator.validate();
         if(bootstrapValidator.isValid()){
-           // var _url = CONTEXT_PATH+"/alarmStatController/submitWorkOrder?"+ Math.random();
-            var _url = CONTEXT_PATH+"/ticket/createWorkOrder?"+ Math.random();
-            $("#workOrder").ajaxSubmit( {
-                type : 'POST',
-                url : _url,
-                dataType : 'json',
-                success : function(data){
-                    if(data.status == "success"){
-                        $('#myWorkModal1').modal('hide'); // 关闭模态框
-                        $('#alertErrorMessage').html(data.message);
-                        $('#alertError').modal('show');
-                    }else{
-                        $('#alertErrorMessage').html(data.message);
-                        $('#alertError').modal('show');
-                    }
+
+            var titleInfo="确认要创建工单?";
+            if(v!=undefined && v=="save"){
+                $("#saveOrCreateFlag").val(v)
+                $("#status").val("0");
+                titleInfo="确认要暂存该工单?";
+            }
+
+            Ewin.confirm({ message: titleInfo }).on(function (e) {
+                if (!e) {
+                    return;
                 }
+                // var _url = CONTEXT_PATH+"/alarmStatController/submitWorkOrder?"+ Math.random();
+                var _url = CONTEXT_PATH+"/ticket/createWorkOrder?"+ Math.random();
+                $("#workOrder").ajaxSubmit( {
+                    type : 'POST',
+                    url : _url,
+                    dataType : 'json',
+                    success : function(data){
+                        if(data.status == "success"){
+                            $('#myWorkModal1').modal('hide'); // 关闭模态框
+                            $('#alertErrorMessage').html(data.message);
+                            $('#alertError').modal('show');
+                        }else{
+                            $('#alertErrorMessage').html(data.message);
+                            $('#alertError').modal('show');
+                        }
+                    }
+                });
             });
         }
 

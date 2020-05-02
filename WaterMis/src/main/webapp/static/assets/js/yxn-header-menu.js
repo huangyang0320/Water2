@@ -1226,15 +1226,21 @@ function formValidator() {
 
 function hideCreateBtn() {
     $("#createBtn").hide();
+    $("#saveBtn").hide();
 }
 function showCreateBtn() {
     $("#createBtn").show();
+    $("#saveBtn").show();
 }
 
 function myModalWorkOrder(row,flag) {
-
+console.log('工单页面赋值yxn');
     //queryAlarmWorkTemplate();
     queryMaintenanceWorkerDept();
+    if(row.ticketId!=undefined){//查看页面进来，直接赋值
+        $("#ticketId").val(row.ticketId);
+    }
+
     $("#alarmContent").val(row.phName+"-"+row.alarmTypeRemarks+'发生了'+row.alarmInfo);
     $("#alarmTime").val(row.startDate);
     $("#phName").val(row.phName);
@@ -1400,11 +1406,15 @@ function alertError() {
     $('#alertError').modal('show');
 }
 
-function submitWorkOrder(){
+function submitWorkOrder(v){
     var bootstrapValidator = $("#workOrder").data('bootstrapValidator');
     //手动触发验证
     bootstrapValidator.validate();
     if(bootstrapValidator.isValid()){
+        if(v!=undefined && v=="save"){
+            $("#saveOrCreateFlag").val(v)
+            $("#status").val("0");
+        }
        // var _url = CONTEXT_PATH+"/alarmStatController/submitWorkOrder?"+ Math.random();
         var _url = CONTEXT_PATH+"/ticket/createWorkOrder?"+ Math.random();
         $("#workOrder").ajaxSubmit( {
