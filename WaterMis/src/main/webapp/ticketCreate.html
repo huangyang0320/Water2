@@ -187,6 +187,8 @@
                             <div class="form-group">
                                 <label for="mgName">部门负责人</label>
                                 <input type="text" class="form-control" readonly id="mgName" name="mgName" >
+                                <!--保存还是创建-->
+                                <input type="hidden" class="form-control" readonly id="saveOrCreateFlag" name="saveOrCreateFlag" >
                             </div>
                         </div>
                     </div>
@@ -215,6 +217,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" onclick="frameElement.api.close()" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="createLxTicket('save')">暂存工单</button>
                 <button type="button" class="btn btn-primary" onclick="createLxTicket()">创建工单</button>
             </div>
             <div class="modal fade" tabindex="-1" role="dialog" id="alertWork">
@@ -307,6 +310,7 @@
     <script src="static/assets/js/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="static/assets/js/bootstrap-select/bootstrap-select.min.js"></script>
     <!-- Date util -->
+    <script src="static/assets/js/tips.js"></script>
     <script src="static/assets/js/date_time.js"></script>
     <script src="static/assets/js/ticket/createTicket.js"></script>
 

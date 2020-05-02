@@ -1091,6 +1091,7 @@ function formValidator() {
 }
 
 function myModalWorkOrder(row) {
+    console.log('工单页面赋值 custom.js');
     queryAlarmWorkTemplate();
     queryMaintenanceWorkerUser();
     $("#alarmContent").val(row.phName+'发生了'+row.alarmInfo);

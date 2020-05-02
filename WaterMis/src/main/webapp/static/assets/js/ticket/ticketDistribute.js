@@ -107,17 +107,23 @@ function approval(){
         var approveOpinion = $("#approveOpinion").val();
 
         if (approveOpinion == "") {
-            $('#alertShowMessage').html('处理结果不能为空!!!');
-            $('#alertShow').modal('show');
+            Ewin.alert('处理结果不能为空!!!');
+            //$('#alertShow').modal('show');
             return false;
         }
         if (status == 4 && $("#approveOperation").val() == "") {
-            $('#alertShowMessage').html('审核结果不能为空!!!');
-            $('#alertShow').modal('show');
+            Ewin.alert('审核结果不能为空!!!');
+            //$('#alertShow').modal('show');
             return false;
         }
-        $('#alertWorkMessage').html('确认要分发工单?');
-        $('#alertWork').modal('show');
+       // Ewin.alert('确认要分发工单?');
+        Ewin.confirm({ message: "确认要分发工单?" }).on(function (e) {
+            if (!e) {
+                return;
+            }
+            clickOk();
+        });
+
 }
 
 function clickOk(){
@@ -169,7 +175,7 @@ function getTicketLogList(ticketId){
                 for(var i=0;i<data.length;i++){
                     var approveOpinion="";
                     if(data[i].approveOpinion==undefined){
-                        approveOpinion ="创建工单.....";
+                        approveOpinion ="创建工单";
                     }else{
                         approveOpinion=data[i].approveOpinion;
                     }

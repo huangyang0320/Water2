@@ -51,7 +51,7 @@ $(function(){
         if(createBeginTime!="" && createEndTime!=""){
             if(createBeginTime>createEndTime){
                 $("#createBeginTime").val('');
-                showErrorMsg("开始时间不能大于结束时间!");
+                Ewin.alert("开始时间不能大于结束时间!");
                 return false;
             }
         }
@@ -64,7 +64,7 @@ $(function(){
         if(createBeginTime!="" && createEndTime!=""){
             if(createBeginTime>createEndTime){
                 $("#createEndTime").val('');
-                showErrorMsg("结束时间不能小于开始时间!");
+                Ewin.alert("结束时间不能小于开始时间!");
                 return false;
             }
         }
@@ -78,7 +78,7 @@ $(function(){
         if(startBeginTime!="" && startEndTime!=""){
             if(startBeginTime>startEndTime){
                 $("#startBeginTime").val('');
-                showErrorMsg("开始时间不能大于结束时间!");
+                Ewin.alert("开始时间不能大于结束时间!");
                 return false;
             }
         }
@@ -91,7 +91,7 @@ $(function(){
         if(startBeginTime!="" && startEndTime!=""){
             if(startBeginTime>startEndTime){
                 $("#startEndTime").val('');
-                showErrorMsg("结束时间不能小于开始时间!");
+                Ewin.alert("结束时间不能小于开始时间!");
                 return false;
             }
         }
@@ -140,10 +140,10 @@ function initBootTable(url){
     function operateFormatter(value, row, index) {
         //status:1 待分发 2 待接单   3处理中  4审核中  5完成
         var str="";
-        if((row.status=='1')&&row.createByStr==userId){
+       /* if((row.status=='1')&&row.createByStr==userId){
             str+='<button type="button" id="editGJ" class="btn btn-primary">编辑</button>'
             str+='<button type="button" onclick="deleteTicket(\''+row.ticketId+'\')" class="btn btn-primary">删除</button>'
-        }
+        }*/
         return [str,'<button type="button" onclick="ticketInfo(\''+row.ticketId+'\')" class="btn btn-primary">详情</button>'].join('');
 
 
@@ -246,6 +246,7 @@ function initBootTable(url){
         },{
             field: 'deviceName',
             title: '设备名称',
+            visible:false,
             align: 'center',
             sortable: true,
             cellStyle: formatTableUnit,
@@ -262,16 +263,15 @@ function initBootTable(url){
             title: '泵房地址',
             align: 'center',
             sortable: true
-        },*/{
+        },{
             field: 'allHandleUser',
             title: '待处理人',
             align: 'center',
             sortable : true,
             cellStyle: formatTableUnit
-        },{
+        },*/{
             field: 'createName',
             title: '工单创建人',
-            visible:false,
             align: 'center',
             sortable : true,
             cellStyle: formatTableUnit
@@ -285,7 +285,6 @@ function initBootTable(url){
             field: 'operateSatus',
             title: '操作',
             align: 'center',
-            width:200,
              events: operateEvents,
             formatter: operateFormatter
         }],
@@ -360,9 +359,9 @@ function clickOk(){
         //只能删除自己名下的数据行
         $.post(CONTEXT_PATH+"/ticket/deleteTicket",{"ticketId":delTicketId},function (res){
             if(res==true){
-                $('#alertShowMessage').html('工单删除成功!!!');
+                Ewin.alert('工单删除成功!!!');
             }else{
-                $('#alertShowMessage').html('工单删除失败!!!');
+                Ewin.alert('工单删除失败!!!');
             }
             $('#alertWork').modal('hide');
             $('#alertShow').modal('show');

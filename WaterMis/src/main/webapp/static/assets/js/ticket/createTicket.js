@@ -453,39 +453,52 @@ function changerDept() {
     $("#mgName").val(jQuery("#deptId option:selected").attr("mgName"));
 }
 
-function createLxTicket(){
-    //保存设置泵房多选
-    var id = arysId;
-    if (id != '' && id != null && id != undefined) {
-        $("#phStr").val(id);
-    } else {
-        $("#phStr").val(null);
-        $('#alertShowMessage').html('请至少选择一个泵房!!!');
-        $('#alertShow').modal('show');
-        return
+function createLxTicket(v){
+    var titleInfo="确认要创建工单?";
+    if(v!=undefined && v=="save"){
+        $("#saveOrCreateFlag").val(v)
+        $("#status").val("0");
+        titleInfo="确认要暂存该工单?";
     }
-    //保存设置工单配件多选
-    var deviceId = $("#deviceId").val()
-    if (deviceId != '' && deviceId != null && deviceId != undefined) {
-        var deviceIdStr = "";
-        for (var i = 0; i < deviceId.length; i++) {
-            deviceIdStr += deviceId[i] + ","
-        }
-        deviceIdStr = deviceIdStr.substring(0, deviceIdStr.length - 1)
-        $("#deviceStr").val(deviceIdStr);
-    } else {
-        $("#deviceStr").val(null);
-        var type = $("#workType").val();
-        if (type == "3") {
-            $('#alertShowMessage').html('请至少选择一个设备!!!');
-            $('#alertShow').modal('show');
+
+        //保存设置泵房多选
+        var id = arysId;
+        if (id != '' && id != null && id != undefined) {
+            $("#phStr").val(id);
+        } else {
+            $("#phStr").val(null);
+            /* $('#alertShowMessage').html('请至少选择一个泵房!!!');
+             $('#alertShow').modal('show');*/
+            Ewin.alert('请至少选择一个泵房!');
             return
         }
+        //保存设置工单配件多选
+        var deviceId = $("#deviceId").val()
+        if (deviceId != '' && deviceId != null && deviceId != undefined) {
+            var deviceIdStr = "";
+            for (var i = 0; i < deviceId.length; i++) {
+                deviceIdStr += deviceId[i] + ","
+            }
+            deviceIdStr = deviceIdStr.substring(0, deviceIdStr.length - 1)
+            $("#deviceStr").val(deviceIdStr);
+        } else {
+            $("#deviceStr").val(null);
+            var type = $("#workType").val();
+            if (type == "3") {
+                /* $('#alertShowMessage').html('请至少选择一个设备!!!');
+                 $('#alertShow').modal('show');*/
+                Ewin.alert('请至少选择一个设备!');
+                return
+            }
 
-    }
+        }
+    Ewin.confirm({ message: titleInfo }).on(function (e) {
+        if (!e) {
+            return;
+        }
+        clickOk();
+    });
 
-    $('#alertWorkMessage').html('确认要创建工单?');
-    $('#alertWork').modal('show');
 }
 function clickOk(){
     var _url = CONTEXT_PATH + "/ticket/createWorkOrder?" + Math.random();
