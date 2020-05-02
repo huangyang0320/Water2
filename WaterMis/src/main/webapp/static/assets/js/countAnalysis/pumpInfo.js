@@ -17,11 +17,13 @@ $(function(){
         ischeck = true;
     	alarmInitCount = 0;
     	LOADING.show();
-    	$('#dataTables-example').bootstrapTable('removeAll');
-    	$('#dataTables-example').bootstrapTable('refresh');
+    	$('#dataTables-example').bootstrapTable('destroy');
+    	// $('#dataTables-example').bootstrapTable('refresh');
     	//initBootTable(url);
     	areaCount();
         alarmTypeCount();
+        var url = CONTEXT_PATH+"/device/pumpHouse?"+ Math.random()
+        initBootTable(url)
     	
     });
     
@@ -134,12 +136,12 @@ function exportData(){
                             title: '泵房名称',
                             align: 'center',
                             sortable: true,
-                        },{
+                        },/*{
                             field: 'id',
                             title: '泵房编码',
                             visible:false,
                             align: 'center'
-                        },{
+                        },*/{
                             field: 'cellAdress',
                             title: '泵房地址',
                             align: 'center',
@@ -229,23 +231,23 @@ function exportData(){
 
                         html = '<ul id="detailList">'+
                             '<li><span class="name"> '+ '所属区域'+ '</span>'+ ' :       ' + toTrim(row.areaId) +'</li>'+
-                            '<li><span class="name"> '+ '泵房名称' + '</span>'+ ' : ' + toTrim(row.pumpHouseName) +'</li>'+
-                            '<li><span class="name"> '+ '泵房编码'  + '</span>'+ ' : '+ toTrim(row.id) +'</li>'+
-                            '<li><span class="name"> '+ '泵房地址' + '</span>'+ ' : ' + toTrim(row.pumpHouseAddress) +'</li>'+
-                            '<li><span class="name"> '+ '小区名称' + '</span>'+ ' : '+ toTrim(row.cellName) +'</li>'+
-                            '<li><span class="name"> '+ '小区地址' + '</span>'+ ' : ' + toTrim(row.cellAdress)+'</li>'+
-                            '<li><span class="name"> '+ '运维方'+ '</span>'+ ' : ' + toTrim(row.constructionSide)+'</li>'+
-                            '<li><span class="name"> '+ '运维方联系方式' + '</span>'+ ' : ' + toTrim(row.constructionSideInformation) +'</li>'+
                             '<li><span class="name"> '+  '物业'+ '</span>'+ ' : ' + toTrim(row.property)+'</li>'+
+                            '<li><span class="name"> '+ '泵房名称' + '</span>'+ ' : ' + toTrim(row.pumpHouseName) +'</li>'+
                             '<li><span class="name"> '+ '物业联系方式' + '</span>'+ ' : ' + toTrim(row.propertyInformation) +'</li>'+
+                            // '<li><span class="name"> '+ '泵房编码'  + '</span>'+ ' : '+ toTrim(row.id) +'</li>'+
+                            '<li><span class="name"> '+ '泵房地址' + '</span>'+ ' : ' + toTrim(row.pumpHouseAddress) +'</li>'+
                             '<li><span class="name"> '+ '施工方' + '</span>'+ ' : ' + toTrim(row.construction) +'</li>'+
+                            '<li><span class="name"> '+ '小区名称' + '</span>'+ ' : '+ toTrim(row.cellName) +'</li>'+
                             '<li><span class="name"> '+ '施工方联系方式' + '</span>'+ ' : '+ toTrim(row.constructionInformation)+'</li>'+
+                            '<li><span class="name"> '+ '小区地址' + '</span>'+ ' : ' + toTrim(row.cellAdress)+'</li>'+
                             '<li><span class="name"> '+ '自控改造厂家'+ '</span>'+ ' : ' + toTrim(row.selfControlManufacturers)+'</li>'+
+                            '<li><span class="name"> '+ '运维方'+ '</span>'+ ' : ' + toTrim(row.constructionSide)+'</li>'+
                             '<li><span class="name"> '+ '自控改造厂家联系方式' + '</span>'+ ' : ' + toTrim(row.selfControlManufacturersInformation) +'</li>'+
-                            '<li><span class="name"> '+ '设备厂家'+ '</span>' + ' : '+ toTrim(row.deviceManufacturers) +'</li>'+
-                            '<li><span class="name"> '+ '设备厂家联系方式' + '</span>'+ ' : '+ toTrim(row.deviceManufacturersInformation) +'</li>'+
+                            '<li><span class="name"> '+ '运维方联系方式' + '</span>'+ ' : ' + toTrim(row.constructionSideInformation) +'</li>'+
                             '<li><span class="name"> '+ '移交时间' + '</span>'+ ' : ' + toTrim(row.handoverTime) +'</li>'+
+                            '<li><span class="name"> '+ '设备厂家'+ '</span>' + ' : '+ toTrim(row.deviceManufacturers) +'</li>'+
                             '<li><span class="name"> '+ '备注' + '</span>'+ ' : '+ toTrim(row.memo)+'</li>'+
+                            '<li><span class="name"> '+ '设备厂家联系方式' + '</span>'+ ' : '+ toTrim(row.deviceManufacturersInformation) +'</li>'+
                             '</ul>'
                         return html
                         // var html = [];
