@@ -81,6 +81,7 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     private List<String> PumpHouseIds;
 
+    private String clearTicketId;//删除告警工单时，需要清空告警表中 关联的工单ID
 
 
     public String getTicketId() {
@@ -513,5 +514,12 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setSaveOrCreateFlag(String saveOrCreateFlag) {
         this.saveOrCreateFlag = saveOrCreateFlag;
+    }
+    public String getClearTicketId() {
+        return clearTicketId;
+    }
+
+    public void setClearTicketId(String clearTicketId) {
+        this.clearTicketId = clearTicketId;
     }
 }

@@ -115,7 +115,7 @@
     <!-- /. ROW  -->
 </div>
 <!-- Modal -->
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myWorkModal1" style="z-index: 99991">
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myWorkModal1" style="z-index: 1049">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -180,7 +180,7 @@
                         </div>
                         <div class="col-md-5 col-md-offset-1">
                             <div class="form-group">
-                                <label for="alarmStatus">告警状态</label>
+                                <label for="alarmStatus">当前状态</label>
                                 <input type="text" class="form-control" readonly id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
                                 <!--2：待接单-->
                                 <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="1"  placeholder="请输入">
@@ -199,6 +199,9 @@
                             <div class="form-group">
                                 <label for="processName">告警等级</label>
                                 <input type="text" class="form-control" id="alarmLevel" name="alarmLevel" placeholder="请输入">
+                                <!--保存还是创建-->
+                                <input type="hidden" class="form-control" readonly id="saveOrCreateFlag" name="saveOrCreateFlag" >
+
                             </div>
                         </div>
 
@@ -256,7 +259,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="createBtn" onclick="submitWorkOrder()">创建</button>
+                <button type="button" class="btn btn-primary" id="saveBtn" onclick="submitWorkOrder('save')">暂存工单</button>
+                <button type="button" class="btn btn-primary" id="createBtn" onclick="submitWorkOrder()">创建工单</button>
             </div>
         </div>
     </div>
