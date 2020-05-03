@@ -176,9 +176,14 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         if(StringUtils.isNotBlank(ticketDto.getSaveOrCreateFlag()) && ticketDto.getSaveOrCreateFlag().equals("save") ){
             TicketToDoDto ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketDto.getTicketId(),"","0",ticketDto.getCreateBy().getId(),"1",new Date(),new Date(),ticketDto.getUpdateBy(),ticketDto.getCreateBy());
                 this.insertTicketToDo(ticketToDoDto);
-                result.put("code","201");
-                result.put("status","success");
-                result.put("message","工单保存成功!");
+            //1.先获取部门下有工单分发角色的所有人
+            List<User> userList = this.getUserListByDeptId(ticketDto.getDeptId());
+                if(userList!=null && userList.size()>0){
+                }else{
+                    result.put("code","3001");
+                    result.put("message","该部门下没有工单分发角色的人员，请联系管理员!");
+                    throw new ServiceException(result.toJSONString());
+                }
         }else{
             //需求变更，发给部门负责人
 
