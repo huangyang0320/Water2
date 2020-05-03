@@ -64,7 +64,7 @@ function exportData(){
             $('#dataTables-example').bootstrapTable('resetView', {height : calcHeight()+55});
             $("#alarm-area-compare, #alarm-type-compare").height(calcHeight()/2 - 5);
         });
-        console.log(url)
+        console.log($('#constructionSide').val())
         jQuery.ajax({
             type: 'get',
             ayscn: false,
