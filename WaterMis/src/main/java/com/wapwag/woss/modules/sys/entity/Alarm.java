@@ -35,6 +35,72 @@ public class Alarm extends DataEntity<Alarm> {
 	private String area;
 	private int minMun;
 	private int maxNum;
+	private String constructionSide;
+
+	public Alarm() {
+	}
+
+	@Override
+	public String toString() {
+		return "Alarm{" +
+				"alarmId='" + alarmId + '\'' +
+				", projectId='" + projectId + '\'' +
+				", projectName='" + projectName + '\'' +
+				", deviceId='" + deviceId + '\'' +
+				", deviceName='" + deviceName + '\'' +
+				", pumpHouseId='" + pumpHouseId + '\'' +
+				", pumpHouseName='" + pumpHouseName + '\'' +
+				", alarmContent='" + alarmContent + '\'' +
+				", alarmReason='" + alarmReason + '\'' +
+				", alarmType='" + alarmType + '\'' +
+				", alarmTime=" + alarmTime +
+				", alarmTimeStr='" + alarmTimeStr + '\'' +
+				", beginTime='" + beginTime + '\'' +
+				", endTime='" + endTime + '\'' +
+				", area='" + area + '\'' +
+				", minMun=" + minMun +
+				", maxNum=" + maxNum +
+				", constructionSide='" + constructionSide + '\'' +
+				'}';
+	}
+
+	public Alarm(String id) {
+		super(id);
+	}
+
+	public Alarm(String id, String alarmId, String projectId, String projectName, String deviceId, String deviceName, String pumpHouseId, String pumpHouseName, String alarmContent, String alarmReason, String alarmType, Date alarmTime, String alarmTimeStr, String beginTime, String endTime, String area, int minMun, int maxNum, String constructionSide) {
+		super(id);
+		this.alarmId = alarmId;
+		this.projectId = projectId;
+		this.projectName = projectName;
+		this.deviceId = deviceId;
+		this.deviceName = deviceName;
+		this.pumpHouseId = pumpHouseId;
+		this.pumpHouseName = pumpHouseName;
+		this.alarmContent = alarmContent;
+		this.alarmReason = alarmReason;
+		this.alarmType = alarmType;
+		this.alarmTime = alarmTime;
+		this.alarmTimeStr = alarmTimeStr;
+		this.beginTime = beginTime;
+		this.endTime = endTime;
+		this.area = area;
+		this.minMun = minMun;
+		this.maxNum = maxNum;
+		this.constructionSide = constructionSide;
+	}
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public String getConstructionSide() {
+		return constructionSide;
+	}
+
+	public void setConstructionSide(String constructionSide) {
+		this.constructionSide = constructionSide;
+	}
 
 	public String getAlarmId() {
 		return alarmId;
@@ -98,11 +164,6 @@ public class Alarm extends DataEntity<Alarm> {
 
 	public void setAlarmTime(Date alarmTime) {
 		this.alarmTime = alarmTime;
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
 	}
 
 	public String getProjectName() {

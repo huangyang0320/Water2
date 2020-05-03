@@ -11,10 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import com.wapwag.woss.common.persistence.Page;
 import com.wapwag.woss.common.persistence.QryObject;
@@ -68,7 +65,7 @@ public class PumpDeviceController {
 	
 	@Autowired
 	private AlarmService alarmService;
-	
+
 	/**
 	 * 查询维保信息
 	 * @return
@@ -505,25 +502,27 @@ public class PumpDeviceController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "pumpHouse")
-	public BootPage pumpHouses(QryObject  info,User user){
+	public BootPage pumpHouses(QryObject info, User user){
 		Alarm alarmInfo = new Alarm();
 		alarmInfo.setArea(info.getAreaId());
 		alarmInfo.setProjectId(info.getProjectId());
 		alarmInfo.setPumpHouseName(StringUtils.getQryMsg(info.getName()));
 		alarmInfo.setId(user.getUserId());
-		
+		alarmInfo.setConstructionSide(info.getConstructionSide());
 		BootPage bootPage = new BootPage();
 		String countNum = deviceService.countPumpHouse(alarmInfo);
 		if ("0".equals(countNum)) {
 			bootPage.setTotal(0);
 			return bootPage;
 		}
-		
 		alarmInfo.setMinMun((info.getPageNumber() -1)*info.getPageSize());
 		alarmInfo.setMaxNum(info.getPageSize());
 		List<PumpHouse> list = deviceService.pumpHouses(alarmInfo);
         bootPage.setTotal(Long.parseLong(countNum));
         bootPage.setRows(list);
+		for(int i=0;i<list.size();i++){
+			System.out.println(list.get(i));
+		}
 		return bootPage;
 	}
 	

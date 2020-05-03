@@ -5,6 +5,86 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class QryObject {
+	private String constructionSide;
+
+	@Override
+	public String toString() {
+		return "QryObject{" +
+				"constructionSide='" + constructionSide + '\'' +
+				", beginTime='" + beginTime + '\'' +
+				", endTime='" + endTime + '\'' +
+				", pageNumber=" + pageNumber +
+				", pageSize=" + pageSize +
+				", deviceId='" + deviceId + '\'' +
+				", deviceName='" + deviceName + '\'' +
+				", alarmInfo='" + alarmInfo + '\'' +
+				", startAlarmTime='" + startAlarmTime + '\'' +
+				", endAlarmTime='" + endAlarmTime + '\'' +
+				", projectId='" + projectId + '\'' +
+				", projectName='" + projectName + '\'' +
+				", userId='" + userId + '\'' +
+				", userName='" + userName + '\'' +
+				", pumpHouseId='" + pumpHouseId + '\'' +
+				", area='" + area + '\'' +
+				", type='" + type + '\'' +
+				", exportType='" + exportType + '\'' +
+				", exportMustNum='" + exportMustNum + '\'' +
+				", tableName='" + tableName + '\'' +
+				", name='" + name + '\'' +
+				", areaId='" + areaId + '\'' +
+				", subIndex=" + subIndex +
+				", keyword='" + keyword + '\'' +
+				", phId='" + phId + '\'' +
+				", pumpHouseName='" + pumpHouseName + '\'' +
+				", areaCode='" + areaCode + '\'' +
+				", sortName='" + sortName + '\'' +
+				", sortOrder='" + sortOrder + '\'' +
+				'}';
+	}
+
+	public QryObject() {
+	}
+
+	public QryObject(String constructionSide, String beginTime, String endTime, int pageNumber, int pageSize, String deviceId, String deviceName, String alarmInfo, String startAlarmTime, String endAlarmTime, String projectId, String projectName, String userId, String userName, String pumpHouseId, String area, String type, String exportType, String exportMustNum, String tableName, String name, String areaId, int subIndex, String keyword, String phId, String pumpHouseName, String areaCode, String sortName, String sortOrder) {
+		this.constructionSide = constructionSide;
+		this.beginTime = beginTime;
+		this.endTime = endTime;
+		this.pageNumber = pageNumber;
+		this.pageSize = pageSize;
+		this.deviceId = deviceId;
+		this.deviceName = deviceName;
+		this.alarmInfo = alarmInfo;
+		this.startAlarmTime = startAlarmTime;
+		this.endAlarmTime = endAlarmTime;
+		this.projectId = projectId;
+		this.projectName = projectName;
+		this.userId = userId;
+		this.userName = userName;
+		this.pumpHouseId = pumpHouseId;
+		this.area = area;
+		this.type = type;
+		this.exportType = exportType;
+		this.exportMustNum = exportMustNum;
+		this.tableName = tableName;
+		this.name = name;
+		this.areaId = areaId;
+		this.subIndex = subIndex;
+		this.keyword = keyword;
+		this.phId = phId;
+		this.pumpHouseName = pumpHouseName;
+		this.areaCode = areaCode;
+		this.sortName = sortName;
+		this.sortOrder = sortOrder;
+	}
+
+	public String getConstructionSide() {
+		return constructionSide;
+	}
+
+	public void setConstructionSide(String constructionSide) {
+		this.constructionSide = constructionSide;
+	}
+
 	private String beginTime;
 	private String endTime;
 	private int pageNumber;
@@ -28,6 +108,8 @@ public class QryObject {
 	private String areaId;
 	private int subIndex;
 	private String keyword;
+
+
 
 	private String phId;
 	private String pumpHouseName;

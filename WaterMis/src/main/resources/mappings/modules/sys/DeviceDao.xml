@@ -16,6 +16,7 @@
 		<result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
 		<result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
 	</resultMap>
+
 	<resultMap id="deviceArchive" type="com.wapwag.woss.modules.sys.entity.Archive">
 		<id column="device_id" property="id" jdbcType="VARCHAR" />
 		<result column="device_name" property="name" jdbcType="VARCHAR" />
@@ -199,6 +200,7 @@
 		where d.id =
 		#{deviceId}
 	</select>
+
 	<select id="getAccessoriesByDevId"
 		resultType="com.wapwag.woss.modules.sys.entity.DeviceAccessories"
 		parameterType="java.lang.String">
@@ -397,6 +399,7 @@
 		</where>
 
 	</select>
+
 	<select id="pumpHouses" resultType="com.wapwag.woss.modules.sys.entity.PumpHouse">
 		select
 		aa.id AS "id",
@@ -423,8 +426,10 @@
 		r.name as
 		areaId
 		from pump_house aa
+
 		left join regional r on r.id = aa.ID_REGION
 		left join project j on j.id = aa.id_project
+
 		where aa.id in (
 		    select id_pump_house from device di where di.ID IN (SELECT 
 		            AUTHOBJECT_ID
@@ -460,8 +465,15 @@
 			and  aa.name  like 
 			concat('%',#{pumpHouseName},'%')
 		</if>
+		<if test="constructionSide != null and constructionSide !=''">
+			and aa.construction_side like concat('%',#{constructionSide},'%')
+		</if>
 		limit #{minMun} , #{maxNum}
 	</select>
+
+
+
+
 	<select id="pumpCountArea" resultType="com.wapwag.woss.modules.sys.entity.Alarm">
 		select al.name as alarmId,count(al.name) as remarks from (
 		select
