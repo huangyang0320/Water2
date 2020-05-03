@@ -217,26 +217,29 @@
 	</select>
 	<select id="findDetails"  resultType="com.wapwag.woss.modules.biz.entity.NoticeDto">
 		select
-		`ID` as id,
-		`biz_id` as bizId,
-		`notice_status` as noticeStatus,
-		`notice_title` as noticeTitle,
-		`notice_type` as noticeType,
-		`notice_content` as noticeContent,
-		`notice_group_obj` as noticeGroupObj,
-		`notice_group_ref_id` as noticeGroupRefId
-		from sys_notice
+		n.`ID` as id,
+		n.`biz_id` as bizId,
+		n.`notice_status` as noticeStatus,
+		n.`notice_title` as noticeTitle,
+		n.`notice_type` as noticeType,
+		n.`notice_content` as noticeContent,
+		n.`notice_group_obj` as noticeGroupObj,
+		n.`notice_group_ref_id` as noticeGroupRefId,
+		u.`NAME` createByName,
+		u.create_date createDate
+		from sys_notice n
+		LEFT JOIN sys_user u ON u.id=n.create_by
 		<where>
 			1=1
-			and notice_status="01"
+			and n.notice_status="01"
 			<if test="noticeGroupRefId!=null and noticeGroupRefId!=''">
-				and notice_group_ref_id = #{noticeGroupRefId}
+				and n.notice_group_ref_id = #{noticeGroupRefId}
 			</if>
 			<if test="bizId!=null and bizId!=''">
-				and biz_id = #{bizId}
+				and n.biz_id = #{bizId}
 			</if>
 			<if test="id!=null and id!=''">
-				and id = #{id}
+				and n.id = #{id}
 			</if>
 		</where>
 	</select>

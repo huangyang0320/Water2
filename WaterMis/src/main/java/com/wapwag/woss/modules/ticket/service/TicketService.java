@@ -52,7 +52,7 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         return ticketDao.getUserIdByDeptId(deptId);
     }
 
-    public void insertDetails(String ticketId,String title,String userId){
+    public void insertDetails(String ticketId,User u,String title,String userId){
         //每次插入新的之前都会把所有这个bizId的对应的流程都修改为一查看
         NoticeDto noticeDto1=new NoticeDto();
         noticeDto1.setBizId(ticketId);
@@ -86,7 +86,8 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         noticeDto.setNoticeContent(ticketDto.getTicketReason());
         noticeDto.setNoticeGroupObj("01");
         noticeDto.setNoticeGroupRefId(userId);
-        noticeDto.setCreateBy(ticketDto.getCreateBy());
+        noticeDto.setCreateBy(u);
+        noticeDto.setUpdateBy(u);
         noticeDto.setCreateDate(new Date());
         noticeDto.setIsNewRecord(true);
         noticeService.insertNoticeDetails(noticeDto);
@@ -98,6 +99,7 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
      */
     @Transactional(readOnly = false)
     public JSONObject startWorkOrder(String ticketId,String deptId,User user){
+        JSONObject result=new JSONObject();
         //日志
         TicketLogDto log=new TicketLogDto();
         log.setId(UUID.randomUUID().toString());
@@ -109,22 +111,32 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         log.setUpdateDate(new Date());
         this.insertTicketLog(log);
 
-        //工单为待分发 1  获取工单部门负责人的UserId
-        List<String> mgUuer= this.getUserIdByDeptId(deptId);
-        this.signIn(ticketId,mgUuer.get(0),"1","1");
-        //创建插入提示消息
-        insertDetails(ticketId,"工单创建",mgUuer.get(0));
-
+        //1.先获取部门下有工单分发角色的所有人
+        List<User> userList = this.getUserListByDeptId(deptId);
+        //2.把人员插入代办表
+        if(userList!=null && userList.size()>0){
+            TicketToDoDto ticketToDoDto=null;
+            for(User u:userList){
+                //status :0待分发  1签收  (直接接受，不需要签收)
+                ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketId,"","1",u.getId(),"1",new Date(),new Date(),user,user);
+                this.insertTicketToDo(ticketToDoDto);
+                result.put("code","201");
+                result.put("status","success");
+                result.put("message","工单创建成功!");
+                //创建插入提示消息
+                insertDetails(ticketId,user,"工单创建->待分发",u.getId());
+            }
+        }else{
+            result.put("code","3001");
+            result.put("message","该部门下没有工单分发角色的人员，请联系管理员!");
+            throw new ServiceException(result.toJSONString());
+        }
         TicketDto ticketDto =new TicketDto();
         ticketDto.setStatus("1");
         ticketDto.setTicketId(ticketId);
 
         //修改工单状态为新建（待部门负责人 分配）
         this.updateTicketInfo(ticketDto);
-        JSONObject result=new JSONObject();
-        result.put("code","201");
-        result.put("status","success");
-        result.put("message","工单保存成功!");
         return result;
     }
 
@@ -168,11 +180,6 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
                 result.put("status","success");
                 result.put("message","工单保存成功!");
         }else{
-            //创建插入提示消息
-            List<String> mgUser= this.getUserIdByDeptId(ticketDto.getDeptId());
-            String uId=mgUser.get(0);
-            insertDetails(ticketDto.getTicketId(),"工单创建",uId);
-
             //需求变更，发给部门负责人
 
             //获取角色下的 所有用户
@@ -180,24 +187,27 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
             systemService.getAllRole();*/
 
             //根据部门ID获取负责人
-            List<String> userList= this.getUserIdByDeptId(ticketDto.getDeptId());
+            //List<String> userList= this.getUserIdByDeptId(ticketDto.getDeptId());
             //代办（部门下的人多能看到，状态为在签收）
-            //1.先获取部门下有效所有人
-            // List<User> userList = this.getUserListByDeptId(ticketDto.getDeptId());
+
+            //1.先获取部门下有工单分发角色的所有人
+             List<User> userList = this.getUserListByDeptId(ticketDto.getDeptId());
             //2.把人员插入代办表
             if(userList!=null && userList.size()>0){
                 TicketToDoDto ticketToDoDto=null;
-                for(String userId:userList){
+                for(User user:userList){
                     //status :0待分发  1签收  (直接接受，不需要签收)
-                    ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketDto.getTicketId(),"","1",userId,"1",new Date(),new Date(),ticketDto.getUpdateBy(),ticketDto.getCreateBy());
+                    ticketToDoDto =  new TicketToDoDto(UUID.randomUUID().toString(),ticketDto.getTicketId(),"","1",user.getId(),"1",new Date(),new Date(),ticketDto.getUpdateBy(),ticketDto.getCreateBy());
                     this.insertTicketToDo(ticketToDoDto);
                     result.put("code","201");
                     result.put("status","success");
                     result.put("message","工单创建成功!");
+                    //创建插入提示消息
+                    insertDetails(ticketDto.getTicketId(),ticketDto.getCreateBy(),"工单创建->待分发",user.getId());
                 }
             }else{
                 result.put("code","3001");
-                result.put("message","该部门下没有配置负责人员，请联系管理员!");
+                result.put("message","该部门下没有工单分发角色的人员，请联系管理员!");
                 throw new ServiceException(result.toJSONString());
             }
 
@@ -221,6 +231,7 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
     public JSONObject handleWorkOrder(TicketDto ticketDto){
         JSONObject result=new JSONObject();
         try{
+            TicketDto ticketInfo=ticketDao.getTicketInfo(ticketDto.getTicketId());
             //日志
             TicketLogDto log=new TicketLogDto();
             log.setId(UUID.randomUUID().toString());
@@ -236,44 +247,44 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
             String uId="";
             // 01：分发业务到人修改为 待接单状态2、
             if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("01")){
-                //工单为待审核 4  获取工单创建人的UserId
+                //工单为待分发 2  获取工单创建人的UserId
                 String handleUserId = ticketDto.getHandleUserId();
-                this.signIn(ticketDto.getTicketId(),handleUserId,"2","0");
+                this.signIn(ticketDto.getTicketId(),handleUserId,"2","0",ticketDto.getCreateBy().getId());
                 log.setStatus("2");
                 log.setNodeId(NodeEnum.DISTRIBUTION.getValue());
                 log.setNodeId(NodeEnum.DISTRIBUTION.getName());
-                title="工单分发";
+                title="工单分发->待处理";
                 uId=handleUserId;
             //退回（处理不了，退回给部门负责人）
             //02回退业务分子修改为待分发状态1、
             }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("02")){
                 //工单为待分发 1  获取工单部门负责人的UserId
-                List<String> mgUuer= this.getUserIdByDeptId(ticketDto.getDeptId());
-                this.signIn(ticketDto.getTicketId(),mgUuer.get(0),"1","1");
+                //List<String> mgUuer= this.getUserIdByDeptId(ticketDto.getDeptId());
+                this.signIn(ticketDto.getTicketId(),ticketInfo.getTicketDistributeBy(),"1","1",null);
                 log.setStatus("1");
                 log.setNodeId(NodeEnum.SINGLE_BACK.getValue());
                 log.setNodeId(NodeEnum.SINGLE_BACK.getName());
-                title="工单回退";
-                uId=mgUuer.get(0);
+                title="工单回退->待分发";
+                uId=ticketInfo.getTicketDistributeBy();
                 //03处理业务修改为待审核状态4
             }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("03")){
                 //工单为待审核 4  获取工单部门负责人的UserId
                 List<String> mgUuer= this.getUserIdByDeptId(ticketDto.getDeptId());
-                this.signIn(ticketDto.getTicketId(),mgUuer.get(0),"4","1");
+                this.signIn(ticketDto.getTicketId(),ticketInfo.getTicketDistributeBy(),"4","1",null);
                 log.setStatus("4");
                 log.setNodeId(NodeEnum.HANDLE.getValue());
                 log.setNodeId(NodeEnum.HANDLE.getName());
-                title="工单处理";
-                uId=mgUuer.get(0);
+                title="工单处理->待审核";
+                uId=ticketInfo.getTicketDistributeBy();
             }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("04")){
                 //04审核不同意业务修改为处理状态3
                 //获取工单最近处理人UserId
                 String lastHandleUserId = this.getTicketLogLastUserIdByTicketId(ticketDto.getTicketId());
-                this.signIn(ticketDto.getTicketId(),lastHandleUserId,"3","1");
+                this.signIn(ticketDto.getTicketId(),lastHandleUserId,"3","1",null);
                 log.setStatus("3");
                 log.setNodeId(NodeEnum.UN_AGREE.getValue());
                 log.setNodeId(NodeEnum.UN_AGREE.getName());
-                title="工单审核";
+                title="工单审核不通过->待重新处理";
                 uId=lastHandleUserId;
             }else if(StringUtils.isNotBlank(ticketDto.getHandleStatus()) && ticketDto.getHandleStatus().equals("05")){
                 //05审核同意业务修改为完成状态5
@@ -293,7 +304,7 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
                 this.updateAlarmData(obj);
             }
             //创建插入提示消息
-            insertDetails(ticketDto.getTicketId(),title,uId);
+            insertDetails(ticketDto.getTicketId(),ticketDto.getCreateBy(),title,uId);
 
             this.insertTicketLog(log);
 
@@ -318,7 +329,7 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
      * @return
      */
     @Transactional(readOnly = false)
-    public boolean signIn(String ticketId,String userId,String status,String signInStatus){
+    public boolean signIn(String ticketId,String userId,String status,String signInStatus,String ticketDistributeBy){
         //必须是待签收状态 0,才能签收（否者已被他人签收）
         // to  do  ...
         //清空历史待处理人
@@ -332,6 +343,7 @@ public class TicketService  extends CrudService<TicketDao, TicketDto> {
         TicketDto ticketDto=new TicketDto();
         ticketDto.setTicketId(ticketId);
         ticketDto.setStatus(status);//处理中
+        ticketDto.setTicketDistributeBy(ticketDistributeBy);//工单分配的操作人
         boolean c=this.updateTicketInfo(ticketDto);
         return a && b && c;
     }

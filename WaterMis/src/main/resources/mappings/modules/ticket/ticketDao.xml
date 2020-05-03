@@ -9,9 +9,11 @@
         where o.del_flag='0'  and uu.isFlag='1' ORDER BY sort asc
     </select>
 
-    <!--根据部门Id获取部门下的所有人-->
+    <!--根据部门Id获取部门下有分配工单的的所有人-->
     <select id="getUserListByDeptId" parameterType="java.lang.String" resultType="com.wapwag.woss.modules.sys.entity.User">
-       	select uu.`name`,uu.id from sys_user uu where uu.del_flag='0' and uu.office_id=#{deptId}
+       <!--	select uu.`name`,uu.id from sys_user uu where uu.del_flag='0' and uu.office_id=#{deptId}-->
+        select uu.`name`,uu.id from ticket_distribute_user uu where uu.del_flag='0' and uu.office_id=#{deptId}
+
     </select>
     <!-- 根据部门id查询 部门负责人 -->
     <select id="getUserIdByDeptId" resultType="java.lang.String"  parameterType="java.lang.String">
@@ -416,6 +418,10 @@
             <if test="deptId!=null and deptId!=''">
                 a.dept_id= #{deptId},
             </if>
+            <if test="ticketDistributeBy!=null and ticketDistributeBy!=''">
+                a.ticket_Distribute_By= #{ticketDistributeBy},
+            </if>
+
         </set>
         where a.ticket_id=#{ticketId}
     </update>
@@ -802,6 +808,7 @@
         SELECT
         t.ticket_id ticketId,
         t.ticket_type ticketType,
+        t.ticket_Distribute_By ticketDistributeBy,
         (
         CASE
         WHEN t.ticket_type = '1' THEN

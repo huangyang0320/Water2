@@ -248,7 +248,7 @@ function initBootTable(url){
         },*/{
             field: 'createName',
             title: '工单创建人',
-            visible:false,
+           /* visible:false,*/
             align: 'center',
             sortable : true,
             cellStyle: formatTableUnit
@@ -258,6 +258,20 @@ function initBootTable(url){
             align: 'center',
             sortable : true,
             sortable: true,
+            cellStyle: formatTableUnit
+        },{
+            field: 'startTime',
+            title: '计划开始时间',
+            align: 'center',
+            sortable : true,
+            /*visible:false,*/
+            cellStyle: formatTableUnit
+        },{
+            field: 'endTime',
+            title: '计划结束时间',
+            align: 'center',
+            sortable : true,
+            /*visible:false,*/
             cellStyle: formatTableUnit
         },{
             field: 'operateSatus',
@@ -451,7 +465,11 @@ function queryParams(params) {
         sortName = "de.NAME"
     } else if (params.sortName=='address'){
         sortName = "t.address"
-    }else if (params.sortName=='createName'){
+    } else if (params.sortName=='startTime'){
+        sortName = "t.start_time"
+    } else if (params.sortName=='endTime'){
+        sortName = "t.end_Time"
+    } else if (params.sortName=='createName'){
         sortName = "su.name"
     }
 
