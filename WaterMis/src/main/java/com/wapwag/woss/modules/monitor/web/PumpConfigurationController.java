@@ -71,6 +71,12 @@ public class PumpConfigurationController extends BaseController {
      */
     @RequestMapping(value = {"getServiceValues"})
     public String getServiceValues(String phid, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin","*");
+        response.setHeader("Access-Control-Allow-Methods","POST,GET");
+        response.setHeader("Access-Control-Allow-Headers","Access-Control");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("XDomainRequestAllowed","1");
+
         String serviceValues= pumpConfigurationService.getServiceValues(phid);
         String req=renderString(response,serviceValues,"application/json");
         return req;
