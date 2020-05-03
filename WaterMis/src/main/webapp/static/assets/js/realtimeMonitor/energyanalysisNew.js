@@ -513,7 +513,7 @@ function drawtable(tablename,result) {
         columns.push({field:'name', title:'名称',align:'center',width:400,class: 'W160',})
         if(result[result.length-1].data){
             for(let i=0;i<result[result.length-1].data.length;i++){
-                columns.push({field:i+'', title:i+'',align:'center',width:300,class: 'W120',})
+                columns.push({field:i+'', title:i+1+'',align:'center',width:300,class: 'W120',})
             }
         }
         columns.push({field:'avg', title:'平均值',align:'center',width:400,class: 'W120'})
@@ -526,19 +526,23 @@ function drawtable(tablename,result) {
         let dataitem = {}
         dataitem.name = result[i].name
         if(result[i].data){
-            let max =-99999,maxname='',min=99999,minname='',avg=0,sum=0
+            let max =-9999,maxname='',min=9999,minname='',avg=0,sum=0
             for(let j = 0;j<result[i].data.length;j++){
-                dataitem[j+''] =  result[i].data[j]
-                sum+=result[i].data[j]
-                if(result[i].data[j]>max){
-                    max = result[i].data[j]
-                    maxname=j
-                }
-                if(result[i].data[j]<min){
-                    min = result[i].data[j]
-                    minname=j
+                if(typeof (result[i].data[j]) == 'number'){
+                    dataitem[j+''] =  result[i].data[j]
+                    sum+=result[i].data[j]
+                    if(result[i].data[j]>max){
+                        max = result[i].data[j]
+                        maxname=j+1
+                    }
+                    if(result[i].data[j]<min){
+                        min = result[i].data[j]
+                        minname=j+1
+                    }
                 }
             }
+            if(max==-9999){max='-'}
+            if(min== 9999){min='-'}
             avg = (sum/result[i].data.length).toFixed(3)
             dataitem['avg'] =  avg
             dataitem['max'] =  max
@@ -554,10 +558,10 @@ function drawtable(tablename,result) {
         let minitem = {name:'最小值'}
         let maxitemname = {name:'最大值名称'}
         let minitemname = {name:'最小值名称'}
-        for(let i = 0;i<result[0].data.length;i++){
+        for(let i = 0;i<result[result.length-1].data.length;i++){
             let sum = 0 ,max=-9999,min=9999,n=0,maxname='-',minname='-'
             for(let j = 0;j<result.length;j++){
-                if(result[j].data[i]){
+                if(typeof (result[j].data[i]) == 'number'){
                     sum += result[j].data[i]
                     n++
                     if(result[j].data[i]>max){
