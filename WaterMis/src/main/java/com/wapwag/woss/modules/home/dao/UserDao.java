@@ -30,4 +30,11 @@ public interface UserDao extends CrudDao<DeviceInfo> {
      */
     void freezeOperation(User user);
 
+    /**
+     * 修改  是否接收告警信息状态
+     * @param user
+     * @return
+     */
+    int updateAlarmRateByUserId(User user);
+
 }

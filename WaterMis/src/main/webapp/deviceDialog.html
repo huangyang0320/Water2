@@ -144,7 +144,7 @@
                 margin: 0;
             }
             .title-list li{
-                line-height: 2;
+                line-height: 1.5;
                 font-size: 14px;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -171,10 +171,11 @@
                 line-height: 2;
                 border-bottom: 1px solid #d6e9c6;
                 font-size: 14px;
-                color: #969696;
+                color: #0b8b7b;
             }
             #infos ul li span {
-                color: #4B4B4B;
+
+                color: #8f139b
             }
         </style>
     </head>
@@ -356,7 +357,7 @@
                             <li>泵房地址: <span id="info13"></span></li>
                         </ul>
                     </div>
-                    <div class="panel-body" style="height: 150px" >
+                    <div class="panel-body" style="height: 140px" >
                         <div id="infos">
                             <ul style="display: none">
                                 <li>滤后压力：<span id="title10"></span></li>
@@ -700,7 +701,7 @@
                                 //找到主控柜
                                 if(res[i].deviceId.indexOf('plc_main') != -1){
                                     if(!res[i].pointList){
-                                        $('#infos').html('<image src="static/assets/img/nosignal.jpg" width="100px" height="100px" style="margin:0 auto;display:inherit"><p style="font-size:14px;text-align:center;line-height: 2">泵房离线</p>')
+                                        $('#infos').html('<image src="static/assets/img/nosignal.jpg" width="80px" height="80px" style="margin:0 auto;display:inherit"><p style="font-size:14px;text-align:center;line-height: 2">泵房离线</p>')
                                         // $('#title10').html('没有点位数据')
                                         // $('#title11').html('没有点位数据')
                                         // $('#title12').html('没有点位数据')

@@ -45,7 +45,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h3 class="modal-title">创建工单</h3>
             </div>-->
-            <div class="modal-body" style="height:600px ;overflow-y: auto;overflow-x: hidden">
+            <div class="modal-body" style="overflow-y: auto;overflow-x: hidden">
                 <form id="workOrder">
                     <div class="row">
                         <div class="col-md-5">
@@ -162,7 +162,7 @@
                         <div class="col-md-11">
                             <div class="form-group">
                                 <label for="alarmReason">发起原因</label>
-                                <textarea class="form-control" rows="3"  id="alarmReason" name="alarmReason" style="resize: none;"></textarea>
+                                <textarea class="form-control" rows="6"  id="alarmReason" name="alarmReason" style="resize: none;"></textarea>
                             </div>
                         </div>
                     </div>
@@ -170,7 +170,7 @@
                         <div class="col-md-11">
                             <div class="form-group">
                                 <label for="planContent">解决方案</label>
-                                <textarea class="form-control" rows="3"  id="planContent" name="planContent" style="resize: none;"></textarea>
+                                <textarea class="form-control" rows="6"  id="planContent" name="planContent" style="resize: none;"></textarea>
                             </div>
                         </div>
                     </div>
@@ -284,6 +284,9 @@
                         <div class="panel-body">
                             <div class="col-md-12 col-xs-12">
                                 <div class="table-responsive">
+                                    <div style="float: left;margin-top: 13px;">
+                                        <button type="button" class="btn btn-primary" onclick="savePumps()">保存</button>
+                                    </div>
                                     <table class="table table-hover" id="dataTables-example" data-reorderable-columns="true">
                                     </table>
                                 </div>
@@ -293,7 +296,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" onclick="savePumps()">保存</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

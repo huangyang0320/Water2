@@ -57,4 +57,10 @@ public class UserService {
     {
         userDao.freezeOperation(user);
     }
+
+    public boolean updateAlarmRateByUserId(User user)
+    {
+         int i= userDao.updateAlarmRateByUserId(user);
+         return i>0;
+    }
 }
