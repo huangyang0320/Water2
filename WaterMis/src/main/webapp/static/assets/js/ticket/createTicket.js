@@ -192,10 +192,10 @@ function savePumps(){
 function initBootTable(url){
     // 初始化无滚动条
     $("#page-wrapper").css("overflow-y", "hidden");
-    $("#page-inner").css("padding-right", "25px");
+    $("#page-inner").css("padding-right", "5px");
     // table height
     var calcHeight = function() {
-        var height = $(window).height() - $(".top-navbar").height() - $(".panel-heading").height() - 56;
+        var height = $(window).height() - $(".top-navbar").height() - $(".panel-heading").height() - 10;
         return height;
     };
     $(window).resize(function() {
@@ -206,17 +206,17 @@ function initBootTable(url){
         url:url,
         cache:false,
         striped:true,
-        height:calcHeight()+55,//设定高度，固定头部
+        height:calcHeight(),//设定高度，固定头部
         search: false,//是否搜索
         queryParamsType:'',
         queryParams:queryParams,
-        pageSize:20,
+        pageSize:5,
         pageNumber:1,
         sidePagination:'server',
         pagination: true,//是否分页
         showColumns: true,//列选择按钮
         minimumCountColumns:2,
-        pageList:[20,30,50,100],
+        pageList:[5,10,20],
         searchOnEnterKey: false,//回车搜索
         clickToSelect:true,
         showRefresh: false,//刷新按钮
@@ -510,9 +510,9 @@ function clickOk(){
         success: function (data) {
             if (data.status == "success") {
                 frameElement.api.close();
-                alert(data.message);
+                Ewin.alert(data.message);
             } else {
-                alert(data.message);
+                Ewin.alert(data.message);
             }
 
         }

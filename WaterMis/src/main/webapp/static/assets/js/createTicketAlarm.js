@@ -478,9 +478,9 @@ function clickOk(){
         success: function (data) {
             if (data.status == "success") {
                 frameElement.api.close();
-                alert(data.message);
+                Ewin.alert(data.message);
             } else {
-                alert(data.message);
+                Ewin.alert(data.message);
             }
 
         }

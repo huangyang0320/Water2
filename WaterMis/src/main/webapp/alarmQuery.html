@@ -6,6 +6,7 @@
         position: absolute !important;
         top: -120px;
         right: -265px;
+        /*z-index: 5;*/
     }
     .input-small {
         width: 80px;
@@ -21,6 +22,7 @@
     }
 </style>
 <link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
+
 
 <div id="page-inner">
     <div class="row">
@@ -73,14 +75,16 @@
                     <ul id="myTab" class="nav nav-tabs">
                         <li class="active"><a id="alarmList" href="#alarm-datalist" data-toggle="tab">告警信息列表</a></li>
                         <li><a id="alarmDetail" href="#alarm-compare-chart" data-toggle="tab">告警数统计</a></li>
+                        <li><a id="alarmFenxi" href="#alarm-fenxi" data-toggle="tab">告警分析</a></li>
                     </ul>
                     <div id="myTabContent" class="tab-content" style="margin-top: 15px;height:50%">
+                        <!--告警信息列表内容-->
                         <div class="tab-pane fade in active" id="alarm-datalist">
                             <!-- Advanced Tables -->
-                            <div class="col-md-9 col-xs-9" style="padding-left: 0;overflow-y:auto">
+                            <div class="col-md-9 col-xs-9" style="padding-left: 0">
                                 <div class="table-responsive">
-                                    <div id="toolbar">
-                                    </div>
+                                    <!--<div id="toolbar">-->
+                                    <!--</div>-->
                                     <!--<button type="button" onclick="exportData()" class='btn btn-mini btn-info'>导出</button>-->
                                     <table class="table table-hover" id="dataTables-example" data-reorderable-columns="true" data-sortable="true" data-sort-class="table-active">
                                     </table>
@@ -95,8 +99,7 @@
                             </div>
                             <!-- alarm compare pie end -->
                         </div>
-
-
+                        <!--告警数统计内容-->
                         <div class="tab-pane fade" id="alarm-compare-chart">
                             <div class="col-md-8 col-xs-8" style="padding-left: 0;">
                                 <div id="alarm-compare-graph"></div>
@@ -105,7 +108,12 @@
                                 <div id="alarm-compare-pie"></div>
                             </div>
                         </div>
-
+                        <!--告警分析内容-->
+                        <div class="tab-pane fade" id="alarm-fenxi">
+                            <div class="col-md-12 col-xs-12">
+                                <div id="totalData"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- panel-body end -->
@@ -246,7 +254,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-5 col-md-offset-1">
+                        <div class="col-md-5 col-md-offset-1"  style="display: none">
                             <div class="form-group">
                                 <label for="mgName">部门负责人</label>
                                 <input type="text" class="form-control" readonly id="mgName" name="mgName" >

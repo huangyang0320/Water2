@@ -51,15 +51,25 @@ public class NoticeService extends CrudService<NoticeDao, NoticeDto> {
     @Transactional(readOnly = false)
     public JSONObject saveNotice(NoticeDto noticeDto) {
         JSONObject result=new JSONObject();
+        User user = UserUtils.getUser();
         if(noticeDto.getIsNewRecord()){
-            User user = UserUtils.getUser();
             if (null!=user && StringUtils.isNotBlank(user.getId())) {
                 noticeDto.setDeleteBy(user);
+                noticeDto.setCreateBy(user);
+                noticeDto.setUpdateBy(user);
             }
+            noticeDto.setCreateDate(new Date());
+            noticeDto.setUpdateDate(new Date());
             noticeDto.setDeleteDate(new Date());
         }
 
         try{
+            if (null!=user && StringUtils.isNotBlank(user.getId())) {
+                noticeDto.setCreateBy(user);
+                noticeDto.setUpdateBy(user);
+                noticeDto.setCreateDate(new Date());
+                noticeDto.setUpdateDate(new Date());
+            }
             super.save(noticeDto);
         }catch(Exception e){
             result.put("code","201");

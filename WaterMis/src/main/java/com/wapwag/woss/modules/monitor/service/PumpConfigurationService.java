@@ -366,10 +366,18 @@ public class PumpConfigurationService {
         }
         for(PumpService pump : format){
             if(pump.getPv()!=null&&pump.getPv().length()>4){
-                pump.setPv(pump.getPv().substring(0,5));
-                if(pump.getPv().lastIndexOf(".")==(pump.getPv().length()-1)){
-                    pump.setPv(pump.getPv().substring(0,pump.getPv().length()-1));
+                if(pump.getCode().equals("flow_total")){
+                    pump.setPv(pump.getPv().substring(0,7));
+                    if(pump.getPv().lastIndexOf(".")==(pump.getPv().length()-1)){
+                        pump.setPv(pump.getPv().substring(0,pump.getPv().length()-1));
+                    }
+                }else{
+                    pump.setPv(pump.getPv().substring(0,5));
+                    if(pump.getPv().lastIndexOf(".")==(pump.getPv().length()-1)){
+                        pump.setPv(pump.getPv().substring(0,pump.getPv().length()-1));
+                    }
                 }
+
             }
 
         }

@@ -35,6 +35,23 @@
             min-height: 450px;
             overflow: visible;
         }
+        .fixed-table-body {
+            overflow-x: auto;
+            overflow-y: auto;
+            height: 50%;
+        }
+        .pagination-info{
+            display: none;
+        }
+        .page-list{
+            display: none;
+        }
+        .fixed-table-pagination .page-list{
+            display: none;
+        }
+        .fixed-table-container{
+            height: auto;
+        }
     </style>
 
 
@@ -183,7 +200,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-5 col-md-offset-1">
+                        <div class="col-md-5 col-md-offset-1" style="display: none">
                             <div class="form-group">
                                 <label for="mgName">部门负责人</label>
                                 <input type="text" class="form-control" readonly id="mgName" name="mgName" >
@@ -255,7 +272,7 @@
         </div><!-- /.modal -->
         </div>
 
-    <div class="modal fade" id="myModal" tabindex="20000" role="dialog">
+    <div class="modal fade" style="top: 0px;" id="myModal" tabindex="20000" role="dialog">
         <div class="modal-dialog" style="width:900px;" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -283,7 +300,7 @@
 
                         <div class="panel-body">
                             <div class="col-md-12 col-xs-12">
-                                <div class="table-responsive">
+                                <div>
                                     <div style="float: left;margin-top: 13px;">
                                         <button type="button" class="btn btn-primary" onclick="savePumps()">保存</button>
                                     </div>

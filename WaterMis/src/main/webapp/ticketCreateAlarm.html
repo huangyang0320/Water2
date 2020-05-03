@@ -165,7 +165,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-5 col-md-offset-1">
+                    <div class="col-md-5 col-md-offset-1"  style="display: none">
                         <div class="form-group">
                             <label for="mgName">部门负责人</label>
                             <input type="text" class="form-control" readonly id="mgName" name="mgName" >
@@ -431,9 +431,9 @@
                 success: function (data) {
                     if (data.status == "success") {
                         frameElement.api.close();
-                        alert(data.message);
+                        Ewin.alert(data.message);
                     } else {
-                        alert(data.message);
+                        Ewin.alert(data.message);
                     }
 
                 }

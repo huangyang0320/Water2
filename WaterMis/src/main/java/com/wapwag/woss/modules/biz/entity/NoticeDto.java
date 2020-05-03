@@ -33,6 +33,8 @@ public class NoticeDto extends DataEntity<NoticeDto> {
 
     private Date deleteDate;  //删除时间
 
+    private String createByName;
+
     public NoticeDto() {
     }
 
@@ -125,5 +127,13 @@ public class NoticeDto extends DataEntity<NoticeDto> {
 
     public void setDeleteFlag(String deleteFlag) {
         this.deleteFlag = deleteFlag;
+    }
+
+    public String getCreateByName() {
+        return createByName;
+    }
+
+    public void setCreateByName(String createByName) {
+        this.createByName = createByName;
     }
 }

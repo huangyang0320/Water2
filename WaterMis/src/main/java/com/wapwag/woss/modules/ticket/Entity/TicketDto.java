@@ -74,6 +74,7 @@ public class TicketDto extends DataEntity<TicketDto> {
     private String allHandleUser;//所有处理人
 
     private String mgName;//部门负责人姓名
+    private String ticketDistributeBy;//工单分发人
 
 
     private String approveOpinion;//处理结果及其意见
@@ -521,5 +522,13 @@ public class TicketDto extends DataEntity<TicketDto> {
 
     public void setClearTicketId(String clearTicketId) {
         this.clearTicketId = clearTicketId;
+    }
+
+    public String getTicketDistributeBy() {
+        return ticketDistributeBy;
+    }
+
+    public void setTicketDistributeBy(String ticketDistributeBy) {
+        this.ticketDistributeBy = ticketDistributeBy;
     }
 }

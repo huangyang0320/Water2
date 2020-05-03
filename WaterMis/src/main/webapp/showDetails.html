@@ -194,7 +194,7 @@
                 if(window.parent.window.isShow) {
                     $("#content").html("");
                     for (var i = 0; i < result.length; i++) {
-                        $("#content").append("<tr class='list-group-item'><td>消息标题：" + result[i]["noticeTitle"] + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>消息类型：" + result[i]["noticeType"] + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><a ref='javascrip:void(0);' value='" + result[i]["id"] + "'>详情</a></td><tr/>");
+                        $("#content").append("<tr class='list-group-item'><td>你有新的【" + result[i]["noticeType"] + "】,请前往工单管理-->待办工单页面处理</td><td><a ref='javascrip:void(0);' value='" + result[i]["id"] + "'>详情</a></td><tr/>");
                     }
                     $("#content a").each(function (index, item) {
                         $(this).click(function () {
@@ -203,7 +203,12 @@
                             $.post(CONTEXT_PATH + "/biz/notice/getDetailsById", {"id": id}, function (result) {
                                 if (result != null && result.length > 0) {
                                     $("#detailsContent").html("");
-                                    $("#detailsContent").append("<tr class='list-group-item'><td>工单标题：</td><td>" + result[0]["noticeTitle"] + "</td></tr><tr class='list-group-item'><td>工单类型：</td><td>" + result[0]["noticeType"] + "</td></tr><tr class='list-group-item'><td></td><td>通知内容：" + result[0]["noticeContent"] + "</td></tr>");
+                                    $("#detailsContent").append("<tr class='list-group-item'><td>工单类型：</td><td>" + result[0]["noticeType"] + "</td></tr>");
+                                    $("#detailsContent").append("<tr class='list-group-item'><td>当前环节：</td><td>" + result[0]["noticeTitle"] + "</td></tr>");
+                                    $("#detailsContent").append("<tr class='list-group-item'><td>创建人：</td><td>" + result[0]["createByName"] + "</td></tr>");
+                                    $("#detailsContent").append("<tr class='list-group-item'><td>创建时间：</td><td>" + result[0]["createDate"] + "</td></tr>");
+                                    /*$("#detailsContent").append("<tr class='list-group-item'><td></td><td>通知内容：" + result[0]["noticeContent"] + "</td></tr>");*/
+
                                 }
                                 $("#myModalDetails").modal("show")
                                 //点击查看后重新设置对应的消息

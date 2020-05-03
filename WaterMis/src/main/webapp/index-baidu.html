@@ -536,7 +536,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-5 col-md-offset-1">
+                            <div class="col-md-5 col-md-offset-1"  style="display: none">
                                 <div class="form-group">
                                     <label for="mgName">部门负责人</label>
                                     <input type="text" class="form-control" readonly id="mgName" name="mgName" >
@@ -614,7 +614,10 @@
                     if (!e) {
                         return;
                     }
-
+                    // http://localhost:8080/HYWater/a/user/updateAlarmRateByUser/1 1接受0不接受
+                    $.post("/HYWater/a/user/updateAlarmRateByUser/1", function(result) {
+                        Ewin.alert('打开告警提示成功');
+                    });
                 });
             }
             if (event.shiftKey && event.keyCode === 13 && !openstate){
@@ -625,7 +628,9 @@
                     if (!e) {
                         return;
                     }
-
+                    $.post("/HYWater/a/user/updateAlarmRateByUser/0", function(result) {
+                        Ewin.alert('关闭告警提示成功');
+                    });
                 });
             }
         });
