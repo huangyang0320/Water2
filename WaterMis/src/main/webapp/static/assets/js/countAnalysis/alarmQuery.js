@@ -84,6 +84,15 @@ $(function(){
     	countAlarmTimes();  /*设备每天告警次数对比*/
     	alarmTypeCountDetail();  // 告警类型对比
     });
+
+    // 告警分析
+    $('#alarmFenxi').click(function () {
+        if("3" ==alarmPage){
+            return;
+        }
+        alarmPage = "3";
+        // initLine()
+    })
     
     // datetimepicker init
     $(".warn-time-begin, .warn-time-end").datetimepicker({
@@ -241,8 +250,8 @@ $(function(){
            pageSize:20,
            pageNumber:1,
            sidePagination:'server',
-            sortName:"endDate",
-            sortOrder:"desc",
+            // sortName:"endDate",
+            // sortOrder:"desc",
            pagination: true,//是否分页
            showColumns: true,//列选择按钮
            minimumCountColumns:2,
@@ -251,7 +260,7 @@ $(function(){
            clickToSelect:true,
            showRefresh: false,//刷新按钮
            smartDisplay:true,
-            // toolbar: "#toolbar",//显示工具栏
+            // toolbar: "#alermCount",//显示工具栏
             // showExport: true,//工具栏上显示导出按钮
             // exportTypes: ['json', 'xml', 'png', 'csv', 'txt', 'sql', 'doc', 'excel', 'xlsx', 'pdf'],//导出格式
             // exportOptions: {//导出设置
@@ -286,17 +295,22 @@ $(function(){
                formatter: paramsMatter,
            }, {
                field: 'deviceName',
-               title: '电气位置',
+               title: '告警内容',
                align: 'center',
                sortable: true,
                // width: 120,
                cellStyle: formatTableUnit,
-               formatter: function (value, row, index) {
+               formatter: function paramsMatter(value, row, index) {
                    var span = document.createElement("span");
-                   span.setAttribute("title", row.deviceName + row.alarmTypeRemarks + row.alarmInfo);
-                   span.innerHTML = row.deviceName + row.alarmTypeRemarks + row.alarmInfo;
+                   let name = ''
+                   if(row.deviceId.split('.')[1] != 'plc_main') {
+                       console.log(row.deviceName)
+                       name = row.deviceName.substring(0,2)
+                   }
+                   span.setAttribute("title", name + row.alarmInfo);
+                   span.innerHTML = name +row.alarmInfo;
                    return span.outerHTML;
-               }
+               },
            },
            // },{
            //     field: 'alarmTypeRemarks',
@@ -319,7 +333,7 @@ $(function(){
            //     cellStyle: formatTableUnit,
            //     formatter: paramsMatter,
            // },
-               {
+              /* {
                field: 'alarmTime',
                title: '告警时长(h)',
                align: 'center',
@@ -327,7 +341,7 @@ $(function(){
                // width: 120,
                cellStyle: formatTableUnit,
                formatter: paramsMatter,
-           },{
+           },*/{
                field: 'confirmStat',
                title: '告警状态',
                align: 'center',
@@ -1059,4 +1073,88 @@ function disHide(){
               $(obj).highcharts().reflow();
           });
       }
-  });                         
+  });
+
+  // 告警分析
+  function fenxi() {
+
+  }
+  function initLine() {
+      var chart = {
+          type: 'column'
+      };
+      var title = {
+          text: '堆叠柱形图'
+      };
+      var xAxis = {
+          categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+      };
+      var yAxis ={
+          min: 0,
+          title: {
+              text: '水果总消费量'
+          },
+          stackLabels: {
+              enabled: true,
+              style: {
+                  fontWeight: 'bold',
+                  color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+              }
+          }
+      };
+      var legend = {
+          align: 'right',
+          x: -30,
+          verticalAlign: 'top',
+          y: 25,
+          floating: true,
+          backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+          borderColor: '#CCC',
+          borderWidth: 1,
+          shadow: false
+      };
+      var tooltip = {
+          formatter: function () {
+              return '<b>' + this.x + '</b><br/>' +
+                  this.series.name + ': ' + this.y + '<br/>' +
+                  'Total: ' + this.point.stackTotal;
+          }
+      };
+      var plotOptions = {
+          column: {
+              stacking: 'normal',
+              dataLabels: {
+                  enabled: true,
+                  color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                  style: {
+                      textShadow: '0 0 3px black'
+                  }
+              }
+          }
+      };
+      var credits = {
+          enabled: false
+      };
+      var series= [{
+          name: 'John',
+          data: [5, 3, 4, 7, 2]
+      }, {
+          name: 'Jane',
+          data: [2, 2, 3, 2, 1]
+      }, {
+          name: 'Joe',
+          data: [3, 4, 4, 2, 5]
+      }];
+
+      var json = {};
+      json.chart = chart;
+      json.title = title;
+      json.xAxis = xAxis;
+      json.yAxis = yAxis;
+      json.legend = legend;
+      json.tooltip = tooltip;
+      json.plotOptions = plotOptions;
+      json.credits = credits;
+      json.series = series;
+      $('#totalData').highcharts(json);
+  }
