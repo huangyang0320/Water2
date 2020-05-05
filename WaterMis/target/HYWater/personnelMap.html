@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">  
+    <title>地图定位</title>
+    <!-- Bootstrap Styles-->
+    <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- FontAwesome Styles-->
+    <link href="static/assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- Google Fonts-->
+    <link href='static/assets/css/useso.css' rel='stylesheet' type='text/css' /> 
+     
+    <style type="text/css">
+        .anchorBL{display:none}
+        .row {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            margin: 0 !important;
+        }
+        .choose-button {
+            position: absolute;
+            width: 200px;
+            height: 30px;
+            left: 50px;
+            top: 15px;
+            opacity: 0.75;
+            z-index: 2;
+        }
+        .choose-button button {
+            border: 1px solid #aaa;
+            font-size: 13px;
+            font-family: "Microsoft YaHei";
+            font-weight: 700;
+        }
+        .choose-button button:hover{
+            color: #4f8096;
+        }
+        #positionCatch {
+            width: 100%;
+            height: 100%;
+        }
+        /* InfoWindow styles */
+    </style>
+
+</head>
+
+<body>
+    <div class="row">
+        <!-- /.CHOOSE BUTTON -->
+        <div id="positionCatch"></div>
+    </div>
+    <!-- ROW -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="static/assets/js/jquery-1.10.2.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="static/assets/js/bootstrap.min.js"></script>
+    <!-- Baidu Map Js -->
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=TnTtZt52jtuwnf8aNHl3H1Eh"></script>
+    <!-- JavaScript -->
+    <script type="text/javascript">
+        //操作类型,0:正常，1:暂停
+        var operType="2";
+        // 父页面参数获取
+        var api = frameElement.api;
+        var userData = api.data;
+        //数据准备,  
+        var points = [];//原始点信息数组  
+        var bPoints = [];//百度化坐标数组。用于更新显示范围。
+        /************************************************/
+        // 地图初始化
+        var map = new BMap.Map("positionCatch");
+        // map.centerAndZoom("上海",15);
+        map.centerAndZoom(new BMap.Point(121.24, 31.40), 14);
+        map.addControl(new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_RIGHT})); //添加平移缩放控件
+        map.addControl(new BMap.OverviewMapControl()); //添加缩略地图控件
+        map.enableScrollWheelZoom(); //启用滚轮放大缩小
+        map.disable3DBuilding();
+        // 自定义地图主题样式
+        var styleJson = [
+            {
+               "featureType": "all",
+               "elementType": "geometry",
+               "stylers": {
+                    "hue": "#007fff",
+                    "saturation": 89
+                }
+            },
+            {
+               "featureType": "water",
+               "elementType": "all",
+               "stylers": {
+                    "color": "#ffffff"
+                }
+            }
+        ]
+        map.setMapStyle({styleJson:styleJson});
+
+        // 定位函数
+        function theLocation(){
+            // 随机经纬度
+            var lng = 121.24 + (Math.random().toFixed(2))*0.1;
+            var lat = 31.40 + (Math.random().toFixed(2))*0.1;
+            var marker = new BMap.Marker(new_point,{icon:myIcon1});// 创建标注
+            map.addOverlay(marker);// 将标注添加到地图中
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE);// 弹跳动画
+            map.panTo(new_point);// 切换位置
+            /*------------------------------------------------------*/
+            // 信息窗口
+            var sContent = "<div><img style='margin:4px' id='imgDemo' src='http://app.baidu.com/map/images/tiananmen.jpg' width='200' height='134' title='天安门'/></div>" + 
+                "<div><h4 style='margin:0 0 5px 0;padding:0.2em 0'>"+userData.person_name+"</h4>" +
+                "<div style='width:200px;height:100px;margin:0.2em;line-height:1.5;font-size:13px;'><span>工号："+userData.person_id+"</span><br><span>在线状态："+userData.person_online+"</span><br><span>最近位置："+userData.person_position+"</span></div>" + 
+                "</div>";
+            var infoWindow = new BMap.InfoWindow(sContent);
+            // 监听覆盖物点击事件，弹出信息窗口
+            marker.addEventListener("click", function(){
+                this.openInfoWindow(infoWindow);
+                document.getElementById('imgDemo').onload = function (){
+                    // 防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+                   infoWindow.redraw();
+                }
+            });      
+        }
+
+        if(userData.person_online == "否"){
+            api.close();
+        } else {
+            setTimeout(dynamicLine, 1000);
+        }
+        
+      //根据点信息实时更新地图显示范围，让轨迹完整显示。设置新的中心点和显示级别  
+        function setZoom(bPoints){  
+            var view = map.getViewport(eval(bPoints));  
+            var mapZoom = view.zoom;   
+            var centerPoint = view.center;   
+            map.centerAndZoom(centerPoint,mapZoom);  
+        }  
+
+        // 获取随机数  
+        function getRandom(n){  
+            return Math.floor(Math.random()*n+1)  
+        }
+      //添加线  
+        function initHistoryLine(){ 
+        	var allOverlays = map.getOverlays();
+        	for(var index=0;index<allOverlays.length;index++){
+        		map.removeOverlay(allOverlays[index]);
+            }
+        	points = new Array();
+    	    jQuery.ajax( { 
+         	    type : 'POST',  
+         	    async:false,
+         	    contentType : 'application/json',  
+         	    url : 'system/getCoordinateByUserId/' + userData.id+"/"+userData.time,    
+         	    dataType : 'json', 
+         	    success : function(data){
+         	    	if(undefined == data || data.length < 1){
+         	    		api.close();
+         	    		showErrorMsg("用户不在线，请稍候再试");
+         	    		return;
+         	    	}
+         	    	$.each(data, function(i, item) {
+         	    		if(isEmp(item.longi) || isEmp(item.lati)){
+         	    			
+         	    		}else{
+         	    			var point = {"lng":Number(item.longi),"lat":Number(item.lati),"status":1,"id":1};
+         	    			points.push(point);
+         	    		}
+    				});
+         	    	for(var i =1;i<points.length;i++){  
+                        var newLinePoints=[];
+                        newLinePoints.push(points[i-1]);
+                        newLinePoints.push(points[i]);
+                        addLine(newLinePoints);//增加轨迹线    
+                	}
+    		    },
+    		    error : function(data)
+    	   	    {
+    		    }
+      		});
+        }
+
+        //随机生成新的点，加入到轨迹中。  
+        function dynamicLine(){
+        	var query = "1";
+        	var point;
+        	if(operType == "1"){
+        		setTimeout(dynamicLine, 5000);
+        		return;	
+        	}else if(operType == "2"){
+        		point =  initHistoryLine();
+        		if(points.length > 0){
+        			point = points[points.length-1];
+            	}
+        		operType = "0";
+        	};
+            var lng;  
+            var lat;  
+            var id = userData.id;  
+            if(undefined == point || null == point){
+            	jQuery.ajax( { 
+             	    type : 'POST',  
+             	    async:false,
+             	    contentType : 'application/json',  
+             	    url : 'system/getLastCoordinateByUserId/'+ userData.id,    
+             	    dataType : 'json', 
+             	    success : function(data){
+             	    	point = {"lng":Number(data[0].longi),"lat":Number(data[0].lati),"status":1,"id":1};
+             	    	lng = point.lng;
+                    	lat = point.lat;
+                    	query = "0";
+        		    },
+        		    error : function(data)
+        	   	    {
+        		    }
+          		});
+            }else{
+            	lng = point.lng;
+            	lat = point.lat;
+            }
+            if(query == "0" && points.length > 0){
+            	query = "1";
+        		if(lng == points[points.length-1].lng && lat == points[points.length-1].lat){
+        			setTimeout(dynamicLine, 5000);
+            		return;
+        		}
+        	}
+            var makerPoints = [];  
+            var newLinePoints = [];  
+            var len;  
+            var allOverlays = map.getOverlays();
+            for(var index=0;index<allOverlays.length;index++){
+            	if((allOverlays[allOverlays.length-index-1].toString()).toLowerCase() == "[object marker]"){
+            		map.removeOverlay(allOverlays[allOverlays.length-index-1]);
+            		break;
+            	}
+            }
+            makerPoints.push(point);              
+            addMarker(makerPoints);//增加对应该的轨迹点  
+            points.push(point);  
+            bPoints.push(new BMap.Point(lng,lat));  
+            len = points.length;
+            if(points.length >1){
+            	newLinePoints = [points[points.length-2],points[points.length-1]];
+                addLine(newLinePoints);//增加轨迹线  
+            }
+            setZoom(bPoints);  
+            setTimeout(dynamicLine, 5000);  
+        }  
+
+        //添加线  
+        function addLine(points){  
+          
+            var linePoints = [],pointsLen = points.length,i,polyline;  
+            if(pointsLen == 0){  
+                return;  
+            }  
+            
+            // 创建标注对象并添加到地图     
+            for(i = 0;i <pointsLen;i++){  
+                linePoints.push(new BMap.Point(points[i].lng,points[i].lat));  
+            }  
+          
+            polyline = new BMap.Polyline(linePoints, {strokeColor:"#0000ff", strokeWeight:4, strokeOpacity:0.5});   //创建折线  
+            map.addOverlay(polyline);   //增加折线  
+        }
+      
+        //在轨迹点上创建图标，并添加点击事件  
+        function addMarker(points){  // 创建图标对象
+        	var pointsLen = points.length;
+        if(pointsLen < 1){
+        	return;
+        }
+        // 创建标注对象并添加到地图       
+         var point = new BMap.Point(points[pointsLen-1].lng,points[pointsLen-1].lat);      
+         var  marker = new BMap.Marker(point);     
+         map.addOverlay(marker);   
+         //给标注点添加点击事件。使用立即执行函数和闭包  
+         var thePointt = points[pointsLen-1]; 
+         showInfo(marker,thePointt);
+         (function() {  
+             var thePoint = points[pointsLen-1];  
+             marker.addEventListener("click",function(){  
+                 showInfo(this,thePoint);  
+             });  
+         })();  
+        } 
+      //显示信息窗口，显示标注点的信息。  
+        function showInfo(thisMaker,point){  
+            var sContent =  
+            '<ul style="margin:0 0 5px 0;padding:0.2em 0">'  
+            +'<li style="line-height: 26px;font-size: 15px;">'  
+            +'<span style="width: 50px;display: inline-block;">时间: </span>' + point.id + '</li>'  
+            +'<li style="line-height: 26px;font-size: 15px;">'  
+            +'<span style="width: 50px;display: inline-block;">坐标: </span>' + point.name + '</li>'  
+            +'<li style="line-height: 26px;font-size: 15px;">'
+            +'<span style="width: 50px;display: inline-block;">位置: </span>'
+            +'<a href="'+point.url+'">详情</a></li>'  
+            +'<li style="line-height: 26px;font-size: 15px;">'
+            +'<span style="width: 50px;display: inline-block;">操作: </span>'
+            +'<a onClick="stop()">停止</a> '
+            +'<a onClick="start()">播放</a> '
+            +'<a onClick="restart()">重新播放</a></li>'
+            +'</ul>';  
+            var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象  
+            thisMaker.openInfoWindow(infoWindow);   //图片加载完毕重绘infowindow  
+      }
+      function start(){
+    	  operType = "0";
+      }
+      function stop(){
+    	  operType = "1";
+      }
+      function restart(){
+    	  operType = "2";
+      }
+      function isEmp(str){
+
+         	if(undefined == str || null == str || "" == str){
+         		return true;
+         	}else{
+         		if(str > 0){
+         			return false;
+         		}
+         		str = str.trim();
+         		if(undefined == str || null == str || "" == str){
+         			return true;
+         		}else{
+         			return false;
+         		}
+         	}
+       }
+    </script>
+
+</body>
+</html>

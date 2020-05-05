@@ -1,0 +1,78 @@
+[{
+  "title": "首页",
+  "icon": "fa-windows",
+  "url": "themeStatNew"
+},{
+  "title": "泵房地图",
+  "icon": "fa-flag",
+  "liLen":"2",
+  "url": "home-map-baiduNew"
+},{
+  "title": "组态监控",
+  "icon": "fa-random",
+  "liLen":"2",
+  "url": "configuration"
+},{
+  "title": "数据监控",
+  "icon": "fa-eye",
+  "liLen":"1",
+  "subMenu": [{
+    "title": "实时数据",
+    "url": "realtimeDataNew"
+  },{
+    "title": "历史数据",
+    "url": "historyDataNewBak"
+  }]
+},{
+  "title": "统计分析",
+  "icon": "fa-bar-chart-o",
+  "liLen":"1",
+  "subMenu": [{
+    "title": "生产数据分析",
+    "url": "energyanalysisNew"
+  },{
+    "title": "告警分析",
+    "url": "alarmQuery"
+  },{
+    "title": "门禁记录",
+    "url": "accessRecord"
+  }]
+},{
+  "title": "泵房管理",
+  "icon": "fa-gears",
+  "liLen":"1",
+  "subMenu": [{
+    "title": "泵房信息",
+    "url": "pumpInfo"
+  },{
+    "title": "设备档案",
+    "url": "deviceArchives"
+  }]
+}, {
+  "title": "工单管理",
+  "icon": "fa-wrench",
+  "liLen":"1",
+  "subMenu": [{
+    "title": "待办工单",
+    "url": "myTicket"
+  },{
+    "title": "已办工单",
+    "url": "ticketQuery"
+  }]
+}, {
+  "title": "系统管理",
+  "icon": "fa-desktop",
+  "liLen":"1",
+  "subMenu": [{
+    "title": "后台管理",
+    "event": "jumpMgSystem",
+    "enabled": "true"
+  }
+
+  ]
+},{
+  "title": "组态测试",
+  "icon": "fa-random",
+  "liLen":"2",
+  "url": "zutaitest"
+}]

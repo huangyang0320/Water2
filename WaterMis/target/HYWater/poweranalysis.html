@@ -1,0 +1,171 @@
+<style type="text/css">
+	/*
+	 * inline styles
+	 * history data styles
+	 */
+	#page-inner {
+        padding: 0 10px 10px 10px;
+        height: 100%;
+    }
+    .panel-body {
+        padding: 6px 15px;
+        height: 100%;
+    }
+	 .time-superposition .download-data {
+	 	line-height: 20px;
+	 	font-size: 14px;
+	 	border: 1px solid transparent;
+	 	border-radius: 4px;
+	 	margin-left: 20px;
+	 	outline: none;
+	 }
+	 #highcharts-history-data,
+	 #highcharts-history-data2 {
+	 	position: relative;
+	 	width: 100%;
+	 	overflow: hidden;
+         height: 100% !important;
+	 }
+.colour_black_0 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #FFB6C1;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_1 {
+    display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #778899;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_2 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #ADD8E6;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_3 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #E1FFFF;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_4 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #20B2AA;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_5 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #90EE90;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_6 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #F08080;
+    border: none;
+    cursor: pointer;
+}
+.list-group-item{
+    overflow: hidden;
+}
+</style>
+<form id="queryForm" style="display: none">
+	<input name="queryType" type="hidden">
+	<input name="startDate" type="hidden">
+	<input name="endDate" type="hidden">
+    <input name="deviceId" type="hidden">
+</form>
+<div id="page-inner">
+	<div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div id="selectedDevice"></div>
+        </div>
+    </div>
+	<div class="row">
+		<div class="col-xs-12 col-md-12">
+			<div class="chart-time">
+				<div class="time-length" id="time-length">
+					<label>统计时长 : </label>
+					<span class="daytime  active">日</span>
+					<span class="monthtime">月</span>
+					<span class="yeartime">年</span>
+				</div>
+				<div class="time-period">
+					<label for="statisticDate">统计时段 : </label>
+					<input type="text" readonly class="form_datetime form-control timepicker" id="statisticDate">
+				</div>
+			</div>
+		</div>
+	</div>
+    <div class="row" style="height: 90%">
+        <div class="col-md-12 col-sm-12 col-xs-12"  style="height: 95%">
+            <div class="panel panel-default"  style="height: 100%">
+                <div class="panel-body" style="height: 100%">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div id="device-norm-data">
+                            <ul class="list-group"></ul>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12" style="height: 72%; margin-top: 10px" >
+                        <div id="highcharts-history-data" class="chart-height" style="height: 100% !important;"></div>
+                        <!-- tongbi chart -->
+                    </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="static/assets/js/realtimeMonitor/poweranalysis.js?v="+ new Date() ></script>

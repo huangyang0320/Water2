@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.sys.dao.PumpHouseDao" >
+  <resultMap id="BaseResultMap" type="com.wapwag.woss.modules.sys.entity.PumpHouse" >
+    <id column="pump_house_id" property="pumpHouseId" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="PUMP_HOUSE_NAME" property="pumpHouseName" jdbcType="VARCHAR" />
+    <result column="PUMP_HOUSE_ADDRESS" property="pumpHouseAddress" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="Longi" property="longi" jdbcType="DECIMAL" />
+    <result column="Lati" property="lati" jdbcType="DECIMAL" />
+    <result column="ACCESS_CTRL_IP_ADDR" property="accessCtrlIpAddr" jdbcType="VARCHAR" />
+    <result column="ACCESS_CTRL_PORT" property="accessCtrlPort" jdbcType="REAL" />
+    <result column="ALL_PIC_URL" property="allPicUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    pump_house_id, project_id, PUMP_HOUSE_NAME, PUMP_HOUSE_ADDRESS, MEMO, Longi, Lati, 
+    ACCESS_CTRL_IP_ADDR, ACCESS_CTRL_PORT, ALL_PIC_URL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from pump_house_info
+    where pump_house_id = #{pumpHouseId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from pump_house_info
+    where pump_house_id = #{pumpHouseId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wapwag.woss.modules.sys.entity.PumpHouse" >
+    insert into pump_house_info (pump_house_id, project_id, PUMP_HOUSE_NAME, 
+      PUMP_HOUSE_ADDRESS, MEMO, Longi, 
+      Lati, ACCESS_CTRL_IP_ADDR, ACCESS_CTRL_PORT, 
+      ALL_PIC_URL)
+    values (#{pumpHouseId,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{pumpHouseName,jdbcType=VARCHAR}, 
+      #{pumpHouseAddress,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, #{longi,jdbcType=DECIMAL}, 
+      #{lati,jdbcType=DECIMAL}, #{accessCtrlIpAddr,jdbcType=VARCHAR}, #{accessCtrlPort,jdbcType=REAL}, 
+      #{allPicUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wapwag.woss.modules.sys.entity.PumpHouse" >
+    insert into pump_house_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pumpHouseId != null" >
+        pump_house_id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="pumpHouseName != null" >
+        PUMP_HOUSE_NAME,
+      </if>
+      <if test="pumpHouseAddress != null" >
+        PUMP_HOUSE_ADDRESS,
+      </if>
+      <if test="memo != null" >
+        MEMO,
+      </if>
+      <if test="longi != null" >
+        Longi,
+      </if>
+      <if test="lati != null" >
+        Lati,
+      </if>
+      <if test="accessCtrlIpAddr != null" >
+        ACCESS_CTRL_IP_ADDR,
+      </if>
+      <if test="accessCtrlPort != null" >
+        ACCESS_CTRL_PORT,
+      </if>
+      <if test="allPicUrl != null" >
+        ALL_PIC_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pumpHouseId != null" >
+        #{pumpHouseId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="pumpHouseName != null" >
+        #{pumpHouseName,jdbcType=VARCHAR},
+      </if>
+      <if test="pumpHouseAddress != null" >
+        #{pumpHouseAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="longi != null" >
+        #{longi,jdbcType=DECIMAL},
+      </if>
+      <if test="lati != null" >
+        #{lati,jdbcType=DECIMAL},
+      </if>
+      <if test="accessCtrlIpAddr != null" >
+        #{accessCtrlIpAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="accessCtrlPort != null" >
+        #{accessCtrlPort,jdbcType=REAL},
+      </if>
+      <if test="allPicUrl != null" >
+        #{allPicUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wapwag.woss.modules.sys.entity.PumpHouse" >
+    update pump_house_info
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="pumpHouseName != null" >
+        PUMP_HOUSE_NAME = #{pumpHouseName,jdbcType=VARCHAR},
+      </if>
+      <if test="pumpHouseAddress != null" >
+        PUMP_HOUSE_ADDRESS = #{pumpHouseAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        MEMO = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="longi != null" >
+        Longi = #{longi,jdbcType=DECIMAL},
+      </if>
+      <if test="lati != null" >
+        Lati = #{lati,jdbcType=DECIMAL},
+      </if>
+      <if test="accessCtrlIpAddr != null" >
+        ACCESS_CTRL_IP_ADDR = #{accessCtrlIpAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="accessCtrlPort != null" >
+        ACCESS_CTRL_PORT = #{accessCtrlPort,jdbcType=REAL},
+      </if>
+      <if test="allPicUrl != null" >
+        ALL_PIC_URL = #{allPicUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pump_house_id = #{pumpHouseId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wapwag.woss.modules.sys.entity.PumpHouse" >
+    update pump_house_info
+    set project_id = #{projectId,jdbcType=VARCHAR},
+      PUMP_HOUSE_NAME = #{pumpHouseName,jdbcType=VARCHAR},
+      PUMP_HOUSE_ADDRESS = #{pumpHouseAddress,jdbcType=VARCHAR},
+      MEMO = #{memo,jdbcType=VARCHAR},
+      Longi = #{longi,jdbcType=DECIMAL},
+      Lati = #{lati,jdbcType=DECIMAL},
+      ACCESS_CTRL_IP_ADDR = #{accessCtrlIpAddr,jdbcType=VARCHAR},
+      ACCESS_CTRL_PORT = #{accessCtrlPort,jdbcType=REAL},
+      ALL_PIC_URL = #{allPicUrl,jdbcType=VARCHAR}
+    where pump_house_id = #{pumpHouseId,jdbcType=VARCHAR}
+  </update>
+</mapper>

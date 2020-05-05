@@ -1,0 +1,955 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.ticket.dao.TicketDao" >
+
+
+    <select id="getDeptList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+        select o.id deptId,o.`name` deptName,uu.`name` mgName from sys_office o
+        LEFT JOIN sys_user uu ON uu.office_id=o.id
+        where o.del_flag='0'  and uu.isFlag='1' ORDER BY sort asc
+    </select>
+
+    <!--根据部门Id获取部门下有分配工单的的所有人-->
+    <select id="getUserListByDeptId" parameterType="java.lang.String" resultType="com.wapwag.woss.modules.sys.entity.User">
+       <!--	select uu.`name`,uu.id from sys_user uu where uu.del_flag='0' and uu.office_id=#{deptId}-->
+        select uu.`name`,uu.id from ticket_distribute_user uu where uu.del_flag='0' and uu.office_id=#{deptId}
+
+    </select>
+    <!-- 根据部门id查询 部门负责人 -->
+    <select id="getUserIdByDeptId" resultType="java.lang.String"  parameterType="java.lang.String">
+        select uu.ID from sys_office o
+        LEFT JOIN sys_user uu ON uu.office_id=o.id
+        where o.del_flag='0'  and uu.isFlag='1'
+        and o.id=#{deptId}
+        ORDER BY sort asc
+    </select>
+
+
+    <insert id="insertTicket"  parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+        INSERT INTO ticket
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="ticketId != null  and ticketId != ''" >
+                ticket_id,
+            </if>
+            <if test="ticketType != null  and ticketType != ''" >
+                ticket_type,
+            </if>
+            <if test="title != null  and title != ''" >
+                title,
+            </if>
+            <if test="channel != null  and channel != ''" >
+                channel,
+            </if>
+            <if test="ticketLevel != null  and ticketLevel != ''" >
+                ticket_level,
+            </if>
+            <if test="address != null  and address != ''" >
+                address,
+            </if>
+            <if test="eventTime != null  and eventTime != ''" >
+                event_time,
+            </if>
+
+            <if test="deviceCode != null  and deviceCode != ''" >
+                device_code,
+            </if>
+
+            <if test="pumpId != null  and pumpId != ''" >
+                pump_id,
+            </if>
+            <if test="reportName != null  and reportName != ''" >
+                report_name,
+            </if>
+            <if test="startTime != null  and startTime != ''" >
+                start_time,
+            </if>
+            <if test="endTime != null  and endTime != ''" >
+                end_time,
+            </if>
+            <if test="createDate != null  and createDate != ''" >
+                create_Date,
+            </if>
+            <if test="updateDate != null  and updateDate != ''" >
+                update_Date,
+            </if>
+
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                create_by,
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                update_By,
+            </if>
+            <if test="ticketReason != null  and ticketReason != ''" >
+                ticket_reason,
+            </if>
+            <if test="ticketDescription != null  and ticketDescription != ''" >
+                ticket_description,
+            </if>
+            <if test="status != null" >
+                `status`,
+            </if>
+            <if test="validFlag != null  and validFlag != ''" >
+                valid_Flag,
+            </if>
+            <if test="deptId != null  and deptId != ''" >
+                dept_Id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="ticketId != null  and ticketId != ''" >
+                #{ticketId},
+            </if>
+            <if test="ticketType != null  and ticketType != ''" >
+                #{ticketType},
+            </if>
+            <if test="title != null  and title != ''" >
+                #{title},
+            </if>
+            <if test="channel != null  and channel != ''" >
+                #{channel},
+            </if>
+            <if test="ticketLevel != null  and ticketLevel != ''" >
+                #{ticketLevel},
+            </if>
+            <if test="address != null  and address != ''" >
+                #{address},
+            </if>
+            <if test="eventTime != null  and eventTime != ''" >
+                #{eventTime},
+            </if>
+
+            <if test="deviceCode != null  and deviceCode != ''" >
+                #{deviceCode},
+            </if>
+
+            <if test="pumpId != null  and pumpId != ''" >
+                #{pumpId},
+            </if>
+            <if test="reportName != null  and reportName != ''" >
+                #{reportName},
+            </if>
+            <if test="startTime != null  and startTime != ''" >
+                #{startTime},
+            </if>
+            <if test="endTime != null  and endTime != ''" >
+                #{endTime},
+            </if>
+            <if test="createDate != null  and createDate != ''" >
+                #{createDate},
+            </if>
+            <if test="updateDate != null  and updateDate != ''" >
+                #{updateDate},
+            </if>
+
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                #{createBy.id},
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                #{updateBy.id},
+            </if>
+            <if test="ticketReason != null  and ticketReason != ''" >
+                #{ticketReason},
+            </if>
+            <if test="ticketDescription != null  and ticketDescription != ''" >
+                #{ticketDescription},
+            </if>
+            <if test="status != null" >
+                #{status},
+            </if>
+            <if test="validFlag != null  and validFlag != ''" >
+                #{validFlag},
+            </if>
+            <if test="deptId != null  and deptId != ''" >
+                #{deptId},
+            </if>
+
+
+
+        </trim>
+    </insert>
+
+    <insert id="insertTicketLog" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketLogDto">
+        INSERT INTO ticket_log
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null and id !='' " >
+                id,
+            </if>
+            <if test="ticketId != null and ticketId !=''" >
+                ticket_id,
+            </if>
+            <if test="status != null and status !=''" >
+                status,
+            </if>
+
+            <if test="approveOpinion != null and approveOpinion !=''" >
+                APPROVE_OPINION,
+            </if>
+            <if test="approveOperation != null and approveOperation !=''" >
+                APPROVE_OPERATION,
+            </if>
+            <if test="validFlag != null and validFlag !=''" >
+                VALID_FLAG,
+            </if>
+
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                CREATE_BY,
+            </if>
+            <if test="createDate != null and createDate !=''" >
+                CREATE_DATE,
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                UPDATE_BY,
+            </if>
+            <if test="updateDate != null and updateDate !=''" >
+                UPDATE_DATE,
+            </if>
+
+            <if test="nodeName != null and nodeName !=''" >
+                NODE_NAME,
+            </if>
+            <if test="nodeId != null and nodeId !=''" >
+                NODE_ID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+        <if test="id != null and id !='' " >
+            #{id},
+        </if>
+        <if test="ticketId != null and ticketId !=''" >
+            #{ticketId},
+        </if>
+        <if test="status != null and status !=''" >
+            #{status},
+        </if>
+
+        <if test="approveOpinion != null and approveOpinion !=''" >
+            #{approveOpinion},
+        </if>
+        <if test="approveOperation != null and approveOperation !=''" >
+            #{approveOperation},
+        </if>
+        <if test="validFlag != null and validFlag !=''" >
+            #{validFlag},
+        </if>
+
+        <if test="createBy != null and createBy.id != null and createBy.id != ''">
+            #{createBy.id},
+        </if>
+        <if test="createDate != null and createDate !=''" >
+            #{createDate},
+        </if>
+         <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+            #{updateBy.id},
+        </if>
+        <if test="updateDate != null and updateDate !=''" >
+            #{updateDate},
+        </if>
+
+        <if test="nodeName != null and nodeName !=''" >
+            #{nodeName},
+        </if>
+        <if test="nodeId != null and nodeId !=''" >
+            #{nodeId},
+        </if>
+
+        </trim>
+    </insert>
+
+
+
+    <insert id="insertTicketToDo" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketToDoDto">
+        INSERT INTO ticket_to_do
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null and id !='' " >
+                id,
+            </if>
+            <if test="ticketId != null and ticketId !=''" >
+                ticket_id,
+            </if>
+            <if test="status != null and status !=''" >
+                status,
+            </if>
+            <if test="userId != null and userId !=''" >
+                user_Id,
+            </if>
+            <if test="bizId != null and bizId !=''" >
+                biz_id,
+            </if>
+
+            <if test="validFlag != null and validFlag !=''" >
+                VALID_FLAG,
+            </if>
+
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                CREATE_BY,
+            </if>
+            <if test="createDate != null and createDate !=''" >
+                CREATE_DATE,
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                UPDATE_BY,
+            </if>
+            <if test="updateDate != null and updateDate !=''" >
+                UPDATE_DATE,
+            </if>
+
+
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null and id !='' " >
+                #{id},
+            </if>
+            <if test="ticketId != null and ticketId !=''" >
+                #{ticketId},
+            </if>
+            <if test="status != null and status !=''" >
+                #{status},
+            </if>
+            <if test="userId != null and userId !=''" >
+                #{userId},
+            </if>
+            <if test="bizId != null and bizId !=''" >
+                #{bizId},
+            </if>
+
+            <if test="validFlag != null and validFlag !=''" >
+                #{validFlag},
+            </if>
+
+            <if test="createBy != null and createBy.id != null and createBy.id != ''">
+                #{createBy.id},
+            </if>
+            <if test="createDate != null and createDate !=''" >
+                #{createDate},
+            </if>
+            <if test="updateBy != null and updateBy.id != null and updateBy.id != ''">
+                #{updateBy.id},
+            </if>
+            <if test="updateDate != null and updateDate !=''" >
+                #{updateDate},
+            </if>
+
+        </trim>
+
+    </insert>
+
+    <update id="updateTicketToDoById" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketToDoDto">
+        update ticket_to_do a
+        set a.user_id= #{userId},a.status=#{status}
+        where a.ticket_Id= #{ticketId}
+    </update>
+
+    <delete id="delTicketToDoByTicketId" parameterType="java.lang.String">
+        delete from ticket_to_do  where ticket_Id= #{ticketId}
+    </delete>
+
+
+
+
+    <update id="updateAlarmTicketByDeviceIdAndStartTime" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+       update alarm_statistics a
+    set a.ticketId= #{ticketId}
+    where a.device_code=#{deviceCode}
+    and a.start_date=#{eventTime}
+    </update>
+    <update id="updateAlarmData" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+        update alarm_statistics a
+        <set>
+            <if test="confirmStatus!=null and confirmStatus!=''">
+                a.confirm_status= #{confirmStatus},
+            </if>
+            <if test="alarmStatus!=null and alarmStatus!=''">
+                a.alarm_status= #{alarmStatus},
+            </if>
+            <if test="clearTicketId!=null and clearTicketId!=''">
+                a.ticketId= '',
+            </if>
+        </set>
+        <where>
+            1=1
+            <if test="ticketId!=null and ticketId!=''">
+                and a.ticketId=#{ticketId}
+            </if>
+        </where>
+
+
+    </update>
+
+    <update id="updateTicketInfo" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+        update ticket a
+        <set>
+            <if test="ticketType!=null and ticketType!=''">
+                a.ticket_type= #{ticketType},
+            </if>
+            <if test="pumpId!=null and pumpId!=''">
+                a.pump_id= #{pumpId},
+            </if>
+            <if test="title!=null and title!=''">
+                a.title= #{title},
+            </if>
+            <if test="channel!=null and channel!=''">
+                a.channel= #{channel},
+            </if>
+            <if test="deviceCode!=null and deviceCode!=''">
+                a.device_code= #{deviceCode},
+            </if>
+            <if test="status!=null and status!=''">
+                a.`status`= #{status},
+            </if>
+            <if test="validFlag!=null and validFlag!=''">
+                a.valid_Flag= #{validFlag},
+            </if>
+            <if test="ticketLevel!=null and ticketLevel!=''">
+                a.ticket_Level= #{ticketLevel},
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                a.start_time= #{startTime},
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                a.end_time= #{endTime},
+            </if>
+            <if test="ticketReason!=null and ticketReason!=''">
+                a.ticket_reason= #{ticketReason},
+            </if>
+            <if test="ticketDescription!=null and ticketDescription!=''">
+                a.ticket_description= #{ticketDescription},
+            </if>
+            <if test="deptId!=null and deptId!=''">
+                a.dept_id= #{deptId},
+            </if>
+            <if test="ticketDistributeBy!=null and ticketDistributeBy!=''">
+                a.ticket_Distribute_By= #{ticketDistributeBy},
+            </if>
+
+        </set>
+        where a.ticket_id=#{ticketId}
+    </update>
+
+    <!--获取对应工单的最后处理人-->
+    <select id="getTicketLogLastUserIdByTicketId" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT
+            t.CREATE_BY
+        FROM
+            ticket_log t
+        WHERE
+            t.create_date = ( SELECT max( c.create_date ) FROM ticket_log c where c.ticket_id=#{ticketId} )
+    </select>
+
+    <!--获取对应工单的创建人-->
+    <select id="getTicketCreateUserIdByTicketId" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT
+            t.CREATE_BY
+        FROM
+            ticket t
+        WHERE
+           t.ticket_id=#{ticketId}
+    </select>
+
+    <select id="findList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketDto" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+        SELECT
+        t.ticket_id ticketId,
+        t.ticket_type ticketType,
+        (
+        CASE
+        WHEN t.ticket_type = '1' THEN
+        '告警工单'
+        WHEN t.ticket_type = '2' THEN
+        '巡检工单'
+        WHEN t.ticket_type = '3' THEN
+        '维保工单' ELSE ''
+        END
+        ) ticketTypeName,
+        t.title title,
+        t.comments comments,
+        t.ticket_level ticketLevel,
+        t.address address,
+        t.event_time eventTime,
+        t.device_code deviceCode,
+        t.pump_id pumpId,
+        t.area_id areaId,
+        t.channel channel,
+        t.report_name reportName,
+        t.report_phone reportPhone,
+        t.start_time startTime,
+        t.end_time endTime,
+        t.create_Date createDate,
+        t.update_Date updateDate,
+        t.create_by createByStr,
+        t.update_by updateByStr,
+        t.ticket_reason ticketReason,
+        t.ticket_description ticketDescription,
+        t.`status` AS STATUS,
+        t.dept_id as deptId,
+        (
+        CASE
+        WHEN t.`status` = '0' THEN
+        '暂存'
+        WHEN t.`status` = '1' THEN
+        '新建'
+        WHEN t.`status` = '2' THEN
+        '待接单'
+        WHEN t.`status` = '3' THEN
+        '处理中'
+        WHEN t.`status` = '4' THEN
+        '审核中'
+        WHEN t.`status` = '5' THEN
+        '完成' ELSE ''
+        END
+        ) currentStatusName,
+        t.biz_id bizId,
+        de.`NAME` deviceName,
+        su.name createName,
+        p.`NAME` pumpName
+        FROM
+        ticket t
+        LEFT JOIN device de ON de.ID = t.device_code
+        LEFT JOIN pump_house p ON p.id = de.ID_PUMP_HOUSE
+        LEFT JOIN sys_user su on su.id=t.create_by
+        <if test=" handleUserId !=null and handleUserId!='' " >
+            INNER JOIN ticket_to_do td ON td.ticket_id = t.ticket_id
+            and td.user_Id = #{handleUserId}
+        </if>
+        WHERE
+        t.valid_flag = '1'
+        <if test="title !=null and title!='' " >
+        and t.title like concat('%',#{title},'%')
+        </if>
+        <if test="status !=null and status!='' " >
+            and t.status =#{status}
+        </if>
+       <!-- <if test="address !=null and address!='' " >
+            and t.address like concat('%',#{address},'%')
+        </if>
+        -->
+
+        <if test="pumpHouseIds !=null and pumpHouseIds.size()>0 " >
+            <foreach collection="pumpHouseIds" item="item" index="index" separator=" or " open=" and (" close=")">
+                LOCATE(#{item}, t.pump_id) > 0
+            </foreach>
+        </if>
+
+        <if test="ticketType !=null and ticketType!='' " >
+            and t.ticket_type = #{ticketType}
+        </if>
+        <if test="ticketId !=null and ticketId!='' " >
+            and t.ticket_id like concat('%',#{ticketId},'%')
+        </if>
+        <if test="createName !=null and createName!='' " >
+            and su.name like concat('%',#{createName},'%')
+        </if>
+        <if test="createBeginTime !=null and createBeginTime!='' " >
+            and t.create_Date >= #{createBeginTime}
+        </if>
+        <if test="createEndTime !=null and createEndTime!='' " >
+            and t.create_Date <![CDATA[ <= ]]> #{createEndTime}
+        </if>
+        <if test="startBeginTime !=null and startBeginTime!='' " >
+            and t.start_time >= #{startBeginTime}
+        </if>
+        <if test="startEndTime !=null and startEndTime!='' " >
+            and t.start_time <![CDATA[ <= ]]> #{startEndTime}
+        </if>
+        <if test="sortName !=null and sortName!='' " >
+            order by ${sortName} ${sortOrder}
+        </if>
+
+        <if test="sortName ==null or sortName =='' " >
+            order by t.create_Date desc
+        </if>
+
+
+
+
+    </select>
+
+    <!--获取所有的工单 分页-->
+    <select id="findAllList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketDto" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+        SELECT
+        t.ticket_id ticketId,
+        t.ticket_type ticketType,
+        (
+        CASE
+        WHEN t.ticket_type = '1' THEN
+        '告警工单'
+        WHEN t.ticket_type = '2' THEN
+        '巡检工单'
+        WHEN t.ticket_type = '3' THEN
+        '维保工单' ELSE ''
+        END
+        ) ticketTypeName,
+        t.title title,
+        t.comments comments,
+        t.ticket_level ticketLevel,
+        t.address address,
+        t.event_time eventTime,
+        t.device_code deviceCode,
+        t.pump_id pumpId,
+        t.area_id areaId,
+        t.channel channel,
+        t.report_name reportName,
+        t.report_phone reportPhone,
+        t.start_time startTime,
+        t.end_time endTime,
+        t.create_Date createDate,
+        t.update_Date updateDate,
+        t.create_by createByStr,
+        su.name createName,
+        t.update_by updateByStr,
+        t.ticket_reason ticketReason,
+        t.ticket_description ticketDescription,
+        t.`status` AS STATUS,
+        t.dept_id as deptId,
+        (
+        CASE
+        WHEN t.`status` = '0' THEN
+        '暂存'
+        WHEN t.`status` = '1' THEN
+        '新建'
+        WHEN t.`status` = '2' THEN
+        '待接单'
+        WHEN t.`status` = '3' THEN
+        '处理中'
+        WHEN t.`status` = '4' THEN
+        '审核中'
+        WHEN t.`status` = '5' THEN
+        '完成' ELSE ''
+        END
+        ) currentStatusName,
+        t.biz_id bizId,
+        de.`NAME` deviceName,
+        p.`NAME` pumpName
+        FROM
+        ticket t
+        LEFT JOIN device de ON de.ID = t.device_code
+        LEFT JOIN pump_house p ON p.id = de.ID_PUMP_HOUSE
+        <!--
+         LEFT JOIN ticket_to_do td ON td.ticket_id = t.ticket_id
+        LEFT JOIN sys_user u ON u.id=td.user_id
+        -->
+        LEFT JOIN sys_user su on su.id=t.create_by
+        INNER JOIN ticket_log  log ON 	t.ticket_id=log.TICKET_ID and log.CREATE_BY = #{handleUserId}
+        WHERE
+        t.valid_flag = '1'
+        <if test="title !=null and title!='' " >
+            and t.title like concat('%',#{title},'%')
+        </if>
+        <if test="status !=null and status!='' " >
+            and t.status =#{status}
+        </if>
+       <!-- <if test="address !=null and address!='' " >
+            and t.address like concat('%',#{address},'%')
+        </if>-->
+        <if test="allHandleUser !=null and allHandleUser!='' " >
+            and u.`name` like concat('%',#{allHandleUser},'%')
+        </if>
+        <if test="createName !=null and createName!='' " >
+            and su.name like concat('%',#{createName},'%')
+        </if>
+        <if test="deviceName !=null and deviceName!='' " >
+            and de.`NAME` like concat('%',#{deviceName},'%')
+        </if>
+        <if test="pumpHouseIds !=null" >
+            <foreach collection="pumpHouseIds" item="item" index="index" separator=" or " open=" and (" close=")">
+                LOCATE(#{item}, t.pump_id) > 0
+            </foreach>
+        </if>
+        <if test="ticketId !=null and ticketId!='' " >
+            and t.ticket_id like concat('%',#{ticketId},'%')
+        </if>
+        <if test="ticketType !=null and ticketType!='' " >
+            and t.ticket_type = #{ticketType}
+        </if>
+        <if test="createBeginTime !=null and createBeginTime!='' " >
+            and t.create_Date >= #{createBeginTime}
+        </if>
+        <if test="createEndTime !=null and createEndTime!='' " >
+            and t.create_Date <![CDATA[ <= ]]> #{createEndTime}
+        </if>
+        <if test="startBeginTime !=null and startBeginTime!='' " >
+            and t.start_time >= #{startBeginTime}
+        </if>
+        <if test="startEndTime !=null and startEndTime!='' " >
+            and t.start_time <![CDATA[ <= ]]> #{startEndTime}
+        </if>
+        group by t.ticket_id
+        <if test="sortName !=null and sortName!='' " >
+            order by ${sortName} ${sortOrder}
+        </if>
+
+        <if test="sortName ==null or sortName =='' " >
+            order by t.create_Date desc
+        </if>
+
+
+
+
+
+    </select>
+
+
+    <select id="getTicketList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketDto" parameterType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+        SELECT
+        t.ticket_id ticketId,
+        t.ticket_type ticketType,
+        (
+        CASE
+        WHEN t.ticket_type = '1' THEN
+        '告警工单'
+        WHEN t.ticket_type = '2' THEN
+        '巡检工单'
+        WHEN t.ticket_type = '3' THEN
+        '维保工单' ELSE ''
+        END
+        ) ticketTypeName,
+        t.title title,
+        t.comments comments,
+        t.ticket_level ticketLevel,
+        t.address address,
+        t.event_time eventTime,
+        t.device_code deviceCode,
+        t.pump_id pumpId,
+        t.area_id areaId,
+        t.channel channel,
+        (
+        CASE
+        WHEN t.channel = '1' THEN
+        '系统报警'
+        WHEN t.channel = '2' THEN
+        '二供平台'
+        WHEN t.channel = '3' THEN
+        '定期计划'
+        WHEN t.channel = '4' THEN
+        '物业保修' ELSE ''
+        END
+        ) channelName,
+        t.report_name reportName,
+        t.report_phone reportPhone,
+        t.start_time startTime,
+        t.end_time endTime,
+        t.create_Date createDate,
+        t.update_Date updateDate,
+        t.create_by createByStr,
+        t.update_by updateByStr,
+        t.ticket_reason ticketReason,
+        t.ticket_description ticketDescription,
+        t.`status` AS STATUS,
+        t.dept_id as deptId,
+        (
+        CASE
+        WHEN t.`status` = '0' THEN
+        '暂存'
+        WHEN t.`status` = '1' THEN
+        '新建'
+        WHEN t.`status` = '2' THEN
+        '待接单'
+        WHEN t.`status` = '3' THEN
+        '处理中'
+        WHEN t.`status` = '4' THEN
+        '审核中'
+        WHEN t.`status` = '5' THEN
+        '完成' ELSE ''
+        END
+        ) currentStatusName,
+        t.biz_id bizId,
+        de.`NAME` deviceName1,
+        p.`NAME` pumpName
+        FROM
+        ticket t
+        LEFT JOIN device de ON de.ID = t.device_code
+        LEFT JOIN pump_house p ON p.id = de.ID_PUMP_HOUSE
+        LEFT JOIN sys_user su on su.id=t.create_by
+        WHERE
+        t.valid_flag = '1'
+        <if test="idsList!=null and idsList.size>0">
+            and t.ticket_id in
+            <foreach collection="idsList" open="(" close=")" index="index" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="idsList==null">
+            <if test="title !=null and title!='' " >
+                and t.title like concat('%',#{title},'%')
+            </if>
+            <if test="status !=null and status!='' " >
+                and t.status =#{status}
+            </if>
+            <if test="address !=null and address!='' " >
+                and t.address like concat('%',#{address},'%')
+            </if>
+            <if test="pumpName !=null and pumpName!='' " >
+                and p.`NAME` like concat('%',#{pumpName},'%')
+            </if>
+            <if test="ticketType !=null and ticketType!='' " >
+                and t.ticket_type = #{ticketType}
+            </if>
+            <if test="ticketId !=null and ticketId!='' " >
+                and t.ticket_id like concat('%',#{ticketId},'%')
+            </if>
+            <if test="createName !=null and createName!='' " >
+                and su.name like concat('%',#{createName},'%')
+            </if>
+            <if test="createBeginTime !=null and createBeginTime!='' " >
+                and t.create_Date >= #{createBeginTime}
+            </if>
+            <if test="createEndTime !=null and createEndTime!='' " >
+                and t.create_Date <![CDATA[ <= ]]> #{createEndTime}
+            </if>
+            <if test="startBeginTime !=null and startBeginTime!='' " >
+                and t.start_time >= #{startBeginTime}
+            </if>
+            <if test="startEndTime !=null and startEndTime!='' " >
+                and t.start_time <![CDATA[ <= ]]> #{startEndTime}
+            </if>
+        </if>
+    </select>
+
+    <select id="getTicketInfo" resultType="com.wapwag.woss.modules.ticket.Entity.TicketDto" parameterType="java.lang.String">
+        SELECT
+        t.ticket_id ticketId,
+        t.ticket_type ticketType,
+        t.ticket_Distribute_By ticketDistributeBy,
+        (
+        CASE
+        WHEN t.ticket_type = '1' THEN
+        '告警工单'
+        WHEN t.ticket_type = '2' THEN
+        '巡检工单'
+        WHEN t.ticket_type = '3' THEN
+        '维保工单' ELSE ''
+        END
+        ) ticketTypeName,
+        t.title title,
+        t.comments comments,
+        t.ticket_level ticketLevel,
+        t.address address,
+        t.event_time eventTime,
+        t.device_code deviceCode,
+        t.pump_id pumpId,
+        t.area_id areaId,
+        t.channel channel,
+        (
+        CASE
+        WHEN t.channel = '1' THEN
+        '系统报警'
+        WHEN t.channel = '2' THEN
+        '二供平台'
+        WHEN t.channel = '3' THEN
+        '定期计划'
+        WHEN t.channel = '4' THEN
+        '物业保修' ELSE ''
+        END
+        ) channelName,
+        t.report_name reportName,
+        t.report_phone reportPhone,
+        t.start_time startTime,
+        t.end_time endTime,
+        t.create_Date createDate,
+        t.update_Date updateDate,
+        t.create_by createByStr,
+        t.update_by updateByStr,
+        t.ticket_reason ticketReason,
+        t.ticket_description ticketDescription,
+        t.`status` AS status,
+        (
+        CASE
+        WHEN t.`status` = '0' THEN
+        '暂存'
+        WHEN t.`status` = '1' THEN
+        '新建'
+        WHEN t.`status` = '2' THEN
+        '待分发'
+        WHEN t.`status` = '3' THEN
+        '处理中'
+        WHEN t.`status` = '4' THEN
+        '审核中'
+        WHEN t.`status` = '5' THEN
+        '完成' ELSE ''
+        END
+        ) currentStatusName,
+        t.biz_id bizId,
+        de.`NAME` deviceName,
+        p.`NAME` pumpName,
+        t.dept_id deptId
+        FROM
+        ticket t
+        LEFT JOIN device de ON de.ID = t.device_code
+        LEFT JOIN pump_house p ON p.id = de.ID_PUMP_HOUSE
+
+        WHERE
+        t.valid_flag = '1'
+        <if test="ticketId !=null and ticketId!='' " >
+            and t.ticket_Id=#{ticketId}
+        </if>
+
+    </select>
+      <select id="getTicketInfoForObj" resultType="com.wapwag.woss.modules.ticket.Entity.TicketDto">
+        SELECT
+        t.ticket_id ticketId
+        FROM
+        ticket t
+        <where>
+        1=1
+        and TO_DAYS(`create_Date`)=TO_DAYS(NOW())
+        <if test="ticketType !=null and ticketType!='' " >
+            and t.ticket_type=#{ticketType}
+        </if>
+        </where>
+        order by create_date desc
+        limit 1
+    </select>
+
+    <select id="getTicketLogList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketLogDto" parameterType="java.lang.String">
+        SELECT
+        t.ticket_id ticketId,
+				g.approve_opinion approveOpinion,
+				g.approve_operation approveOperation,
+				u.`name` ticketLogName,
+				g.CREATE_Date createDate,
+				 t.`status` AS status,
+				 g.node_id nodeId,
+				 g.node_name nodeName,
+        (
+        CASE
+
+        WHEN t.`status` = '1' THEN
+        '新建'
+        WHEN t.`status` = '2' THEN
+        '待分发'
+        WHEN t.`status` = '3' THEN
+        '处理中'
+        WHEN t.`status` = '4' THEN
+        '审核中'
+        WHEN t.`status` = '5' THEN
+        '完成' ELSE ''
+        END
+        ) currentStatusName
+        FROM
+        ticket_log g
+				LEft JOIN ticket t ON t.ticket_id= g.ticket_id
+        LEFT JOIN device de ON de.ID = t.device_code
+        LEFT JOIN pump_house p ON p.id = de.ID_PUMP_HOUSE
+				LEFT JOIN sys_user u ON u.id=g.create_by
+        WHERE
+        t.valid_flag = '1'
+        <if test="ticketId !=null and ticketId!='' " >
+            and t.ticket_Id=#{ticketId}
+        </if>
+				ORDER BY g.CREATE_Date asc
+    </select>
+
+    <!--泵房list-->
+    <select id="getPumpList" resultType="com.wapwag.woss.modules.ticket.Entity.TicketComDto">
+        select id ,`NAME` name,ADDRESS address from pump_house
+        <if test="projectId !=null and projectId!='' " >
+            where id_project = #{projectId}
+        </if>
+    </select>
+<!--设备list-->
+    <select id="getDeviceList" parameterType="java.lang.String"  resultType="com.wapwag.woss.modules.ticket.Entity.TicketComDto">
+        select id,`NAME` name from device where ID_PUMP_HOUSE=#{id}
+    </select>
+
+
+
+</mapper>

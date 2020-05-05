@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.LifepredictionDao">
+	<resultMap id="ProductComponentMap" type="com.wapwag.woss.modules.biz.entity.ProductComponent">
+	    <id column="id" jdbcType="VARCHAR" property="id" />
+	    <result column="component_name" jdbcType="VARCHAR" property="componentName" />
+	    <result column="component_model" jdbcType="VARCHAR" property="componentModel" />
+	    <result column="failure_rate_year_1" jdbcType="REAL" property="failureRateYear1" />
+	    <result column="failure_rate_year_2" jdbcType="REAL" property="failureRateYear2" />
+	    <result column="failure_rate_year_3" jdbcType="REAL" property="failureRateYear3" />
+	    <result column="failure_rate_year_4" jdbcType="REAL" property="failureRateYear4" />
+	    <result column="failure_rate_year_5" jdbcType="REAL" property="failureRateYear5" />
+	    <result column="failure_rate_year_6" jdbcType="REAL" property="failureRateYear6" />
+	    <result column="failure_rate_year_7" jdbcType="REAL" property="failureRateYear7" />
+	    <result column="failure_rate_year_8" jdbcType="REAL" property="failureRateYear8" />
+	    <result column="failure_rate_year_9" jdbcType="REAL" property="failureRateYear9" />
+	    <result column="failure_rate_year_10" jdbcType="REAL" property="failureRateYear10" />
+	    <result column="weight" jdbcType="REAL" property="weight" />
+		<result column="wb_reason" jdbcType="VARCHAR" property="wbReason" />
+		<result column="wb_programme" jdbcType="VARCHAR" property="wbProgramme" />
+	    <result column="sort" jdbcType="BIGINT" property="sort" />
+  	</resultMap>
+	<sql id="ProductComponent_Column_List">
+	    id, component_name, component_model, failure_rate_year_1, failure_rate_year_2, failure_rate_year_3, 
+	    failure_rate_year_4, failure_rate_year_5, failure_rate_year_6, failure_rate_year_7, 
+	    failure_rate_year_8, failure_rate_year_9, failure_rate_year_10, weight, wb_reason, wb_programme, sort
+	</sql>    
+	<select id="getProductComponentById" resultMap="ProductComponentMap">
+	    select 
+	    <include refid="ProductComponent_Column_List" />
+	    from product_component
+	    where id = #{componentId,jdbcType=VARCHAR}
+	</select>
+	<select id="getComponentByProductId" resultMap="ProductComponentMap">
+		 SELECT
+			comp.*
+		FROM
+			product_component comp
+		JOIN product_component_settings sett ON sett.component_id = comp.id
+		WHERE
+			sett.product_type = #{productType}
+	</select>		
+</mapper>

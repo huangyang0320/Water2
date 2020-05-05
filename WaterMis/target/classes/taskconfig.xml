@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+配置文件使用说明：
+	class   	定时任务类,唯一
+	method  	执行方法，该方法为，公有、静态、无返回、无参数的方法（public static void）
+	isNormal    0:正常，1：停止
+	mode   		执行方式
+					0:指定的时间开始，按照指定的时间重复执行. 
+			   		1:系统启动延迟多长时间后，按照指定的时间重复执行. 
+			   		2:系统启动延迟多长时间后执行，仅执行一次
+			   		3:按照指定的时间执行，仅执行一次
+	firstTime 	开始执行时间(格式为:yyyy-MM-dd HH:mm:ss）
+	delay   	延迟执行时间（毫秒） 
+	period  	重复执行时间间隔（毫秒）
+ -->
+<taskconfig>
+    <!-- 泵站导航统计 -->
+	<task>
+		<class>com.wapwag.woss.common.task.CountValueUtil</class>
+		<method>initValues</method>
+		<isNormal>0</isNormal>
+		<mode>1</mode>
+		<firstTime></firstTime>
+		<delay>20000</delay>
+		<period>120000</period>
+	</task>
+	
+	<!-- 小时表统计 -->
+	<task>
+		<class>com.wapwag.woss.common.task.ServicValuesHourTask</class>
+		<method>stat</method>
+		<isNormal>0</isNormal>
+		<mode>1</mode>
+		<firstTime></firstTime>
+		<delay>20000</delay>
+		<period>60000</period>
+	</task>
+	
+	<!-- 天表统计 -->
+	<task>
+		<class>com.wapwag.woss.common.task.ServicValuesDayTask</class>
+		<method>stat</method>
+		<isNormal>0</isNormal>
+		<mode>0</mode>
+		<firstTime>00:05:00</firstTime>
+		<delay>20000</delay>
+		<period>3600000</period>
+	</task>
+	
+	<!-- 月表统计【时间间隔统计】 -->
+	<task>
+		<class>com.wapwag.woss.common.task.ServicValuesMonthTask</class>
+		<method>stat</method>
+		<isNormal>0</isNormal>
+		<mode>0</mode>
+		<firstTime>01:20:00</firstTime>
+		<delay>20000</delay>
+		<period>86400000</period>
+	</task>
+	
+	<!-- 月表统计【定时统计】 -->
+	<task>
+		<class>com.wapwag.woss.common.task.ServicValuesMonthTask</class>
+		<method>stat</method>
+		<isNormal>0</isNormal>
+		<mode>0</mode>
+		<firstTime>00:10:00</firstTime>
+		<delay>20000</delay>
+		<period>86400000</period>
+	</task>
+	
+	<!-- 年表统计【时间间隔统计】 -->
+	<task>
+		<class>com.wapwag.woss.common.task.ServiceValuesYearTask</class>
+		<method>stat</method>
+		<isNormal>0</isNormal>
+		<mode>0</mode>
+		<firstTime>01:40:00</firstTime>
+		<delay>20000</delay>
+		<period>86400000</period>
+	</task>
+	
+	<!-- 年表统计【定时统计】 -->
+	<task>
+		<class>com.wapwag.woss.common.task.ServiceValuesYearTask</class>
+		<method>stat</method>
+		<isNormal>0</isNormal>
+		<mode>0</mode>
+		<firstTime>00:15:00</firstTime>
+		<delay>20000</delay>
+		<period>86400000</period>
+	</task>
+	
+	<!-- 能耗统计 -->
+	<task>
+		<class>com.wapwag.woss.common.task.AccumulationServer</class>
+		<method>stat</method>
+		<isNormal>0</isNormal>
+		<mode>0</mode>
+		<firstTime>00:05:01</firstTime>
+		<delay>20000</delay>
+		<period>3600000</period>
+	</task>
+	
+	<!-- 设备、泵房在线状态统计 -->
+	<task>
+		<class>com.wapwag.woss.common.task.PumpDevStatusTask</class>
+		<method>initValues</method>
+		<isNormal>0</isNormal>
+		<mode>1</mode>
+		<firstTime></firstTime>
+		<delay>10000</delay>
+		<period>60000</period>
+	</task>
+	
+	<!-- 实时数据生成 -->
+	<task>
+		<class>com.wapwag.woss.common.task.CurrentValuesTask</class>
+		<method>stat</method>
+		<isNormal>0</isNormal>
+		<mode>1</mode>
+		<firstTime></firstTime>
+		<delay>2000</delay>
+		<period>60000</period>
+	</task>
+
+	<task>
+		<class>com.wapwag.woss.common.task.AlarmMsgTask</class>
+		<method>sendSms</method>
+		<isNormal>0</isNormal>
+		<mode>1</mode>
+		<firstTime></firstTime>
+		<delay>2000</delay>
+		<period>10000</period>
+	</task>
+
+
+	<task>
+		<class>com.wapwag.woss.common.task.SyncHrTask</class>
+		<method>syncHrEmployeeData</method>
+		<isNormal>0</isNormal>
+		<mode>1</mode>
+		<firstTime>00:30:00</firstTime>
+		<delay></delay>
+		<period>86400000</period>
+	</task>
+
+</taskconfig>

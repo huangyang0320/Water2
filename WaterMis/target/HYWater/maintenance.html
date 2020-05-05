@@ -1,0 +1,69 @@
+<style type="text/css">
+    .columns.columns-right {
+        position: absolute !important;
+        top: 9px;
+        right: 40px;
+    }
+    #maintenance-timeline {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+</style>
+<div id="page-inner">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <form name="maintenance" id="maintenance" onsubmit="return false;">
+                        <div class="query-parameter">
+                            <label>区域名称 : </label>
+                            <select id="areaId" name="areaId" class="device-id form-control input-text2">
+                            </select>
+                            <label>项目名称 : </label>
+                            <select id="project" class="device-id form-control input-text2">
+                            </select>
+
+                            <label>泵房名称 : </label>
+                            <select id="phId" name="phId"  class="device-id form-control input-text2">
+                            </select>
+
+                            <label>维修人员 : </label>
+                            <input id="userName" class="device-id form-control input-text2">
+                            <button id="query" type="button"  class="btn btn-primary query-btn">查 询</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- panel-body -->
+                <div class="panel-body">
+                    <ul id="myTab" class="nav nav-tabs">
+                        <li class="active"><a id = "mainList" href="#maintenance-datalist" data-toggle="tab">维保信息列表</a></li>
+                        <li><a id="detailList" href="#maintenance-timeline" data-toggle="tab">维保时间轴</a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content" style="margin-top: 15px;">
+                        <!-- Advanced Tables -->
+                        <div class="tab-pane fade in active" id="maintenance-datalist">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="dataTables-example">
+                                </table>
+                            </div>
+                        </div>
+                        <!--End Advanced Tables -->
+
+                        <!-- timeline -->
+                        <div class="tab-pane fade" id="maintenance-timeline">
+                            <div id="vertical-timeline" class="vertical-container dark-timeline">
+                            </div>
+                        </div>
+                        <!-- timeline end -->
+                    </div>
+                </div>
+                <!-- panel-body end -->
+            </div>
+        </div>
+    </div>
+    <!-- /. ROW  -->
+</div>
+
+<!-- Script -->
+<script src="static/assets/js/device/maintenance.js"></script>

@@ -1,0 +1,303 @@
+<style type="text/css">
+	/*
+	 * inline styles
+	 * energyanalysis styles
+	 */
+	#page-inner {
+        padding: 0 10px 10px 10px;
+        height: 100%;
+        overflow-y:auto;
+        overflow-x:hidden ;
+    }
+    .panel-body {
+        padding: 0px 15px 6px;
+    }
+    #page-inner .pre-scrollable{
+      /*height: 90%;*/
+      /*max-height: 90%;*/
+    }
+	/* Water/Electricity/Water-Electricity */
+	.water,
+	.electricity,
+	.water-electricity {
+		text-align: center;
+		font-size: 14px;
+		font-family: "Microsoft YaHei",serif;
+	}
+	.water {
+		background-color: #8ab1e2;
+	}
+	.electricity {
+		background-color: #9bb2d0;
+	}
+	.water-electricity {
+		background-color: #559fc2;
+	}
+	label.consumption-title {
+		font-weight: normal !important;
+		font-size: 16px;
+		color: #fff;
+	}
+	.consumption-content span {
+		color: #fdff55;
+	}
+	.consumption-content label {
+		display: block;
+		font-weight: normal !important;
+		color: #333;
+	}
+	/* bar-chart */
+	.bar-chart-title {
+		position: relative;
+		padding: 4px 10px;
+		font-size: 18px;
+		color: #333;
+		font-family: "Microsoft YaHei",serif;
+		/*background-color: #F7F7FF !important;*/
+        text-align: center;
+	}
+	.device-btn {
+		position: absolute;
+		display: inline-block;
+		right: 10px;
+		background-color: rgb(5, 141, 199);
+		padding: 0 8px;
+		color: #fff;
+		cursor: pointer;
+	}
+	#device-menu {
+		overflow-x: hidden;
+		overflow-y: auto;
+		padding: 1px 0 !important;
+		margin: 0 !important;
+		z-index: 10;
+	}
+	#energyanalysis-mb{
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        font-size: 14px;
+        text-align: center;
+    }
+    #energyanalysis-mb span{
+        position: absolute;
+        top: 48%;
+        left: 0;
+        width: 100%;
+        text-align: center;
+    }
+    .bootstrap-table .table, .bootstrap-table .table>tbody>tr>td, .bootstrap-table .table>tbody>tr>th, .bootstrap-table .table>tfoot>tr>td, .bootstrap-table .table>tfoot>tr>th, .bootstrap-table .table>thead>tr>td {
+        vertical-align: middle;
+    }
+    .changebutton{
+        position: relative;
+        height: 60px;
+        line-height: 60px;
+        padding: 0 0 0 20px;
+        font-size: 15px;
+        float: left;
+    }
+    .W120 .th-inner {
+        width:140px !important;
+    }
+    .W160 .th-inner {
+        width:140px !important;
+    }
+</style>
+
+<!--<link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.css" rel="stylesheet">-->
+<link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/bootstrap-table.css" rel="stylesheet">
+<link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/extensions/fixed-columns/bootstrap-table-fixed-columns.min.css" rel="stylesheet">
+
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.0/jquery.js"></script>-->
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.js"></script>-->
+<!--<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/bootstrap-table.js"></script>-->
+<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-table/1.16.0/extensions/fixed-columns/bootstrap-table-fixed-columns.min.js"></script>
+<!--<script>-->
+<!--    $('#table').bootstrapTable({-->
+<!--        pagination: true,-->
+<!--        fixedColumns: true,-->
+<!--        height:270,-->
+<!--        fixedNumber: 1,-->
+<!--        data:[-->
+<!--            {q:111111111,w:11111111111,e:1111111111111,r:11111111111,t:1111111111,y:6111111111,u:711111111,i:8111111111,9:1111111111,p:1111111111,a:111111111111,s:31111111111},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--            // {q:1,w:1,e:1,r:1,t:1,y:6,u:7,i:8,9:0,p:1,a:1,s:3},-->
+<!--        ],-->
+<!--        columns: [-->
+<!--            {field:'q',title:'q',width:'300'},-->
+<!--            {field:'w',title:'w',width:'300'},-->
+<!--            {field:'e',title:'e',width:'300'},-->
+<!--            {field:'r',title:'r',width:'300'},-->
+<!--            {field:'t',title:'t'},-->
+<!--            {field:'y',title:'y'},-->
+<!--            {field:'u',title:'u'},-->
+<!--            {field:'i',title:'i'},-->
+<!--            {field:'o',title:'o'},-->
+<!--            {field:'p',title:'p'},-->
+<!--            {field:'a',title:'a'},-->
+<!--            {field:'s',title:'s'},-->
+<!--        ]-->
+<!--    })-->
+<!--</script>-->
+<!--<div style='width:700px'>-->
+<!--    <div style='height:30px'></div>-->
+<!--    <table id='table' ></table>-->
+<!--</div>-->
+<form id="queryForm" style="display: none">
+	<input name="deviceId" type="hidden">
+	<input name="deviceIds" type="hidden">
+	<input name="deviceIndexs" type="hidden">
+	<input name="diffDeviceIndexs" type="hidden">
+	<input name="dimen" type="hidden" value="day">
+	<input name="startDate" type="hidden">
+	<input name="endDate" type="hidden">
+	<input name="addOnDate" type="hidden">
+	<input name="choose" type="hidden">
+</form>
+<script src="static/assets/js/moment.js"></script>
+<script>
+    function changeToTable() {
+        document.querySelector('#changeToTable').style.display='none'
+        document.querySelector('#changeToChart').style.display='inline-block'
+        document.querySelector('#exportExcel').style.display = 'inline-block'
+
+        document.querySelector('#energyanalysis-chart-m3').style.visibility='hidden'
+        document.querySelector('#energyanalysis-chart-m3-table-wrap').style.visibility='visible'
+        document.querySelector('#energyanalysis-chart-kWh').style.visibility='hidden'
+        document.querySelector('#energyanalysis-chart-kWh-table-wrap').style.visibility='visible'
+        document.querySelector('#energyanalysis-chart-energy').style.visibility='hidden'
+        document.querySelector('#energyanalysis-chart-energy-table-wrap').style.visibility='visible'
+
+    }
+    function changeToChart() {
+        document.querySelector('#changeToTable').style.display = 'inline-block'
+        document.querySelector('#changeToChart').style.display = 'none'
+        document.querySelector('#exportExcel').style.display = 'none'
+
+        document.querySelector('#energyanalysis-chart-m3').style.visibility = 'visible'
+        document.querySelector('#energyanalysis-chart-m3-table-wrap').style.visibility = 'hidden'
+        document.querySelector('#energyanalysis-chart-kWh').style.visibility = 'visible'
+        document.querySelector('#energyanalysis-chart-kWh-table-wrap').style.visibility = 'hidden'
+        document.querySelector('#energyanalysis-chart-energy').style.visibility = 'visible'
+        document.querySelector('#energyanalysis-chart-energy-table-wrap').style.visibility = 'hidden'
+    }
+</script>
+
+<div id="page-inner">
+	<div class="row">
+        <div class="col-xs-12 col-md-12" style="height: 28px">
+            <div id="selectedDevice"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div class="chart-time">
+<!--				<div class="time-period" id="equipment">-->
+<!--					<label>查询类型 : </label>-->
+<!--					<label style="display: inline-block; cursor: pointer;"><input type="radio" name="optionsRadios" id="optionsRadios1" value="dev" checked>设备 </label>-->
+<!--					<label style="display: inline-block; cursor: pointer;"><input type="radio" name="optionsRadios" id="optionsRadios2" value="pump" >泵房 </label>-->
+<!--				</div>-->
+                <div class="time-length" id="time-length">
+                    <label>统计时长 : </label>
+                    <span class="daytime active">日</span>
+                    <span class="monthtime">月</span>
+                    <span class="yeartime">年</span>
+                </div>
+                <div class="time-period">
+                    <label for="statisticDate">统计时段 : </label>
+                    <input type="text" readonly class="form_datetime form-control timepicker" id="statisticDate">
+                </div>
+                <div class="changebutton">
+                    <button id="changeToTable" onclick="changeToTable()" type="button" class="btn btn-primary query-btn">切换到表</button>
+                    <button id="changeToChart" onclick="changeToChart()" style="display: none" type="button" class="btn btn-primary query-btn">切换到图</button>
+                    <button id="exportExcel" class="btn btn-primary query-btn" style="display: none" onclick="exportExcel()">导出数据</button>
+
+                </div>
+                <!--<div class="time-superposition">-->
+                    <!--<label for="addOnTime">叠加时长 : </label>-->
+                    <!--<select class="superposition" id="addOnTime" style="width:50px"></select>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+    <!--/.row-->
+    <div class="row" style="height:95%">
+		<!-- col-md-3 -->
+		<div class="col-md-4 col-sm-4 col-xs-4" style="height: 100%">
+			<div class="panel panel-default" style="height: 60%;margin-bottom: 2%">
+				<div class="panel-body" id="energyanalysis-compare" style="position: relative; overflow: hidden;height: 100%">
+				</div>
+			</div>
+            <div class="panel panel-default" style="height: 28%; margin: 0px;margin-top: 4%">
+                <div class="panel-heading">
+                    <div class="bar-chart-title">
+                        综合能耗分析说明
+                    </div>
+                </div>
+                <div class="panel-body" style="position: relative;">
+                    <ul id="energyanalysis_msg" class="list-group" style="padding-bottom: 40px">
+                        <li id="energyanalysis_msg_kwh_m3" class="list-group-item" style="padding: 10px !important;">吨水耗电量最高：...</li>
+                        <li id="energyanalysis_msg_kwh" class="list-group-item" style="padding: 10px !important;">耗电量最少：...</li>
+                        <li id="energyanalysis_msg_m3" class="list-group-item" style="padding: 10px !important;">产水量最高：...</li>
+                    </ul>
+                </div>
+            </div>
+
+		</div>
+		<!-- col-md-9 -->
+        <div class="col-md-8 col-sm-8 col-xs-8" style="height:100%">
+<!--            <div class="panel panel-default pre-scrollable">-->
+            <div class="panel panel-default">
+                <div class="panel-body">
+					<!-- chart -->
+                    <div class="col-xs-12 col-md-12" style="height:400px;position: relative">
+                        <div id="energyanalysis-chart-m3" style="width:100%;height:100%;position: absolute;top: 0;left:0"></div>
+                        <div id="energyanalysis-chart-m3-table-wrap" style="width:100%;height:100%;visibility: hidden;position: absolute;top: 0;left:0">
+                            <div style="text-align: center;font-size: 18px;line-height: 30px">用水量趋势分析对比</div>
+                            <table id="energyanalysis-chart-m3-table" style="height:100%"></table>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12" style="margin-top: 20px;height:400px;position: relative">
+                        <div id="energyanalysis-chart-kWh"></div>
+                        <div id="energyanalysis-chart-kWh-table-wrap" style="width:100%;height:100%;visibility: hidden;position: absolute;top: 0;left:0">
+                            <div style="text-align: center;font-size: 18px;line-height: 30px">用电量趋势对比</div>
+                            <table id="energyanalysis-chart-kWh-table" style="height:100%"></table>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12" style="margin-top: 20px;height:400px;position: relative">
+                        <div id="energyanalysis-chart-energy"></div>
+                        <div id="energyanalysis-chart-energy-table-wrap" style="width:100%;height:100%;visibility: hidden;position: absolute;top: 0;left:0">
+                            <div style="text-align: center;font-size: 18px;line-height: 30px">吨水耗电量趋势分析对比</div>
+                            <table id="energyanalysis-chart-energy-table" style="height:100%"></table>
+                        </div>
+                    </div>
+        		</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /. PAGE INNER  -->
+<script src="static/assets/js/realtimeMonitor/energyanalysisNew.js"></script>
+
+<script>
+    //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
+    /* 点击input框时加载监听事件*/
+    $(".timepicker").each(function () {
+        this.addEventListener('click',myfunc);
+    })
+
+    function myfunc(e){
+        e.currentTarget.blur();
+    }
+</script>

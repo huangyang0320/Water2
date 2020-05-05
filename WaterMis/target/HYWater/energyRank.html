@@ -1,0 +1,72 @@
+<style type="text/css">
+.columns.columns-right {
+	position: absolute !important;
+	top: 9px;
+	right: 40px;
+}
+.input-small {
+        width: 80px;
+    }
+.highcharts-container{
+	width: 100% !important;
+}
+</style>
+<div id="page-inner" style="height: 100%;">
+	<div class="row" style="height: 10%">
+		<!-- Advanced Tables -->
+		<div class="panel panel-default pre-scrollable" style=" height: 100%;max-height: 100%; border: none">
+			<div class="panel-heading">
+				<form id="countSubmit">
+					<div class="query-parameter">
+						<label>统计类型: </label>
+							<select id="type" name="type" class="device-id form-control input-small">
+								<option value = 'pump' selected>泵房</option>
+								<option value = 'dev'>设备</option>
+							</select>
+						<label>开启时间 : </label>
+						<input id="beginTime" name="beginTime" type="text" value="" readonly
+							class="device-id form-control input-text1 warn-time-begin timepicker">
+						<label>结束时间 : </label>
+						<input id="endTime" name="endTime" type="text" value="" readonly
+							class="device-id form-control input-text1 warn-time-begin timepicker">
+						<input type="hidden" id="pumpHouseId">
+						<input type="hidden" id="user" name="userId">
+						<button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!--End Advanced Tables -->
+	</div>
+	<div  class="row" style="height: 90%;background: #fff">
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs" id="tabThisPage" role="tablist" style="margin: 0px 15px ">
+			<li id="topLi" role="presentation" class="active"><a isOpen="true" aria-controls="home" role="tab" data-toggle="tab">前十名千吨水百米能耗</a></li>
+			<li id="lastLi" role="presentation"><a isOpen="false" aria-controls="profile" role="tab" data-toggle="tab">后十名千吨水百米能耗</a></li>
+			<li id="highLi" role="presentation"><a isOpen="false" aria-controls="messages" role="tab" data-toggle="tab">超过50%千吨水百米能耗</a></li>
+		</ul>
+
+		<!-- Tab panes -->
+		<div class="tab-content" style="padding: 0px 15px;height: 90%; ">
+			<div role="tabpanel" class="tab-pane active" id="home" style="height: 100%;position: relative;">
+				<div id="char_top"  style="height: 100%; width: 100%; position: absolute;z-index: 99"></div>
+				<div id="char_last"  style="height: 100%; width: 100%;position: absolute;z-index: 1"></div>
+				<div id="char_high"  style="height: 100%; width: 100%;position: absolute;z-index: 2"></div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- Script -->
+<script src="static/assets/js/countAnalysis/energyRank.js"></script>
+<script>
+	//datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
+	/* 点击input框时加载监听事件*/
+	$(".timepicker").each(function () {
+		this.addEventListener('click',myfunc);
+	})
+
+	function myfunc(e){
+		e.currentTarget.blur();
+	}
+</script>

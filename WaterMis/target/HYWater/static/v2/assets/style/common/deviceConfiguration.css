@@ -1,0 +1,329 @@
+/***********************************************************/
+/* scadaNav and  onlineData*/
+/***********************************************************/
+/*devicePic-container*/
+.devicePic-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: url(../img/pumpBK.jpg) 50% 0 no-repeat;
+}
+
+.devicePic-container .devicePic {
+    position: absolute;
+    width: 586px;
+    left: 50%;
+    top: 50%;
+    margin-top: -210px;
+    margin-left: -320px;
+}
+
+.devicePic-container .devicePic .pump-first, 
+.devicePic-container .devicePic .pump-second, 
+.devicePic-container .devicePic .pump-third {
+    position: absolute;
+    width: 25px;
+    height: auto;
+    color: #000;
+    font-size: 16px;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.devicePic-container .devicePic .pump-first {
+    top: 160px;
+    left: 116px;
+}
+
+.devicePic-container .devicePic .pump-second {
+    top: 160px;
+    left: 166px;
+}
+
+.devicePic-container .devicePic .pump-third {
+    top: 160px;
+    left: 218px;
+}
+
+.devicePic-container .devicePic .pump-first .pump-name, 
+.devicePic-container .devicePic .pump-second .pump-name,
+.devicePic-container .devicePic .pump-third .pump-name {
+    width: 100%;
+    height: 20px;
+    background: #fff;
+}
+
+.devicePic-container .devicePic .pump-first .pump-status, 
+.devicePic-container .devicePic .pump-second .pump-status,
+.devicePic-container .devicePic .pump-third .pump-status {
+    width: 100%;
+    height: auto;
+    margin-top: 8px;
+}
+
+.statusDescribe {
+    position: relative;
+    width: 350px;
+    height: auto;
+    margin-top: -18px;
+}
+
+.statusDescribe .describeTitle {
+    width: 332px;
+    height: 20px;
+    margin-bottom: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    border-bottom: 1px solid #aaa;
+}
+
+.statusDescribe ul {
+    margin: 0;
+    padding: 0;
+}
+
+.statusDescribe li {
+    display: inline-block;
+    list-style: none;
+}
+
+.statusDescribe li div {
+    width: 40px;
+    height: 19px;
+    border: 1px solid #aaa;
+    margin-right: 5px;
+    float: left;
+}
+
+.frequency-change { background: #0054ff; }
+.frequency-keep { background: #00b4ff; }
+.pump-rest { background: #000; }
+.pump-alarm { background: #f30000; }
+
+.statusDescribe li span {
+    margin-right: 10px;
+    font-weight: bold;
+    float: left;
+}
+
+.devicePic-container .devicePic .changeArea {
+    float: left;
+    margin-top: -3px;
+    margin-left: 150px;
+}
+
+.devicePic-container .devicePic .changeArea i {
+    color: #1d2939;
+    font-size: 35px;
+    cursor: pointer;
+}
+
+.devicePic-container .devicePic .pumpChoose {
+    position: absolute;
+    top: -30px;
+    left: 0;
+}
+
+.devicePic-container .devicePic .pumpChoose span {
+    color: red;
+    font-size: 18px;
+}
+
+.devicePic-container .devicePic .pumpChoose .pumpChoose-name {
+    margin-right: 20px;
+}
+
+.devicePic-container .backPage {
+    position: absolute;
+    top: 8px;
+    right: 20px;
+}
+
+.devicePic-container .backPage a {
+    color: #1d2939;
+}
+
+.devicePic-container .backPage i {
+
+    margin-right: 5px;
+}
+
+/*monitor-container*/
+.monitor-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    overflow-x: hidden;
+    overflow-y: auto; 
+}
+
+.monitor-title {
+    width: 100%;
+    line-height: 30px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    background: #88aedb;
+}
+
+.monitor-container .pumpFault-point,
+.monitor-container .systemFault-point, 
+.monitor-container .remote-operation {
+    width: 100%;
+    height: auto;
+}
+
+.monitor-container .pumpFault-point caption, 
+.monitor-container .systemFault-point caption {
+    padding: 5px 0;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+    background: #a7c9f1;
+}
+
+.monitor-container .pumpFault-point table>tbody>tr>td, 
+.monitor-container .systemFault-point table>tbody>tr>td, 
+.monitor-container .remote-operation table>tbody>tr>td {
+    font-size: 12px;
+    line-height: 0.88;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.monitor-container .pumpFault-point table>tbody>tr>td:first-child, 
+.monitor-container .remote-operation table>tbody>tr>td:first-child, 
+.monitor-container .systemFault-point table>tbody>tr>td:nth-child(odd) {
+    width: 35%;
+}
+
+.monitor-container .device-type {
+    width: 100%;
+    padding-left: 20px;
+    line-height: 35px;
+    font-size: 12px;
+}
+
+/*status color*/
+.systemFault-point em {
+    display: block;
+    width: 20px;
+    height: 20px;
+    margin: auto;
+    /*border: 1px solid #57615c;*/
+    border-radius: 50%;
+}
+
+.error-point {
+    background: #f72636;
+}
+
+.success-point {
+    background: #30e887;
+}
+
+.onoffswitch-label {
+    display: block;
+    width: 30%;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.onoffswitch-span {
+    display: block;
+    float: left;
+    width: 80%;
+    height: 16px;
+    padding: 0;
+    line-height: 16px;
+    color: #FFF;
+    font-size: 10px;
+    font-family: Trebuchet,Arial,sans-serif;
+    font-weight: 700;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.switch-label-auto {
+    border: 2px solid #a7c9f1;
+}
+
+.switch-span-auto {
+    background-color: #a7c9f1;
+}
+.switch-label-hand {
+    border: 2px solid #dade29;
+}
+
+.switch-span-hand {
+    float: right;
+    background-color: #dade29;
+}
+
+.switch-label-on {
+    border: 2px solid #faaaa3;
+}
+
+.switch-span-on {
+    background-color: #faaaa3;
+}
+
+.switch-label-off {
+    border: 2px solid #8fd4fd;
+}
+
+.switch-span-off {
+    float: right;
+    background-color: #8fd4fd;
+}
+/*media*/
+@media(min-width: 1920px) {
+    .status-container table>thead>tr>th, .status-container table>tbody>tr>td {
+        line-height: 3.5;
+    }
+    .devicePic-container {
+        background: url(../img/pumpBK.jpg) 90% 0 no-repeat;
+    }
+    .monitor-container .pumpFault-point table>tbody>tr>td, 
+    .monitor-container .systemFault-point table>tbody>tr>td, 
+    .monitor-container .remote-operation table>tbody>tr>td {
+        line-height: 2.5;
+        font-size: 13px;
+    }
+    .statusDescribe, 
+    .devicePic-container .devicePic .changeArea {
+        margin-top: 30px;
+    }
+    .devicePic-container .devicePic .changeArea i {
+        font-size: 40px;
+    }
+    .devicePic-container .devicePic .pumpChoose {
+        top: -60px;
+    }
+}
+
+.status-frequency {
+    background: #0054ff;
+}
+.status-power {
+    background: #30e887;
+}
+.status-stop {
+    background: #000000;
+}
+.status-error {
+    background: #f72636;
+}
+
+.status-pic-error {
+    background: url(../img/status-pic-error.png) no-repeat center center;
+}
+.status-pic-power {
+    background: url(../img/status-pic-power.png) no-repeat center center;
+}
+.status-pic-stop {
+    background: url(../img/status-pic-stop.png) no-repeat center center;
+}

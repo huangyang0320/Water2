@@ -463,7 +463,7 @@ public class PumpDeviceController {
 	
 	
 	/**
-	 * 根据项目ID查询设备信息  
+	 * 根据项目ID查询设备信 息
 	 * @return
 	 */
 	@ResponseBody

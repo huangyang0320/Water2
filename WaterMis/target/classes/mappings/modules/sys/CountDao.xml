@@ -1,0 +1,1454 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.sys.dao.CountDao">
+
+	<select id="countValueByName" resultType="com.wapwag.woss.modules.sys.entity.ValueCount">
+		select
+		va.id_device as deviceId,
+		concat(h.name,CASE
+                WHEN d.LOCATION = 1 THEN
+                '-低区'
+                WHEN d.LOCATION = 2 THEN
+                '-中区'
+                WHEN d.LOCATION= 3 THEN '-高区'
+                WHEN d.LOCATION= 4 THEN '-中高区'
+                WHEN d.LOCATION= 5 THEN '-超高区'
+                ELSE '-水泵' END) as pumpHouseName,
+		case
+		truncate(pv * case when ratio is null then 1 else ratio end ,2)
+		when
+		'0.00' then '0' else
+		truncate(pv * case when ratio is null then 1 else
+		ratio end ,2)
+		end pv
+		,
+		concat(va.id_device,va.id_service) as serviceId,
+		h.id_region as areaId,
+		'1' as total
+		from
+
+		(
+		select * from (
+		SELECT
+		id_device,pv,id_service
+		FROM
+		${tableName}
+		where date_time &gt;
+		date_sub(now(), interval 3 Minute) and ( id_service like
+		<if test="deviceId == 'bhyl'">
+			'%\\\\pressure_outwater'
+		</if>
+		<if test="deviceId == 'sbpl'">
+			'%frequency_%'
+		</if>
+		<if test="deviceId == 'ssdl'">
+			'%degree_total'
+		</if>
+		<if test="deviceId == 'ssll'">
+			'%flowinstant_outwater'
+		</if>
+		<if test="deviceId == 'ljll'">
+			'%flowtotal_outwater'
+		</if>
+		<if test="deviceId == 'jkyl'">
+			'%pressure_szjs1'
+		</if>
+		and pv &gt; 0 and pv &lt; 1000000
+		)
+		order by date_time desc
+
+		) temp group by temp.id_device
+
+		)
+		va left join
+		device d on va.id_device = d.id
+		left join pump_house h on
+		d.id_pump_house = h.id
+		left join services s on s.id = va.id_service
+		where h.id is not null
+		union
+		select
+		va.id_device as deviceId,
+		concat(h.name,CASE
+                WHEN d.LOCATION = 1 THEN
+                '-低区'
+                WHEN d.LOCATION = 2 THEN
+                '-中区'
+                WHEN d.LOCATION= 3 THEN '-高区'
+                WHEN d.LOCATION= 4 THEN '-中高区'
+                WHEN d.LOCATION= 5 THEN '-超高区'
+                ELSE '-水泵' END) as pumpHouseName,
+		case
+		truncate(pv * case when ratio is null then 1 else ratio end ,2)
+		when
+		'0.00' then '0' else
+		truncate(pv * case when ratio is null then 1 else
+		ratio end ,2)
+		end pv
+		,
+		concat(va.id_device,va.id_service) as serviceId,
+		h.id_region as areaId,
+		'2' as total
+		from
+
+		(
+		select * from (
+		SELECT
+		id_device,pv,id_service
+		FROM
+		service_values_month
+		where id_device not in (select id_device from ${tableName} where date_time &gt;
+		date_sub(now(), interval 3 Minute) group by id_device) and ( id_service like
+		<if test="deviceId == 'bhyl'">
+			'%\\\\pressure_outwater'
+		</if>
+		<if test="deviceId == 'sbpl'">
+			'%frequency_%'
+		</if>
+		<if test="deviceId == 'ssdl'">
+			'%degree_total'
+		</if>
+		<if test="deviceId == 'ssll'">
+			'%flowinstant_outwater'
+		</if>
+		<if test="deviceId == 'ljll'">
+			'%flowtotal_outwater'
+		</if>
+		<if test="deviceId == 'jkyl'">
+			'%pressure_szjs1'
+		</if>
+		and pv &gt; 0 and pv &lt; 1000000
+		)
+		order by date_time desc
+
+		) temp group by temp.id_device
+
+		)
+		va left join
+		device d on va.id_device = d.id
+		left join pump_house h on
+		d.id_pump_house = h.id
+		left join services s on s.id = va.id_service
+		where h.id is not null
+	</select>
+
+	<select id="statisticDevivceSum" resultType="java.lang.String">
+		select count(id)
+		from
+		device
+		where id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+	</select>
+
+	<select id="statisticElectricity" resultType="java.lang.String">
+		select
+		truncate(sum(va.pv),0) from (
+		select temp.pv from (
+		SELECT id_service,pv
+		FROM ${tableName} where date_time &gt;
+		date_sub(now(), interval
+		5
+		Minute) and ( tag_name like
+		'%总用功电度%' ) and pv &gt; 0 and pv &lt; 1000000 order by
+		date_time desc
+
+		) temp
+		group by
+		temp.id_service
+		) va
+	</select>
+
+	<select id="statisticFlow" resultType="java.lang.String">
+		select
+		truncate(sum(va.pv),0) from (
+		select temp.pv from (
+		SELECT id_service,pv
+		FROM ${tableName} where date_time &gt;
+		date_sub(now(), interval
+		5
+		Minute) and ( tag_name like
+		'%累计流量%' ) and pv &gt;
+		0 and pv &lt; 1000000 order by
+		date_time
+		desc
+
+		) temp group by
+		temp.id_service
+		) va
+	</select>
+
+	<select id="statisticDevivceRunTime" resultType="java.lang.String">
+		SELECT
+		createtime FROM device 
+		where 
+		id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		order by createtime limit 0,1
+	</select>
+
+	<select id="statisticSysTime" resultType="java.lang.String">
+		select
+		param_Value as
+		paramValue
+		from sys_parameter where id = '1'
+	</select>
+	<select id="statisticAlaemDevices" resultType="java.lang.String">
+		SELECT 
+	    count(*)
+	FROM
+		alarm_statistics alarm
+			JOIN
+		alarm_task_description atd ON atd.function_name = alarm.function_name
+		WHERE
+			alarm.device_code IN (
+				SELECT 
+					authobject_id
+				FROM
+					permission_info
+				WHERE
+					role_id IN (SELECT 
+							role_id
+						FROM
+							sys_user_role
+						WHERE
+							user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+				GROUP BY authobject_id
+			)
+		    and (start_date &gt; substring(now(),1,7)  or end_date &gt; substring(now(),1,7))
+	</select>
+
+	<select id="statisticDevivceArea" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		SELECT 
+		    area.id,
+		    area.name,
+		    CASE
+		        WHEN ss.memo &gt; 0 THEN ss.memo
+		        ELSE 0
+		    END memo
+		FROM
+		    regional area
+		        JOIN
+		    (SELECT 
+		        r.id, r.name, COUNT(r.id) AS memo
+		    FROM
+		        device d
+		    JOIN project p ON d.id_project = p.id
+		    JOIN regional r ON p.id_region = r.id
+		    WHERE
+		        r.id IS NOT NULL 
+		        and d.id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		    GROUP BY r.id) ss ON area.id = ss.id
+		union
+		select id,name,'0' memo from regional where
+		parent_id &lt;&gt; '0' and
+		 id not in
+		(SELECT 
+		    area.id
+		FROM
+		    regional area
+		        JOIN
+		    (SELECT 
+		        r.id, r.name, COUNT(r.id) AS memo
+		    FROM
+		        device d
+		    JOIN project p ON d.id_project = p.id
+		    JOIN regional r ON p.id_region = r.id
+		    WHERE
+		        r.id IS NOT NULL 
+		        and d.id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		    GROUP BY r.id) ss ON area.id = ss.id)
+
+	</select>
+
+	<select id="countDeviceAreaChina" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select
+		r2.region_name as name,count(r2.region_id) as memo from device d join
+		pump_house p on p.id = d.ID_PUMP_HOUSE
+		join sys_region r on r.region_id = p.id_region
+
+		join sys_region r1 on r1.region_id = r.parent_region_id
+
+		join sys_region r2 on r2.region_id = r1.parent_region_id
+		group by r2.region_id
+	</select>
+	
+	<select id="countDeviceAreaChinaById" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		SELECT 
+		    r2.region_name AS name, COUNT(r2.region_id) AS memo
+		FROM
+		    device d
+		        JOIN
+		    pump_house p ON p.id = d.ID_PUMP_HOUSE
+			    join 
+			project j ON p.id_project = j.id
+		        JOIN
+		    sys_region r ON r.region_id = j.id_region
+		        JOIN
+		    sys_region r1 ON r1.region_id = r.parent_region_id
+		        JOIN
+		    sys_region r2 ON r2.region_id = r1.parent_region_id
+			
+			where d.id IN (
+					SELECT 
+						authobject_id
+					FROM
+						permission_info
+					WHERE
+						role_id IN (SELECT 
+								role_id
+							FROM
+								sys_user_role
+							WHERE
+								user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+					GROUP BY authobject_id
+				) 
+			
+		GROUP BY r2.region_id
+	</select>
+
+	<select id="statisticDevivceType" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		SELECT s.label as
+		name, count(d.type) as memo FROM device d
+
+		left join sys_dict s on
+		d.type = s.value
+		where d.type is not null
+		and d.type &lt;&gt; ''
+		and d.id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		group by
+		d.type
+	</select>
+
+	<select id="statisticDevivceTypeNull" resultType="java.lang.String">
+		select
+		count(id) from device where (type is null or type = '')
+		and id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+	</select>
+
+	<select id="statisticElectricityTime" resultType="java.lang.String">
+		select
+		truncate(sum(va.pv),0) from (
+		select temp.pv from (
+		SELECT id_service,pv
+		FROM ${tableName} where
+		date_time between #{beginTime} and #{endTime}
+		and
+		( tag_name like
+		'%总用功电度%' ) and pv &gt; 0 and pv &lt; 1000000
+		order by
+		date_time desc
+
+		) temp group by
+		temp.id_service
+		) va
+	</select>
+	<insert id="saveCountValue">
+		INSERT INTO electricity_statistics (
+		ID,
+		total,
+		increase
+		) VALUES (
+		#{dateTime},
+		#{total},
+		#{pv}
+		)
+	</insert>
+	<select id="getCountValues" resultType="com.wapwag.woss.modules.sys.entity.ValueCount">
+		select
+		id as dateTime ,
+		total, increase as pv from electricity_statistics order
+		by id desc
+		limit 0,30
+	</select>
+	<select id="statisticRepaicType" resultType="com.wapwag.woss.modules.biz.entity.Device">
+
+		select area.name
+		,
+		count(area.id) as memo from (
+		select r.project_id,p.id_region from
+		pump_device_repair_info r left join
+		project p on r.project_id = p.id
+		where p.id is not null
+		) re left join regional area on area.id =
+		re.id_region group by area.id
+	</select>
+	<select id="statisticAlarmType" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		SELECT 
+		    t.alarm_type name, COUNT(t.alarm_type) memo
+		FROM
+		    alarm_statistics a
+		        JOIN
+		    alarm_task_description t ON a.function_name = t.function_name
+		WHERE
+		    device_code IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		and   start_date > SUBSTRING(NOW(), 1, 7)
+		GROUP BY t.alarm_type
+	</select>
+	<select id="statRealAlarm" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		SELECT 
+		    CASE
+		        WHEN alarm_level = '1' THEN '一级'
+		        WHEN alarm_level = '2' THEN '二级'
+		        WHEN alarm_level = '3' THEN '三级'
+		        WHEN alarm_level = '4' THEN '四级'
+		        WHEN alarm_level = '5' THEN '五级'
+		        ELSE '其它'
+		    END name,
+		    COUNT(alarm_level) memo
+		FROM
+		    alarm_statistics a
+		        JOIN
+		    alarm_task_description t ON a.function_name = t.function_name
+		WHERE
+		    a.start_date >= SUBSTRING(NOW(), 1, 7)
+		        AND a.device_code = #{deviceId}
+		GROUP BY alarm_level
+	</select>
+	
+	<select id="pumpRatedPower" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		SELECT 
+		    label name,
+		     SUM(rated_power) memo
+		FROM
+		    device_pump_label l
+		        JOIN
+		    (SELECT 
+		        d.id,
+		            CASE
+		                WHEN s.label IS NULL THEN '低 区'
+		                ELSE s.label
+		            END label
+		    FROM
+		        device d
+		    LEFT JOIN (SELECT 
+		        label, value, sort
+		    FROM
+		        sys_dict
+		    WHERE
+		        type = 'device_location') s ON d.LOCATION = s.value
+		    WHERE
+		        id_pump_house IN (SELECT 
+		                id_pump_house
+		            FROM
+		                device
+		            WHERE
+		                id = #{deviceId})) dl ON dl.id = l.device_id
+		GROUP BY dl.label
+	</select>
+	
+	<select id="statRealAlarmType" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		SELECT 
+		   alarm_type name,
+		    COUNT(alarm_type) memo
+		FROM
+		    alarm_statistics a
+		        JOIN
+		    alarm_task_description t ON a.function_name = t.function_name
+		WHERE
+		    a.start_date >= SUBSTRING(NOW(), 1, 7)
+		        AND a.device_code = #{deviceId}
+		GROUP BY t.alarm_type
+	</select>
+	<select id="statisticHourEle" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select right(name,2) as
+		name,memo from (
+		select
+		id as name , increase as memo from
+		electricity_statistics where id
+		&gt;= #{beginTime} and id &lt;=
+		#{endTime} and increase
+		&lt; 10000 order
+		by id desc
+		) vals order
+		by
+		vals.name asc
+	</select>
+	<select id="statisticDayEle" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select * from (
+		select
+		substring(name,9,2) as name,pv from (
+		select id as
+		name,total as pv from
+		electricity_statistics
+		where id &gt;=
+		#{beginTime} and id &lt;
+		#{endTime}
+		order by total desc
+		) aa ) bb group by bb.name order by
+		bb.name asc
+	</select>
+	<select id="statisticMouthEle" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select * from (
+		select
+		substring(name,6,2) as name,pv from (
+		select left(id,7)
+		as name,total as
+		pv from electricity_statistics
+		where id &gt;=
+		#{beginTime} and id &lt;
+		#{endTime}
+		order by total desc
+		) aa ) bb group by bb.name order by
+		bb.name asc
+	</select>
+	<select id="statisticHourAla" resultType="com.wapwag.woss.modules.biz.entity.Device">
+
+		select aa.beginTime as
+		name , count(aa.beginTime) as memo from
+		(
+
+		select
+		DATE_FORMAT(start_date,'%Y-%m-%d %H') as beginTime from alarm_statistics
+		where start_date between #{beginTime} and #{endTime}
+		and device_code IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		order by
+		start_date
+		) aa group by aa.beginTime
+	</select>
+	<update id="modSystemRunTime">
+		update sys_parameter set param_value = #{beginTime}
+		where id = '1' and
+		param_name = 'SYS_RUN_TIME'
+	</update>
+	<select id="oneAlarmRecords" resultType="com.wapwag.woss.modules.sys.entity.Alarm">
+		select
+		s.label as
+		alarmType,
+		a.alarmTime,
+		a.alarmContent,
+		ss.label as alarmReason
+		from (
+		select
+		alarm_time as alarmTime,
+		alarm_Content as alarmContent,
+		alarm_type,
+		alarm_Reason
+		from alarm_info
+		where
+		device_id = #{deviceId}
+		and
+		alarm_time &lt;= #{endTime}
+		and
+		alarm_time
+		&gt;= #{beginTime}
+
+		order by
+		alarm_time
+		desc
+		) a
+		left join ( select
+		value,label from sys_dict
+		where type
+		= 'alarm' ) s on a.alarm_type =
+		s.value
+		left join ( select
+		value,label
+		from sys_dict where type =
+		'alarm_reason' ) ss on
+		a.alarm_Reason =
+		ss.value
+		group by a.alarmTime
+	</select>
+	<select id="oneRepairRecords" resultType="com.wapwag.woss.modules.sys.entity.PumpDeviceRepair">
+		select
+		user_id as
+		userId,
+		repair_time as repairTime,
+		repair_content as repairContent,
+		ACCESSORIES_XH as accessoriesXh,
+		FAULT_REASON as faultReason,
+		solution
+		as solution,
+		MEMO as memo
+		from pump_device_repair_info
+		where device_id =
+		#{deviceId}
+		and
+		repair_time &lt;= #{endTime}
+		and
+		repair_time &gt;=
+		#{beginTime}
+		order by repair_time
+		desc
+	</select>
+	<select id="pumpNames" resultType="java.lang.String">
+		select * from (
+		select
+		substring(f.memo,1,2) memo from services s join
+		function f on f.id =
+		s.id_function
+		where (f.memo like '%工频运行%' or f.memo
+		like '%变频运行%' or
+		f.memo like '%#水泵运行%') and s.id_device = #{deviceId}
+		) vv group by memo
+	</select>
+	<select id="pumpHistoryStatis" resultType="com.wapwag.woss.modules.sys.entity.PumpServiceValue">
+		select
+		concat(temp.ID_DEVICE,temp.id_service) as tagName,temp.pv from (
+		select ID_DEVICE,id_service ,pv from PUMP_run_statis where id_device
+		&lt;&gt; '' order by
+		date_time desc
+		) temp group by
+		temp.id_device,temp.id_service
+	</select>
+	<insert id="savePumpRunStatis">
+		INSERT INTO PUMP_run_statis(
+		id_device,
+		id_service,
+		tag_name,
+		date_time,
+		pv,
+		status
+		) VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.deviceId},
+			#{item.serviceId},
+			#{item.tagName},
+			#{item.beginTime},
+			#{item.pv},
+			#{item.remarks}
+			)
+		</foreach>
+	</insert>
+	<select id="pumpHistoryMaxTime" resultType="java.lang.String">
+		select date_time from
+		PUMP_run_statis order by date_time desc limit 0,1
+	</select>
+	<select id="pumpRunTimeStatis" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		SELECT 
+		    name, SUM(value) memo
+		FROM
+		    (SELECT 
+		        service_id name,
+		            TIMESTAMPDIFF(SECOND, start_date, end_date) / 3600 value
+		    FROM
+		        service_values_run_statistics
+		    WHERE
+		        device_code = #{deviceId}
+		            AND start_date &gt; SUBSTRING(NOW(), 1, 7)
+		            AND type = '2') temp
+		GROUP BY name
+	</select>
+	<select id="pumpRunTimesStatis" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select
+		Substring(tag_name,1,2) as
+		name ,count(tag_name) as memo
+		from
+		pump_run_statis
+		where id_device =
+		#{deviceId}
+		and date_time &gt;
+		#{beginTime} and date_time &lt;
+		#{endTime}
+		and status &gt; 0 group by
+		Substring(tag_name,1,2)
+	</select>
+	<select id="pumpRatedStatis" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select PUMP_NO as name
+		,RATED_POWER as memo from device_pump_label where
+		device_id =
+		#{deviceId}
+		group by pump_no
+	</select>
+	<select id="lastMouthPV" resultType="java.lang.String">
+		select total from
+		electricity_statistics where id &lt;= #{beginTime} order by total desc
+		limit 0,1
+	</select>
+	<select id="qryMinMaxConf" resultType="com.wapwag.woss.modules.sys.entity.ValueCount">
+		SELECT
+			concat( s.id_device, s.id ) AS serviceId,
+			IFNULL( s.RangeMinimum, f.MIN_RV ) AS min,
+			IFNULL( s.RangeMaximum, f.MAX_RV ) AS max 
+		FROM
+			services s
+			LEFT JOIN FUNCTION f ON f.ID = s.ID_FUNCTION 
+		WHERE
+			s.NAME LIKE '%后压力%' 
+			OR s.NAME LIKE '%频率%' 
+			OR s.NAME LIKE '%瞬时流量%'
+	</select>
+	<select id="countLocation" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select label as name ,
+		count(label) as memo from (
+		select * from
+		(select LOCATION from device
+		where LOCATION is not null ) d
+		left join (select label,value,sort from
+		sys_dict where type =
+		'device_location') s
+		on d.LOCATION = s.value
+		) dsd
+		group by LOCATION order by sort asc
+	</select>
+	<select id="statisticPumpPressure" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select d.name as
+		name,
+		va.pv as memo from (
+		select * from (
+		SELECT id_device , pv FROM
+		${tableName} where tag_name like
+		'%后压力%' and pv &gt; 0
+		order by
+		date_time
+		) aa group by id_device ) va left join device d on
+		d.id =
+		va.id_device
+
+	</select>
+
+	<select id="staticEle" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select
+		substring(name,#{type},2) name,memo from(
+		select
+		substring(date_time,1,#{subIndex}) as name ,sum(pv) memo from
+		service_values_summary
+		where date_time &lt; #{endTime} and date_time
+		&gt;
+		#{beginTime}
+		and eu = 'kWh' and pv &lt; 9999
+		
+		<if test="null == userId">
+		    and id_device = #{deviceId}
+		</if>
+		<if test="null != userId">
+		    and id_device IN (
+				SELECT 
+					authobject_id
+				FROM
+					permission_info
+				WHERE
+					role_id IN (SELECT 
+							role_id
+						FROM
+							sys_user_role
+						WHERE
+							user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+				GROUP BY authobject_id
+			)
+		</if>
+		group by
+		substring(date_time,1,#{subIndex})
+		) va
+	</select>
+	<select id="statisticPumpSum" resultType="java.lang.String">
+		select count(id)
+		from
+		pump_house
+		where id in (
+		    select id_pump_house from device where 
+				    id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		)
+	</select>
+	<select id="statPower" resultType="java.lang.String">
+		select sum(pv) from (
+		select
+		replace(RATED_POWER,'KW','') pv from device_pump_label
+		where device_id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		) v
+	</select>
+	
+	<select id="devEleCom" resultType="com.wapwag.woss.modules.biz.entity.Device">
+        SELECT 
+		    label name, SUM(pv) memo
+		FROM
+		    (SELECT 
+		        CASE
+		                WHEN s.label IS NULL THEN '低 区'
+		                ELSE s.label
+		            END label,
+		            t1.pv
+		    FROM
+		        (SELECT 
+		        id_device id, SUM(pv) pv
+		    FROM
+		        service_values_summary
+		    WHERE
+		        id_pump_house IN (SELECT 
+		                id_pump_house
+		            FROM
+		                device
+		            WHERE
+		                id = #{devId})
+		            AND eu = 'kWH'
+		            AND date_time &gt;= SUBSTRING(NOW(), 1, 7)
+		    GROUP BY id_device) t1
+		    JOIN device d ON d.id = t1.id
+		    LEFT JOIN (SELECT 
+		        label, value, sort
+		    FROM
+		        sys_dict
+		    WHERE
+		        type = 'device_location') s ON d.LOCATION = s.value) t2
+		GROUP BY label
+    </select>
+
+	<select id="areaProjectRepairStat" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select
+		count(r.pump_house_id)
+		memo
+		, a.name name from (select pump_house_id
+		from
+		pump_device_repair_info
+		where device_id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		 group
+		by project_id) r join pump_house p on
+		r.pump_house_id = p.id join
+		regional a on p.id_region = a.id
+
+	</select>
+
+	<select id="traSuppPumpStat" resultType="com.wapwag.woss.modules.biz.entity.Device">
+				
+		SELECT 
+		    COUNT(self_control_manufacturers) memo,
+		    self_control_manufacturers name
+		FROM
+		    (SELECT 
+		        CASE
+		                WHEN self_control_manufacturers IS NULL THEN '无厂家'
+		                WHEN self_control_manufacturers = '' THEN '无厂家'
+		                ELSE self_control_manufacturers
+		            END self_control_manufacturers
+		    FROM
+		        pump_house
+		    WHERE
+		        id IN (SELECT 
+		                id_pump_house
+		            FROM
+		                device
+		            WHERE
+		                id IN (SELECT 
+		                        authobject_id
+		                    FROM
+		                        permission_info
+		                    WHERE
+		                        role_id IN (SELECT 
+		                                role_id
+		                            FROM
+		                                sys_user_role
+		                            WHERE
+		                                user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+		                    GROUP BY authobject_id))) ph
+		GROUP BY self_control_manufacturers
+	</select>
+
+	<select id="countAlarmTimesStat" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select DATE_FORMAT(ss.alarm,'%Y-%m') as
+		name,count(ss.alarm) as memo from (
+		select
+		DATE_FORMAT(alarm.start_date,'%Y-%m-%d') as alarm
+		from
+		alarm_statistics alarm
+		where
+		alarm.start_date &gt;= subString(now(),1,4)
+		<if test="'user' == type">
+		    and device_code IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		</if>
+		
+		<if test="'dev' == type">
+		    and device_code = #{userId}
+		</if>
+		order
+		by
+		alarm.start_date desc
+		) ss group by DATE_FORMAT(ss.alarm,'%Y-%m')
+	</select>
+	<select id="countMaintenanceTrend" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select DATE_FORMAT(ss.alarm,'%Y-%m') as
+		name,count(ss.alarm) as memo from (
+		select
+		DATE_FORMAT(alarm.repair_time,'%Y-%m-%d') as alarm
+		from
+		pump_device_repair_info alarm
+		where
+		alarm.repair_time &gt;=
+		subString(now(),1,4)
+		and device_id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		order by alarm.repair_time desc
+		) ss group by
+		DATE_FORMAT(ss.alarm,'%Y-%m')
+	</select>
+
+	<select id="countMaintenanceTrendDev" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select DATE_FORMAT(ss.alarm,'%Y-%m') as
+		name,count(ss.alarm) as memo from (
+		select
+		DATE_FORMAT(alarm.repair_time,'%Y-%m-%d') as alarm
+		from
+		pump_device_repair_info alarm
+		where
+		alarm.repair_time &gt;=
+		subString(now(),1,4)
+		and device_id  = #{devId}
+		order by alarm.repair_time desc
+		) ss group by
+		DATE_FORMAT(ss.alarm,'%Y-%m')
+	</select>
+	
+	<select id="statisticEleByLocation" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select count(id)
+		as
+		id,
+		case when id = '00' then '24' else id end as name
+		,
+		truncate(sum(increase),2)
+		as memo from (
+		SELECT substring(date_time,12,2) as id  , pv increase FROM
+		service_values_summary where date_time &gt; substring(now(),1,4)
+		and pv &lt; 9999
+		and eu = 'kWh'
+		) aa
+		group by id
+	</select>
+
+	<select id="statisticEleByDeviceId" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select count(id)
+		as
+		id,
+		case when id = '00' then '24' else id end as name
+		,truncate(sum(increase),2)
+		as memo from (
+		SELECT
+		substring(sv.date_time,12,2) as id , sv.pv increase
+		FROM
+		service_values_summary  sv 
+		where date_time &gt; #{beginTime} and
+		id_device
+		= #{deviceId}  and eu = 'kWh' and pv &lt; 9999
+		) aa
+		group by id
+	</select>
+
+	<select id="devicePicUrl" resultType="java.lang.String">
+		select ALL_PIC_URL from
+		pump_house where id in (select id_pump_house from device where id =
+		#{deviceId}) limit 0,1
+	</select>
+
+	<select id="pumpRunTime" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select id_device id,pv name
+		from(
+		select * from ${tableName} where date_time &gt;
+		date_sub(now(), interval 5
+		Minute) and tag_name like '%运行%时%'
+		order
+		by pv
+		desc
+		) tt group by id_device
+	</select>
+
+	<select id="statRat" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select sum(RATED_POWER)
+		id,sum(SBEDGSYC) name from device_pump_label where device_id =
+		#{deviceId} group by device_id
+	</select>
+
+	<select id="pumpPow" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select sum(RATED_POWER)
+		id,sum(RATED_CURRENT) name from device_electrical_label where
+		device_id = #{deviceId} group by device_id
+	</select>
+
+	<select id="statEle" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select id_device
+		id,pv name
+		from(
+		select * from ${tableName} where date_time &gt;
+		date_sub(now(), interval 5
+		Minute) and
+		( tag_name like
+		'%累计功耗%') and pv &lt; 1000000 order by
+		pv desc
+		) tt
+		group by id_device
+	</select>
+	<select id="statFlow" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select id_device
+		id,pv name
+		from(
+		select * from ${tableName} where date_time &gt;
+		date_sub(now(), interval 5
+		Minute) and
+		( tag_name like
+		'%累计流量%' ) order
+		by
+		pv desc
+		) tt
+		group by id_device
+	</select>
+	<select id="videoCode" resultType="java.lang.String">
+		select group_concat(hkVideoDeviceId Separator  '_')  from
+		video_info where pump_house_id in (select id_pump_house from device
+		where id = #{deviceId}) group by pump_house_id
+	</select>
+
+	<select id="passStat" resultType="com.wapwag.woss.modules.biz.entity.Device">
+		select id_service name,
+		case
+		truncate(pv * case when ratio is null then 1 else ratio end ,2)
+		when
+		'0.00' then '0' else
+		truncate(pv * case when ratio is null then 1 else
+		ratio end ,2)
+		end memo
+		from (
+		select * from (
+		select pv ,id_service
+		from
+		${tableName}
+		where date_time &gt;
+		date_sub(now(), interval 5
+		Minute) and id_device =
+		#{deviceId} and
+		( id_service like
+		'%OutletPressure' or id_service like '%GivenPressure'
+		or id_service
+		like '%InletPressure')
+		order by date_time desc
+		) temp
+		group by id_service
+		) va left join services s on s.id = va.id_service
+	</select>
+
+	<select id="getDoorUUId" resultType="java.lang.String">
+		select hkAccessDeviceId from
+		access_device where pump_house_id in
+		(select id_pump_house from device
+		where id = #{deviceId}) limit 0,1
+	</select>
+
+	<select id="getDoorControlUrl" resultType="java.lang.String">
+		select param_value
+		from sys_parameter where param_name = 'DOOR_CONTROAL_URL'
+	</select>
+
+	<select id="outPre" resultType="java.lang.String">
+		select
+		case
+		truncate(pv * case when
+		ratio is null then 1 else ratio end ,2)
+		when
+		'0.00' then '0' else
+		truncate(pv * case when ratio is null then 1 else
+		ratio end ,2)
+		end memo
+		from (
+		select id_service, pv from
+		${tableName} where date_time
+		&gt;
+		date_sub(now(), interval 5
+		Minute) and id_device =
+		#{deviceId} and
+		pv &gt; 0 and
+		id_service like '%OutletPressure%' order
+		by date_time desc
+		limit 0,13
+		) va left join services s on s.id =
+		va.id_service
+	</select>
+
+	<select id="inPre" resultType="java.lang.String">
+		select
+		case
+		truncate(pv * case when
+		ratio is null then 1 else ratio end ,2)
+		when
+		'0.00' then '0' else
+		truncate(pv * case when ratio is null then 1
+		else
+		ratio end ,2)
+		end memo
+		from (
+		select id_service, pv from
+		${tableName} where date_time
+		&gt;
+		date_sub(now(), interval 5
+		Minute) and id_device =
+		#{deviceId} and
+		pv &gt; 0 and
+		id_service like '%InletPressure%' order
+		by date_time desc
+		limit 0,13
+		)
+		va left join services s on s.id =
+		va.id_service
+	</select>
+
+	<select id="gitPre" resultType="java.lang.String">
+	
+		select
+		case
+		truncate(pv * case when
+		ratio is null then 1 else ratio end ,2)
+		when
+		'0.00' then '0' else
+		truncate(pv * case when ratio is null then 1
+		else
+		ratio end ,2)
+		end memo
+		from (
+		select id_service, pv from
+		${tableName} where date_time
+		&gt;
+		date_sub(now(), interval 5
+		Minute) and id_device =
+		#{deviceId} and
+		pv &gt; 0 and
+		id_service like '%GivenPressure%' order
+		by date_time desc
+		limit 0,13
+		)
+		va left join services s on s.id =
+		va.id_service
+	</select>
+	
+	<select id="summaryMaxVals" resultType="java.util.HashMap">
+	    SELECT
+		    concat(id_device,'_',eu) name,
+		    concat(truncate(SUBSTRING_INDEX(
+		        group_concat(
+		            max
+		            ORDER BY
+		                date_time DESC
+		        ),
+		        ',',
+		        1
+		    ),2),'') AS value
+		FROM
+		    service_values_summary
+		GROUP BY
+		    id_device,eu
+	</select>
+	
+	<select id="getDevIdsByUser" resultType="java.lang.String">
+	    SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+	</select>
+	<select id="statSummary" resultType="java.lang.String">
+		SELECT 
+		    truncate(SUM(max),2)
+		FROM
+		    (SELECT 
+		        *
+		    FROM
+		        (SELECT 
+		        *
+		    FROM
+		        service_values_summary
+		    WHERE
+		        <if test="'ele' == operType">
+		            eu = 'kWh' and
+		        </if>
+		        <if test="'ele' != operType">
+		            eu = 'm3' and
+		        </if>
+		        id_device IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		
+		    ORDER BY date_time DESC limit 10000) temp
+		    GROUP BY id_device) tem
+		GROUP BY eu
+	</select>
+	
+	<select id="getDevIdsByArea" resultType="java.lang.String">
+	    select
+		concat(dev.id,'')
+		from regional d join pump_house p on p.id_region = d.id
+		join device dev on dev.id_pump_house = p.id
+		where dev.id in 
+		(	SELECT 
+		authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+		<if test="'-1' != areaId">
+		    and d.id = #{areaId}
+		</if>
+	</select>
+	<select id="deviceStatus" resultType="java.util.HashMap">
+	    SELECT 
+		    id_device dev,
+		    CASE
+		        WHEN t2.device_code IS NULL THEN '0'
+		        ELSE '1'
+		    END status
+		FROM
+		    (SELECT 
+		        id_device
+		    FROM
+		        (SELECT 
+		        *
+		    FROM
+		        service_values_${tableTag}
+		    WHERE
+		        date_time &gt; DATE_SUB(NOW(), INTERVAL 3 MINUTE)
+		    ORDER BY date_time DESC) temp
+		    GROUP BY id_device) t1
+		        LEFT JOIN
+		    (SELECT 
+		        device_code
+		    FROM
+		        alarm_statistics
+		    WHERE
+		        end_date &gt; DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+		            AND alarm_status = '1'
+		    GROUP BY device_code) t2 ON t1.id_device = t2.device_code
+	</select>
+	
+	<select id="devPump" resultType="java.util.HashMap">
+	    select id dev  , ID_PUMP_HOUSE pump from device 
+	</select>
+	
+	<select id="getAllSummaryByRole" resultType="java.lang.String">
+		SELECT 
+		    concat(truncate(SUM(pv),2),'')
+		FROM
+		    service_values_summary
+		WHERE
+		    eu = #{type}  and pv &lt; 1000
+		        AND id_device IN (SELECT 
+		            authobject_id
+		        FROM
+		            permission_info
+		        WHERE
+		            role_id IN (SELECT 
+		                    role_id
+		                FROM
+		                    sys_user_role
+		                WHERE
+		                    user_id = #{userId})
+		                OR role_id IN (SELECT 
+		                    role_id AS authobject_id
+		                FROM
+		                    sys_office_role_new
+		                WHERE
+		                    office_id IN (SELECT 
+		                            office_id
+		                        FROM
+		                            sys_user
+		                        WHERE
+		                            id = #{userId}))
+		        GROUP BY authobject_id)
+	</select>
+	
+	<select id="getDevSummaryByDev" resultType="java.lang.String">
+		SELECT 
+		    concat(truncate(SUM(pv),2),'')
+		FROM
+		    service_values_summary
+		WHERE
+		    eu = #{type} and id_device = #{devId} and pv &lt; 1000
+	</select>
+	
+	<select id="getConFPower" resultType="java.lang.String">
+	    select POWER_RATING from  device_set_label where DEVICE_ID = #{devId} limit 1
+	</select>
+	
+	<select id="getSBEDGSYC" resultType="java.lang.String">
+	    select SBEDGSYC from  device_set_label where DEVICE_ID = #{devId} limit 1
+	</select>
+	
+	<select id="devRunTime" resultType="java.lang.String">
+	    select concat(createtime,'') from device where id = #{devId} limit 1
+	</select>
+</mapper>

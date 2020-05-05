@@ -1,0 +1,96 @@
+<style type="text/css">
+	/*
+	 * inline styles
+	 * history data styles
+	 */
+	#page-inner {
+        padding: 0 10px 10px 10px;
+    }
+    .panel-body {
+        padding: 6px 15px;
+    }
+	 #highcharts-pump-performanceMatrix
+	 {
+	 	position: relative;
+	 	width: 100%;
+		height: 700px;
+	 	overflow: hidden;
+	 }
+	.styleNone{
+		display: none;
+	}
+
+
+</style>
+<link rel="stylesheet" href="static/assets/css/kkpager_blue.css" />
+<div id="page-inner">
+	<div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div id="selectedDevice"></div>
+        </div>
+    </div>
+	<div class="row">
+		<div class="col-xs-12 col-md-12">
+			<div class="chart-time">
+				<div class="time-length" id="time-length">
+					<label>水泵性能矩阵数据 : </label>
+					<select id="pumpModel" name="pumpModel" onChange="findHz()">
+					</select>
+					<label for="hz">赫兹 : </label>
+					<select  id="hz" name="hz" onChange="onLiftTablClick()">
+						<option value="0">请选择</option>
+					</select>
+				</div>
+				<!--<button class="download-data btn-primary" id="export">导出数据</button>-->
+			</div>
+		</div>
+	</div>
+    <!--/.row-->
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default">
+				<ul id="myTab" class="nav nav-tabs">
+					<li class="active" id="myTab-li"><a href="#tab-flowLift" data-toggle="tab" @click="redrawLine" onclick="onLiftTablClick()">流量扬程曲线图</a></li>
+					<li><a href="#realtime-chart" data-toggle="tab" @click="redrawLine" onclick="onPowerTablClick()">流量功率曲线图</a></li>
+					<li><a href="#realtime-chart" data-toggle="tab" @click="redrawLine" onclick="onEfficiencyTablClick()">流量效率曲线图</a></li>
+					<li><a href="#realtime-table" data-toggle="tab" onclick="realDataTablClick()">水泵性能矩阵数据</a></li>
+				</ul>
+                <div class="panel-body">
+                    <div class="col-md-12 col-sm-12 col-xs-12" id="tab-flowLift">
+                        <div id="highcharts-pump-performanceMatrix" class="chart-height"></div>
+                        <!-- tongbi chart -->
+                    </div>
+					<div class="reportContainer" style="display: none">
+						<div class="tableContainer">
+							<table class="table table-hover">
+								<thead>
+								<tr>
+									<th>水泵型号</th>
+									<th>工作频率</th>
+									<th>流量m³/小时</th>
+									<th>扬程m</th>
+									<th>输入功率KW</th>
+									<th>输出功率KW</th>
+									<th>效率</th>
+									<th>功率因数</th>
+								</tr>
+								</thead>
+								<tbody id="tableList">
+
+								</tbody>
+							</table>
+						</div>
+						<div id="kkpager" style="margin: 0 15px;"></div>
+					</div>
+             	 </div>
+            <!-- panel -->
+        	</div>
+        <!-- col-md-12 -->
+    	</div>
+	</div>
+    <!-- /. ROW  -->
+</div>
+
+<!-- /. PAGE INNER  -->
+<script src="static/assets/js/realtimeMonitor/pumpPerformanceMatrix.js"></script>
+<script src="static/assets/js/kkpager.min.js"></script>

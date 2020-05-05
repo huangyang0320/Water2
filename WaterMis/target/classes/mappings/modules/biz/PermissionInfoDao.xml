@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.PermissionInfoDao">
+    
+	<sql id="permissionInfoColumns">
+		a.auth_id AS "id",
+		a.role_id AS "role.id",
+		a.auth_type AS "authType",
+		a.authobject_id AS "authobjectId"
+	</sql>
+	
+	<sql id="permissionInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="PermissionInfo">
+		SELECT 
+			<include refid="permissionInfoColumns"/>
+		FROM permission_info a
+		<include refid="permissionInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PermissionInfo">
+		SELECT 
+			<include refid="permissionInfoColumns"/>
+		FROM permission_info a
+		<include refid="permissionInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PermissionInfo">
+		SELECT 
+			<include refid="permissionInfoColumns"/>
+		FROM permission_info a
+		<include refid="permissionInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO permission_info(
+			auth_id,
+			role_id,
+			auth_type,
+			authobject_id
+		) VALUES (
+			#{id},
+			#{role.id},
+			#{authType},
+			#{authobjectId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE permission_info SET 	
+			auth_id = #{id},
+			role_id = #{role.id},
+			auth_type = #{authType},
+			authobject_id = #{authobjectId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM permission_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

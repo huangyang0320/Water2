@@ -1,0 +1,67 @@
+<style type="text/css">
+    .chooseNum {
+        margin-left: 20px;
+    }
+    .input-deviceNum {
+        width: 70px;
+    }
+    .panel-body {
+        overflow: auto;
+    }
+    .panel-body ul {
+        padding: 0;
+        margin: 0
+    }
+    .panel-body ul > li {
+        list-style: none;
+        width: 100%;
+        height: 200px;
+    }
+    .panel-body ul > li > div {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<div id="page-inner">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <form name="historyQuery" id="historyQuery">
+                        <div class="query-parameter">
+                            <label>区域名称 : </label>
+                            <select id="area"  class="device-id form-control input-text2">
+                            </select>
+                            <label>请选择展示的指标 : </label>
+                            <select id="qryType" class="device-id form-control input-text2">
+                                <option value="bhyl" selected="selected">出口压力</option>
+                                <option value="sbpl">水泵频率</option>
+                                <option value="ssdl">实时电量</option>
+                                <option value="ssll">瞬时流量</option>
+                                <option value="ljll">累计流量</option>
+                                <option value="jkyl">进口压力</option>
+                            </select>
+                            <label class="chooseNum">请选择每行展示的设备数量 : </label>
+                            <select id="rowSize" class="device-id form-control input-deviceNum">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15" selected="selected">15</option>
+                                <option value="20">20</option>
+                                <option value="25">25</option>
+                                <option value="30">30</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="panel-body">
+                    <ul id="boxId">
+                    </ul>
+                </div>
+            </div>
+            <!--End Advanced Tables -->
+        </div>
+    </div>
+    <!-- /. ROW  -->
+</div>
+<script src="static/assets/js/pumpGuide/pumpGuide.js"></script>

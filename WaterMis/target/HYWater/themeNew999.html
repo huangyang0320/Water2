@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>水司主题</title>
+    <link rel="stylesheet" type="text/css" href="theme/css/themeNew.css">
+</head>
+<body class="main-body pre-scrollable" style="overflow-y: hidden">
+<div class="main" style="width: 100%; height: 100%;">
+
+    <div class="main-top">
+
+        <div class="main-bottom-yxn">
+
+            <div class="info-content" style="text-align: center;">
+                <div style="float:left ;width: 20%;height: 50px;background-color: #2f3149;">
+                    <table class="info-table" style="height: 100%">
+                        <tr style="vertical-align: middle;">
+                            <td class="td1" align="center" valign="middle"><img src="theme/images/icon1.png"  style="vertical-align:middle;"></td>
+                            <td class="td2">泵房总计</td>
+                            <td class="td3" colspan="2"><span id="pump_num">-</span><label>个</label></td>
+                        </tr>
+                    </table>
+
+                </div>
+
+                <div style="float:left ;width: 20%;height: 50px;background-color: #2f3149;margin-left: 3px;">
+                    <table class="info-table" style="height: 100%">
+                        <tr style="vertical-align: middle;">
+                            <td class="td1"><img src="theme/images/icon2.png" style="vertical-align:middle;"></td>
+                            <td class="td2">平台运行 总时长</td>
+                            <td class="td3" colspan="2"><span id="run_time">-</span><label>小时</label></td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="float:left ;width: 20%;height: 50px;background-color: #2f3149;margin-left: 3px;">
+                    <table class="info-table" style="height: 100%">
+                        <tr style="vertical-align: middle;">
+                            <td class="td1"><img src="theme/images/icon3.png" style="vertical-align:middle;"></td>
+                            <td class="td2">总累积流量</td>
+                            <td class="td3" colspan="2"><span id="device_pw">-</span><label>m³</label></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="float:left ;width: 20%;height: 50px;background-color: #2f3149;margin-left: 3px;">
+                    <table class="info-table" style="height: 100%">
+                        <tr style="vertical-align: middle;">
+                            <td class="td1"><img src="theme/images/icon4.png" style="vertical-align:middle;"></td>
+                            <td class="td2">总累积电量</td>
+                            <td class="td3" colspan="2"><span id="ele_num">-</span><label>kWh</label></td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="float:left ;width: 18%;height: 50px;background-color: #2f3149;margin-left: 3px;">
+                    <table class="info-table" style="height: 100%">
+                        <tr style="vertical-align: middle;">
+                            <td class="td1" rowspan="2"><img src="theme/images/icon5.png" style="vertical-align:middle;"></td>
+                            <td class="td2" rowspan="2">人员状态</td>
+                            <td class="td4">忙碌 (人)</td>
+                            <td class="td5"><span id="perRun_num">-</span></td>
+
+                        </tr>
+                        <tr>
+                            <td class="td4">空闲 (人)</td>
+                            <td class="td5"><span id="perNot_num">-</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ./basic-info -->
+
+
+
+        <div class="compare-wrap1" style="width: 273px;margin-left: 0px;">
+            <div class="waterEleCompare">
+                <div class="title-cover"></div>
+                <div class="title">供水分时耗电对比</div>
+                <div class="compareData"  style="background-color: #161e21;">
+                    <ul>
+                        <li>
+                            <label>高峰电量 :</label>
+                            <span id="ele_max">-</span>
+                            <label class="unit">kWh</label>
+                        </li>
+                        <li>
+                            <label>低峰电量 :</label>
+                            <span id="ele_min">-</span>
+                            <label class="unit">kWh</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="areaDeviceNumCompare">
+                <div class="title-cover"></div>
+                <div class="title">区域设备量占比对比</div>
+                <div class="compareData"  style="background-color: #161e21;">
+                    <ul id="deviceRate"></ul>
+                </div>
+            </div>
+            <div class="areaDevicePie">
+                <div class="pie-cover"></div>
+                <div class="pie-container" id="pie-container"  style="background-color: #161e21;"></div>
+            </div>
+        </div>
+        <!-- ./compare-wrap1 -->
+
+        <div class="device-distribution" style="width: 690px;background-color: #161e21;">
+            <div class="distribution-cover" style="width: 690px;"></div>
+            <!-- <div class="title-cover"></div> -->
+            <div class="title" id="cityName" id="device_num"></div>
+            <div class="mapContainer" id="map" style="width: 690px;"></div>
+        </div>
+        <!-- ./device-distribution -->
+
+
+        <div class="compare-wrap2" style="width: 370px;">
+            <div class="deviceTypeCount" style="width: 370px;">
+                <div class="deviceType-cover" style="width: 370px;"></div>
+                <div class="title-cover" style="width: 370px;"></div>
+                <div class="title">设备类型占比</div>
+                <div class="deviceTypeChart" id="deviceType" style="background-color: #161e21;"></div>
+            </div>
+            <div class="alarmInfoCount" style="width: 370px;">
+                <div class="alarmInfo-cover" style="width: 370px;"></div>
+                <div class="title-cover" style="width: 370px;"></div>
+                <div class="title">告警信息类型占比</div>
+                <div class="alarmInfoChart" id="alarmInfo" style="background-color: #161e21;top: 16px;"></div>
+            </div>
+        </div>
+        <!-- ./compare-wrap2 -->
+    </div>
+    <!-- ./main-top -->
+
+    <div class="main-bottom" style="margin-top: 49px">
+        <div class="supplier-count">
+            <div class="supplier-cover"></div>
+            <div class="title-cover"></div>
+            <div class="title">设备供应商统计</div>
+            <div class="supplierChart" id="supplierChart" style="background-color: #161e21;"></div>
+        </div>
+        <div class="orderstatus-count">
+            <div class="order-cover"></div>
+            <div class="title-cover"></div>
+            <div class="title">工单状态统计</div>
+            <div class="orderChart" id="orderChart" style="background-color: #161e21;"></div>
+        </div>
+        <div class="trend-wrap">
+            <div class="trend-cover"></div>
+            <div class="title-cover"></div>
+            <ul class="tab-ul">
+                <li class="active">
+                    <a href="javascript:void(0)" data-href="#electricTrend" data-unit="kWh">总耗电量趋势图</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" data-href="#alarmTrend" data-unit="条">告警信息趋势图</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" data-href="#maintenanceTrend" data-unit="条">维保信息趋势图</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" data-href="#orderTrend" data-unit="个">工单完成趋势图</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="electricTrend" class="tab-pane tab-active" style="background-color: #161e21;"></div>
+                <div id="alarmTrend" class="tab-pane" style="background-color: #161e21;"></div>
+                <div id="maintenanceTrend" class="tab-pane" style="background-color: #161e21;"></div>
+                <div id="orderTrend" class="tab-pane" style="background-color: #161e21;"></div>
+            </div>
+        </div>
+        <div class="maintenance-compare" style="width: 275px;">
+            <div class="maintenance-cover" style="width: 274px;"></div>
+            <div class="title-cover" style="width: 274px;"></div>
+            <div class="title">区域维保项目对比</div>
+            <div class="maintenanceChart" id="maintenanceChart" style="background-color: #161e21;"></div>
+        </div>
+    </div>
+    <!-- ./main-bottom -->
+</div>
+<!-- ./main -->
+
+
+<!-- JavaScripts -->
+<script src="static/v2/assets/jquery/2.2.0/jQuery-2.2.0.min.js"></script>
+<script src="theme/scripts/resize.js"></script>
+<script src="static/v2/assets/echarts/3.5.1/echarts.min.js"></script>
+<script src="static/v2/assets/echarts/map/china.js"></script>
+<script src="theme/scripts/scroll.js"></script>
+<script src="theme/scripts/theme.js"></script>
+</body>
+</html>

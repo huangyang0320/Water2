@@ -1,0 +1,328 @@
+<style type="text/css">
+    #alarm-area-compare {
+        margin-bottom: 10px;
+    }
+    .columns.columns-right {
+        position: absolute !important;
+        top: -120px;
+        right: -265px;
+        /*z-index: 5;*/
+    }
+    .input-small {
+        width: 80px;
+    }
+
+    @media(min-width: 1920px){
+        .columns.columns-right {
+            right: -400px !important;
+        }
+    }
+    .table {
+        table-layout: fixed !important;
+    }
+</style>
+<link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
+
+
+<div id="page-inner">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <form id="alermCount">
+                        <div class="query-parameter">
+                           <!-- <label>模糊查询 : </label>-->
+                            <input type="hidden" id="keyword" placeholder="泵房名称/设备编号/报警内容" name="keyword" class="device-id form-control input-text4">
+                            <label>区域名称 : </label>
+                            <select id="areaCode" name="areaCode" class="device-id form-contrxun ol input-text2">
+                            </select>
+                            <label>泵房名称 : </label>
+                            <input type="text" id="pumpHouseName" name="pumpHouseName" class="device-id form-control input-text2">
+                            <label>设备名称 : </label>
+                            <input type="text" id="deviceName" name="deviceName" class="device-id form-control input-text2">
+                            <label>起止时间 : </label>
+                            <input id ="beginTime" name="beginTime" type="text" value="" readonly class="device-id form-control input-text2 warn-time-begin timepicker">
+                            <label>-</label>
+                            <input id="endTime" name="endTime" type="text" value="" readonly class="device-id form-control input-text2 warn-time-end timepicker">
+
+
+
+                            </div>
+                        <div class="query-parameter">
+                            <label>告警内容 : </label>
+                            <input type="text" id="alarmInfo" name="alarmInfo" class="device-id form-control input-text2">
+
+                            <label>告警等级 : </label>
+                            <select id="type" name="type" class="device-id form-control input-text2">
+                                <option value="">全部</option>
+                                <option value="1">一级</option>
+                                <option value="2">二级</option>
+                                <option value="3">三级</option>
+                                <option value="4">四级</option>
+                            </select>
+                            <label>告警时长 : </label>
+                            <input type="text" id="startAlarmTime" name="startAlarmTime" class="device-id form-control input-text2" onkeyup="value=value.replace(/[^\d.]/g,'')">-
+                            <input type="text" id="endAlarmTime" name="endAlarmTime" class="device-id form-control input-text2" onkeyup="value=value.replace(/[^\d.]/g,'')">
+
+
+                            <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
+                            <button class="btn btn-primary query-btn" onclick="exportData()" type="button" id="exportBtn">导出数据</button>
+                        </div>
+                   </form>
+                </div>
+                <!-- panel-body -->
+                <div class="panel-body">
+                    <ul id="myTab" class="nav nav-tabs">
+                        <li class="active"><a id="alarmList" href="#alarm-datalist" data-toggle="tab">告警信息列表</a></li>
+                        <li><a id="alarmDetail" href="#alarm-compare-chart" data-toggle="tab">告警数统计</a></li>
+                        <li><a id="alarmFenxi" href="#alarm-fenxi" data-toggle="tab">告警分析</a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content" style="margin-top: 15px;height:50%">
+                        <!--告警信息列表内容-->
+                        <div class="tab-pane fade in active" id="alarm-datalist">
+                            <!-- Advanced Tables -->
+                            <div class="col-md-9 col-xs-9" style="padding-left: 0">
+                                <div class="table-responsive">
+                                    <!--<div id="toolbar">-->
+                                    <!--</div>-->
+                                    <!--<button type="button" onclick="exportData()" class='btn btn-mini btn-info'>导出</button>-->
+                                    <table class="table table-hover" id="dataTables-example" data-reorderable-columns="true" data-sortable="true" data-sort-class="table-active">
+                                    </table>
+                                </div>
+                            </div>
+                            <!--End Advanced Tables -->
+
+                            <!-- alarm compare pie -->
+                            <div class="col-md-3 col-xs-6" style="padding-right: 0;">
+                                <div id="alarm-area-compare"></div>
+                                <!--<div id="alarm-type-compare"></div>-->
+                            </div>
+                            <!-- alarm compare pie end -->
+                        </div>
+                        <!--告警数统计内容-->
+                        <div class="tab-pane fade" id="alarm-compare-chart">
+                            <div class="col-md-8 col-xs-8" style="padding-left: 0;">
+                                <div id="alarm-compare-graph"></div>
+                            </div>
+                            <div class="col-md-4 col-xs-4" style="padding-right: 0;">
+                                <div id="alarm-compare-pie"></div>
+                            </div>
+                        </div>
+                        <!--告警分析内容-->
+                        <div class="tab-pane fade" id="alarm-fenxi">
+                            <div class="col-md-12 col-xs-12">
+                                <div id="totalData"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- panel-body end -->
+            </div>
+        </div>
+    </div>
+    <!-- /. ROW  -->
+</div>
+<!-- Modal -->
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myWorkModal1" style="z-index: 1049">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">创建工单</h3>
+            </div>
+            <div class="modal-body" style="height:500px ;overflow-y: auto">
+                <form id="workOrder">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="ticketId">工单编号</label>
+                                <input type="text" class="form-control" readonly id="ticketId" name="ticketId">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="workType">工单类型</label>
+                                <input type="text" class="form-control" readonly id="showWorkType" name="showWorkType" value="告警工单" placeholder="请输入">
+                                <input type="hidden" id="workType" name="workType" value="1">
+                                <!-- <select class="form-control" id="workType" name="workType">
+                                     <option value="1">告警工单</option>
+                                 </select>-->
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-5 col-md-offset-1">
+                             <div class="form-group">
+
+                                 <label for="alarmContent">工单名称</label>
+                                 <input type="text" class="form-control" readonly id="alarmContent" name="alarmContent" placeholder="请输入">
+                             </div>
+                         </div>-->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <!--  <label for="taskSource">工单来源</label>  -->
+                                <input type="hidden" class="form-control" id="taskSource" name="taskSource" value="二供平台" placeholder="请输入">
+
+                                <label for="phName">泵房名称</label>
+                                <input type="text" class="form-control" readonly id="phName" name="phName" placeholder="请输入">
+                                <input type="hidden" class="form-control" readonly id="phId" name="phId" placeholder="请输入">
+                                <input type="hidden" class="form-control" readonly id="alarmContent" name="alarmContent" placeholder="请输入">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="address">泵房地址</label>
+                                <input type="text" class="form-control" readonly id="address" name="address" placeholder="请输入">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="processName">所在设备</label>
+                                <input type="text" class="form-control" readonly id="processName" name="processName" placeholder="请输入">
+                                <input type="hidden"  class="form-control" readonly id="deviceId" name="deviceId" placeholder="请输入">
+
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="alarmStatus">当前状态</label>
+                                <input type="text" class="form-control" readonly id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
+                                <!--2：待接单-->
+                                <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="1"  placeholder="请输入">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="alarmTime">告警时间</label>
+                                <input type="text" class="form-control" readonly id="alarmTime" name="alarmTime" placeholder="请输入">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="processName">告警等级</label>
+                                <input type="text" class="form-control" id="alarmLevel" name="alarmLevel" placeholder="请输入">
+                                <!--保存还是创建-->
+                                <input type="hidden" class="form-control" readonly id="saveOrCreateFlag" name="saveOrCreateFlag" >
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="planStartTime">计划开始时间</label>
+                                <input id ="planStartTime" name="planStartTime" type="text" value="" readonly style="background-color: white" class="planStartTime form-control timepicker">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="planEndTime">计划结束时间</label>
+                                <input id ="planEndTime" name="planEndTime" type="text" value="" readonly style="background-color: white"  class="planEndTime form-control timepicker">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="form-group">
+                                <label for="alarmReason">告警原因</label>
+                                <textarea class="form-control" rows="3" id="alarmReason" name="alarmReason" style="resize: none;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="form-group">
+                                <label for="planContent">解决方案</label>
+                                <textarea class="form-control" rows="3" id="planContent" name="planContent" style="resize: none;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="deptId">执行部门</label>
+                                <select class="form-control" id="deptId" name="deptId" onchange="changerDept()">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5 col-md-offset-1"  style="display: none">
+                            <div class="form-group">
+                                <label for="mgName">部门负责人</label>
+                                <input type="text" class="form-control" readonly id="mgName" name="mgName" >
+                            </div>
+                        </div>
+
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="saveBtn" onclick="submitWorkOrder('save')">暂存工单</button>
+                <button type="button" class="btn btn-primary" id="createBtn" onclick="submitWorkOrder()">创建工单</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="alertWork">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+                <p id="alertWorkMessage" style="color: red"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myWorkModal1" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="alertError">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+                <p id="alertErrorMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="refresh()" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Script -->
+<script src="static/common/common.js"></script>
+<script src="static/assets/js/bootstrap-table/bootstrap-table-resizable.min.js"></script>
+<script src="static/assets/js/colResizable-1.6.min.js"></script>
+<script src="static/assets/js/tips.js"></script>
+<script src="static/assets/js/countAnalysis/alarmQuery.js"></script>
+<script src="static/assets/js/moment.js"></script>
+<script>
+    //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
+    /* 点击input框时加载监听事件*/
+    $(".timepicker").each(function () {
+        this.addEventListener('click',myfunc);
+    })
+
+    function myfunc(e){
+        e.currentTarget.blur();
+    }
+</script>

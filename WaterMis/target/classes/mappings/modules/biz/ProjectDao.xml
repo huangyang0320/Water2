@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.ProjectDao">
+    
+	<sql id="projectColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.id_region AS "region.id",
+		a.project_manager AS "projectManager",
+		a.address AS "address",
+		a.memo AS "memo",
+		a.salesman AS "salesman",
+		a.contract_type AS "contractType",
+		a.buyer_name AS "buyerName",
+		a.buyer_contacts_name AS "buyerContactsName",
+		a.sign_date AS "signDate",
+		a.arrival_date AS "arrivalDate",
+		a.yjts_date AS "yjtsDate",
+		a.htqd_dw AS "htqdDw",
+		a.del_flag AS "delFlag",
+		a.region_type AS "regionType",
+		a.company_node AS "companyNode",
+		a.pinyin AS "pinyin",
+		a.water_depart_orgNode AS "waterDepartOrgnode",
+		a.water_house_orgNode AS "waterHouseOrgnode",
+		a.business_place_orgNode AS "businessPlaceOrgnode"
+	</sql>
+	
+	<sql id="projectJoins">
+	</sql>
+    
+	<select id="get" resultType="Project">
+		SELECT 
+			<include refid="projectColumns"/>
+		FROM project a
+		<include refid="projectJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Project">
+		SELECT 
+			<include refid="projectColumns"/>
+		FROM project a
+		<include refid="projectJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Project">
+		SELECT 
+			<include refid="projectColumns"/>
+		FROM project a
+		<include refid="projectJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO project(
+			id,
+			name,
+			id_region,
+			project_manager,
+			address,
+			memo,
+			salesman,
+			contract_type,
+			buyer_name,
+			buyer_contacts_name,
+			sign_date,
+			arrival_date,
+			yjts_date,
+			htqd_dw,
+			del_flag,
+			region_type, 
+            company_node,
+            pinyin,
+            water_depart_orgNode,
+		    water_house_orgNode,
+		    business_place_orgNode
+		) VALUES (
+			#{id},
+			#{name},
+			#{region.id},
+			#{projectManager},
+			#{address},
+			#{memo},
+			#{salesman},
+			#{contractType},
+			#{buyerName},
+			#{buyerContactsName},
+			#{signDate},
+			#{arrivalDate},
+			#{yjtsDate},
+			#{htqdDw},
+			#{delFlag}, 
+			#{regionType}, 
+            #{companyNode}, 
+            #{pinyin},
+            #{waterDepartOrgnode},
+            #{waterHouseOrgnode},
+            #{businessPlaceOrgnode}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE project SET 	
+			name = #{name},
+			id_region = #{region.id},
+			project_manager = #{projectManager},
+			address = #{address},
+			memo = #{memo},
+			salesman = #{salesman},
+			contract_type = #{contractType},
+			buyer_name = #{buyerName},
+			buyer_contacts_name = #{buyerContactsName},
+			sign_date = #{signDate},
+			arrival_date = #{arrivalDate},
+			yjts_date = #{yjtsDate},
+			htqd_dw = #{htqdDw},
+			region_type = #{regionType},
+            company_node = #{companyNode},
+            pinyin = #{pinyin},
+            water_depart_orgNode = #{waterDepartOrgnode},
+            water_house_orgNode = #{waterHouseOrgnode},
+            business_place_orgNode = #{businessPlaceOrgnode}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE project SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+
+	
+</mapper>

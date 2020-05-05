@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.DeviceAccessoriesInfoDao">
+    
+	<sql id="deviceAccessoriesInfoColumns">
+		a.accessories_id AS "id",
+		a.accessories_name AS "accessoriesName",
+		a.device_id AS "device.id",
+		a.accessories_no AS "accessoriesNo",
+		a.accessories_units AS "accessoriesUnits",
+		a.accessories_itemid AS "accessoriesItemid",
+		a.insert_time AS "insertTime",
+		a.last_update_time AS "lastUpdateTime",
+		a.accessories_type AS "accessoriesType"
+	</sql>
+	
+	<sql id="deviceAccessoriesInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="DeviceAccessoriesInfo">
+		SELECT 
+			<include refid="deviceAccessoriesInfoColumns"/>
+		FROM device_accessories_info a
+		<include refid="deviceAccessoriesInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="DeviceAccessoriesInfo">
+		SELECT 
+			<include refid="deviceAccessoriesInfoColumns"/>
+		FROM device_accessories_info a
+		<include refid="deviceAccessoriesInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="DeviceAccessoriesInfo">
+		SELECT 
+			<include refid="deviceAccessoriesInfoColumns"/>
+		FROM device_accessories_info a
+		<include refid="deviceAccessoriesInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO device_accessories_info(
+			accessories_id,
+			accessories_name,
+			device_id,
+			accessories_no,
+			accessories_units,
+			accessories_itemid,
+			insert_time,
+			last_update_time,
+			accessories_type
+		) VALUES (
+			#{id},
+			#{accessoriesName},
+			#{device.id},
+			#{accessoriesNo},
+			#{accessoriesUnits},
+			#{accessoriesItemid},
+			#{insertTime},
+			#{lastUpdateTime},
+			#{accessoriesType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE device_accessories_info SET 	
+			accessories_id = #{id},
+			accessories_name = #{accessoriesName},
+			device_id = #{device.id},
+			accessories_no = #{accessoriesNo},
+			accessories_units = #{accessoriesUnits},
+			accessories_itemid = #{accessoriesItemid},
+			insert_time = #{insertTime},
+			last_update_time = #{lastUpdateTime},
+			accessories_type = #{accessoriesType}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM device_accessories_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

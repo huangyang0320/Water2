@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.sys.dao.CoordinateDao" >
+   <select id="getUsers" resultType="com.wapwag.woss.modules.sys.entity.Coordinate">
+  	select 
+  	    s.id,
+  	    s.no,
+  	    s.name,
+  	    s.mobile,
+  	    u.date_time as addDate,
+  	    u.longi,
+  	    u.lati
+  	from sys_user s left join (select 
+  	    id_user,
+  	    date_time, 
+  	    longi,
+  	    lati
+  	from user_coordinate order by date_time desc) u 
+  	on s.id = u.id_user   
+  	group by s.id  limit #{pageNumber},#{pageSize}
+  </select>
+  
+  <select id="getCoordinateByUserId" resultType="com.wapwag.woss.modules.sys.entity.Coordinate">
+  	select 
+  	    u.date_time as addDate,
+  	    u.longi,
+  	    u.lati
+  	from user_coordinate u where id_user = #{userId} and
+  	DATE_FORMAT(u.date_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{endTime},'%Y-%m-%d')
+			and 
+		DATE_FORMAT(u.date_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{beginTime},'%Y-%m-%d')
+  </select>
+  <select id="countSum" resultType="java.lang.Integer">
+  	select 
+  	    count(1)
+  	from sys_user
+  </select>
+  
+  <select id="getLastCoordinateByUserId" resultType="com.wapwag.woss.modules.sys.entity.Coordinate">
+  	select 
+  	    max(u.date_time) as addDate,
+  	    u.longi,
+  	    u.lati
+  	from user_coordinate u 
+  	where date_time = (select max(date_time) from user_coordinate where id_user = #{userId}) and id_user = #{userId}
+  </select>
+</mapper>

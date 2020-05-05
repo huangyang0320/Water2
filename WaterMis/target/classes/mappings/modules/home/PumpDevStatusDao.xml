@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.home.dao.PumpDevStatusDao" >
+
+  <resultMap id="BaseResultMap" type="com.wapwag.woss.modules.home.web.PumpDevStatus" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pumpId" property="pumpid" jdbcType="VARCHAR" />
+    <result column="pumpStatus" property="pumpstatus" jdbcType="VARCHAR" />
+    <result column="devId" property="devid" jdbcType="VARCHAR" />
+    <result column="devStatus" property="devstatus" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, pumpId, pumpStatus, devId, devStatus, createTime, creator
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from pump_dev_status
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from pump_dev_status
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.wapwag.woss.modules.home.web.PumpDevStatus" >
+    insert into pump_dev_status (id, pumpId, pumpStatus, 
+      devId, devStatus, createTime, 
+      creator)
+    values (#{id,jdbcType=INTEGER}, #{pumpid,jdbcType=VARCHAR}, #{pumpstatus,jdbcType=VARCHAR}, 
+      #{devid,jdbcType=VARCHAR}, #{devstatus,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.wapwag.woss.modules.home.web.PumpDevStatus" >
+    insert into pump_dev_status
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pumpid != null" >
+        pumpId,
+      </if>
+      <if test="pumpstatus != null" >
+        pumpStatus,
+      </if>
+      <if test="devid != null" >
+        devId,
+      </if>
+      <if test="devstatus != null" >
+        devStatus,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="pumpid != null" >
+        #{pumpid,jdbcType=VARCHAR},
+      </if>
+      <if test="pumpstatus != null" >
+        #{pumpstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="devid != null" >
+        #{devid,jdbcType=VARCHAR},
+      </if>
+      <if test="devstatus != null" >
+        #{devstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.wapwag.woss.modules.home.web.PumpDevStatus" >
+    update pump_dev_status
+    <set >
+      <if test="pumpid != null" >
+        pumpId = #{pumpid,jdbcType=VARCHAR},
+      </if>
+      <if test="pumpstatus != null" >
+        pumpStatus = #{pumpstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="devid != null" >
+        devId = #{devid,jdbcType=VARCHAR},
+      </if>
+      <if test="devstatus != null" >
+        devStatus = #{devstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.wapwag.woss.modules.home.web.PumpDevStatus" >
+    update pump_dev_status
+    set pumpId = #{pumpid,jdbcType=VARCHAR},
+      pumpStatus = #{pumpstatus,jdbcType=VARCHAR},
+      devId = #{devid,jdbcType=VARCHAR},
+      devStatus = #{devstatus,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <insert id="insertBatch">
+    INSERT INTO pump_dev_status
+            (id,pumpId, pumpStatus, devId,devStatus,createTime,creator)
+    VALUES
+    <foreach collection ="list" item="pumpDevStatus" separator =",">
+         (#{pumpDevStatus.id},#{pumpDevStatus.pumpid}, #{pumpDevStatus.pumpstatus}, #{pumpDevStatus.devid}, #{pumpDevStatus.devstatus}, #{pumpDevStatus.createtime},#{pumpDevStatus.creator})
+    </foreach >
+  </insert>
+  
+  <delete id="deleteByDevId" >
+    delete from pump_dev_status
+    where id in    
+    <foreach collection="list"  item="item" open="(" separator="," close=")">
+                #{item.devid}       
+    </foreach>    
+  </delete>
+  
+  <delete id="deleteByPumpId" >
+    delete from pump_dev_status
+    where id in    
+    <foreach collection="list"  item="item" open="(" separator="," close=")">
+                #{item.pumpid}       
+    </foreach>    
+  </delete>
+  
+  
+   <delete id="delete" >
+    delete from pump_dev_status
+   </delete>
+   
+   <delete id="deleteBycreateTime" >
+    delete from pump_dev_status where createTime &lt; #{createtime}
+   </delete>
+   
+  <select id="selectTimeByTime" resultMap="BaseResultMap" >
+    select 
+       *
+    from pump_dev_status
+     where createTime = #{createtime}
+  </select>
+   
+   <select id="selectByDevId" resultType="java.lang.String" >
+    select 
+       devstatus
+    from pump_dev_status
+    where devId = #{devId}
+  </select>
+  
+    <select id="selectTimeByDevId" resultMap="BaseResultMap" >
+    select 
+       *
+    from pump_dev_status
+    where devId = #{devId}
+  </select>
+  
+    <select id="selectByPumpId" resultType="java.lang.String">
+    select pumpStatus
+    from pump_dev_status
+    where pumpId = #{pumpId}
+  </select>
+   
+</mapper>

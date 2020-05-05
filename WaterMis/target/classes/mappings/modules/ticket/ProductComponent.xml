@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.ticket.dao.ProductComponentDao">
+	<resultMap id="BaseResultMap" type="com.wapwag.woss.modules.ticket.Entity.ProductComponentData">
+	    <id column="id" jdbcType="VARCHAR" property="id" />
+	    <result column="component_name" jdbcType="VARCHAR" property="componentName" />
+	    <result column="component_model" jdbcType="VARCHAR" property="componentModel" />
+	    <result column="failure_rate_year_1" jdbcType="REAL" property="failureRateYear1" />
+	    <result column="failure_rate_year_2" jdbcType="REAL" property="failureRateYear2" />
+	    <result column="failure_rate_year_3" jdbcType="REAL" property="failureRateYear3" />
+	    <result column="failure_rate_year_4" jdbcType="REAL" property="failureRateYear4" />
+	    <result column="failure_rate_year_5" jdbcType="REAL" property="failureRateYear5" />
+	    <result column="failure_rate_year_6" jdbcType="REAL" property="failureRateYear6" />
+	    <result column="failure_rate_year_7" jdbcType="REAL" property="failureRateYear7" />
+	    <result column="failure_rate_year_8" jdbcType="REAL" property="failureRateYear8" />
+	    <result column="failure_rate_year_9" jdbcType="REAL" property="failureRateYear9" />
+	    <result column="failure_rate_year_10" jdbcType="REAL" property="failureRateYear10" />
+	    <result column="weight" jdbcType="REAL" property="weight" />
+	    <result column="sort" jdbcType="BIGINT" property="sort" />
+		<result column="wb_Reason" jdbcType="VARCHAR" property="wbReason" />
+		<result column="wb_Programme" jdbcType="VARCHAR" property="wbProgramme" />
+  	</resultMap>
+	<sql id="Base_Column_List">
+	    id, component_name, component_model, failure_rate_year_1, failure_rate_year_2, failure_rate_year_3,
+	    failure_rate_year_4, failure_rate_year_5, failure_rate_year_6, failure_rate_year_7,
+	    failure_rate_year_8, failure_rate_year_9, failure_rate_year_10, weight, sort
+	</sql>
+    <select id="findAllProductComponentList" resultMap="BaseResultMap">
+        select
+        a.id,a.component_name
+        from product_component a
+        order by a.sort asc
+    </select>
+
+	<select id="findProductComponentReasonListById" resultMap="BaseResultMap">
+        select
+		GROUP_CONCAT(a.wb_Reason) wbReason,GROUP_CONCAT(a.wb_Programme) wbProgramme
+        from product_component a
+        <where>
+			a.id IN
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</where>
+        order by a.sort asc
+    </select>
+</mapper>

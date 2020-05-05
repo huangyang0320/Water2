@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.sys.dao.PumpPerformanceMatrixDao">
+    
+	<sql id="pumpPerformanceMatrixColumns">
+		a.id as id,
+		a.pump_model as pumpModel,
+		a.hz as hz,
+		a.flow as flow,
+		a.lift as lift,
+		a.input_power as inputPower,
+		a.output_power as outputPower,
+		a.efficiency as efficiency,
+		a.power_factor as powerFactor,
+		a.state as state,
+		a.create_time as createTime,
+		a.create_id as createId,
+		a.update_time as updateTime,
+		a.update_id as updateId
+	</sql>
+	
+	<resultMap type="PumpPerformanceMatrix" id="PumpPerformanceMatrixMap">
+		<id column="id" property="id" />
+		<result column="pumpModel" property="pumpModel" />
+		<result column="hz" property="hz" />
+		<result column="flow" property="flow" />
+		<result column="lift" property="lift" />
+		<result column="inputPower" property="inputPower" />
+		<result column="outputPower" property="outputPower" />
+		<result column="efficiency" property="efficiency" />
+		<result column="powerFactor" property="powerFactor" />
+		<result column="state" property="state" />
+		<result column="createTime" property="createTime" />
+		<result column="createId" property="createId" />
+		<result column="updateTime" property="updateTime" />
+		<result column="updateId" property="updateId" />
+	</resultMap>
+    
+	<select id="get" resultMap="PumpPerformanceMatrixMap">
+		SELECT 
+			<include refid="pumpPerformanceMatrixColumns"/>
+		FROM pump_performance_matrix a
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultMap="PumpPerformanceMatrixMap">
+		SELECT
+		a.id as id,
+		a.pump_model as pumpModel,
+		a.hz as hz,
+		a.flow as flow,
+		a.lift as lift,
+		a.input_power as inputPower,
+		a.output_power as outputPower,
+		a.efficiency as efficiency,
+		a.power_factor as powerFactor
+		FROM pump_performance_matrix a
+		<where>
+			<if test="pumpModel != null and pumpModel != ''">
+				AND a.pump_model LIKE
+					<if test="dbName == 'oracle'">'%'||#{pumpModel}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{pumpModel}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{pumpModel},'%')</if>
+			</if>
+			<if test="hz != null and hz != ''">
+				AND a.hz LIKE
+				<if test="dbName == 'oracle'">'%'||#{hz}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{hz}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{hz},'%')</if>
+			</if>
+			AND a.state ='1'
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		order by pumpModel,hz,flow asc
+	</select>
+
+	<select id="queryMatrix" resultType="com.wapwag.woss.modules.sys.entity.PumpPerformanceMatrix">
+		select flow,lift,input_power as inputPower,output_power as outputPower, efficiency from pump_performance_matrix
+		<where>
+			<if test="pumpModel != null and pumpModel != ''">
+				AND pump_model = #{pumpModel}
+			</if>
+			<if test="hz != null and hz != ''">
+				AND hz = #{hz}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryPumpModel" resultType="String">
+		select pump_model from pump_performance_matrix GROUP BY pump_model
+	</select>
+	<select id="queryHzByPumpModel" resultType="String" >
+			select hz from pump_performance_matrix where pump_model = #{pumpModel} GROUP BY hz
+	</select>
+
+</mapper>

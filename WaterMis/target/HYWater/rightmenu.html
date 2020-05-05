@@ -1,0 +1,624 @@
+<style type="text/css">
+*{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
+.content{width:260px;font-family: "Microsoft YaHei";}
+.filterinput{
+	background-color:rgba(249, 244, 244, 0);
+	border-radius:15px;
+	width:74%;
+	height:30px;
+    line-height: 30px;
+	border:thin solid #FFF;
+	text-indent:1em;
+	font-weight:bold;
+	font-family: "Microsoft YaHei";
+	color:#FFF;
+	margin-top: 10px;
+    font-size: 14px;
+    margin-left: 10px;
+}
+.searchTree{
+    margin-left: 8px;
+    margin-bottom: -8px;
+    display: inline-block;
+    background: url(static/assets/img/search.png) no-repeat;
+    background-size: 100% 100%;
+    width: 25px;
+    height: 26px;
+    cursor: pointer;
+}
+#demo-list a{
+	overflow:hidden;
+	text-overflow:ellipsis;
+	-o-text-overflow:ellipsis;
+	white-space:nowrap;
+	width:100%;
+}
+#hideMenu{
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    padding: 10px 0px;
+    background-color: #2139ae;
+    /*background:rgba(38,54,90, 1);*/
+}
+#jquery-accordion-menu input:focus {
+    outline: none;
+    border-color: #9ecaed;
+    border-radius: 15px;
+}
+.displayall{
+    position: absolute;
+    top: 0px;
+    margin-right: 0px;
+    background: transparent;
+    display: inline-block;
+    width: 100%;
+    height: 42px;
+    box-sizing: border-box;
+}
+.displayall p{
+    height: 16px;
+}
+.displayallspan{
+    padding-top: 14px;
+}
+.pumpIcon{
+    position: absolute;
+    left: 70px;
+    top: 10px;
+    display: inline-block;
+    width: 16px;
+    height: 22px;
+    background: url('static/assets/img/online.png') no-repeat;
+    background-size: 100%;
+}
+/*.ztree li span ..pumpIcon{*/
+    /*right: 78px;*/
+/*}*/
+.ztree li span.button.switch{
+    width: 20%;
+    height: 100%;
+    margin: 0;
+}
+.ztree li span.switch {
+    background-size: 30%;
+    background-position: 50% 12px
+}
+.ztree li span.button.center_close {
+    background-size: 30%;
+    background-position: 50% 12px
+}
+.ztree li span.button.bottom_close {
+    background-size: 30%;
+    background-position: 50% 12px
+}
+.pumpOut{
+    background: url('static/assets/img/outline.png') no-repeat;
+    background-size: 100%;
+}
+.pumpOff{
+    background: url('static/assets/img/offline.png') no-repeat;
+background-size: 100%;
+}
+#jquery-accordion-menu .searchClearCtent{
+    right: 68px;
+    top: 14px;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+    display: none;
+}
+#jquery-accordion-menu .searchClearCtentim:hover{
+    display: block !important;
+}
+
+</style>
+</head>
+<body>
+<div class="content" style="width: 200px;">
+    <div id="jquery-accordion-menu">
+        <div class="jquery-accordion-menu-header" id="form">
+            <form class="filterform" action="#" onsubmit="false">
+                <input class="empty filterinput" id="keyTree"  value="" placeholder="请输入关键字" autocomplete="off" type="text">
+                <i class="searchClearCtent" id="searchClearCtent" onclick="searchClearCtent()">x</i>
+                <span class="searchTree" onclick="searchNode()"></span>
+            </form>
+        </div>
+        <div class="loadDeviceList">
+            <div  id="rightTreeNode" class="ztree"> </div>
+        </div>
+        <div class="jquery-accordion-menu-footer">
+            <a href="javascript:;" id="hideMenu">隐藏列表 <i class="fa fa-angle-double-up"></i></a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+var ztreeBulid = {
+    'zTreeObj':"",// 初始化之后的树对象
+    'key':"", // 搜索的DOM地址
+    'lastValue':"",
+    'treeDomId':"rightTreeNode",// 树的DOM id
+    'searchDomId':"keyTree",// 搜索的DOM id
+    'modalId':"myModalAlert", // 模态框DOM id
+    'nodesTreeOne':"",
+    'nodeList':[],
+    'fontCss':{},
+    'isShowCheck': true, // 是否显示复选框 默认显示
+
+    'isClearList': true, // 默认多选list清空
+    'zNodes' : [], // 需要渲染的树结构
+    'setting':{
+         view: {
+             showTitle:true, //悬浮显示title
+             nameIsHTML: true, //开启name支持html标签
+             dblClickExpand: false//屏蔽掉双击事件
+         },
+         check: {
+             enable: false,
+             chkStyle: "checkbox",
+             chkboxType: { "Y": "ps", "N": "ps" }
+         },
+         data: {
+             simpleData: {
+                 enable: true,  //true 、 false 分别表示 使用 、 不使用 简单数据模式
+                 idKey: "id",  //节点数据中保存唯一标识的属性名称
+                 pIdKey: "pId",    //节点数据中保存其父节点唯一标识的属性名称
+                 // rootPId: -1  //用于修正根节点父节点数据，即 pIdKey 指定的属性值
+             },
+             key:{
+                 title:"name"  //zTree 节点数据保存节点名称的属性名称  默认值："name"
+             }
+         },
+         callback: {
+             onClick: onClick,
+             onCheck: zTreeOnCheck,
+         }
+    },
+    'setOption':function (data) {
+        if (data.setting) {
+            this.setting = $.extend(this.setting, data.setting);
+        };
+        if (data.zNodes) {
+            /* 数据处理 */
+            this.zNodes = data.zNodes.map(function (v) {
+                let vObj = JSON.parse(JSON.stringify(v));
+                v.title = vObj.name;
+                if(v.deviceId){
+                    v.name = "<div class='displayall displayallspan'> <p style='display: none'>"+ v.deviceId +"</p> <p class='name'>"+ v.name +"</p></div>"
+                }
+                if(v.pumpStatus){ // 0在线 1警报 2离线
+                	var py = v.pinyin?v.pinyin:v.name;
+                    switch (parseInt(v.pumpStatus)){
+                        case 0 : v.name = "<div class='displayall displayallspan'><p style='display: none'> "+py+"</p><span class='name'>"+ v.name +"</span> <span class= 'pumpIcon'></span> </div>";
+                                 break;
+                        case 1 : v.name = "<div class='displayall displayallspan'><p style='display: none'> "+py+"</p><span class='name'>"+ v.name +"</span> <span class= 'pumpIcon pumpOff'></span> </div>";
+                                 break;
+                        case 2 : v.name = "<div class='displayall displayallspan'><p style='display: none'> "+py+"</p><span class='name'>"+ v.name +"</span> <span class= 'pumpIcon pumpOut'></span> </div>";
+                                 break;
+                    }
+                }
+                return v;
+            })
+        } else {
+            throw new Error("param_zNodes_err_server")
+        };
+
+    },
+    'updateNodes': function updateNodes(highlight) {
+         var zTree = $.fn.zTree.getZTreeObj(this.treeDomId);
+         var allNode = zTree.transformToArray(zTree.getNodes());
+         zTree.hideNodes(allNode);
+         for(var n in this.nodeList){
+             this.findParent(zTree,this.nodeList[n]);
+         }
+         zTree.showNodes(this.nodeList);
+         this.isShowCk()
+    },
+     'findParent':function (zTree,node){
+         if(node.id){
+             zTree.expandNode(node,true,false,false);
+             var pNode = node.getParentNode();
+             if(pNode != null){
+                 this.nodeList.push(pNode);
+                 this.findParent(zTree,pNode);
+             }
+         }
+     },
+     /* 显示/隐藏复选框 */
+     'checkBoxSH': function checkBoxSH(type){
+         this.isShowCheck = type;
+         if(type){
+             $('#jquery-accordion-menu').find('.chk').css('display','block');
+         }else{
+             $('#jquery-accordion-menu').find('.chk').css('display','none');
+         }
+     },
+    /* 是否显示复选框 */
+    'isShowCk': function () {
+        if(this.isShowCheck){
+            $('#jquery-accordion-menu').find('.chk').css('display','block');
+        }else{
+            $('#jquery-accordion-menu').find('.chk').css('display','none');
+        }
+    },
+    'getfirstNode': function (obj){
+        GLOBAL_SELECT_LIST = [];
+        if(ztreeBulid.isShowCheck){
+            GLOBAL_SELECT_LIST_B = []
+            GLOBAL_SELECT_DEVICE = {};
+        }
+        if(obj.isParent){
+            this.getfirstNode(obj.children[0]);
+        }else{
+            let namestr = obj.name;
+            // let saveObj =obj;
+            let saveObj = JSON.parse(JSON.stringify(obj));
+            saveObj.name = saveObj.title;
+            if(ztreeBulid.isShowCheck){
+                GLOBAL_SELECT_LIST.push(saveObj)
+                GLOBAL_SELECT_LIST_B.push(obj)
+            }
+            GLOBAL_SELECT_DEVICE = saveObj;
+            this.zTreeObj.selectNode(obj)
+            this.zTreeObj.checkNode(obj, true, true);
+            var parent = obj.getParentNode();
+            if(!parent.open){
+                this.zTreeObj.expandNode(parent,true,true);
+            }
+        }
+    },
+    'getChooseNode': function (obj) {
+        if(obj){
+            // 默认选择第一个节点
+            this.nodesTreeOne =  this.zTreeObj.getNodeByParam('isFirstNode', true);
+            ztreeBulid.getfirstNode(this.nodesTreeOne);
+            return false;
+        }
+        let saveObj = JSON.parse(JSON.stringify(obj));
+        saveObj.name = saveObj.title;
+        if(ztreeBulid.isShowCheck){
+            GLOBAL_SELECT_LIST.push(saveObj)
+            GLOBAL_SELECT_LIST_CHO0SE.push(saveObj)
+            GLOBAL_SELECT_LIST_B.push(obj)
+        }
+        GLOBAL_SELECT_DEVICE = saveObj;
+        this.zTreeObj.selectNode(obj)
+        this.zTreeObj.checkNode(obj, true, true);
+        var parent = obj.getParentNode();
+        if(!parent.open){
+            this.zTreeObj.expandNode(parent,true,true);
+        }
+    },
+    'showChoose':function (type, isShowChecked) {
+        if(GLOBAL_SELECT_LIST_ISSHOWCHECK && isShowChecked){
+            moreToMore(type, isShowChecked)
+            GLOBAL_SELECT_LIST_CHO0SE = JSON.parse(JSON.stringify(GLOBAL_SELECT_LIST));
+        }
+        if(GLOBAL_SELECT_LIST_ISSHOWCHECK && !isShowChecked){
+            moreToOne(type, isShowChecked)
+        }
+        if(!GLOBAL_SELECT_LIST_ISSHOWCHECK && isShowChecked){
+            oneToMore(type, isShowChecked)
+        }
+        if(!GLOBAL_SELECT_LIST_ISSHOWCHECK && !isShowChecked){
+            oneToOne(type, isShowChecked)
+        }
+        GLOBAL_SELECT_LIST_TYPE = type;
+        GLOBAL_SELECT_LIST_ISSHOWCHECK = isShowChecked;
+    },
+    'init':function () {
+        // console.log('setting',this.setting)
+        // console.log('22222',this.treeDomId)
+        // console.log('33333',this.zNodes)
+        this.zTreeObj = $.fn.zTree.init($("#"+ this.treeDomId +""), this.setting, this.zNodes);
+
+        if(GLOBAL_SELECT_LIST_CHO0SE.length > 0 ){
+            if(GLOBAL_TREE_PUMP_EQT && GLOBAL_TREE_VIDEO_EQT==1) ztreeBulid.showChoose('device', this.isShowCheck);
+            if(GLOBAL_TREE_PUMP_EQT && GLOBAL_TREE_VIDEO_EQT==2) ztreeBulid.showChoose('video', this.isShowCheck);
+            if(!GLOBAL_TREE_PUMP_EQT) ztreeBulid.showChoose('pump', this.isShowCheck);
+        }else{
+            // 默认选择第一个节点
+            this.nodesTreeOne =  this.zTreeObj.getNodeByParam('isFirstNode', true);
+            ztreeBulid.getfirstNode(this.nodesTreeOne);
+            GLOBAL_SELECT_LIST_ISSHOWCHECK = this.isShowCheck;
+            if(GLOBAL_TREE_PUMP_EQT && GLOBAL_TREE_VIDEO_EQT==1)  GLOBAL_SELECT_LIST_TYPE = 'device';
+            if(GLOBAL_TREE_PUMP_EQT && GLOBAL_TREE_VIDEO_EQT==2) GLOBAL_SELECT_LIST_TYPE = 'video';
+            if(!GLOBAL_TREE_PUMP_EQT) GLOBAL_SELECT_LIST_TYPE = 'pump';
+        }
+        console.log(ztreeBulid.searchDomId)
+        this.key = $("#"+ ztreeBulid.searchDomId +"");
+        this.key.bind("input", inputKey)
+                .bind("mouseenter ", inputKey)
+                .bind("mouseleave  ", keyMouseleave)
+                .bind("focus", focusKey)
+                .bind("blur", blurKey)
+    }
+
+}
+/* 单击展开子节点 */
+function onClick(e,treeId, treeNode) {
+    if(!treeNode.isParent && !ztreeBulid.isShowCheck){
+        // 点击具体泵房地址
+        console.log('点击',treeNode.name)
+        GLOBAL_SELECT_LIST_CHO0SE = []
+        GLOBAL_SELECT_LIST = []
+        treeNode.name =  treeNode.title;
+        GLOBAL_SELECT_DEVICE = treeNode;
+        GLOBAL_SELECT_LIST_CHO0SE.push(treeNode);
+        GLOBAL_SELECT_LIST.push(treeNode);
+        refreshDevice(treeNode)
+        toAreaPump2(treeNode, '3')
+    }else{
+        if(treeNode.level == 0){
+            //点击芜湖
+            $('#selectedDevice').html('当前选择:芜湖')
+            // 展示所有泵房事件
+            showAllPumphouses()
+        }else if(treeNode.level == 1){
+            //点击区
+            $('#selectedDevice').html('当前选择:芜湖/'+treeNode.name)
+            // 区域搜索
+            toAreaPump2(treeNode, '2')
+        }else {
+            //有柜子的页面点击事件
+            var zTree = $.fn.zTree.getZTreeObj(ztreeBulid.treeDomId);
+            zTree.expandNode(treeNode);
+            ztreeBulid.isShowCk();
+        }
+    }
+    // var zTree = $.fn.zTree.getZTreeObj(ztreeBulid.treeDomId);
+    // zTree.expandNode(treeNode);
+    // ztreeBulid.isShowCk();
+}
+
+function zTreeOnCheck(event, treeId, treeNode) {
+    // 获取复选框/单选框选中的节点：
+    let  checkedNodes = ztreeBulid.zTreeObj.getCheckedNodes();
+    window.choosedNodes = []
+    checkedNodes.map(function (v) {
+        if(!v.isParent) window.choosedNodes.push(v)
+    })
+
+    if( window.choosedNodes.length<1 && ztreeBulid.isClearList){
+        // GLOBAL_SELECT_LIST_B.map(function (v) {
+        //     ztreeBulid.zTreeObj.checkNode(v,true,true);
+        // })
+        // window.openAlertModel("myModalAlert" , "至少选择一个设备！")
+        // return false;
+    }
+    if( window.choosedNodes.length>20){
+        window.ConfirmModal("提示" , "你选中的设备/泵房将多于20套/个，可能导致数据加载时间变长，确认要选中吗？",'choosedRun', 'choosedStop')
+        return false;
+    }
+    choosedRun();
+}
+function choosedStop() {
+    ztreeBulid.zTreeObj.checkAllNodes(false);
+    GLOBAL_SELECT_LIST_B.map(function (v) {
+        ztreeBulid.zTreeObj.checkNode(v,true,true);
+    })
+}
+
+function  choosedRun() {
+    if(window.choosedNodes.length> GLOBAL_SELECT_LIST.length || !ztreeBulid.isClearList){
+        window.choosedNodes.map(function (v) {
+            let newObj = JSON.parse(JSON.stringify(v));
+            let status = true;
+            newObj.name =newObj.title;
+            GLOBAL_SELECT_LIST.map(function (val) {
+                if(val.id == v.id) status = false;
+            })
+            if(status){
+                GLOBAL_SELECT_LIST.push(newObj);
+                GLOBAL_SELECT_LIST_B.push(v);
+                GLOBAL_SELECT_LIST_CHO0SE.push(v);
+            }
+        })
+    }
+    if(window.choosedNodes.length< GLOBAL_SELECT_LIST.length && ztreeBulid.isClearList){
+        let arrNew =[].concat(JSON.parse(JSON.stringify(GLOBAL_SELECT_LIST)));
+        arrNew.map(function (v, i) {
+            let status = true;
+            window.choosedNodes.map(function (val) {
+                if(val.id == v.id) status = false;
+            })
+            if(status){
+                let index ;
+                for (let j = 0; j<GLOBAL_SELECT_LIST.length; j++){
+                    if(GLOBAL_SELECT_LIST[j].id == v.id ){
+                        index = j;
+                        continue;
+                    }
+                }
+                GLOBAL_SELECT_LIST.splice(index, 1);
+                GLOBAL_SELECT_LIST_B.splice(index, 1);
+            }
+        })
+    }
+    if(window.choosedNodes.length > 0){
+        refreshDeviceCheck(GLOBAL_SELECT_LIST);
+        rightMenuMsg()
+    }
+}
+function focusKey(e) {
+   window.treeFocusKey = true;
+}
+function blurKey(e) {
+   window.treeFocusKey = false;
+}
+
+function inputKey(){
+    let massage = $('#keyTree').val();
+    if(massage){
+        ztreeBulid.isClearList = false;
+        $('#searchClearCtent').show().addClass('searchClearCtentim');
+    }else {
+        ztreeBulid.isClearList = true;
+        $('#searchClearCtent').hide();
+        searchNode();
+    }
+}
+function keyMouseleave() {
+    $('#searchClearCtent').hide();
+}
+
+function searchClearCtent() {
+    $('#keyTree').val("");
+    $('#searchClearCtent').hide().removeClass('searchClearCtentim');
+    searchNode();
+}
+
+$(document).keydown(function (event) {
+    if (window.treeFocusKey && event.keyCode == 13) {
+        searchNode();
+    };
+});
+
+function  moreToMore(type, isShowChecked){
+    GLOBAL_SELECT_LIST = []
+    if(type == 'device' ||type == 'video'){
+        GLOBAL_SELECT_LIST_CHO0SE.map(function (v) {
+            let node = ztreeBulid.zTreeObj.getNodeByParam('pId', v.id)
+            if(node){
+                ztreeBulid.getChooseNode(node);
+            }
+        })
+    }
+    if(type == 'pump'){
+        GLOBAL_SELECT_LIST_CHO0SE.map(function (v) {
+            if(v.pumpStatus){
+                GLOBAL_SELECT_LIST.push(v)
+            }
+            let node = ztreeBulid.zTreeObj.getNodeByParam('pumpHouseId', v.pumpHouseId)
+            ztreeBulid.getChooseNode(node);
+        })
+    }
+
+}
+
+function moreToOne(type, isShowChecked) {
+    if(type == 'device' || type == 'video'){
+        if(GLOBAL_SELECT_LIST_TYPE == type){
+            GLOBAL_SELECT_DEVICE = GLOBAL_SELECT_LIST_CHO0SE[0]
+            let node = ztreeBulid.zTreeObj.getNodeByParam('id', GLOBAL_SELECT_LIST_CHO0SE[0].id);
+            ztreeBulid.getChooseNode(node);
+        }else {
+            if(GLOBAL_SELECT_LIST_TYPE == 'pump'){
+                let node = ztreeBulid.zTreeObj.getNodeByParam('pId', GLOBAL_SELECT_LIST_CHO0SE[0].id );
+                if(node){
+                    GLOBAL_SELECT_DEVICE = node;
+                    GLOBAL_SELECT_LIST_CHO0SE[0]=node
+                    GLOBAL_SELECT_LIST[0]=node
+                }
+                ztreeBulid.getChooseNode(node);
+            }else{
+                let node = ztreeBulid.zTreeObj.getNodeByParam('pId', GLOBAL_SELECT_LIST_CHO0SE[0].pId);
+                if(node){
+                    GLOBAL_SELECT_DEVICE = node;
+                    GLOBAL_SELECT_LIST_CHO0SE[0]=node
+                    GLOBAL_SELECT_LIST[0]=node
+                }
+                ztreeBulid.getChooseNode(node);
+            }
+
+        }
+    }
+    if(type == 'pump'){
+        if(GLOBAL_SELECT_LIST_TYPE == type){
+            GLOBAL_SELECT_DEVICE = GLOBAL_SELECT_LIST_CHO0SE[0]
+            let node = ztreeBulid.zTreeObj.getNodeByParam('id', GLOBAL_SELECT_LIST_CHO0SE[0].id)
+            ztreeBulid.getChooseNode(node);
+        }else {
+            let node = ztreeBulid.zTreeObj.getNodeByParam('id', GLOBAL_SELECT_LIST_CHO0SE[0].pId)
+            if(node){
+                GLOBAL_SELECT_DEVICE = node;
+            }
+            ztreeBulid.getChooseNode(node);
+        }
+    }
+}
+function oneToMore(type, isShowChecked) {
+    GLOBAL_SELECT_LIST = [];
+    GLOBAL_SELECT_LIST_CHO0SE = [];
+    if(type == 'device' || type == 'video'){
+        if(GLOBAL_SELECT_LIST_TYPE == type){
+            let node = ztreeBulid.zTreeObj.getNodeByParam('id', GLOBAL_SELECT_DEVICE.id);
+            ztreeBulid.getChooseNode(node);
+        }else {
+            if(GLOBAL_SELECT_LIST_TYPE == 'pump'){
+                let node = ztreeBulid.zTreeObj.getNodeByParam('pId', GLOBAL_SELECT_DEVICE.id);
+                    ztreeBulid.getChooseNode(node);
+            }else{
+                let node = ztreeBulid.zTreeObj.getNodeByParam('pId', GLOBAL_SELECT_DEVICE.pId);
+                    ztreeBulid.getChooseNode(node);
+            }
+
+        }
+    }
+    if(type == 'pump'){
+        if(GLOBAL_SELECT_LIST_TYPE == type){
+            let node = ztreeBulid.zTreeObj.getNodeByParam('id', GLOBAL_SELECT_DEVICE.id)
+            ztreeBulid.getChooseNode(node);
+        }else {
+            let node = ztreeBulid.zTreeObj.getNodeByParam('id', GLOBAL_SELECT_DEVICE.pId)
+                ztreeBulid.getChooseNode(node);
+        }
+    }
+}
+function oneToOne(type, isShowChecked) {
+    if(type == 'device' || type == 'video'){
+        if(GLOBAL_SELECT_LIST_TYPE == type){
+            let node = ztreeBulid.zTreeObj.getNodeByParam('id', GLOBAL_SELECT_DEVICE.id);
+            ztreeBulid.getChooseNode(node);
+        }else {
+            if(GLOBAL_SELECT_LIST_TYPE == 'pump'){
+                let node = ztreeBulid.zTreeObj.getNodeByParam('pId', GLOBAL_SELECT_DEVICE.id );
+                if(node){
+                    GLOBAL_SELECT_DEVICE = node;
+                }
+                ztreeBulid.getChooseNode(node);
+            }else {
+                let node = ztreeBulid.zTreeObj.getNodeByParam('pId', GLOBAL_SELECT_DEVICE.pId );
+                if(node){
+                    GLOBAL_SELECT_DEVICE = node;
+                }
+                ztreeBulid.getChooseNode(node);
+            }
+
+        }
+    }
+    if(type == 'pump'){
+        if(GLOBAL_SELECT_LIST_TYPE == type){
+            let node = ztreeBulid.zTreeObj.getNodeByParam('id', GLOBAL_SELECT_DEVICE.id)
+            ztreeBulid.getChooseNode(node);
+        }else {
+            let node = ztreeBulid.zTreeObj.getNodeByParam('id', GLOBAL_SELECT_DEVICE.pId)
+            if(node){
+                GLOBAL_SELECT_DEVICE = node;
+            }
+            ztreeBulid.getChooseNode(node);
+        }
+    }
+}
+
+function searchNode() {
+    var zTree = $.fn.zTree.getZTreeObj(ztreeBulid.treeDomId);
+    var value = $.trim(ztreeBulid.key.val());
+    var keyType = "name";
+    if (ztreeBulid.lastValue === value) return;
+    ztreeBulid.lastValue = value;
+    if (value === "") {
+        zTree.showNodes(zTree.transformToArray(zTree.getNodes())) ;
+        ztreeBulid.isShowCk();
+        return;
+    }
+    ztreeBulid.nodeList = zTree.getNodesByParamFuzzy(keyType, value);
+    ztreeBulid.nodeList = zTree.transformToArray(ztreeBulid.nodeList);
+    ztreeBulid.isShowCk();
+    ztreeBulid.updateNodes(true);
+}
+</script>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>登录</title>
+		<link rel="shortcut icon" href="static/login/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" type="text/css" href="static/login/css/reset.css">
+		<link rel="stylesheet" type="text/css" href="static/login/css/login.css">
+	</head>
+
+	<body>
+		<div class="wrapper">
+			<div class="top-bar">
+				<div class="logo">
+					<img src="static/login/images/logo_dst.png">
+				</div>
+				<div class="title">广西北控二次供水智慧管理平台</div>
+			</div>
+			<div class="main-container">
+				<div class="content">
+					<div class="back-hover1"></div>
+					<div class="back-hover2"></div>
+					<div class="login-container">
+						<div class="error-box"></div>
+						<label>用户登录</label>
+						<input type="text" class="username" placeholder="账号" />
+						<input type="text" class="userpwd" placeholder="密码" />
+						<button id="login" type="button">登 录</button>
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				技术支持 : 上海XXXXXX智慧水务股份有限公司
+			</div>
+		</div>
+	</body>
+
+	<script type="text/javascript" src="static/assets/login/js/jquery-1.8.2.js"></script>
+	<script>
+		$(function () {
+		    var $errorBox = $('.error-box');
+            var $username = $('.username');
+            var $password = $('.userpwd');
+
+            $password.focus(function() {
+                $(this).prop('type', 'password');
+			});
+
+            var validate = function ($input) {
+                var value = $input.val();
+                var msg = $input.prop('placeholder');
+
+                if (value === '') {
+                    msg += '不能为空';
+                } else if (!/^[0-9a-zA-Z_]+$/.test(value)) {
+                    msg += '必须为数字或字母';
+                } else if (!/^[0-9a-zA-Z_]{5,20}$/.test(value)) {
+                    msg += '长度在5到20位之间';
+				}
+
+				if ($input.prop('placeholder') !== msg) {
+                    $errorBox.text(msg);
+				} else {
+                    $errorBox.text('');
+				}
+
+                return msg === $input.prop('placeholder');
+            };
+
+            var login = function () {
+                $errorBox.show();
+
+                if (validate($username) && validate($password)) {
+
+                    var loginInfo = {
+                        "loginName": $username.val(),
+                        "password": $password.val()
+                    };
+
+                    $.post("/HYWater/a/user/login", loginInfo, function(result) {
+                        $errorBox.text(result["result"]);
+                        if (result.hasOwnProperty("user")) {
+                            var user = result["user"];
+                            user["map"] = result["map"];
+                            localStorage.setItem("user", JSON.stringify(user));
+                            location.replace("/HYWater/index-" + result["map"] + ".html");
+                        }
+                    });
+                }
+            };
+
+            $('#login').on("click", login);
+
+            $(document).on('keypress', function(event) {
+                if(event.which === 13) {
+                    login();
+                }
+            });
+        });
+	</script>
+</html>

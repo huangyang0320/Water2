@@ -1,0 +1,425 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>index</title>
+    <script type="text/javascript" src="static/home/js/jquery-1.8.0.min.js"></script>
+
+    <link rel="stylesheet" href="static/home/css/comon0.css">
+    <link rel="stylesheet" href="static/home/css/button.css">
+    <link rel="stylesheet" href="static/home/css/liMarquee.css">
+</head>
+<script>
+    $(window).load(function(){
+        $(".loading").fadeOut()
+    })
+
+    /****/
+    $(document).ready(function(){
+        var whei=$(window).width()
+        $("html").css({fontSize:whei/20})
+        $(window).resize(function(){
+            var whei=$(window).width()
+            $("html").css({fontSize:whei/20})
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    function timer(opj){
+        $(opj).find('ul').animate({
+            marginTop : "1rem"
+        },500,function(){
+            $(this).css({marginTop : "0.1rem"}).find("li:first").appendTo(this);
+        })
+    }
+    // alert
+    $(function(){
+        var num = $('.notice_active').find('li').length;
+        if(num > 1){
+            var time=setInterval('timer(".notice_active")',3000);
+            $('.huadong').mousemove(function(){
+                clearInterval(time);
+            }).mouseout(function(){
+                // alert(2)
+                time = setInterval('timer(".notice_active")',3000);
+            });
+        }
+
+        $(".news_ck").click(function(){
+            location.href = $(".notice_active .notice_active_ch").children(":input").val();
+        })
+    });
+</script>
+
+<style type="text/css">
+    .huadong {height:5.5rem;padding: 0.1rem 0 0.1rem 0;}
+    .huadong .notice_active {
+        float: left;
+        width: 100%;
+        height: 5.3rem;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+    }
+    .huadong .notice_active li{list-style-type:none;height:5.3rem;overflow: hidden;}
+    .notice_active ul{padding-left: 6px;}
+    .alltitle-one{
+        text-align: left;
+    }
+    #echarts_04 {
+        height:calc(4.5rem - 30px)
+    }
+    @media screen and (max-width: 1600px) {
+        #echarts_04 {
+        }
+    }
+</style>
+
+<style>
+    .dowebok { width: 600px; height: 100px; margin-top: 1px; font-size: 14px;}
+    .dowebok ul { margin: 0; line-height: 30px;}
+    .dowebok a { color: #bdbdbd; text-decoration: none;}
+    .dowebok a:hover { text-decoration: underline;}
+</style>
+
+
+<body>
+<div class="canvas" style="opacity: .2">
+    <iframe frameborder="0" src="static/home/js/index.html" style="width: 100%; height: 100%"></iframe>
+</div>
+<div class="loading">
+    <div class="loadbox"> <img src="static/home/picture/loading.gif"> 页面加载中... </div>
+</div>
+<!--<div class="head">
+  <h1>大数据可视化展板通用模板</h1>
+  <div class="weather"><span id="showTime"></span></div>
+
+	<script>
+var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+		var y=dt.getFullYear();
+		var mt=dt.getMonth()+1;
+		var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行
+    }
+
+</script>
+
+
+</div>-->
+<div class="mainbox">
+    <ul class="clearfix">
+        <li>
+            <div class="boxall" style="height: 2rem">
+                <div class="alltitle">能耗分析</div>
+                <table style="margin-top: 3px;">
+                    <tr>
+
+                        <td rowspan="2" width="10%"><img src="static/home/images/icon-05.png"  style="width: 70%"/></td>
+                        <td width="40%" >
+                            <p class="alltitle-one" style="white-space: nowrap">当月用水：<span id="cureentDayAvg" style="color: #fff;">0</span>/天</p>
+                        </td>
+
+
+                        <td rowspan="2" width="10%"><img src="static/home/images/icon-01.png" style="width: 70%"/></td>
+                        <td width="40%">
+                            <p class="alltitle-one" style="white-space: nowrap">同期用水：<span id="lastYearAvg" style="color: #fff;">0</span>/天</p>
+                        </td>
+
+
+
+                        <!--<td rowspan="2"><img src="static/home/images/icon-06.png"  style="width: 70%"/></td>
+                        <td>
+                            <p class="alltitle-one">同比</p>
+                        </td>
+                        <td>
+                            <p><img id="tb" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
+                                <span id="tRate" style="color: #fff;">0</span></p>
+                        </td>-->
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <p class="alltitle-one" style="white-space: nowrap">当月能效：<span id="currentPower" style="color: #fff;">0</span></p>
+                        </td>
+
+
+                        <td>
+                            <p class="alltitle-one" style="white-space: nowrap">同期能效：<span id="lastYearPower" style="color: #fff;">0</span></p>
+                        </td>
+
+
+                        <!-- <td>
+                             <p class="alltitle-one">环比</p>
+                         </td>
+                         <td>
+                             <p><img id="hb" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
+                                 <span id="hRate" style="color: #fff;">0</span></p>
+                         </td>-->
+                    </tr>
+
+                   <!-- <tr>
+                        <td colspan="6"><hr style="    background: #79ace3;height: 1px; border: none;"/></td>
+                    </tr>-->
+
+                    <tr>
+
+                        <td rowspan="2" width="10%"><img src="static/home/images/icon-02.png"  style="width: 70%"/></td>
+                        <td width="40%">
+                            <p class="alltitle-one" style="white-space: nowrap">上月用水：<span id="lastMonthAvg" style="color: #fff;">0</span>/天</p>
+                        </td>
+
+                        <td rowspan="2" width="10%"><img src="static/home/images/icon-06.png"  style="width: 70%"/></td>
+                        <td  width="40%">
+                            <p class="alltitle-one" style="white-space: nowrap">同比(%)：
+
+                                <img id="tb" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
+                                水:<span id="tRate" style="color: #fff;">0</span>
+                                <img id="tbd" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
+                                能效:<span id="tRated" style="color: #fff;">0</span>
+
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <p class="alltitle-one" style="white-space: nowrap">上月能效：<span id="lastPower" style="color: #fff;">0</span></p>
+                        </td>
+
+
+                        <td>
+                            <p class="alltitle-one" style="white-space: nowrap">环比(%)：
+
+                                <img id="hb" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
+                                水:<span id="hRate" style="color: #fff;">0</span>
+                                <img id="hbd" src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>
+                                能效:<span id="hRated" style="color: #fff;">0</span>
+                            </p>
+                        </td>
+                    </tr>
+
+
+
+
+                </table>
+                <div class="boxfoot"></div>
+            </div>
+            <div class="boxall" style="height: 4.4rem">
+                <div class="alltitle">泵房状态</div>
+                <div class="allnav" id="echart_02"></div>
+                <div class="boxfoot"></div>
+            </div>
+            <div class="boxall" style="height: 4.16rem">
+                <div class="alltitle">智能运维</div>
+                <div class="allnav" id="echarts_03"></div>
+                <div class="boxfoot"></div>
+            </div>
+        </li>
+        <li>
+            <div class="map">
+                <div>
+                    <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpMapData(this);">泵房数</span>
+                    <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getUseWaterOrUsrPowerData('m3',this);">用水量</span>
+                    <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getUseWaterOrUsrPowerData('kWh',this);">耗电量</span>
+                    <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpMapFreeWater(this);">蓄水量</span>
+
+                </div>
+
+                <div class="map1"><img src="static/home/picture/lbx.png"></div>
+                <div class="map2"><img src="static/home/picture/jt.png"></div>
+                <div class="map3"><img src="static/home/picture/map.png"></div>
+                <div class="map4" id="map_1"></div>
+
+            </div>
+            <div class="boxall" style="height: 3.66rem;">
+                <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getDynamicPressureData(this);">压力动态</span>
+                <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpHouseDynamicPressureData(this);">压力均值</span>
+                <div class="allnav" id="fb1" style="height: 100%"></div>
+                <!--<div class="alltitle">动态压力</div>-->
+                <!--<div style="height:100%; width: 100%; float: left;">-->
+                    <!--<div class="allnav" id="fb1"></div>-->
+                <!--</div>-->
+                <!--<div class="alltitle">总耗电量</div>
+                <div style="height:45%; width: 100%; float: left;">
+                    <div class="allnav" id="fb2"></div>
+                </div>-->
+
+                <div class="boxfoot">
+
+                </div>
+            </div>
+        </li>
+        <li>
+            <!--<div class="boxall" style="height: 2.3rem">
+                <div class="alltitle">月统计</div>
+                <div class="allnav">
+                    <ul>
+                        <li style="float: left;margin-left: 35px;color: #FFFFFF; font-size: 13px;">区域</li>
+                        <li style="float: left;margin-left: 35px;color: #FFFFFF; font-size: 13px;">当月用水量</li>
+                        <li style="float: left;margin-left: 35px;color: #FFFFFF; font-size: 13px;">当月耗电量</li>
+                        <li style="float: left;margin-left: 35px;color: #FFFFFF; font-size: 13px;">泵房数</li>
+                        <li style="float: left;margin-left: 35px;color: #FFFFFF; font-size: 13px;">蓄水量</li>
+                    </ul>
+
+                    <div class="dowebok">
+
+                        <ul id="table">
+                            <table width="100%" cellpadding="6" cellspacing="0">
+                                <tr class="row2">
+                                    <td>48</td>
+                                    <td>48</td>
+                                    <td>48</td>
+                                    <td>48</td>
+                                    <td>48</td>
+                                </tr>
+                                <tr class="row1">
+                                    <td>34</td>
+                                    <td>34</td>
+                                    <td>34</td>
+                                    <td>34</td>
+                                    <td>34</td>
+                                </tr>
+                                <tr class="row2">
+                                    <td>28</td>
+                                    <td>28</td>
+                                    <td>26</td>
+                                    <td>25</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr class="row2">
+                                    <td>28</td>
+                                    <td>28</td>
+                                    <td>26</td>
+                                    <td>25</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr class="row2">
+                                    <td>28</td>
+                                    <td>28</td>
+                                    <td>26</td>
+                                    <td>25</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr class="row2">
+                                    <td>28</td>
+                                    <td>28</td>
+                                    <td>26</td>
+                                    <td>25</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr class="row2">
+                                    <td>28</td>
+                                    <td>28</td>
+                                    <td>26</td>
+                                    <td>25</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr class="row2">
+                                    <td>28</td>
+                                    <td>28</td>
+                                    <td>26</td>
+                                    <td>25</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr class="row2">
+                                    <td>28</td>
+                                    <td>28</td>
+                                    <td>26</td>
+                                    <td>25</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr class="row2">
+                                    <td>28</td>
+                                    <td>28</td>
+                                    <td>26</td>
+                                    <td>25</td>
+                                    <td>8</td>
+                                </tr>
+                            </table>
+
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="boxfoot"></div>
+            </div>-->
+            <div class="boxall" style="height:5rem">
+                <div class="alltitle">趋势曲线</div>
+                <div>
+                    <span class="button-span nav_active" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpData_04_day(this);">日曲线</span>
+                    <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpData_04_month(this);">月曲线</span>
+                    <span class="button-span" style="display:inline-block;margin-left: 3px;cursor:pointer;" onclick="getPumpData_04_year(this);">年曲线</span>
+                        <!--<uul>
+                            <lli class="nav_active" style="display:inline-block;margin-left: 10px;"><a href="#" onclick="getPumpData_04_day();">日曲线</a> </lli>
+                            <lli style="display:inline-block;margin-left: 3px;"><a href="#" onclick="getPumpData_04_month();">月曲线</a> </lli>
+                            <lli style="display:inline-block;margin-left: 3px;"><a href="#" onclick="getPumpData_04_year();">年曲线</a> </lli>
+                        </uul>-->
+                </div>
+                <div class="allnav" id="echarts_04"></div>
+                <div class="boxfoot"></div>
+            </div>
+            <div class="boxall" style="height: 5.71rem">
+                <div class="alltitle">用水量排名</div>
+                <div class="allnav" id="echart5" style="display: none;"></div>
+                <div class="huadong">
+                    <div class="notice_active">
+                        <ul>
+                            <li class="notice_active_ch">
+                                <div class="paiming" id="paiming1" style="width: 100%;height: 96%;" ></div>
+                            </li>
+                            <li class="notice_active_ch">
+                                <div class="paiming" id="paiming2" style="width: 100%;height: 96%;" ></div>
+                            </li>
+                            <li class="notice_active_ch">
+                                <div class="paiming" id="paiming3" style="width: 100%;height: 96%;" ></div>
+                            </li>
+                            <li class="notice_active_ch">
+                                <div class="paiming" id="paiming4" style="width: 100%;height: 96%;" ></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="boxfoot"></div>
+            </div>
+
+        </li>
+    </ul>
+</div>
+<div class="back"></div>
+
+<script type="text/javascript" src="static/home/js/jquery.js"></script>
+<script type="text/javascript" src="static/home/js/echarts.min.js"></script>
+<script type="text/javascript" src="static/home/js/get_every_day.js"></script>
+<script type="text/javascript" src="static/home/js/map.js"></script>
+
+
+<script language="javascript" src="static/home/js/js.js"></script>
+<script language="javascript" src="static/home/js/top10.js"></script>
+<script type="text/javascript" src="static/home/js/th-ratio.js"></script>
+<!-- Highcharts Js -->
+<script src="static/assets/js/Highcharts-4.2.3/highcharts.js"></script>
+<script src="static/assets/js/Highcharts-4.2.3/highcharts-3d.js"></script>
+<script src="static/assets/js/Highcharts-4.2.3/highcharts-more.js"></script>
+<script src="static/assets/js/constant.js"></script>
+<script type="text/javascript" src="static/home/js/pump_echarts_02.js"></script>
+<script type="text/javascript" src="static/home/js/pump_echarts_03.js"></script>
+<script type="text/javascript" src="static/home/js/pump_echarts_04.js"></script>
+
+<script type="text/javascript" src="static/home/js/china.js"></script>
+<script type="text/javascript" src="static/home/js/area_echarts.js"></script>
+<!--	<script  type="text/javascript" src="js/online.js"></script> -->
+<script type="text/javascript" src="static/home/js/jquery.liMarquee.js"></script>
+
+</body>
+</html>

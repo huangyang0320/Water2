@@ -1,0 +1,167 @@
+[{
+    "title": "系统预览",
+    "icon": "fa-search",
+    "subMenu": [{
+      "title": "系统首页",
+      "url": "themeStatNew"
+    },{
+      "title": "主题页面",
+      "url": "systemOverview"
+    }
+    ]
+  },{
+    "title": "系统导航",
+    "icon": "fa-flag",
+    "liLen":"2",
+    "subMenu": [{
+      "title": "地图导航（老）",
+      "url": "home-map-baidu",
+      "enabled": "false"
+    },
+      {
+        "title": "地图导航",
+        "url": "home-map-baiduNew"
+      }
+    , {
+      "title": "泵站导航",
+      "url": "pumpGuide"
+    }, {
+      "title": "SCADA导航",
+      "enabled": "false",
+      "event": "showSCADA"
+    }]
+  }, {
+    "title": "实时监控",
+    "icon": "fa-eye",
+    "subMenu": [{
+      "title": "实时数据（老）",
+      "url": "realtimeData",
+      "enabled": "false"
+    },{
+      "title": "实时数据",
+      "url": "realtimeDataNew"
+    },{
+      "title": "历史数据(老)",
+      "enabled": "false",
+      "url": "historyDataNew"
+    },{
+      "title": "历史数据",
+      "url": "historyDataNewBak"
+    },{
+      "title": "能耗分析（老）",
+      "url": "energyanalysis",
+      "enabled": "false"
+    }
+    , {
+      "title": "功耗分析（老）",
+      "url": "poweranalysisBak",
+      "enabled": "false"
+    },{
+      "title": "组态监控",
+      "url": "configuration"
+    },{
+      "title": "视频监控",
+      "url": "video"
+    }, {
+      "title": "视频回放",
+      "url": "videoHis"
+    }]
+  }, {
+    "title": "设备管理",
+    "icon": "fa-gears",
+    "subMenu": [{
+      "title": "设备档案",
+      "url": "deviceArchives"
+    }, {
+      "title": "泵房信息",
+      "url": "pumpInfo"
+    }, {
+      "title": "寿命预估",
+      "url": "lifeprediction"
+    }, {
+      "title": "维保信息",
+      "url": "maintenance"
+    },{
+      "title": "水泵性能矩阵数据",
+      "url": "pumpPerformanceMatrix"
+    }]
+  }, {
+    "title": "生产管理",
+    "icon": "fa-wrench",
+    "enabled": "false",
+    "subMenu": [{
+      "title": "门禁管理",
+      "url": "doorAccess"
+    }, {
+      "title": "人员状态",
+      "url": "personnelStatus",
+      "enabled": "false"
+    }]
+  }, {
+    "title": "统计分析",
+    "icon": "fa-bar-chart-o",
+    "subMenu": [{
+      "title": "考勤统计",
+      "url": "attendanceStat"
+    },{
+      "title": "门禁记录",
+      "url": "accessRecord"
+    },{
+      "title": "告警查询",
+      "url": "alarmQuery"
+    }, {
+      "title": "历史查询",
+      "url": "historyQuery"
+    },  {
+      "title": "能耗分析",
+      "url": "energyanalysisNew"
+    }, {
+      "title": "功耗分析",
+      "url": "poweranalysis"
+    },{
+      "title": "能耗排名",
+      "url": "energyRank"
+    },{
+      "title": "泵机带图",
+      "url": "pumpBandDiagram"
+    },{
+      "title": "小流量保压",
+      "url": "smallFlow"
+    }]
+  }, {
+    "title": "工单管理",
+    "icon": "fa-wrench",
+    "liLen":"2",
+    "subMenu": [{
+      "title": "工单管理",
+      "event": "jumpTicket",
+      "enabled": "true"
+    },{
+      "title": "工单查询",
+      "url": "ticketQuery"
+    },{
+      "title": "人员列表",
+      "url": "personList",
+      "enabled": "false"
+    }]
+  }, {
+    "title": "系统管理",
+    "icon": "fa-desktop",
+    "liLen":"2",
+    "subMenu": [{
+      "title": "告警参数",
+      "event": "showAlert"
+    }, {
+      "title": "密码设置",
+      "event": "showPassword",
+      "enabled": "false"
+    }, {
+      "title": "右侧菜单设置",
+      "event": "ztreeType"
+    },{
+      "title": "后台管理",
+      "event": "jumpMgSystem",
+      "enabled": "true"
+    }
+    ]
+}]

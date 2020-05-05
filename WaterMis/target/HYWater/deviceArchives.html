@@ -1,0 +1,490 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<style type="text/css">
+	/*
+	 * inline styles
+	 * deviceArchives styles
+	 */
+	 #page-inner {
+         padding: 10px;
+		 overflow-y: auto;
+		 overflow-x: hidden;
+     }
+	 input, textarea {
+	 	width: 95%;
+	 	color: #636464;
+	 	font-size: 12px;
+	 	outline: none;
+	 }
+	 textarea {
+	 	height: 70px;
+	 }
+	 .td-first {
+	 	min-width: 70px;
+	 	color: rgb(67, 95, 123);
+	 }
+	 .td-second {
+	 	width: 33.3333%;
+	 	min-width: 90px;
+	 	text-align: center !important;
+	 	word-break: break-all;
+	 	word-wrap: break-word;
+	 }
+	 /* base styles */
+	 .devicefiles-container {
+	 	position: relative;
+	 	width: 100%;
+	 	height: auto;
+	    background-color: #fff;
+	    border: 1px solid transparent;
+	    border-radius: 4px;
+	    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+	    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+	 }
+	 .ul-contanier,
+	 .showInfo {
+	 	width: 100%;
+	 	height: auto;
+	 	padding: 10px 0;
+	 	margin: 0;
+	 	float: left;
+	 }
+	 .showInfo2 {
+	 	padding: 0 0 10px 0;
+	 	margin-top: 2px;
+	 }
+	 .ul-contanier li {
+	 	display: inline-block;
+	 	list-style: none;
+	 	background: #ebf2fa;
+	 	margin-left: 1%;
+	 	border: 1px solid #ccc;
+	 	float: left;
+	 }
+	 .li1 {
+	 	width: 19%;
+	 }
+	 .li2 {
+	 	width: 25%;
+	 }
+	 .li3 {
+	 	width: 32%;
+	 }
+	 .li4 {
+	 	width: 19%;
+	 }
+	 .surround,
+	 .surround1 {
+	 	float: left;
+ 	    width: 100%;
+	    height: 35px;
+	    line-height: 35px;
+	    font-size: 12px;
+	    color: #1a3666;
+	    background: #c8d7ec;
+	    text-align: center;
+	    border-top: 1px solid #fff;
+	    overflow: hidden;
+	    cursor: default;
+	 }
+	 .surround span {
+ 	    float: left;
+	    width: 50%;
+	    cursor: pointer;
+	 }
+	 .surround-padding {
+	 	padding-right: 15px;
+	 }
+	 .surround1 span {
+	 	float: left;
+	 	width: 33.3333%;
+	 }
+	 .surround span:hover {
+	 	color: #fff;
+ 	 	background-color: #93afd7;
+	 }
+	 .span-active {
+	 	color: #fff;
+	 	background-color: #93afd7;
+	 }
+	 /**********************************/
+	 .showInfo li {
+	 	width: 100%;
+	 	margin-left: 0;
+	 	border: none;
+	 }
+	 .showInfo table td {
+	 	padding: 1px 3px;
+	 	font-size: 12px;
+	 	text-align: right;
+	 }
+	 li.hide-table {
+	 	display: none;
+	 }
+
+	 .table-scroll {
+	 	display: block;
+	 	overflow-x: hidden;
+	 	overflow-y: auto;
+	 }
+
+</style>
+<div id="page-inner">
+	<div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div id="selectedDevice"></div>
+        </div>
+    </div>
+	<div class="row">
+		<div class="col-md-12 col-sm-12 col-xs-12 bg-device">
+			<div class="devicefiles-container">
+				<ul class="ul-contanier">
+					<!-- device/program infomation -->
+					<li class="li1  col-bg-6" style="width:23%">
+						<div>
+							<div class="surround" id="device-program-info">
+								<span class="span-active">设备信息</span>
+								<span>泵房信息</span>
+								<span>项目信息</span>
+							</div>
+							<ul class="showInfo">
+								<li>
+									<table cellpadding="0" cellspacing="0" width="100%">
+										<tr>
+											<td  class="td-first">设备名称 :</td>
+											<td><input type="text" id="deviceName" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">设备编号 :</td>
+											<td><input type="text" id="deviceId_d" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">生产日期 :</td>
+											<td><input type="text" id="dateManufacture" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">购买日期 :</td>
+											<td><input type="text" id="datePurchase" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">购买金额 :</td>
+											<td><input type="text" id="purchaseAmount" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">创建日期 :</td>
+											<td><input type="text" id="createtime" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">更新日期 :</td>
+											<td><input type="text" id="updatetime" readonly="readonly"></td>
+										</tr>
+									</table>
+								</li>
+								<li class="hide-table">
+									<table cellpadding="0" cellspacing="0" width="100%">
+										<tr>
+											<td class="td-first">泵房名称 :</td>
+											<td><input type="text" id="pumpName" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">泵房地址 :</td>
+											<td><input type="text" id="pumpAddress" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">设备厂家名 :</td>
+											<td><input type="text" id="deviceManufacturers" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">设备厂家联系方式 :</td>
+											<td><input type="text" id="deviceManufacturersInformation" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">自控改造厂家位 :</td>
+											<td><input type="text" id="selfControlManufacturers" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">自控改造厂家联系方式 :</td>
+											<td><input type="text" id="selfControlManufacturersInformation" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">建设方 :</td>
+											<td><input type="text" id="constructionSide" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">建设方联系方式 :</td>
+											<td><input type="text" id="constructionSideInformation" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">施工方 :</td>
+											<td><input type="text" id="construction" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">施工方联系方式 :</td>
+											<td><input type="text" id="constructionInformation" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">物业 :</td>
+											<td><input type="text" id="property" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">物业联系方式 :</td>
+											<td><input type="text" id="propertyInformation" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">小区名称 :</td>
+											<td><input type="text" id="cellName" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">小区地址 :</td>
+											<td><input type="text" id="cellAdress" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">移交时间 :</td>
+											<td><input type="text" id="handoverTime" readonly="readonly"></td>
+										</tr>
+									</table>
+								</li>
+								<li class="hide-table">
+									<table cellpadding="0" cellspacing="0" width="100%">
+										<tr>
+											<td class="td-first">项目编号 :</td>
+											<td><input type="text" id="projectId" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">项目名称 :</td>
+											<td><input type="text" id="projectName" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">项目主管 :</td>
+											<td><input type="text" id="projectManager" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">销售员姓名 :</td>
+											<td><input type="text" id="salesman" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">项目地址 :</td>
+											<td><input type="text" id="projectAddress" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">合同签订单位 :</td>
+											<td><input type="text" id="htqdDw" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">合同签订类型 :</td>
+											<td><input type="text" id="contractType" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">购买方名称 :</td>
+											<td><input type="text" id="buyerName" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">购买方联系人 :</td>
+											<td><input type="text" id="buyerContactsName" readonly="readonly"></td>
+										</tr>
+										<!--
+                                        <tr>
+                                            <td class="td-first">合同签订日期 :</td>
+                                            <td><input type="text" id="signDate" readonly="readonly"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td-first">到货日期 :</td>
+                                            <td><input type="text" id="arrivalDate" readonly="readonly"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td-first">预计调试日期 :</td>
+                                            <td><input type="text" id="yjtsDate" readonly="readonly"></td>
+                                        </tr>
+                                        -->
+										<tr>
+											<td class="td-first">备注 :</td>
+											<td><textarea id="projectMemo"></textarea></td>
+										</tr>
+									</table>
+								</li>
+							</ul>
+						</div>
+						<div>
+							<div class="surround">
+								电器设备标牌
+							</div>
+							<ul class="showInfo">
+								<li>
+									<table cellpadding="0" cellspacing="0" width="100%">
+										<tr>
+											<td class="td-first">设备编号 :</td>
+											<td><input type="text" id="deviceId_a" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">设备型号 :</td>
+											<td><input type="text" id="modelNo" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">额定电压 :</td>
+											<td><input type="text" id="ratedVoltage" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">额定功率 :</td>
+											<td><input type="text" id="ratedPower_A" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">执行标准 :</td>
+											<td><input type="text" id="standards" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">控制台数 :</td>
+											<td><input type="text" id="controlQuantity" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">额定电流 :</td>
+											<td><input type="text" id="ratedCurrent" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">额定频率 :</td>
+											<td><input type="text" id="ratedFrequency" readonly="readonly"></td>
+										</tr>
+									</table>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li class="li2  col-bg-6" style="width:28%">
+						<div>
+							<div class="surround">
+								设备配件信息
+							</div>
+							<div class="surround surround1" id="device-fitting">
+								<span class="span-active">成套设备</span>
+								<span>电气设备</span>
+								<span>水泵</span>
+							</div>
+							<div class="surround1 surround-padding" id="device-fitting">
+								<span>名称</span>
+								<span>类型</span>
+								<span>数量</span>
+							</div>
+							<ul class="showInfo showInfo2">
+								<li>
+									<table id="e_table" class="table-scroll" cellpadding="0" cellspacing="0" width="100%">
+									</table>
+								</li>
+								<li class="hide-table">
+									<table id="a_table" class="table-scroll" cellpadding="0" cellspacing="0" width="100%">
+									</table>
+								</li>
+								<li class="hide-table">
+									<table id="p_table" class="table-scroll" cellpadding="0" cellspacing="0" width="100%">
+									</table>
+								</li>
+							</ul>
+						</div>
+						<div>
+							<div class="surround">
+								水泵标牌
+							</div>
+							<ul class="showInfo">
+								<li>
+									<table cellpadding="0" cellspacing="0" width="100%">
+										<tr>
+											<td class="td-first">水泵型号 :</td>
+											<td><input type="text" id="modelNo_p" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">额定供水量 :</td>
+											<td><input type="text" id="sbedgsll_p" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">额定功率 :</td>
+											<td><input type="text" id="ratedPower_p" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">额定供水扬程 :</td>
+											<td><input type="text" id="sbedgsyc_p" readonly="readonly"></td>
+										</tr>
+										<tr>
+											<td class="td-first">转速 :</td>
+											<td><input type="text" id="speed_p" readonly="readonly"></td>
+										</tr>
+									</table>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li class="li3  col-bg-12" style="width:43%">
+						<div class="surround">
+							成套设备标牌
+						</div>
+						<ul class="showInfo">
+							<li>
+								<table cellpadding="0" cellspacing="0" width="100%">
+									<tr>
+										<td class="td-first">设备编号 :</td>
+										<td><input type="text" id="deviceId_e" readonly="readonly"></td>
+										<td class="td-first">设备重量 :</td>
+										<td><input type="text" id="weight" readonly="readonly"></td>
+									</tr>
+									<tr>
+										<td class="td-first">设备型号 :</td>
+										<td><input type="text" id="equipmentModelNo_S" readonly="readonly"></td>
+										<td class="td-first">环境温度 :</td>
+										<td><input type="text" id="environmentalTemperature" readonly="readonly"></td>
+									</tr>
+									<tr>
+										<td class="td-first">水泵型号 :</td>
+										<td><input type="text" id="pupmpModelNo" readonly="readonly"></td>
+										<td class="td-first">水泵台数 :</td>
+										<td><input type="text" id="pumpQuantity" readonly="readonly"></td>
+									</tr>
+									<tr>
+										<td class="td-first">额定供水流量 :</td>
+										<td><input type="text" id="sbedgsll_S" readonly="readonly"></td>
+										<td class="td-first">控制柜型号 :</td>
+										<td><input type="text" id="cabinetModelNo" readonly="readonly"></td>
+									</tr>
+									<tr>
+										<td class="td-first">设备额定功率 :</td>
+										<td><input type="text" id="powerRating" readonly="readonly"></td>
+										<td class="td-first">配套电源电压 :</td> 
+										<td><input type="text" id="powerVoltage" readonly="readonly"></td>
+									</tr>
+									<tr>
+										<td class="td-first">稳流罐规格 :</td>
+										<td><input type="text" id="wlgGg" readonly="readonly"></td>
+										<td class="td-first">额定供水扬程 :</td>
+										<td><input type="text" id="sbedgsyc_S" readonly="readonly"></td>
+									</tr>
+									<tr>
+										<td class="td-first">设备外形尺寸 :</td>
+										<td><input type="text" id="shapgeSize" readonly="readonly"></td>
+										<td class="td-first">设备总功率 :</td>
+										<td><input type="text" id="totalPower" readonly="readonly"></td>
+									</tr>
+									<tr>
+										<td class="td-first">流量控制器 :</td>
+										<td><input type="text" id="llkzq" readonly="readonly"></td>
+										<td class="td-first">增压装置规格 :</td>
+										<td><input type="text" id="zyzzGg" readonly="readonly"></td>
+									</tr>
+									<tr>
+										<td class="td-first">气压罐规格 :</td>
+										<td><input type="text" id="qygGg" readonly="readonly"></td>
+										<td class="td-first">补偿器规格 :</td>
+										<td><input type="text" id="scbcq" readonly="readonly"></td>
+									</tr>
+									<tr>
+										<td class="td-first">水箱规格 :</td>
+										<td><input type="text" id="sxGg" readonly="readonly"></td>
+										<td class="td-first">出厂日期 :</td>
+										<td><input type="text" id="exFactoryDate" readonly="readonly"></td>
+									</tr>
+								</table>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+    <!-- /. ROW  -->
+</div>
+<!-- /. PAGE INNER  -->
+<script src="static/assets/js/device/deviceArchives.js"></script>

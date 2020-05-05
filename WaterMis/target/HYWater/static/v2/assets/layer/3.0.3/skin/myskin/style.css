@@ -1,0 +1,20 @@
+/*
+ * define personal styles for layer skin
+ * author: superdongguo
+ * time: 2017-04-11
+ */
+
+body .layer-myskin .layui-layer-title{
+	color: #fff;
+	font-size: 15px;
+	background-color: #3b7fd2;
+}
+
+/*body .layer-myskin .layui-layer-ico {
+	background: url(icon.png) no-repeat;
+}*/
+
+body .layer-myskin .layui-layer-setwin .layui-layer-close1 {
+    background-position: -186px -38px;
+    cursor: pointer;
+}

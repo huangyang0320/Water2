@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.home.dao.AlarmStatMapper">
+
+	<!--批量插入告警下发状态数据-->
+	<insert id="insertAlarmSendStatus" parameterType="java.util.List">
+		insert into alarm_send_status(
+		alarm_send_id
+		,alarm_statistics_id
+		,alarm_send_type
+		,send_fail_count
+		,send_addr
+		,is_Success
+		,create_date
+		,create_by
+		,valid_flag
+		) values
+		<foreach collection="list" item="alarmList" index="index"
+				 separator=",">
+			(
+			#{alarmList.alarmSendId}
+			,#{alarmList.alarmStatisticsId}
+			,#{alarmList.alarmSendType}
+			,#{alarmList.sendFailCount}
+			,#{alarmList.sendAddr}
+			,#{alarmList.isSuccess}
+			,#{alarmList.createDate}
+			,#{alarmList.createBy}
+			,#{alarmList.validFlag}
+			)
+		</foreach>
+	</insert>
+	<!--修改发送失败次数-->
+	<update id="updateAlarmSendStatusByAlarmStatisticsId" parameterType="java.util.List">
+		<foreach collection="list" item="bean" index="index" open="" close="" separator=";">
+			UPDATE alarm_send_status ala
+			<set>
+				SET ala.send_fail_count = ( ala.send_fail_count + 1 )
+			</set>
+			<where>
+				ala.alarm_statistics_id = #{bean.alarmStatisticsId}
+			</where>
+		</foreach>
+	</update>
+	
+<!--获取对应的告警数据（对应的测点名）-->
+	<select id="getAlarmDetailBySendStatus" resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
+		select
+				s.id,
+				s.longi,s.lati,
+				s.phName,
+				s.phId,
+				s.ticketId,
+				s.deviceName,
+				s.deviceId,
+				s.alarmInfo,
+				s.alarmReason,
+				s.alarDescription,
+				s.endDate,
+				s.startDate,
+				s.alarmTime,
+				s.alarmLevel
+		from
+		(
+			SELECT
+					concat(ALARM.device_code,'_',ALARM.function_name,'_',date_format(ALARM.start_date,'%Y-%m-%d %H:%i:%s')) as id,
+					longi,lati,
+					DL.name phName,
+					DL.id phId,
+					alarm.ticketId ticketId,
+					D.name deviceName,
+					concat(D.id,'') deviceId,
+					ATD.FUNCTION_REMARKS alarmInfo,
+					ATD.alarm_reason alarmReason,
+					ATD.task_description alarDescription,
+					date_format(ALARM.END_DATE,'%Y-%m-%d %H:%i:%s') endDate,
+					date_format(ALARM.START_DATE,'%Y-%m-%d %H:%i:%s') startDate,
+					truncate(TIMESTAMPDIFF(SECOND,Start_DATE,End_Date)/3600,2) alarmTime,
+					case when alarm_level = '1' then '一级'
+						 when alarm_level = '2' then '二级'
+						 when alarm_level = '3' then '三级'
+						 when alarm_level = '4' then '四级'
+						 else '' end alarmLevel
+				FROM
+					alarm_statistics alarm
+						JOIN
+					alarm_task_description atd ON atd.function_name = alarm.function_name
+						JOIN
+					device d ON d.id = alarm.device_code
+						JOIN
+					pump_house dl ON dl.id = d.id_pump_house
+				WHERE
+					d.id IN (
+						SELECT
+							authobject_id
+						FROM
+							permission_info
+					)
+						and (start_date >= substring(now(),1,10)  or end_date >= substring(now(),1,10))
+					and alarm_status = '1' and confirm_status = '0'
+					<if test="pumpHouseName != null and pumpHouseName != ''">
+						and dl.name like CONCAT('%',#{pumpHouseName},'%')
+					</if>
+					<if test="areaCode != null and areaCode != ''">
+						and dl.ID_REGION = #{areaCode}
+					</if>
+				) as s
+				where
+				NOT EXISTS (
+					SELECT
+						alarm_statistics_id
+					FROM
+						alarm_send_status ala
+					WHERE
+						ala.alarm_statistics_id = s.id
+						and (
+						ala.is_success = 'Y'
+						or
+						ala.send_fail_count >= 3
+						)
+						and ala.valid_flag = 'Y'
+
+				)
+			</select>
+
+
+
+
+
+
+	<select id="getAlarmDetail" resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
+		SELECT 
+	    concat(ALARM.device_code,'__',ALARM.function_name,'__',date_format(ALARM.start_date,'%Y-%m-%d %H:%i:%s')) as id,
+		longi,lati,
+		DL.name phName,
+		alarmSet.alarmSetValue,
+		DL.id phId,
+		atd.function_name functionName,
+		DL.ADDRESS address,
+		alarm.ticketId ticketId,
+		D.name deviceName,
+		atd.alarm_type_remarks as alarmTypeRemarks,
+		concat(D.id,'') deviceId,
+		ATD.FUNCTION_REMARKS alarmInfo,
+		ATD.alarm_reason alarmReason,
+		ATD.task_description alarDescription,
+		date_format(ALARM.END_DATE,'%Y-%m-%d %H:%i:%s') endDate,
+		date_format(ALARM.START_DATE,'%Y-%m-%d %H:%i:%s') startDate,
+		truncate(TIMESTAMPDIFF(SECOND,Start_DATE,End_Date)/3600,2) alarmTime,
+		case when alarm_level = '1' then '一级'
+			 when alarm_level = '2' then '二级'
+			 when alarm_level = '3' then '三级'
+			 when alarm_level = '4' then '四级'
+			 else '' end alarmLevel
+	FROM
+		alarm_statistics alarm
+			JOIN
+		alarm_task_description atd ON atd.function_name = alarm.function_name
+			JOIN
+		device d ON d.id = alarm.device_code
+			JOIN
+		pump_house dl ON dl.id = d.id_pump_house
+		left JOIN
+		getAlarmSetValue alarmSet ON alarmSet.idDevice=alarm.device_code and atd.function_name =alarmSet.functionName
+		WHERE
+		d.id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+	    and (start_date &gt; substring(now(),1,10)  or end_date &gt; substring(now(),1,10))
+		and alarm_status = '1' and confirm_status = '0'
+
+		<if test="phIdList != null and phIdList.size() > 0 ">
+		and dl.id in
+			<foreach collection="phIdList"  item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+
+
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+
+
+		<if test="alarmLevel != null and alarmLevel != ''">
+			and alarm_level= #{alarmLevel}
+		</if>
+		group by id
+		<if test="sortName !=null and sortName!='' " >
+			order by ${sortName} ${sortOrder}
+		</if>
+
+		<if test="sortName ==null or sortName =='' " >
+			order by start_date desc
+		</if>
+		limit 20
+	</select>
+	
+	<select id="countAlarms" resultType="java.lang.String">
+		SELECT 
+	    count(*)
+	FROM
+		alarm_statistics alarm
+			JOIN
+		alarm_task_description atd ON atd.function_name = alarm.function_name
+			JOIN
+		device d ON d.id = alarm.device_code
+			JOIN
+		pump_house dl ON dl.id = d.id_pump_house
+	WHERE
+		d.id IN (
+			SELECT 
+				authobject_id
+			FROM
+				permission_info
+			WHERE
+				role_id IN (SELECT 
+						role_id
+					FROM
+						sys_user_role
+					WHERE
+						user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+			GROUP BY authobject_id
+		)
+	    and (start_date &gt; substring(now(),1,10)  or end_date &gt; substring(now(),1,10))
+		and alarm_status = '1' and confirm_status = '0'
+		<!--<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>-->
+	</select>
+	
+	<select id="selectListPage" resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
+		SELECT 
+		    DL.name phName,
+		    D.name deviceName,
+		    D.id deviceId,
+		    DL.address,
+		    ATD.FUNCTION_REMARKS alarmInfo,
+		    ATD.task_description alarDescription,
+		    atd.alarm_type_remarks as alarmTypeRemarks,
+		    date_format(ALARM.END_DATE,'%Y-%m-%d %H:%i:%s') endDate,
+		    date_format(ALARM.START_DATE,'%Y-%m-%d %H:%i:%s') startDate,
+		    truncate(TIMESTAMPDIFF(SECOND,Start_DATE,End_Date)/3600,2) alarmTime,
+			alarm_reason as alarmReason,
+		    case when alarm_level = '1' then '一级'
+		         when alarm_level = '2' then '二级'
+		         when alarm_level = '3' then '三级'
+		         when alarm_level = '4' then '四级'
+		         else '' end alarmLevel,
+		     case when alarm.confirm_status = '1' then '已确认'
+		          when alarm.confirm_status = '2' then '忽略'
+		          else '无' end confirmStat,
+		     alarm.org_user_name userName,
+		     alarm.confirm_reason confirmReson,
+			 date_format(confirm_date,'%Y-%m-%d %H:%i:%s') confirmDate,
+			 alarm.ticketId ticketId,
+			 t.dept_id as deptId
+		FROM
+		    alarm_statistics alarm
+		        JOIN
+		    alarm_task_description atd ON atd.function_name = alarm.function_name
+		        JOIN
+		    device d ON d.id = alarm.device_code
+		        JOIN
+		    pump_house dl ON dl.id = d.id_pump_house
+		    LEFT JOIN ticket t on t.ticket_id=alarm.ticketId
+		WHERE
+			d.id IN (
+				SELECT 
+				    authobject_id
+				FROM
+				    permission_info
+				WHERE
+				    role_id IN (SELECT 
+				            role_id
+				        FROM
+				            sys_user_role
+				        WHERE
+				            user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+				GROUP BY authobject_id
+			)
+		AND ALARM.END_DATE BETWEEN #{beginTime} AND #{endTime}
+		<if test="keyword != null and keyword != ''">
+			AND (
+			DL.name LIKE concat('%', #{keyword} ,'%')
+			OR
+			ATD.FUNCTION_REMARKS LIKE concat('%', #{keyword} ,'%')
+			or
+			D.id LIKE concat('%', #{keyword} ,'%')
+			)
+		</if>
+		<if test="type != null and type != ''">
+		    and atd.alarm_level = #{type}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
+		<if test="deviceName != null and deviceName != ''">
+			and D.name like CONCAT('%',#{deviceName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+		<if test="startAlarmTime != null and startAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ >= ]]> #{startAlarmTime}
+		</if>
+		<if test="endAlarmTime != null and endAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ <= ]]> #{endAlarmTime}
+		</if>
+		<if test="sortName !=null and sortName!='' " >
+			order by ${sortName} ${sortOrder}
+		</if>
+
+		<if test="sortName ==null or sortName =='' " >
+			ORDER BY ALARM.END_DATE desc
+		</if>
+		limit #{pageNumber},#{pageSize}
+	</select>
+	
+	<select id="expSelectListPage" resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
+		SELECT 
+		    DL.name phName,
+		    D.name deviceName,
+		    D.id deviceId,
+		    ATD.FUNCTION_REMARKS alarmInfo,
+		    ATD.task_description alarDescription,
+		    atd.alarm_type_remarks as alarmTypeRemarks,
+		    date_format(ALARM.END_DATE,'%Y-%m-%d %H:%i:%s') endDate,
+		    date_format(ALARM.START_DATE,'%Y-%m-%d %H:%i:%s') startDate,
+		    truncate(TIMESTAMPDIFF(SECOND,Start_DATE,End_Date)/3600,2) alarmTime,
+		    case when alarm_level = '1' then '一级'
+		         when alarm_level = '2' then '二级'
+		         when alarm_level = '3' then '三级'
+		         when alarm_level = '4' then '四级'
+		         else '' end alarmLevel,
+		     case when alarm.confirm_status = '1' then '已确认'
+		          when alarm.confirm_status = '2' then '忽略'
+		          else '无' end confirmStat,
+		     alarm.org_user_name userName,
+		     alarm.confirm_reason confirmReson
+		FROM
+		    alarm_statistics alarm
+		        JOIN
+		    alarm_task_description atd ON atd.function_name = alarm.function_name
+		        JOIN
+		    device d ON d.id = alarm.device_code
+		        JOIN
+		    pump_house dl ON dl.id = d.id_pump_house
+		WHERE
+			d.id IN (
+				SELECT 
+				    authobject_id
+				FROM
+				    permission_info
+				WHERE
+				    role_id IN (SELECT 
+				            role_id
+				        FROM
+				            sys_user_role
+				        WHERE
+				            user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+				GROUP BY authobject_id
+			)
+		AND ALARM.END_DATE BETWEEN #{beginTime} AND #{endTime}
+		<if test="keyword != null and keyword != ''">
+			AND (
+			DL.name LIKE concat('%', #{keyword} ,'%')
+			OR
+			ATD.FUNCTION_REMARKS LIKE concat('%', #{keyword} ,'%')
+			or
+			D.id LIKE concat('%', #{keyword} ,'%')
+			)
+		</if>
+		<if test="type != null and type != ''">
+		    and atd.alarm_level = #{type}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
+		ORDER BY ALARM.END_DATE desc 
+	</select>
+	
+	<select id="countAlarm" resultType="java.lang.Integer">
+		SELECT 
+		    count(*)
+		FROM
+		    alarm_statistics alarm
+		        JOIN
+		    alarm_task_description atd ON atd.function_name = alarm.function_name
+		        JOIN
+		    device d ON d.id = alarm.device_code
+		        JOIN
+		    pump_house dl ON dl.id = d.id_pump_house
+		WHERE
+			D.id IN (
+				SELECT 
+				    authobject_id
+				FROM
+				    permission_info
+				WHERE
+				    role_id IN (SELECT 
+				            role_id
+				        FROM
+				            sys_user_role
+				        WHERE
+				            user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+				GROUP BY authobject_id
+			)
+		AND ALARM.END_DATE BETWEEN #{beginTime} AND #{endTime}
+		<if test="keyword != null and keyword != ''">
+			AND (
+			DL.name LIKE concat('%', #{keyword} ,'%')
+			OR
+			ATD.FUNCTION_REMARKS LIKE concat('%', #{keyword} ,'%')
+			or
+			D.id LIKE concat('%', #{keyword} ,'%')
+			)
+		</if>
+		<if test="type != null and type != ''">
+		    and atd.alarm_level = #{type}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
+		<if test="deviceName != null and deviceName != ''">
+			and D.name like CONCAT('%',#{deviceName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+		<if test="startAlarmTime != null and startAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ >= ]]> #{startAlarmTime}
+		</if>
+		<if test="endAlarmTime != null and endAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ <= ]]> #{endAlarmTime}
+		</if>
+
+	</select>
+	
+	<select id="statLevel" resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
+		SELECT 
+		     case when alarm_level = '1' then '一级'
+		         when alarm_level = '2' then '二级'
+		         when alarm_level = '3' then '三级'
+		         when alarm_level = '4' then '四级'
+		         else '' end deviceName,
+		      count(alarm_level) deviceId
+		FROM
+		    alarm_statistics alarm
+		        JOIN
+		    alarm_task_description atd ON atd.function_name = alarm.function_name
+		        JOIN
+		    device d ON d.id = alarm.device_code
+		        JOIN
+		    pump_house dl ON dl.id = d.id_pump_house
+		WHERE
+			D.id IN (
+				SELECT 
+				    authobject_id
+				FROM
+				    permission_info
+				WHERE
+				    role_id IN (SELECT 
+				            role_id
+				        FROM
+				            sys_user_role
+				        WHERE
+				            user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+				GROUP BY authobject_id
+			)
+		AND ALARM.END_DATE BETWEEN #{beginTime} AND #{endTime}
+		<if test="keyword != null and keyword != ''">
+			AND (
+			DL.name LIKE concat('%', #{keyword} ,'%')
+			OR
+			ATD.FUNCTION_REMARKS LIKE concat('%', #{keyword} ,'%')
+			or
+			D.id LIKE concat('%', #{keyword} ,'%')
+			)
+		</if>
+		<if test="type != null and type != ''">
+		    and atd.alarm_level = #{type}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
+		<if test="deviceName != null and deviceName != ''">
+			and D.name like CONCAT('%',#{deviceName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+		<if test="startAlarmTime != null and startAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ >= ]]> #{startAlarmTime}
+		</if>
+		<if test="endAlarmTime != null and endAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ <= ]]> #{endAlarmTime}
+		</if>
+		group by alarm_level
+	</select>
+	
+	<select id="statType" resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
+		SELECT 
+		     alarm_type deviceName,
+		      count(alarm_type) deviceId
+		FROM
+		    alarm_statistics alarm
+		        JOIN
+		    alarm_task_description atd ON atd.function_name = alarm.function_name
+		        JOIN
+		    device d ON d.id = alarm.device_code
+		        JOIN
+		    pump_house dl ON dl.id = d.id_pump_house
+		WHERE
+			D.id IN (
+				SELECT 
+				    authobject_id
+				FROM
+				    permission_info
+				WHERE
+				    role_id IN (SELECT 
+				            role_id
+				        FROM
+				            sys_user_role
+				        WHERE
+				            user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+				GROUP BY authobject_id
+			)
+		AND ALARM.END_DATE BETWEEN #{beginTime} AND #{endTime}
+		<if test="keyword != null and keyword != ''">
+			AND (
+			DL.name LIKE concat('%', #{keyword} ,'%')
+			OR
+			ATD.FUNCTION_REMARKS LIKE concat('%', #{keyword} ,'%')
+			or
+			D.id LIKE concat('%', #{keyword} ,'%')
+			)
+		</if>
+		<if test="type != null and type != ''">
+		    and atd.alarm_level = #{type}
+		</if>
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and dl.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
+		<if test="deviceName != null and deviceName != ''">
+			and D.name like CONCAT('%',#{deviceName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+		<if test="startAlarmTime != null and startAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ >= ]]> #{startAlarmTime}
+		</if>
+		<if test="endAlarmTime != null and endAlarmTime != ''">
+			and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ <= ]]> #{endAlarmTime}
+		</if>
+		group by alarm_type
+		
+		</select>
+		<select id="statTime" resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
+		SELECT 
+		     subString(end_date,1,10) deviceName,
+		      count(end_date) deviceId
+		FROM
+		    alarm_statistics alarm
+		        JOIN
+		    alarm_task_description atd ON atd.function_name = alarm.function_name
+		        JOIN
+		    device d ON d.id = alarm.device_code
+		        JOIN
+		    pump_house dl ON dl.id = d.id_pump_house
+		WHERE
+			D.id IN (
+				SELECT 
+				    authobject_id
+				FROM
+				    permission_info
+				WHERE
+				    role_id IN (SELECT 
+				            role_id
+				        FROM
+				            sys_user_role
+				        WHERE
+				            user_id = #{userId}) or role_id in (select role_id as authobject_id from sys_office_role_new where office_id in (select office_id from sys_user where id = #{userId}))
+				GROUP BY authobject_id
+			)
+		AND ALARM.END_DATE BETWEEN #{beginTime} AND #{endTime}
+		<if test="keyword != null and keyword != ''">
+			AND (
+			DL.name LIKE concat('%', #{keyword} ,'%')
+			OR
+			ATD.FUNCTION_REMARKS LIKE concat('%', #{keyword} ,'%')
+			or
+			D.id LIKE concat('%', #{keyword} ,'%')
+			)
+		</if>
+		<if test="type != null and type != ''">
+		    and atd.alarm_level = #{type}
+		</if>
+			<if test="pumpHouseName != null and pumpHouseName != ''">
+				and dl.name like CONCAT('%',#{pumpHouseName},'%')
+			</if>
+		<if test="areaCode != null and areaCode != ''">
+			and dl.ID_REGION = #{areaCode}
+		</if>
+		<if test="deviceName != null and deviceName != ''">
+			and D.name like CONCAT('%',#{deviceName},'%')
+		</if>
+		<if test="alarmInfo != null and alarmInfo != ''">
+			and ATD.FUNCTION_REMARKS like CONCAT('%',#{alarmInfo},'%')
+		</if>
+			<if test="startAlarmTime != null and startAlarmTime != ''">
+				and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ >= ]]> #{startAlarmTime}
+			</if>
+			<if test="endAlarmTime != null and endAlarmTime != ''">
+				and truncate(TIMESTAMPDIFF(SECOND,ALARM.Start_DATE,ALARM.End_Date)/3600,2) <![CDATA[ <= ]]> #{endAlarmTime}
+			</if>
+		group by subString(end_date,1,10)
+	</select>
+	
+	<update id="indexConfig">
+	    update alarm_statistics set confirm_status = #{alarmType},
+	    org_user_name = #{userName},confirm_reason = #{confirmReson},confirm_url = #{configUrl},
+	    confirm_date = now()
+	    where device_code = #{deviceId} and function_name = #{deviceName}
+	        and start_date = #{startDate}
+	</update>
+	
+	<select id="getAlarmById"  resultType="com.wapwag.woss.modules.home.entity.AlarmStat">
+	    SELECT 
+		    CONCAT(a.device_code,
+		            '_',
+		            a.function_name,
+		            '_',
+		            DATE_FORMAT(a.start_date, '%Y-%m-%d %H:%i:%s')) AS id,
+		    p.name AS phName,
+		    case when ds.label is null then '低 区' else ds.label end deviceName,
+		    at.alarm_type alarmType,
+		    DATE_FORMAT(a.start_date, '%Y-%m-%d %H:%i:%s') alarmTime,
+		    at.task_description alarDescription
+		FROM
+		    alarm_statistics a
+		        JOIN
+		    device d ON d.id = a.device_code
+		        JOIN
+		    pump_house p ON p.id = d.id_pump_house
+		        JOIN
+		    alarm_task_description at ON at.function_name = a.function_name
+		    left JOIN
+		    (SELECT 
+		        *
+		    FROM
+		        sys_dict
+		    WHERE
+		        type = 'device_location') ds ON ds.value = d.LOCATION
+	    where a.device_code = #{deviceId} and a.function_name = #{deviceName}
+	        and a.start_date = #{startDate}
+		<if test="pumpHouseName != null and pumpHouseName != ''">
+			and p.name like CONCAT('%',#{pumpHouseName},'%')
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and p.ID_REGION = #{areaCode}
+		</if>
+	    limit 1
+	</select>
+
+	<update id="updateAlarmStatisticsTicketId" parameterType="com.wapwag.woss.modules.home.entity.AlarmStatistics">
+		update alarm_statistics set ticketId = #{ticketId}
+		where device_code = #{deviceCode} and start_date = #{startDate}
+	</update>
+
+	<resultMap id="BaseResultMap" type="com.wapwag.woss.modules.home.entity.SysDict" >
+		<id column="id" property="id" jdbcType="VARCHAR"/>
+		<result column="value" property="value" jdbcType="VARCHAR" />
+		<result column="label" property="label" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="sort" property="sort" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+    	id, value, label, label, type, sort, description, remarks
+  	</sql>
+
+	<select id="queryAlarmWorkTemplate" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" /> from sys_dict where type='work_type'
+	</select>
+
+	<select id="queryMaintenanceWorkerUser" resultType="com.wapwag.woss.modules.home.entity.User">
+		select * from sys_user su left join sys_user_role sur on sur.user_id = su.id left join sys_role sr on sr.id = role_id where sr.id ='9769bf92ba024103b0942bc498564ced'
+	</select>
+</mapper>

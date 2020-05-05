@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.sys.dao.PumpFaultDao" >
+  <resultMap id="BaseResultMap" type="com.wapwag.woss.modules.sys.entity.PumpFault" >
+    <id column="FAULT_id" property="faultId" jdbcType="VARCHAR" />
+    <result column="alarm_id" property="alarmId" jdbcType="VARCHAR" />
+    <result column="device_id" property="deviceId" jdbcType="VARCHAR" />
+    <result column="fault_level" property="faultLevel" jdbcType="INTEGER" />
+    <result column="fault_message" property="faultMessage" jdbcType="VARCHAR" />
+    <result column="fault_state" property="faultState" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    FAULT_id, alarm_id, device_id, fault_level, fault_message, fault_state
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from pump_fault_info
+    where FAULT_id = #{faultId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from pump_fault_info
+    where FAULT_id = #{faultId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wapwag.woss.modules.sys.entity.PumpFault" >
+    insert into pump_fault_info (FAULT_id, alarm_id, device_id, 
+      fault_level, fault_message, fault_state
+      )
+    values (#{faultId,jdbcType=VARCHAR}, #{alarmId,jdbcType=VARCHAR}, #{deviceId,jdbcType=VARCHAR}, 
+      #{faultLevel,jdbcType=INTEGER}, #{faultMessage,jdbcType=VARCHAR}, #{faultState,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wapwag.woss.modules.sys.entity.PumpFault" >
+    insert into pump_fault_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="faultId != null" >
+        FAULT_id,
+      </if>
+      <if test="alarmId != null" >
+        alarm_id,
+      </if>
+      <if test="deviceId != null" >
+        device_id,
+      </if>
+      <if test="faultLevel != null" >
+        fault_level,
+      </if>
+      <if test="faultMessage != null" >
+        fault_message,
+      </if>
+      <if test="faultState != null" >
+        fault_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="faultId != null" >
+        #{faultId,jdbcType=VARCHAR},
+      </if>
+      <if test="alarmId != null" >
+        #{alarmId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null" >
+        #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="faultLevel != null" >
+        #{faultLevel,jdbcType=INTEGER},
+      </if>
+      <if test="faultMessage != null" >
+        #{faultMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="faultState != null" >
+        #{faultState,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wapwag.woss.modules.sys.entity.PumpFault" >
+    update pump_fault_info
+    <set >
+      <if test="alarmId != null" >
+        alarm_id = #{alarmId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null" >
+        device_id = #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="faultLevel != null" >
+        fault_level = #{faultLevel,jdbcType=INTEGER},
+      </if>
+      <if test="faultMessage != null" >
+        fault_message = #{faultMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="faultState != null" >
+        fault_state = #{faultState,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where FAULT_id = #{faultId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wapwag.woss.modules.sys.entity.PumpFault" >
+    update pump_fault_info
+    set alarm_id = #{alarmId,jdbcType=VARCHAR},
+      device_id = #{deviceId,jdbcType=VARCHAR},
+      fault_level = #{faultLevel,jdbcType=INTEGER},
+      fault_message = #{faultMessage,jdbcType=VARCHAR},
+      fault_state = #{faultState,jdbcType=VARCHAR}
+    where FAULT_id = #{faultId,jdbcType=VARCHAR}
+  </update>
+</mapper>

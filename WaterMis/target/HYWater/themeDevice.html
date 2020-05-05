@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>水司主题</title>
+	<link rel="stylesheet" type="text/css" href="theme/css/theme.css">
+</head>
+<body>
+	<div class="main">
+		<div class="main-top">
+			<div class="basic-info">
+				<div class="title">
+					<div class="title-cover"></div>
+					<div class="title-content">设备基本信息</div>
+				</div>
+				<div class="info">
+					<div class="info-cover"></div>
+					<div class="info-content">
+						<table class="info-table">
+							<tr>
+								<td class="td1"><img src="theme/images/icon1.png"></td>
+								<td class="td2">设备名称</td>
+								<td class="td3" colspan="2"><span></span><label id="pump_num">-</label></td>
+							</tr>
+							<tr>
+								<td class="td1"><img src="theme/images/icon2.png"></td>
+								<td class="td2">运行时长</td>
+								<td class="td3" colspan="2"><span id="runTime">-</span><label>小时</label></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="info" style="margin: 7px 0;">
+					<div class="info-cover"></div>
+					<div class="info-content">
+						<table class="info-table">
+							<tr>
+								<td class="td1"><img src="theme/images/icon3.png"></td>
+								<td class="td2">累积流量</td>
+								<td class="td3" colspan="2"><span id="v4">-</span><label>m³</label></td>
+							</tr>
+							<tr>
+								<td class="td1"><img src="theme/images/icon4.png"></td>
+								<td class="td2">累积电量</td>
+								<td class="td3" colspan="2"><span id="statEle">-</span><label>kWh</label></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="info" style="margin: 7px 0;">
+					<div class="info-cover"></div>
+					<div class="info-content">
+						<table class="info-table">
+							<tr>
+								<td class="td1"><img src="theme/images/icon3.png"></td>
+								<td class="td2">额定功率</td>
+								<td class="td3" colspan="2"><span id="v1">-</span><label>kW</label></td>
+							</tr>
+							<tr>
+								<td class="td1"><img src="theme/images/icon4.png"></td>
+								<td class="td2">额定扬程</td>
+								<td class="td3" colspan="2"><span id="v2">-</span><label>m</label></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<!-- ./basic-info -->
+
+			<div class="device-distribution">
+				<div class="distribution-cover"></div>
+				<div class="title-cover"></div>
+				<div class="title" id="12"></div>
+				<div class="deviceCount"><label></label><span id="device_num"></span><label></label></div>
+				<div class="mapContainer" id="map">
+				    <iframe id="onlineDataPage" src="" style="border: none;outline: none;width: 100%;height: 100%"></iframe>
+				</div>
+			</div>
+			<!-- ./device-distribution -->
+
+			<div class="compare-wrap1">
+				<div class="waterEleCompare">
+					<div class="title-cover"></div>
+					<div class="title">供水分时耗电对比</div>
+					<div class="compareData">
+						<ul>
+							<li>
+								<label>高峰耗电总量 :</label>
+								<span id="ele_max">-</span>
+								<label class="unit">kWh</label>
+							</li>
+							<li>
+								<label>低峰耗电总量 :</label>
+								<span id="ele_min">-</span>
+								<label class="unit">kWh</label>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="areaDeviceNumCompare">
+					<div class="title-cover"></div>
+					<div class="title" id="titleMsg">泵房温度: - | 泵房湿度: -</div>
+					<div class="compareData">
+						<ul id="deviceRate"></ul>
+					</div>
+				</div>
+				<div class="areaDevicePie">
+					<div class="pie-cover"></div>
+					<div class="pie-container" id="pie-container"></div>
+				</div>
+			</div>
+			<!-- ./compare-wrap1 -->
+
+			<div class="compare-wrap2">
+				<div class="deviceTypeCount">
+					<div class="deviceType-cover"></div>
+					<div class="title-cover"></div>
+					<div class="title">告警类型对比</div>
+					<div class="deviceTypeChart" id="deviceType"></div>
+				</div>
+				<div class="alarmInfoCount">
+					<div class="alarmInfo-cover"></div>
+					<div class="title-cover"></div>
+					<div class="title">泵房区域额定功率对比(单位:kW)</div>
+					<div class="alarmInfoChart" id="alarmInfo"></div>
+				</div>
+			</div>
+			<!-- ./compare-wrap2 -->
+		</div>
+		<!-- ./main-top -->
+
+		<div class="main-bottom">
+			<div class="supplier-count">
+				<div class="supplier-cover"></div>
+				<div class="title-cover"></div>
+				<div class="title">压力统计(Mpa)</div>
+				<div class="supplierChart" id="supplierChart"></div>
+			</div>
+			<div class="orderstatus-count">
+				<div class="order-cover"></div>
+				<div class="title-cover"></div>
+				<div class="title">设备图片</div>
+				<div class="orderChart" id="12">
+				<img id="deviceImg" style="width:100%;height:100%" src=""/>
+				</div>
+			</div>
+			<div class="trend-wrap">
+				<div class="trend-cover"></div>
+				<div class="title-cover"></div>
+				<ul class="tab-ul">
+					<li class="active">
+						<a href="javascript:void(0)" data-href="#electricTrend" data-unit="kw">总耗电量趋势图</a>
+					</li>
+					<li>
+						<a href="javascript:void(0)" data-href="#alarmTrend" data-unit="条">告警信息趋势图</a>
+					</li>
+					<li>
+						<a href="javascript:void(0)" data-href="#maintenanceTrend" data-unit="条">维保信息趋势图</a>
+					</li>
+					<li>
+						<a href="javascript:void(0)" data-href="#orderTrend" data-unit="个">工单完成趋势图</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div id="electricTrend" class="tab-pane tab-active"></div>
+					<div id="alarmTrend" class="tab-pane"></div>
+					<div id="maintenanceTrend" class="tab-pane"></div>
+					<div id="orderTrend" class="tab-pane"></div>
+				</div>
+			</div>
+			<div class="maintenance-compare">
+				<div class="maintenance-cover"></div>
+				<div class="title-cover"></div>
+				<div class="title">泵房区域耗电量对比(单位:kWh)</div>
+				<div class="maintenanceChart" id="maintenanceChart"></div>
+			</div>
+		</div>
+		<!-- ./main-bottom -->
+	</div>
+	<!-- ./main -->
+
+
+	<!-- JavaScripts -->
+	<script src="static/v2/assets/jquery/2.2.0/jQuery-2.2.0.min.js"></script>
+	<script src="theme/scripts/resize.js"></script>
+	<script src="static/v2/assets/echarts/3.5.1/echarts.min.js"></script>
+	<script src="theme/scripts/scroll.js"></script>
+	<script src="theme/scripts/themeDevice.js"></script>
+</body>
+</html>

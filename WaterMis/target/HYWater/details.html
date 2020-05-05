@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>报警信息</title>
+    <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
+
+<!--    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">-->
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            color: #020b1c;
+            font-size: 14px;
+            font-family: 'Microsoft YaHei';
+        }
+        .wrapper {
+            position: relative;
+            width: 100%;
+            height: auto;
+            padding-top: 5px;
+        }
+
+        .alarm-head {
+            width: 100%;
+            height: auto;
+        }
+        .alarm-head ul, .alarm-body ul {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .alarm-head ul>li {
+            font-size: 14px;
+            margin: 3px 0px;
+        }
+        .alarm-head ul>li>span, .alarm-body ul>li>span{
+            display: inline-block;
+            text-align: center;
+        }
+        .alarm-body ul>li {
+            border-top: 1px solid #BECEF5;
+        }
+
+        .closeTips{
+            float: right;
+            cursor: pointer;
+            padding: 1px 6px;
+        }
+        .closeTips:hover{
+            background: #cfd1d3;
+            color: #fff;
+        }
+        /* myscroll */
+        .alarm-body {
+            width: 100%;
+            height: 100%;
+            margin-top: 5px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .alarm-body ul>li {
+            height: 30px;
+            line-height: 30px;
+            font-size: 13px;
+        }
+        .alarm-body ul>li:hover{
+            background-color:#eef3ff ;
+        }
+       /* .alarm-body ul>li .btn{
+            display: inline-block;
+            padding: 0px 2px;
+            margin: 0px 3px;
+            border: 1px #ccc solid;
+            line-height: 20px;
+        }
+        .alarm-body ul>li .btn:hover{
+            background-color: #275ab7;
+            border-color:#275ab7 ;
+            color: #fff;
+        }*/
+        .alarmTitle{
+            height: 36px;
+            font-size: 16px;
+            padding: 8px;
+            background: #0278E7;
+            box-sizing: border-box;
+            border-bottom: 1px solid #e0e4e6;
+        }
+        .alarm-head span{
+            font-weight: 700;
+        }
+        #alarmtable{
+            max-height:200px;
+            overflow-y:auto;
+        }
+    </style>
+<!--    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
+<!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>-->
+
+</head>
+<body>
+<div>
+    <div class="alarmTitle" style="color: #fff;">
+        告警信息列表
+        <span class="closeTips" onclick="window.parent.window.closeTips()" title="关闭" style="    color: #fff;">X</span>
+    </div>
+    <div class="panel-heading" style=" text-align:center">
+        <form name="alarmForm" id="alarmForm">
+            <div class="query-parameter" style=" text-align:center" >
+                <label>区域名称 : </label>
+                <select id="areaCode" name="areaCode" class="device-id form-control input-text2" style="display: table-column;width: 11%">
+                </select>
+                <label>泵房名称 : </label>
+                <input id="pumpHouseName" name="pumpHouseName" class="device-id form-control input-text2" style="display: table-column;width: 13%">
+                <label>告警内容 : </label>
+                <input id="alarmInfo" name="alarmInfo" class="device-id form-control input-text2" style="display: table-column;width: 13%">
+                <label>告警等级 : </label>
+                <select id="alarmLevel" name ="alarmLevel" class="device-id form-control input-text2" style="display: table-column;width: 13%">
+                    <option value="">全部</option>
+                    <option value="1">一级</option>
+                    <option value="2">二级</option>
+                    <option value="3">三级</option>
+                    <option value="4">四级</option>
+                </select>
+                <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
+                <button id="all" type="button" onclick="ignoreAll()"  class="btn btn-primary query-btn">全部忽略</button>
+            </div>
+            <input id="sortName" name="sortName" type="hidden"/>
+            <input id="sortOrder" name="sortOrder" type="hidden"/>
+            <input id="sortOrderChange" type="hidden" value="desc"/>
+        </form>
+    </div>
+    <div class="content">
+<!--        <div class="wrapper">-->
+<!--            <div class="alarm-head">-->
+<!--                <ul>-->
+<!--                    <li>-->
+<!--                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('ALARM.START_DATE')">开始时间</span>-->
+<!--                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('DL.name')">泵房名称</span>-->
+<!--                        <span style="width: 10%;font-weight: 500;" onclick="sortOrderData('D.id')">设备名称</span>-->
+<!--                        <span style="width: 15%;font-weight: 500;" onclick="sortOrderData('ATD.FUNCTION_REMARKS')">告警内容</span>-->
+<!--                        <span style="width: 7%;font-weight: 500;" onclick="sortOrderData('alarm_level')">告警等级</span>-->
+<!--                        <span style="width: 12%;font-weight: 500;" onclick="sortOrderData('ALARM.END_DATE')">最近报警</span>-->
+<!--                        <span style="width: 20%;font-weight: 500;">操作</span>-->
+
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--            <div class="alarm-body" style="position: relative">-->
+<!--                <ul>-->
+<!--                    <li style="height: 15px"></li>-->
+<!--                </ul>-->
+<!--                <div id="alarmBodyNoMsg" style="width: 100%;height: 100%; text-align: center;padding-top: 60px; position: absolute;top: 0px;left: 0;z-index: 999"> 暂无数据 </div>-->
+<!--            </div>-->
+<!--        </div>-->
+        <div id="alarmtable"></div>
+    </div>
+</div>
+    <!-- jQuery Js -->
+    <script src="static/assets/js/jquery-1.10.2.js"></script>
+    <script src="static/assets/js/jquery-form.js"></script>
+    <script src="static/assets/js/scroll.js"></script>
+    <!--&lt;!&ndash; Bootstrap Js &ndash;&gt;-->
+    <script src="static/assets/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+    <script>
+        $(function () {
+            qryAreaList();
+            getAlarmList();
+            if(getPar("flag")==1){
+                $(".alarmTitle").css("display","none");
+            }
+
+            //查询事件
+            $("#query").click(function(){
+                getAlarmList();
+
+            });
+
+        })
+        function getPar(par){
+            //获取当前URL
+            var local_url = document.location.href;
+            //获取要取得的get参数位置
+            var get = local_url.indexOf(par +"=");
+            if(get == -1){
+                return false;
+            }
+            //截取字符串
+            var get_par = local_url.slice(par.length + get + 1);
+            //判断截取后的字符串是否还有其他get参数
+            var nextPar = get_par.indexOf("&");
+            if(nextPar != -1){
+                get_par = get_par.slice(0, nextPar);
+            }
+            return get_par;
+        }
+     function sortOrderData(sortName){
+            $("#sortName").val(sortName);
+            if($("#sortOrderChange").val()=="desc"){
+                $("#sortOrderChange").val("asc")
+                $("#sortOrder").val("desc");
+            }else{
+                $("#sortOrderChange").val("desc")
+                $("#sortOrder").val("asc");
+            }
+           getAlarmList();
+     }
+     function getAlarmList() {
+         //  $.get(parent.CONTEXT_PATH + '/alarmStatController/indexAlarm', function(data) {
+         $("#alarmForm").ajaxSubmit({
+             type: 'POST',
+             url: parent.CONTEXT_PATH + '/alarmStatController/indexAlarm',
+             dataType: 'json',
+             success: function (data) {
+                 // if (data && data.length > 0) {
+                     // $('.alarm-body ul').html('');
+                     // $('#alarmBodyNoMsg').hide();
+                     // window.deviceList=[];
+                     // $.each(data, function (i, item) {
+                     //     var ht;
+                     //     var dealData = JSON.stringify(item);
+                     //     if (item.ticketId) {
+                     //         ht = "<span onclick='alertErrors()' class='btn btn-xs btn-primary'>创建工单</span>"
+                     //     } else {
+                     //         ht = "<span onclick='createWorkOrder(this)'  data = '" + dealData + "' class='btn btn-xs btn-info'>创建工单</span>"
+                     //     }
+                     //     console.log(item);
+                     //     var $li = '<li name="' + checStr(item.phId) + '">';
+                     //     $li += '<span style="width: 15%;color: #847979">' + item.startDate + '</span>';
+                     //     $li += '<span style="width: 15%;color: #847979" onclick="modalConfig(this)" name="' + item.phId + '">' + item.phName + '</span>';
+                     //     $li += '<span style="width: 12%;color: #847979">' + checStr(item.deviceName) + '</span>';
+                     //     $li += '<span style="width: 14%;color: #847979" title="' + checStr(item.alarmInfo)+checStr(item.alarmSetValue)+'">' + checStr(item.alarmInfo)+alarmSetValue(item.alarmSetValue)+'</span>';
+                     //     $li += '<span style="width: 9%;"><span style="width: 5%;background-color: #fff141">' + checStr(item.alarmLevel) + '</span></span>';
+                     //     $li += '<span style="width: 15%;color: #847979">' + checStr(item.endDate) + '</span>';
+                     //     $li += '<span style="width: 20%;color: #847979">'
+                     //         + '<span onclick="answer(this);" class="btn btn-xs btn-info" name="' + item.alarDescription + '" alarmReason = "' + item.alarmReason + '">解决方案</span>'
+                     //       /*  + '&nbsp;'
+                     //         + '<span onclick="affirm(this);" class="btn btn-xs btn-info" name="' + item.id + '">确认</span>'*/
+                     //         + '&nbsp;'
+                     //         + '<span onclick="ignore(this);" class="btn btn-xs btn-info" name="' + item.id + '">忽略</span>'
+                     //         + '<span onclick="ignoreAll(this);" style="display: none" class="btn btn-xs btn-info ignoreAll" name="' + item.id + '">忽略</span>'
+                     //         + '&nbsp;'
+                     //         + ht
+                     //         + '</span>';
+                     //     $li += '</li>';
+                     //     $('.alarm-body ul').append($li);
+                     // });
+                     //
+                     // $('.alarm-body').myScroll({
+                     //     speed: 80, //数值越大，速度越慢
+                     //     rowHeight: 30 //li的高度
+                     // });
+
+
+                 // } else {
+                     // $('.alarm-body ul').html("<div style='text-align: center;color:red'>无告警数据...</div>");
+                     // $('#alarmBodyNoMsg').show()
+                 // }
+                 function addFunctionAlty(value, row, index) {
+                     let str = ''
+                     if(!row.ticketId){
+                         str = '<button id="createWorkOrder" type="button" class="btn btn-info">创建工单</button>'
+                     }else{
+                         str = '<button id="createWorkOrder" type="button" class="btn btn-warning">创建工单</button>'
+                     }
+                     return [
+                         '<button id="answer" type="button" class="btn btn-info">解决方案</button>',
+                         '<button id="ignore" type="button" class="btn btn-info">忽略</button>',
+                         str,
+                     ].join('');
+                 }
+                 window.operateEvents = {
+                     'click #answer': function (e, value, row, index) {
+                         console.log(e,value,row,index)
+                         answer(row)
+                     },
+                     'click #ignore': function (e, value, row, index) {
+                         console.log(e,value,row,index)
+                         ignore(row)
+                     },
+                     'click #createWorkOrder': function (e, value, row, index) {
+                         console.log(e,value,row,index)
+                         if(row.ticketId){
+                             alertErrors(row)
+                         }else{
+                             createWorkOrder(row)
+                         }
+                     }
+                 };
+                 let columns = [
+                     {
+                         field:'startDate',
+                         title:'开始时间',
+                         sortable:'true',
+                     },
+                     {
+                         field:'phName',
+                         title:'泵房名称',
+                         sortable:'true',
+                     },
+                     {
+                         field:'deviceName',
+                         title:'设备名称',
+                         sortable:'true',
+                     },
+                     {
+                         field:'alarmInfo',
+                         title:'告警内容',
+                         sortable:'true',
+                     },
+                     {
+                         field:'alarmLevel',
+                         title:'告警等级',
+                         align: 'center',
+                         sortable:'true',
+                         formatter:  function(value,row,index) {
+                             var a = "";
+                             if(value == "一级") {
+                                 a = '<span style="background-color:#FF0000;color:#ffff">'+value+'</span>';
+                             }else if(value == "二级"){
+                                 a = '<span style="background-color:#f46b1c;color:#ffff">'+value+'</span>';
+                             }else if(value == "三级") {
+                                 a = '<span style="background-color:#f4e672;color:#ffff">'+value+'</span>';
+                             }else if(value == "四级") {
+                                 a = '<span style="background-color:#dbf4be;color:#ffff">'+value+'</span>';
+                             }else{
+                                 a = '<span style="background-color:#45d60c;color:#ffff">'+value+'</span>';
+                             }
+                             return a;
+                         }
+                     },
+                     {
+                         field:'endDate',
+                         title:'最近报警',
+                         sortable:'true',
+                     },
+                     {
+                         field: 'operate',
+                         title: '操作',
+                         width:350,
+                         events: operateEvents,//给按钮注册事件
+                         formatter: addFunctionAlty//表格中增加按钮  
+                     }
+                 ]
+                 $('#alarmtable').bootstrapTable({
+                     columns:columns,
+                     data:data,
+                     formatNoMatches: function () {  //没有匹配的结果
+                         return '暂时没有告警';
+                     },
+                 })
+             }
+         });
+     }
+
+
+        function modalConfig(phId) {
+        	phId = $(phId).attr('name');
+        	
+        	if(window.parent.GLOBAL_URL_ADDRESS != 'home-map-baiduNew.html'){
+        		
+        		//用于首次地图加载判断
+        		window.parent.ALARM_TO_MAP_PUMP_ID = 'FIRST_IN';
+        		
+        		window.parent.GLOBAL_URL_ADDRESS = 'home-map-baiduNew.html';
+            	
+            	window.parent.window.$pageWrapper.load('home-map-baiduNew.html', function() {
+        			window.parent.window.refreshLeftMenuStatus("地图导航");
+        			window.parent.ALARM_TO_MAP_PUMP_ID = phId;
+        			window.parent.window.pageChange();
+    			});
+        	}else{
+        		window.parent.ALARM_TO_MAP_PUMP_ID = phId;
+        		window.parent.window.callRefresh();
+        	}
+        	
+        }
+        function affirm(obj){
+        	var item = $(obj).attr('name');
+        	window.parent.window.openAlarmConfirm(item,obj);
+        }
+        function ignore(obj){
+        	// var item = $(obj).attr('name');
+            let item = obj.id
+        	if(confirm('确定要忽略此条告警吗？')){
+                window.parent.window.alarmIgnore(item);
+                setTimeout(()=>{
+                    getAlarmList()
+                },2000)
+            }
+        }
+        function ignoreAll(){
+            //获取单个忽略的所有对象，循环触发单个忽略
+
+            var delFlag=false;
+            if(confirm('确定要忽略此条告警吗？')) {
+                $(".ignoreAll").each(function (i, obj) {
+                    var item = $(obj).attr('name');
+                    window.parent.window.alarmIgnoreAll(item, obj);
+                    delFlag = true;
+                });
+                if (delFlag) {
+                    window.parent.openAlertModel("myModalAlert", "忽略成功")
+                }
+            }
+
+
+
+        }
+
+        function answer(obj){
+            console.log('333333',obj)
+        	// var item = $(obj).attr('name');
+            // var alarmReason = $(obj).attr('alarmReason');
+
+            let item = obj.alarDescription
+            let alarmReason = obj.alarmReason
+        	//console.log(item);
+        	if(item != undefined){
+                // window.parent.window.openAlertModel("myModalAlert" , item)
+                window.parent.window.myModalProDeaL(alarmReason, item)
+        	}else{
+                window.parent.window.openAlertModel("myModalAlert" , "暂无解决方案")
+        	}
+        }
+        
+        function checStr(str){
+        	if(undefined == str || null == str){
+        		return "";
+        	}else{
+        		return str;
+        	}
+        }
+
+        function alarmSetValue(str){
+            if(undefined == str || null == str){
+                return "";
+            }else{
+                return "<img src='static/assets/img/alarm.png' style='height: 12px;width: 10px'><font color='red' style='font-size: 1px'>限值</font>";
+            }
+        }
+
+
+        
+        function createWorkOrder(self) {
+            console.log(self)
+            // var data = $(self).attr('data');
+            // var sdata =  JSON.parse(data);
+
+            let sdata = self
+            //打开创建工单页面
+            window.parent.window.queryWhetherWorker(sdata.deviceId);
+            //工单页面赋值
+            window.parent.window.myModalWorkOrder(sdata);
+        }
+        function alertErrors() {
+            window.parent.window.alertError();
+        }
+
+        function qryAreaList(){
+            $("#areaCode").empty();
+            $("#areaCode").append("<option value = ''>全部</option>");
+            jQuery.ajax( {
+                type : 'POST',
+                contentType : 'application/json',
+                url : parent.CONTEXT_PATH +'/device/getAllAreas?'+ Math.random(),
+                dataType : 'json',
+                success : function(data){
+                    if(undefined == data){
+                        return;
+                    }else{
+                        $("#areaCode").empty();
+                        $("#areaCode").append("<option value = ''>全部</option>");
+                        $.each(data, function(i, item) {
+
+                            $("#areaCode").append("<option value = '" + item.deviceId + "'> "+item.deviceName  + "</option>");
+                        })
+                    }
+                },
+                error : function(data)
+                {
+                }
+            });
+        }
+       /* /!*
+47     *
+48     *,compare比较函数
+49     *这里使用匿名函数解决闭包问题
+50     *
+51     * *!/
+            window.onload=function() {
+                    var bjuge = false;
+                     var body = document.getElementsByTagName("tbody")[0];
+                     var th = document.getElementsByTagName("th");//为什么点击事件没有发生呢
+                    for (var k = 1; k < 5; k++) {
+                                th[k].onclick =function(k){
+                                        return function () {
+                                            var temp = new Array(4);
+                                            for (var i = 0; i < 4; i++) {
+                                                     temp[i] = body.children[i].getElementsByTagName("td")[k].innerText;
+                                                }
+                                            function compare2(value1, value2) {
+                                                     return value1 - value2;
+                                                 }
+                                             if (bjuge == true) {
+                                                    temp = temp.sort(compare2);
+                                                    bjuge = false;
+                                                 } else {
+                                                     temp = temp.reverse(temp.sort(compare2));
+                                                     bjuge = true;
+                                                 }
+                                            for (var m = 0; m < 4; m++) {
+                                                    for (var j = 0; j < 4; j++) {
+                                                            if (body.children[j].getElementsByTagName("td")[k].innerText == temp[m]) {
+                                                                    body.children[m].parentNode.insertBefore(body.children[j], body.children[m]);
+                                                                 }
+                                                         }
+                                                 }
+                                         }
+                                 }(k)
+                         }
+                 }*/
+    </script>
+
+</body>
+</html>

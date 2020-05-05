@@ -1,0 +1,311 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>index</title>
+	<script type="text/javascript" src="static/home/js/jquery-1.8.0.min.js"></script>
+
+	<link rel="stylesheet" href="static/home/css/comon0.css">
+	<link rel="stylesheet" href="static/home/css/liMarquee.css">
+</head>
+<script>
+	$(window).load(function(){
+		$(".loading").fadeOut()
+	})
+
+	/****/
+	$(document).ready(function(){
+		var whei=$(window).width()
+		$("html").css({fontSize:whei/20})
+		$(window).resize(function(){
+			var whei=$(window).width()
+			$("html").css({fontSize:whei/20})
+		});
+	});
+</script>
+
+<script type="text/javascript">
+	function timer(opj){
+		$(opj).find('ul').animate({
+			marginTop : "1rem"
+		},500,function(){
+			$(this).css({marginTop : "0.1rem"}).find("li:first").appendTo(this);
+		})
+	}
+	$(function(){
+		var num = $('.notice_active').find('li').length;
+		if(num > 1){
+			var time=setInterval('timer(".notice_active")',3500);
+			$('.gg_more a').mousemove(function(){
+				clearInterval(time);
+			}).mouseout(function(){
+				time = setInterval('timer(".notice_active")',3500);
+			});
+		}
+
+		$(".news_ck").click(function(){
+			location.href = $(".notice_active .notice_active_ch").children(":input").val();
+		})
+	});
+</script>
+
+<style type="text/css">
+	.huadong {height:5.5rem;padding: 0.1rem 0 0.1rem 0;}
+	.huadong .notice_active {
+		float: left;
+		width: 100%;
+		height: 5.3rem;
+		padding: 0;
+		overflow: hidden;
+		position: relative;
+	}
+	.huadong .notice_active li{list-style-type:none;height:5.3rem;overflow: hidden;}
+	.notice_active ul{padding-left: 6px;}
+</style>
+
+<style>
+	.dowebok { width: 600px; height: 100px; margin-top: 1px; font-size: 14px;}
+	.dowebok ul { margin: 0; line-height: 30px;}
+	.dowebok a { color: #bdbdbd; text-decoration: none;}
+	.dowebok a:hover { text-decoration: underline;}
+</style>
+
+
+<body>
+<div class="canvas" style="opacity: .2">
+	<iframe frameborder="0" src="static/home/js/index.html" style="width: 100%; height: 100%"></iframe>
+</div>
+<div class="loading">
+	<div class="loadbox"> <img src="static/home/picture/loading.gif"> 页面加载中... </div>
+</div>
+<!--<div class="head">
+  <h1>大数据可视化展板通用模板</h1>
+  <div class="weather"><span id="showTime"></span></div>
+
+	<script>
+var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+		var y=dt.getFullYear();
+		var mt=dt.getMonth()+1;
+		var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行
+    }
+
+</script>
+
+
+</div>-->
+<div class="mainbox">
+	<ul class="clearfix">
+		<li>
+			<div class="boxall" style="height: 2.3rem">
+				<div class="alltitle">能耗（每吨）</div>
+				<table style="margin-top: 17px;">
+					<tr>
+						<th><img src="static/home/images/icon-01.png" /></th>
+						<td>
+
+							<p class="alltitle-one">去年同期月用水量</p>
+							<p class="alltitle-one"><span id="listedCompany" style="color: #fff;">12123</span></p>
+						</td>
+						<th><img src="static/home/images/icon-05.png" /></th>
+						<td>
+
+							<p class="alltitle-one">上月总用水量<br></p>
+							<p class="alltitle-one"><span id="listedSecurity" style="color: #fff;">25122</span></p>
+						</td>
+						<th><img src="static/home/images/icon-06.png" /></th>
+						<td>
+							<p><span id="listedSecurity">0</span></p>
+							<p class="alltitle-one">当月总用水量<br>同比:23212/20000<br>
+								环比:<img src="static/home/images/icondown.png" style="width: 10px;height: 12px;"/>3212</p>
+						</td>
+					</tr>
+				</table>
+				<div class="boxfoot"></div>
+			</div>
+
+
+			<div class="boxall" style="height: 4rem">
+				<div class="alltitle">泵房概况2</div>
+				<div class="allnav" id="echart1"></div>
+				<div class="boxfoot"></div>
+			</div>
+			<div class="boxall" style="height: 4.8rem">
+				<div class="alltitle">智能运维</div>
+				<div class="allnav" id="echart2"></div>
+				<div class="boxfoot"></div>
+			</div>
+
+		</li>
+		<li>
+			<div class="map">
+				<div class="map1"><img src="static/home/picture/lbx.png"></div>
+				<div class="map2"><img src="static/home/picture/jt.png"></div>
+				<div class="map3"><img src="static/home/picture/map.png"></div>
+				<div class="map4" id="map_1"></div>
+			</div>
+			<div class="boxall" style="height: 4rem">
+				<div class="alltitle">总用水量</div>
+				<div style="height:45%; width: 100%; float: left;">
+					<div class="allnav" id="fb1"></div>
+				</div>
+				<div class="alltitle">总耗电量</div>
+				<div style="height:45%; width: 100%; float: left;">
+					<div class="allnav" id="fb2"></div>
+				</div>
+
+				<div class="boxfoot">
+
+				</div>
+			</div>
+		</li>
+		<li>
+			<div class="boxall" style="height: 2.3rem">
+				<div class="alltitle">月统计</div>
+				<div class="allnav">
+					<ul>
+						<li style="float: left;margin-left: 35px;color: #FFFFFF; font-size: 13px;">区域</li>
+						<li style="float: left;margin-left: 35px;color: #FFFFFF; font-size: 13px;">当月用水量</li>
+						<li style="float: left;margin-left: 35px;color: #FFFFFF; font-size: 13px;">当月耗电量</li>
+						<li style="float: left;margin-left: 35px;color: #FFFFFF; font-size: 13px;">泵房数</li>
+						<li style="float: left;margin-left: 35px;color: #FFFFFF; font-size: 13px;">蓄水量</li>
+					</ul>
+
+					<div class="dowebok">
+
+						<ul id="table">
+							<table width="100%" cellpadding="6" cellspacing="0">
+								<tr class="row2">
+									<td>48</td>
+									<td>48</td>
+									<td>48</td>
+									<td>48</td>
+									<td>48</td>
+								</tr>
+								<tr class="row1">
+									<td>34</td>
+									<td>34</td>
+									<td>34</td>
+									<td>34</td>
+									<td>34</td>
+								</tr>
+								<tr class="row2">
+									<td>28</td>
+									<td>28</td>
+									<td>26</td>
+									<td>25</td>
+									<td>8</td>
+								</tr>
+								<tr class="row2">
+									<td>28</td>
+									<td>28</td>
+									<td>26</td>
+									<td>25</td>
+									<td>8</td>
+								</tr>
+								<tr class="row2">
+									<td>28</td>
+									<td>28</td>
+									<td>26</td>
+									<td>25</td>
+									<td>8</td>
+								</tr>
+								<tr class="row2">
+									<td>28</td>
+									<td>28</td>
+									<td>26</td>
+									<td>25</td>
+									<td>8</td>
+								</tr>
+								<tr class="row2">
+									<td>28</td>
+									<td>28</td>
+									<td>26</td>
+									<td>25</td>
+									<td>8</td>
+								</tr>
+								<tr class="row2">
+									<td>28</td>
+									<td>28</td>
+									<td>26</td>
+									<td>25</td>
+									<td>8</td>
+								</tr>
+								<tr class="row2">
+									<td>28</td>
+									<td>28</td>
+									<td>26</td>
+									<td>25</td>
+									<td>8</td>
+								</tr>
+								<tr class="row2">
+									<td>28</td>
+									<td>28</td>
+									<td>26</td>
+									<td>25</td>
+									<td>8</td>
+								</tr>
+							</table>
+
+						</ul>
+					</div>
+
+				</div>
+				<div class="boxfoot"></div>
+			</div>
+
+			<div class="boxall" style="height:2.9rem">
+				<div class="alltitle">实时统计</div>
+				<div class="allnav" id="echart4"></div>
+				<div class="boxfoot"></div>
+			</div>
+
+			<div class="boxall" style="height: 5.9rem">
+				<div class="alltitle">用水量统计</div>
+				<div class="allnav" id="echart5" style="display: none;"></div>
+				<div class="huadong">
+					<div class="notice_active">
+						<ul>
+							<li class="notice_active_ch">
+								<div class="paiming" id="paiming1" style="width: 100%;height: 96%;" ></div>
+							</li>
+							<li class="notice_active_ch">
+								<div class="paiming" id="paiming2" style="width: 100%;height: 96%;" ></div>
+							</li>
+							<li class="notice_active_ch">
+								<div class="paiming" id="paiming3" style="width: 100%;height: 96%;" ></div>
+							</li>
+							<li class="notice_active_ch">
+								<div class="paiming" id="paiming4" style="width: 100%;height: 96%;" ></div>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="boxfoot"></div>
+			</div>
+
+		</li>
+	</ul>
+</div>
+<div class="back"></div>
+
+<script type="text/javascript" src="static/home/js/jquery.js"></script>
+<script type="text/javascript" src="static/home/js/echarts.min.js"></script>
+<script language="javascript" src="static/home/js/js.js"></script>
+<script language="javascript" src="static/home/js/top10.js"></script>
+<script type="text/javascript" src="static/home/js/china.js"></script>
+<script type="text/javascript" src="static/home/js/area_echarts.js"></script>
+<!--	<script  type="text/javascript" src="js/online.js"></script> -->
+<script type="text/javascript" src="static/home/js/jquery.liMarquee.js"></script>
+</body>
+</html>

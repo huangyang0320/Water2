@@ -1,0 +1,240 @@
+<style type="text/css">
+	/*
+	 * inline styles
+	 * history data styles
+	 */
+	#page-inner {
+        padding: 0 10px 10px 10px;
+    }
+    .panel-body {
+        padding: 6px 15px;
+    }
+	 .time-superposition .download-data {
+	 	line-height: 20px;
+	 	font-size: 14px;
+	 	border: 1px solid transparent;
+	 	border-radius: 4px;
+	 	margin-left: 20px;
+	 	outline: none;
+	 }
+	 #highcharts-history-data,
+	 #highcharts-history-data2 {
+	 	position: relative;
+	 	width: 100%;
+	 	overflow: hidden;
+	 }
+	 #device-norm-data,
+	 #device-norm-data2 {
+	 	overflow-y: scroll;
+	 	border: 1px solid #ccc;
+	 }
+.colour_black_0 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #FFB6C1;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_1 {
+    display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #778899;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_2 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #ADD8E6;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_3 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #E1FFFF;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_4 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #20B2AA;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_5 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #90EE90;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_6 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #F08080;
+    border: none;
+    cursor: pointer;
+}
+	.bootstrap-table .table, .bootstrap-table .table>tbody>tr>td, .bootstrap-table .table>tbody>tr>th, .bootstrap-table .table>tfoot>tr>td, .bootstrap-table .table>tfoot>tr>th, .bootstrap-table .table>thead>tr>td{
+		padding: 0px!important;
+	}
+	.fixed-table-container tbody td .th-inner, .fixed-table-container thead th .th-inner {
+		padding: 8px 0;
+	}
+	.W120 .th-inner {
+		width:140px !important;
+	}
+	.W160 .th-inner {
+		width:160px !important;
+	}
+	.W160{
+			line-height: 40px!important;
+	}
+	.W120{
+		line-height: 40px!important;
+	}
+</style>
+<form id="queryForm" style="display: none">
+	<input name="deviceIds" type="hidden">
+	<input name="index" type="hidden">
+	<input name="dimen" type="hidden">
+	<input name="startDate" type="hidden">
+	<input name="endDate" type="hidden">
+    <input name="addOnDate" type="hidden">
+</form>
+<script>
+	//datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
+	/* 点击input框时加载监听事件*/
+	$(".timepicker").each(function () {
+		this.addEventListener('click',myfunc);
+	})
+
+	function myfunc(e){
+		e.currentTarget.blur();
+	}
+
+	function showTu() {
+		document.querySelector("#tabToTu").style.display = 'none'
+		document.querySelector("#tabToBiao").style.display = 'inline-block'
+		document.querySelector("#highcharts-history-data").style.display = 'block'
+		document.querySelector("#tablewrap").style.display = 'none'
+		initChart()
+	}
+	function showBiao() {
+		document.querySelector("#tabToTu").style.display = 'inline-block'
+		document.querySelector("#tabToBiao").style.display = 'none'
+		document.querySelector("#highcharts-history-data").style.display = 'none'
+		document.querySelector("#tablewrap").style.display = 'block'
+		initChart()
+	}
+</script>
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
+<div id="page-inner">
+	<div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div id="selectedDevice"></div>
+        </div>
+    </div>
+	<div class="row" >
+		<div class="col-xs-12 col-md-12" >
+			<div class="chart-time">
+				<div class="time-length" id="time-length">
+					<label>统计时长: </label>
+					<span class="minute">分</span>
+					<span class="hourtime active">时</span>
+					<span class="daytime">日</span>
+					<span class="monthtime">月</span>
+					<span class="yeartime">年</span>
+				</div>
+				<div class="time-period">
+					<label for="statisticDate">统计时段 : </label>
+
+					<input type="text" readonly class="form_datetime form-control timepicker" id="startDate">-
+					<input type="text" readonly class="form_datetime form-control timepicker" id="statisticDate">
+
+				</div>
+
+				<div class="time-superposition">
+					<div style="display: none">
+						<label for="addOnTime">叠加时长 : </label>
+						<select class="superposition" id="addOnTime" style="width:50px"></select>
+					</div>
+					<button class="download-data btn-primary" id="export">导出数据</button>
+					<button class="download-data btn-primary" id="tabToTu" onclick="showTu()" style="display: none">切换到图</button>
+					<button class="download-data btn-primary" id="tabToBiao" onclick="showBiao()">切换到表</button>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!--/.row-->
+    <div class="row" style="height: calc(100% - 100px);">
+        <div class="col-md-12 col-sm-12 col-xs-12" style="height: 100%">
+            <div class="panel panel-default" style="height: 100%">
+                <div class="panel-body" style="height: 100%">
+                    <div class="col-md-9 col-sm-12 col-xs-12" style="height: 100%">
+                        <div id="highcharts-history-data" class="chart-height"></div>
+						<div id="tablewrap" style="display: none" style="height:100px">
+							<table id="history-data-Table"></table>
+						</div>
+                        <!-- tongbi chart -->
+                    </div>
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                      <div id="device-norm-data" class="chart-height">
+                          <ul class="list-group"></ul>
+                      </div>
+                      <!-- DEVICELIST -->
+                    </div>
+              </div>
+            <!-- panel -->
+        </div>
+        <!-- col-md-12 -->
+    </div>
+    <!-- /. ROW  -->
+</div>
+<!-- /. PAGE INNER  -->
+	<script src="static/assets/js/tips.js"></script>
+<script src="static/assets/js/realtimeMonitor/historyDataNewBak.js"></script>

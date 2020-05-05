@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.sys.dao.AccumulationMapper">
+	<select id="queryStatAccumulation" resultType="java.util.HashMap">
+		select
+		id_device as deviceid,
+		id_service as serviceid,
+		tag_name as tagname,
+		${operTime} as datetime,
+		truncate((max(pv) - min(pv)),3) pv,
+		case when id_service like '%degree_total%' then 'kWh' else 'm3' end as
+		unit,
+		min(pv) mindata,
+		max(pv) maxdata
+		from service_values_${tableName}
+		where
+		date_time between #{beginTime} and #{endTime}
+		and pv between 5 and 999999999
+		and (id_service like '%flowtotal_outwater%' or id_service like '%degree_total%')
+		group by
+		id_service,id_device,tag_name
+	</select>
+
+	<select id="queryStatPass" resultType="java.util.HashMap">
+		select
+		id_device as deviceid,
+		id_service as serviceid,
+		tag_name as tagname,
+		${operTime} as datetime,
+		truncate((avg(pv)),2) pv,
+		case when id_service like '%pressure_szjs1%' then 'in' else 'out' end as
+		unit,
+		min(pv) mindata,
+		max(pv) maxdata
+		from service_values_${tableName}
+		where
+		date_time between #{beginTime} and #{endTime}
+		and pv > 0
+		and (id_service like '%\pressure_szjs1' or id_service like '%\pressure_outwater')
+		group by
+		id_service,id_device,tag_name
+	</select>
+
+	<insert id="batchInsert">
+		insert ignore  INTO ${tableName} (
+		id_device,
+		id_pump_house,
+		id_service,
+		tag_name,
+		date_time,
+		pv,
+		eu,
+		MIN,
+		MAX
+		) VALUES
+		<foreach collection="list" item="item" index="index"
+				 separator=",">
+			(
+			#{item.deviceid},
+			#{item.pumpid},
+			#{item.serviceid},
+			#{item.tagname},
+			#{item.datetime},
+			#{item.pv},
+			#{item.unit},
+			#{item.mindata},
+			#{item.maxdata}
+			)
+		</foreach>
+	</insert>
+
+	<select id="devPumps" resultType="java.util.HashMap">
+	    select
+	        id as dev,
+	        id_pump_house as pump
+	    from device
+	</select>
+
+	<select id="getOneSummary" resultType="java.util.HashMap">
+	    select
+	        id_device deviceid,
+		id_pump_house pumpid,
+		id_service serviceid,
+		tag_name tagname,
+		date_time datetime,
+		pv pv,
+		eu unit,
+		MIN mindata,
+		MAX maxdata
+	    from service_values_summary_history where date_time = #{dateTime}
+	    and id_pump_house is not null and pv &gt; 0
+	</select>
+
+	<select id="getTwoHourAvg" resultType="java.util.HashMap">
+	    select dev , concat(pv,'') pv from (
+	    select
+	    concat(id_device,'_',eu) dev, avg(pv) pv
+	    from service_values_summary where date_time &gt; #{startTime} and date_time &lt; #{endTime}
+	    and id_pump_house is not null
+	    group by id_device,eu
+	    ) temp
+	</select>
+
+	<select id="getAllDevConf" resultType="java.util.HashMap">
+		SELECT
+		    dev.id,
+		    CASE
+		        WHEN SBEDGSLL IS NULL THEN flow
+		        ELSE SBEDGSLL
+		    END flow,
+		    CASE
+		        WHEN POWER_RATING IS NULL THEN power
+		        ELSE POWER_RATING
+		    END power
+		FROM
+		    (SELECT
+		        id,
+		            (SELECT
+		                    label
+		                FROM
+		                    sys_dict
+		                WHERE
+		                    value = 'default_rate_flow') flow,
+		            (SELECT
+		                    label
+		                FROM
+		                    sys_dict
+		                WHERE
+		                    value = 'default_rate_power') power
+		    FROM
+		        device) dev
+		        LEFT JOIN
+		    device_set_label l ON l.DEVICE_ID = dev.id
+	</select>
+
+	<select id="getPumpDevSize" resultType="java.util.HashMap">
+    select pumpid,concat(pv,'') pv from (
+        select concat(id_pump_house,'') pumpid,count(id) pv from device group by id_pump_house
+        ) temp
+    </select>
+
+</mapper>

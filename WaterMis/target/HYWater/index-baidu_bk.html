@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!-- Icon title -->
+    <link rel="shortcut icon" href="static/login/favicon.ico" type="image/x-icon">
+    <title>二次供水管理平台</title>
+    <!-- Bootstrap Styles-->
+    <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- TABLE STYLES-->
+    <link href="static/assets/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+    <!-- FontAwesome Styles-->
+    <link href="static/assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- RightMenu Styles -->
+    <link href="static/assets/css/jquery-accordion-menu.css" rel="stylesheet" />
+    <!-- Datetimepicker Styles -->
+    <link href="static/assets/js/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <!-- iCheck Styles -->
+    <link href="static/assets/js/iCheck/iCheck.css" rel="stylesheet" />
+    <!-- ScrollBar Styles -->
+    <link href="static/assets/css/scrollBar.css" rel="stylesheet" />
+    <!-- Custom Styles-->
+    <link href="static/assets/css/custom-styles.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="cover-container">
+        <div class="loadingBar-container">
+            <img src="static/assets/img/ring-alt.gif">
+        </div>
+        <div class="percentBar-container">
+            <span class="percentBar"></span>
+        </div>
+    </div>
+
+    <div id="wrapper">
+        <nav class="navbar navbar-default top-navbar" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index-baidu.html">
+                    <img src="static/assets/login/images/dst_logo.png">
+                </a>
+            </div>
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-check-square-o"></i>
+                        欢迎登录 , <span id="loginUser"></span>
+                        <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+                        <li role="presentation">
+                            <a href="javascript:;" id="logout">
+                                <i class="fa fa-power-off"></i>
+                                退出系统
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-question-circle"></i>
+                        帮助
+                        <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+                        <li role="presentation">
+                            <a href="static/assets/vlc/WebCtrl_V4.0.exe"><i class="fa fa-download"></i>下载视频播放插件</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;" id="showWarnDialog">
+                        <i class="fa fa-shield"></i>
+                        <span class="label label-warning warn-info"></span>
+                        告警信息
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!--/. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+		    <div id="sideNav"><i class="fa fa-caret-left"></i></div>
+            <div class="sidebar-collapse">
+                
+            </div>
+        </nav>
+        <!-- /. technicalSupport -->
+        <div class="technicalSupport">技术支持:上海XXXXXX智慧水务</div>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+            
+        </div>
+        <!-- /. PAGE WRAPPER  -->
+
+        <nav class="navbar-default pull-right" id="deviceMenuRight">
+            <div class="showRightMenu">
+                <a href="javascript:;">
+                    <i class='fa fa-cog' style='margin-right:6px;'></i>
+                    <span></span>
+                </a>
+                <br>
+                <a href="javascript:;" title="显示设备列表"><i class="fa fa-angle-double-down"></i></a>
+            </div>
+            <div class="right-menu" id="right-menu-list">
+            </div>
+        </nav>
+        <!-- /. RIGHT MENU -->
+
+        <div class="alarmTips">
+            <div class="alarmTitle">
+                <span>告警信息列表</span>
+                <span class="closeTips" title="关闭">X</span>
+            </div>
+            <div class="content">
+                <iframe frameborder="0" width="100%" height="100%"></iframe>
+            </div>
+        </div>
+        <!-- /.ALARM TIPS -->
+    </div>
+    <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="static/assets/js/jquery-1.10.2.js"></script>
+    <script>
+        var SYSTEM_LOADING;
+        $(function() {
+            // loading bar
+            var barLen = 0;
+            SYSTEM_LOADING = setInterval(function(){
+                barLen ++;
+                if(barLen > 95){
+                    clearInterval(SYSTEM_LOADING);
+                } else {
+                    $(".percentBar").text(barLen + "%");
+                }
+            }, 20);
+        });
+    </script>
+    <script src="static/assets/js/jquery-form.js"></script>
+    <script src="static/assets/js/jQuery.base64.js"></script>
+    <script src="static/assets/js/scroll.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="static/assets/js/bootstrap.min.js"></script>
+    <!-- BOOTSTRAP SCRIPTS -->
+    <script src="static/assets/js/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="static/assets/js/bootstrap-table/bootstrap-table-zh-CN.min.js"></script>
+    <script src="static/assets/js/bootstrap-table/bootstrap-table-export.js"></script>
+    <script src="static/assets/js/bootstrap-table/tableExport.js"></script>
+    <!-- Highcharts Js -->
+    <script src="static/assets/js/Highcharts-4.2.3/highcharts.js"></script>
+    <script src="static/assets/js/Highcharts-4.2.3/highcharts-3d.js"></script>
+    <script src="static/assets/js/Highcharts-4.2.3/highcharts-more.js"></script>
+    <script src="static/assets/js/Highcharts-4.2.3/modules/solid-gauge.js"></script>
+    <script src="static/assets/js/Highcharts-4.2.3/modules/exporting.js"></script>
+    <!-- ArcGIS Map Js -->
+    <script src="static/assets/js/Highcharts-4.2.3/modules/export-csv.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="static/assets/js/jquery.metisMenu.js"></script>
+    <!-- RightMenu Js -->
+    <script src="static/assets/js/jquery-accordion-menu.js"></script>
+    <!-- Lhgdialog Js -->
+    <script src="static/assets/js/lhgdialog/lhgdialog.min.js?skin=iblue"></script>
+    <!-- Datetimepicker Js -->
+    <script src="static/assets/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="static/assets/js/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+    <!-- iCheck Js -->
+    <script src="static/assets/js/iCheck/iCheck.min.js"></script>
+    <!-- Date util -->
+    <script src="static/assets/js/date_time.js"></script>
+    <!-- Baidu Map Js -->
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=TnTtZt52jtuwnf8aNHl3H1Eh"></script>
+    <!-- Constant Js -->
+    <script src="static/assets/js/constant.js"></script>
+    <!-- Util Js -->
+    <script src="static/assets/js/util.js"></script>
+    <!-- Custom Js -->
+    <script src="static/assets/js/custom.js"></script>
+</body>
+
+</html>

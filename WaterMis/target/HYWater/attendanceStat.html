@@ -1,0 +1,54 @@
+<style type="text/css">
+    .columns.columns-right {
+        position: absolute !important;
+        top: 9px;
+        right: 40px;
+    }
+</style>
+<div id="page-inner">
+    <div class="row">
+        <div class="col-md-8 col-xs-8">
+            <!-- Advanced Tables -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <form id="countSubmit">
+                        <div class="query-parameter">
+                        	<label>持卡人 : </label>
+                            <input id="userName"class="device-id form-control input-text2">
+                            <label>开启时间 : </label>
+                            <input id="beginTime" name="beginTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-begin timepicker">
+                            <label>结束时间 : </label>
+                            <input id="endTime" name="endTime" type="text" value="" readonly class="device-id form-control input-text1 warn-time-begin timepicker">
+                            <input type="hidden" id="pumpHouseId">
+                            <input type="hidden" id="user" name="userId">
+                            <button id="query" type="button" class="btn btn-primary query-btn">查 询</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="dataTables-example">
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+            <!--End Advanced Tables -->
+        </div>
+        <div class="col-md-4 col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="entertimes-title">
+                        <span>用户出勤天数统计</span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="entertimes-compare"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /. ROW  -->
+</div>
+<!-- Script -->
+<script src="static/assets/js/countAnalysis/attendanceStat.js"></script>

@@ -1,0 +1,53 @@
+<form id="queryForm" style="display: none">
+	<input name="deviceId" type="hidden">
+	<input name="index" type="hidden">
+</form>
+<div id="page-inner">
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div id="selectedDevice"></div>
+        </div>
+    </div>
+	<div class="row">
+        <iframe id="onlineDataPage" name="onlineDataPage" src="onlineData_v2New.html" style="border: none;outline: none;width: 100%;height: 100%"></iframe>
+    </div>
+    <!-- /. ROW  -->
+</div>
+<script>
+
+    $(function () {
+        rightMenuMsg();
+        // 初始化无滚动条
+        $("#page-wrapper").css("overflow-y", "hidden");
+        // 计算图表展示区域和设备指标显示区域的高度
+        var calcHeight = function() {
+            return $(window).height() - $(".top-navbar").height();
+        };
+
+        $('#onlineDataPage').height(calcHeight());
+
+        $(window).resize(function() {
+            $('#onlineDataPage').height(calcHeight());
+        });
+    });
+
+    function refreshDeviceCheck(){
+        window.onlineDataPage.getSendData();
+    }
+
+    /**
+     * 初始化树默认调用
+     */
+    function defChoose(){
+        if(window.onlineDataPage.getSendData){
+            window.onlineDataPage.getSendData();
+        }
+    }
+    function callRefresh () {
+        if(window.onlineDataPage.getSendData){
+            window.onlineDataPage.getSendData();
+        }
+        // return false;
+    }
+
+</script>

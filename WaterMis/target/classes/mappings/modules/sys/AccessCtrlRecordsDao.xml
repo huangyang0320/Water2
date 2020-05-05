@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.sys.dao.AccessCtrlRecordsDao">
+
+
+	<select id="findList"
+		resultType="com.wapwag.woss.modules.sys.entity.AccessCtrlRecords">
+		SELECT
+			a.eventTime,
+			a.personName,
+			a.eventName,
+			a.eventCard,
+			a.doorName,
+			a.deviceName
+		FROM access_record a
+			JOIN access_device ad on ad.hkAccessDeviceId = a.doorId
+		WHERE
+			a.eventTime &gt; #{beginTime}
+			and a.eventTime &lt; #{endTime}
+			<if test="personName != null and personName != ''">
+				and a.personName like '%${personName}%'
+			</if>
+			<if test="doorName != null and doorName != ''">
+				and a.doorName like '%${doorName}%'
+			</if>
+		order by a.eventTime desc
+	</select>
+	<select id="exportList"
+		resultType="com.wapwag.woss.modules.sys.entity.AccessCtrlRecords">
+		SELECT
+			a.eventTime,
+			a.personName,
+			a.eventName,
+			a.eventCard,
+			a.doorName,
+			a.deviceName
+		FROM access_record a
+			JOIN access_device ad on ad.hkAccessDeviceId = a.doorId
+		WHERE
+			a.eventTime &gt; #{beginTime}
+			and a.eventTime &lt; #{endTime}
+			<if test="personName != null and personName != ''">
+				and a.personName like '%${personName}%'
+			</if>
+			<if test="doorName != null and doorName != ''">
+				and a.doorName like '%${doorName}%'
+			</if>
+		order by a.eventTime desc
+		limit 0, #{exportMustNum}
+	</select>
+
+	<select id="countLoginUser"
+		resultType="com.wapwag.woss.modules.sys.entity.AccessCtrlRecords">
+		SELECT
+			count(a.eventType) eventType, a.eventName eventName
+		FROM access_record a
+			JOIN access_device ad on ad.hkAccessDeviceId = a.doorId
+		WHERE
+			a.eventTime &gt; #{beginTime}
+			and a.eventTime &lt; #{endTime}
+			<if test="personName != null and personName != ''">
+				and a.personName like '%${personName}%'
+			</if>
+		group by eventType
+	</select>
+	<select id="getBeginTime" resultType="java.lang.String">
+		select eventTime from
+		access_record order by eventTime desc limit 0 , 1
+	</select>
+
+	<insert id="saveAccessRecord">
+		INSERT INTO access_record(
+		acEventId,
+		eventType,
+		eventTime,
+		eventName,
+		eventCode,
+		eventCard,
+		personId,
+		personName,
+		deptId,
+		deptName,
+		deptCode,
+		deviceId,
+		deviceName,
+		deviceType,
+		doorId,
+		doorName,
+		regionId,
+		regionName,
+		controlUnitId,
+		controlUnitName,
+		tag,
+		systemType,
+		systemName,
+		state,
+		triggerRecord,
+		remark
+		) VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			#{item.acEventId},
+			#{item.eventType},
+			#{item.eventTime},
+			#{item.eventName},
+			#{item.eventCode},
+			#{item.eventCard},
+			#{item.personId},
+			#{item.personName},
+			#{item.deptId},
+			#{item.deptName},
+			#{item.deptCode},
+			#{item.deviceId},
+			#{item.deviceName},
+			#{item.deviceType},
+			#{item.doorId},
+			#{item.doorName},
+			#{item.regionId},
+			#{item.regionName},
+			#{item.controlUnitId},
+			#{item.controlUnitName},
+			#{item.tag},
+			#{item.systemType},
+			#{item.systemName},
+			#{item.state},
+			#{item.triggerRecord},
+			#{item.remark}
+			)
+		</foreach>
+	</insert>
+	<select id="configInfos" resultType="com.wapwag.woss.common.hkthirdsdk.pojo.ConfigInfo">
+	select  PARAM_NAME paramName,PARAM_VALUE paramValue from sys_parameter
+	</select>
+
+</mapper>

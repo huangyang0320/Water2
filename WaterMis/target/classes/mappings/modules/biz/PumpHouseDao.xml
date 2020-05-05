@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.PumpHouseDao">
+    
+	<sql id="pumpHouseColumns">
+		a.id AS "id",
+		a.id_project AS "project.id",
+		a.name AS "name",
+		a.address AS "address",
+		a.memo AS "memo",
+		a.longi AS "longi",
+		a.lati AS "lati",
+		a.access_ctrl_ip_addr AS "accessCtrlIpAddr",
+		a.access_ctrl_port AS "accessCtrlPort",
+		a.all_pic_url AS "allPicUrl",
+		a.id_region AS "region.id",
+		a.pinyin,
+		a.device_Manufacturers AS deviceManufacturers,
+		a.device_Manufacturers_Information AS deviceManufacturersInformation,
+		a.self_Control_Manufacturers AS selfControlManufacturers,
+		a.self_Control_Manufacturers_Information AS selfControlManufacturersInformation,
+		a.construction_Side as constructionSide,
+		a.construction_Side_Information as constructionSideInformation,
+		a.construction as construction,
+		a.construction_Information as constructionInformation,
+		a.property as property,
+		a.property_Information AS propertyInformation,
+		a.handover_time AS handoverTime
+
+	</sql>
+	
+	<sql id="pumpHouseJoins">
+	</sql>
+    
+	<select id="get" resultType="PumpHouse">
+		SELECT 
+			<include refid="pumpHouseColumns"/>
+		FROM pump_house a
+		<include refid="pumpHouseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PumpHouse">
+		SELECT 
+			<include refid="pumpHouseColumns"/>
+		FROM pump_house a
+		<include refid="pumpHouseJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PumpHouse">
+		SELECT 
+			<include refid="pumpHouseColumns"/>
+		FROM pump_house a
+		<include refid="pumpHouseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO pump_house(
+			id,
+			id_project,
+			name,
+			address,
+			memo,
+			longi,
+			lati,
+			access_ctrl_ip_addr,
+			access_ctrl_port,
+			all_pic_url,
+			id_region,
+			pinyin
+		) VALUES (
+			#{id},
+			#{project.id},
+			#{name},
+			#{address},
+			#{memo},
+			#{longi},
+			#{lati},
+			#{accessCtrlIpAddr},
+			#{accessCtrlPort},
+			#{allPicUrl},
+			#{region.id},
+			#{pinyin}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE pump_house SET 	
+			id_project = #{project.id},
+			name = #{name},
+			address = #{address},
+			memo = #{memo},
+			longi = #{longi},
+			lati = #{lati},
+			access_ctrl_ip_addr = #{accessCtrlIpAddr},
+			access_ctrl_port = #{accessCtrlPort},
+			all_pic_url = #{allPicUrl},
+			id_region = #{region.id},
+			pinyin = #{pinyin}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM pump_house
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

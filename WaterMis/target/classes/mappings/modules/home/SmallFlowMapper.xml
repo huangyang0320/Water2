@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.home.dao.SmallFlowMapper">
+
+	<select id="getSmallFlowData" resultType="HashMap">
+		select
+			code,
+			pv,
+			uint,
+			DATE_FORMAT(startTime, '%Y-%m-%d %H:%i:%s') startTime
+		from
+			small_flow_keep_pressure
+		where
+			del_falg = '0'
+			AND status = '1'
+			AND deviceCode = #{deviceId}
+			AND pv &gt; 0
+ 			AND startTime &gt;= #{startTime} and startTime &lt;= #{endTime}
+	</select>
+
+
+
+</mapper>

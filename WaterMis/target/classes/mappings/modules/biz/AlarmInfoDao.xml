@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.AlarmInfoDao">
+    
+	<sql id="alarmInfoColumns">
+		a.alarm_id AS "id",
+		a.project_id AS "project.id",
+		a.device_id AS "device.id",
+		a.pump_house_id AS "pumpHouse.id",
+		a.alarm_content AS "alarmContent",
+		a.alarm_reason AS "alarmReason",
+		a.alarm_type AS "alarmType",
+		a.alarm_time AS "alarmTime"
+	</sql>
+	
+	<sql id="alarmInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="com.wapwag.woss.modules.biz.entity.AlarmInfo">
+		SELECT 
+			<include refid="alarmInfoColumns"/>
+		FROM alarm_info a
+		<include refid="alarmInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="com.wapwag.woss.modules.biz.entity.AlarmInfo">
+		SELECT 
+			<include refid="alarmInfoColumns"/>
+		FROM alarm_info a
+		<include refid="alarmInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="com.wapwag.woss.modules.biz.entity.AlarmInfo">
+		SELECT 
+			<include refid="alarmInfoColumns"/>
+		FROM alarm_info a
+		<include refid="alarmInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO alarm_info(
+			alarm_id,
+			project_id,
+			device_id,
+			pump_house_id,
+			alarm_content,
+			alarm_reason,
+			alarm_type,
+			alarm_time
+		) VALUES (
+			#{id},
+			#{project.id},
+			#{device.id},
+			#{pumpHouse.id},
+			#{alarmContent},
+			#{alarmReason},
+			#{alarmType},
+			#{alarmTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE alarm_info SET 	
+			alarm_id = #{id},
+			project_id = #{project.id},
+			device_id = #{device.id},
+			pump_house_id = #{pumpHouse.id},
+			alarm_content = #{alarmContent},
+			alarm_reason = #{alarmReason},
+			alarm_type = #{alarmType},
+			alarm_time = #{alarmTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM alarm_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

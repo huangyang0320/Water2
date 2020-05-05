@@ -1,0 +1,169 @@
+<style type="text/css">
+	/*
+	 * inline styles
+	 * history data styles
+	 */
+	#page-inner {
+        padding: 0 10px 10px 10px;
+    }
+    .panel-body {
+        padding: 6px 15px;
+    }
+	 .time-superposition .download-data {
+	 	line-height: 20px;
+	 	font-size: 14px;
+	 	border: 1px solid transparent;
+	 	border-radius: 4px;
+	 	margin-left: 20px;
+	 	outline: none;
+	 }
+	 #device-data,
+	 #component-data {
+	 	position: relative;
+	 	width: 100%;
+	 	overflow: hidden;
+	 }
+	 #device-norm-data,
+	 #component-norm-data {
+	 	overflow-y: scroll;
+	 	border: 1px solid #ccc;
+	 }
+.colour_black_0 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #FFB6C1;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_1 {
+    display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #778899;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_2 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #ADD8E6;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_3 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #E1FFFF;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_4 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #20B2AA;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_5 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #90EE90;
+    border: none;
+    cursor: pointer;
+}
+.colour_black_6 {
+	display:block;
+    float:right;
+    width:87%;
+    vertical-align: middle;
+    margin: 0 8px 0 0;
+    padding: 0;
+    height:20px;
+    margin-right: 1px;
+    background-color: #F08080;
+    border: none;
+    cursor: pointer;
+}
+</style>
+<form id="queryForm" style="display: none">
+	<input name="deviceId" type="hidden">
+	<input name="index" type="hidden">
+	<input name=componentId type="hidden">
+</form>
+<div id="page-inner">
+	<div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div id="selectedDevice"></div>
+        </div>
+    </div>
+	<div class="row">
+		<div class="col-xs-12 col-md-12">
+			<div class="chart-time">
+				<div class="time-period">
+					<label>设备启用时间 : </label>
+					<span id="startDate"></span>
+				</div>
+				<div class="time-period">
+					<label>运行时长: </label>
+					<span id="runDays"></span>
+				</div>
+				<div class="time-superposition">
+					<label for="component">设备配件 : </label>
+					<select class="superposition" id="component" style="width:230px"></select>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!--/.row-->
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel-body">
+                        <div id="lifeprediction-data" class="chart-height"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- panel -->
+        </div>
+        <!-- col-md-12 -->
+    </div>
+    <!-- /. ROW  -->
+</div>
+<!-- /. PAGE INNER  -->
+<script src="static/assets/js/realtimeMonitor/lifeprediction.js"></script>

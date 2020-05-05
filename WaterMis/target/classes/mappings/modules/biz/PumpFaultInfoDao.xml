@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.biz.dao.PumpFaultInfoDao">
+    
+	<sql id="pumpFaultInfoColumns">
+		a.fault_id AS "id",
+		a.alarm_id AS "alarm.id",
+		a.device_id AS "device.id",
+		a.fault_level AS "faultLevel",
+		a.fault_message AS "faultMessage",
+		a.fault_state AS "faultState"
+	</sql>
+	
+	<sql id="pumpFaultInfoJoins">
+	</sql>
+    
+	<select id="get" resultType="PumpFaultInfo">
+		SELECT 
+			<include refid="pumpFaultInfoColumns"/>
+		FROM pump_fault_info a
+		<include refid="pumpFaultInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PumpFaultInfo">
+		SELECT 
+			<include refid="pumpFaultInfoColumns"/>
+		FROM pump_fault_info a
+		<include refid="pumpFaultInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PumpFaultInfo">
+		SELECT 
+			<include refid="pumpFaultInfoColumns"/>
+		FROM pump_fault_info a
+		<include refid="pumpFaultInfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO pump_fault_info(
+			fault_id,
+			alarm_id,
+			device_id,
+			fault_level,
+			fault_message,
+			fault_state
+		) VALUES (
+			#{id},
+			#{alarm.id},
+			#{device.id},
+			#{faultLevel},
+			#{faultMessage},
+			#{faultState}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE pump_fault_info SET 	
+			fault_id = #{id},
+			alarm_id = #{alarm.id},
+			device_id = #{device.id},
+			fault_level = #{faultLevel},
+			fault_message = #{faultMessage},
+			fault_state = #{faultState}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM pump_fault_info
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

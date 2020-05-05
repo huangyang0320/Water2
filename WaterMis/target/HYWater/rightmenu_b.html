@@ -1,0 +1,85 @@
+<style type="text/css">
+*{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
+.content{width:260px;font-family: "Microsoft YaHei";}
+.filterinput{
+	background-color:rgba(249, 244, 244, 0);
+	border-radius:15px;
+	width:90%;
+	height:30px;
+    line-height: 30px;
+	border:thin solid #FFF;
+	text-indent:1em;
+	font-weight:bold;
+	font-family: "Microsoft YaHei";
+	color:#FFF;
+	margin-top: 10px;
+}
+#demo-list a{
+	overflow:hidden;
+	text-overflow:ellipsis;
+	-o-text-overflow:ellipsis;
+	white-space:nowrap;
+	width:100%;
+}
+</style>
+</head>
+<body>
+<div class="content">
+
+    <div id="jquery-accordion-menu" class="jquery-accordion-menu">
+        <div class="jquery-accordion-menu-header" id="form">
+            <form class="filterform" action="#" onsubmit="false">
+                <input class="filterinput" placeholder="搜索" type="text"><i class="fa fa-search-plus"></i>
+            </form>
+        </div>
+        
+        <div class="loadDeviceList">
+            <ul id="demo-list"></ul>
+        </div>
+
+        <div class="jquery-accordion-menu-footer">
+            <a href="javascript:;" id="hideMenu">隐藏设备列表 <i class="fa fa-angle-double-up"></i></a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    (function ($) {
+        /**
+         * @return {boolean}
+         */
+        jQuery.expr[':'].Contains = function (a, i, m) {
+            return (a.textContent || a.innerText || "").indexOf(m[3]) >= 0;
+        };
+
+        function filterList(header, list) {
+            // keyup触发匹配事件
+            $(".filterinput").keyup(function() {
+                var filter = $(this).val();
+                if (filter) {
+                    // 先隐藏所有li
+                    $(list).find("li").hide();
+
+                    var _list = $(list).find(".device");
+                    // 获取匹配到的device li
+                    $device = _list.find("a:Contains(" + filter + ")").parent();
+                    // 获取house li
+                    $house = _list.find("a:Contains(" + filter + ")").parent().parent().parent();
+                    // 获取area li
+                    $area = _list.find("a:Contains(" + filter + ")").parent().parent().parent().parent().parent();
+                    // 展示匹配到节点
+                    $area.slideDown();
+                    $house.slideDown();
+                    $device.slideDown();
+                } else {
+                    $(list).find("li").slideDown();
+                }
+                return false;
+            });
+        }
+
+        $(function () {
+            filterList($("#form"), $("#demo-list"));
+        });
+    })(jQuery);
+</script>

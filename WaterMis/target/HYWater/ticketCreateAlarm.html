@@ -1,0 +1,458 @@
+
+    <!-- Bootstrap Styles-->
+    <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
+
+    <link href="static/assets/css/bootstrapValidator.min.css" rel="stylesheet" />
+    <!-- TABLE STYLES-->
+    <link href="static/assets/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+    <!-- FontAwesome Styles-->
+    <link href="static/assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- RightMenu Styles -->
+    <link href="static/assets/css/jquery-accordion-menu.css" rel="stylesheet" />
+    <!-- Datetimepicker Styles -->
+    <link href="static/assets/js/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+    <link href="static/assets/js/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
+
+    <!-- iCheck Styles -->
+    <link href="static/assets/js/iCheck/iCheck.css" rel="stylesheet" />
+    <!-- ScrollBar Styles -->
+    <link href="static/assets/css/scrollBar.css" rel="stylesheet" />
+    <!-- Custom Styles-->
+    <link href="static/assets/css/custom-styles.css" rel="stylesheet" />
+    <!-- Ztrr Styles -->
+    <link href="static/ztree/css/demo.css" type="text/css" rel="stylesheet" >
+    <link href="static/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css" rel="stylesheet" >
+
+    <link rel="stylesheet" type="text/css" href="theme/css/load.css">
+
+
+    <!--	<script src="static/assets/vide/preview.js"></script>
+        <script src="static/assets/vide/playback.js"></script>-->
+    <style>
+        html, body{
+            min-width: 800px;
+            min-height: 450px;
+            overflow: visible;
+        }
+    </style>
+
+
+
+
+    <div class="modal-content">
+        <!--        <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title">创建工单</h3>
+                </div>-->
+        <div class="modal-body" style="overflow-y: auto;overflow-x: hidden">
+            <form id="workOrder">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="ticketId">工单编号</label>
+                            <input type="text" class="form-control" readonly id="ticketId" name="ticketId">
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-md-offset-1">
+                        <div class="form-group">
+                            <label for="workType">工单类型</label>
+                            <input type="text" class="form-control" readonly id="showWorkType" name="showWorkType" value="告警工单" placeholder="请输入">
+                            <input type="hidden" id="workType" name="workType" value="1">
+                            <!-- <select class="form-control" id="workType" name="workType">
+                                 <option value="1">告警工单</option>
+                             </select>-->
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <!--  <label for="taskSource">工单来源</label>  -->
+                            <input type="hidden" class="form-control" id="taskSource" name="taskSource" value="二供平台" placeholder="请输入">
+
+                            <label for="phName">泵房名称</label>
+                            <input type="text" class="form-control" readonly id="phName" name="phName" placeholder="请输入">
+                            <input type="hidden" class="form-control" readonly id="phId" name="phId" placeholder="请输入">
+                            <input type="hidden" class="form-control" readonly id="alarmContent" name="alarmContent" placeholder="请输入">
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-md-offset-1">
+                        <div class="form-group">
+                            <label for="address">泵房地址</label>
+                            <input type="text" class="form-control" readonly id="address" name="address" placeholder="请输入">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="processName">所在设备</label>
+                            <input type="text" class="form-control" readonly id="processName" name="processName" placeholder="请输入">
+                            <input type="hidden"  class="form-control" readonly id="deviceId" name="deviceId" placeholder="请输入">
+
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-md-offset-1">
+                        <div class="form-group">
+                            <label for="alarmStatus">告警状态</label>
+                            <input type="text" class="form-control" readonly id="alarmStatus" name="alarmStatus" value="新建"  placeholder="请输入">
+                            <!--2：待接单-->
+                            <input type="hidden"  type="text" class="form-control" readonly id="status" name="status" value="1"  placeholder="请输入">
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="alarmTime">告警时间</label>
+                            <input type="text" class="form-control" readonly id="alarmTime" name="alarmTime" placeholder="请输入">
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-md-offset-1">
+                        <div class="form-group">
+                            <label for="alarmLevel">告警等级</label>
+                            <input type="text" class="form-control" id="alarmLevel" name="alarmLevel" placeholder="请输入">
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="planStartTime">计划开始时间</label>
+                            <input id ="planStartTime" name="planStartTime" readonly type="text" value=""  style="background-color: white" class="planStartTime form-control timepicker">
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-md-offset-1">
+                        <div class="form-group">
+                            <label for="planEndTime">计划结束时间</label>
+                            <input id ="planEndTime" name="planEndTime" readonly type="text" value=""  style="background-color: white"  class="planEndTime form-control timepicker">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="form-group">
+                            <label for="alarmReason">发起原因</label>
+                            <textarea class="form-control" rows="6"  id="alarmReason" name="alarmReason" style="resize: none;"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="form-group">
+                            <label for="planContent">解决方案</label>
+                            <textarea class="form-control" rows="6"  id="planContent" name="planContent" style="resize: none;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" id="deptDiv">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="deptId">执行部门</label>
+                            <select class="form-control" id="deptId" name="deptId"  onchange="changerDept()">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-md-offset-1"  style="display: none">
+                        <div class="form-group">
+                            <label for="mgName">部门负责人</label>
+                            <input type="text" class="form-control" readonly id="mgName" name="mgName" >
+                            <!--保存还是创建-->
+                            <input type="hidden" class="form-control" readonly id="saveOrCreateFlag" name="saveOrCreateFlag" >
+                        </div>
+                    </div>
+                </div>
+                <!--
+
+                                    <div class="row" id="ticketLogs">
+
+
+                                    </div>-->
+
+                <!--   <div class="row">
+                       <div class="col-md-11">
+                           <div class="form-group">
+                               <label for="approveOpinion">处理结果<font color="red">*</font></label>
+                               <textarea class="form-control" rows="3" id="approveOpinion" name="approveOpinion"></textarea>
+                           </div>
+                       </div>
+
+                   </div>
+
+                   <div class="row" id="approveOperationKZ">
+
+                   </div>-->
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" onclick="frameElement.api.close()" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" id="saveBtn" onclick="createLxTicket('save')">暂存工单</button>
+            <button type="button" class="btn btn-primary" id="createBtn" onclick="createLxTicket()">创建工单</button>
+        </div>
+        <div class="modal fade" tabindex="-1" role="dialog" id="alertWork">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">提示</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p id="alertWorkMessage" style="color: red"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myWorkModal" onclick="clickOk()" data-dismiss="modal">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="alertShow">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">提示</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p id="alertShowMessage" style="color: red"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </div>
+
+    <script src="static/assets/js/jquery-1.10.2.js"></script>
+    <script src="static/assets/js/jquery-form.js"></script>
+    <script src="static/assets/js/bootstrap.min.js"></script>
+    <script src="static/assets/js/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="static/assets/js/jQuery.base64.js"></script>
+
+    <!-- Datetimepicker Js -->
+    <script src="static/assets/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="static/assets/js/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="static/assets/js/bootstrap-select/bootstrap-select.min.js"></script>
+    <!-- Date util -->
+    <script src="static/assets/js/tips.js"></script>
+    <script src="static/assets/js/date_time.js"></script>
+    <!--<script src="static/assets/js/ticket/createTicketAlarm.js"></script>-->
+
+    <script>
+
+        var ROOT_PATH = function getContextPath() {
+            var pathName = document.location.pathname;
+            var index = pathName.substr(1).indexOf("/");
+            return pathName.substr(0, index + 1);
+        }();
+
+        /**
+         * context path for the application
+         */
+        var CONTEXT_PATH = ROOT_PATH + "/a";
+
+
+        var api = frameElement.api;
+        console.log('888888888888888888888');
+        console.log(api.data);
+       /* $('#myWorkModal').modal('show');*/
+        myModalWorkOrder(api.data);
+
+        function hideCreateBtn() {
+            $("#createBtn").hide();
+            $("#saveBtn").hide();
+        }
+        function showCreateBtn() {
+            $("#createBtn").show();
+            $("#saveBtn").show();
+        }
+
+        function myModalWorkOrder(row) {
+            //查看 ticketId!=""    创建 ticketId==""
+            if(row.ticketId==undefined || row.ticketId==""){
+                disShow();
+                showCreateBtn();
+                setTicketId("1");
+            }else{
+                disHide();
+                hideCreateBtn();
+                $("#ticketId").val(row.ticketId);
+            }
+
+
+            queryMaintenanceWorkerDept();
+
+
+            $("#alarmContent").val(row.phName+"-"+row.alarmTypeRemarks+'发生了'+row.alarmInfo);
+            $("#alarmTime").val(row.startDate);
+            $("#phName").val(row.phName);
+            $("#phId").val(row.phId);
+            $("#address").val(row.address);
+
+
+            $("#processName").val(row.deviceName);
+            $("#deviceId").val(row.deviceId);
+            $("#alarmReason").val(row.alarmReason);
+            $("#alarmLevel").val(row.alarmLevel);
+            $("#planContent").val(row.alarDescription);
+            $("#taskSource").val("二供");
+
+            $("#planStartTime").datetimepicker({
+                format: 'yyyy-mm-dd hh:ii:ss',
+                minuteStep:1,
+                minView:1,
+                language: 'zh-CN',
+                pickerPosition:'bottom-right',
+                autoclose:true,
+                startDate: new Date()
+            }).on("click",function(){
+                $("#planStartTime").datetimepicker("setEndDate",$("#planEndTime").val());
+            });
+
+            $("#planEndTime").datetimepicker({
+                format: 'yyyy-mm-dd hh:ii:ss',
+                minuteStep:1,
+                minView:'hour',
+                language: 'zh-CN',
+                autoclose:true
+            }).on("click",function(){
+                $("#planEndTime").datetimepicker("setStartDate",$("#planStartTime").val());
+            });
+
+            var myDate = new Date();
+            $("#planStartTime").val(myDate.Format("yyyy-MM-dd HH:mm:ss"));
+            myDate.setDate(myDate.getDate() + 7)
+            $("#planEndTime").val(myDate.Format("yyyy-MM-dd HH:mm:ss"));
+
+          /*  formValidator();
+            //重置验证
+            $("#workOrder").data('bootstrapValidator').destroy();
+            $('#workOrder').data('bootstrapValidator',null);
+            formValidator();*/
+
+        }
+        function disShow(){
+
+            $("#alarmLevel").removeAttr("readonly");
+            $("#planStartTime").removeAttr("disabled");
+            $("#planEndTime").removeAttr("disabled");
+            $("#alarmReason").removeAttr("disabled");
+            $("#planContent").removeAttr("disabled");
+            $("#deptId").removeAttr("disabled");
+            /*$("#deptDiv").css("display","block");*/
+        }
+        function disHide(){
+            $("#alarmLevel").attr("readonly","true");
+            $("#planStartTime").attr("disabled","true");
+            $("#planEndTime").attr("disabled","true");
+            $("#alarmReason").attr("disabled","true");
+            $("#planContent").attr("disabled","true");
+            $("#deptId").attr("disabled","true");
+            /*$("#deptDiv").css("display","none");*/
+
+        }
+
+
+        function queryMaintenanceWorkerDept() {
+            //var url = CONTEXT_PATH+"/alarmStatController/queryMaintenanceWorkerUser?"+ Math.random();
+            var url =CONTEXT_PATH+"/ticket/getDept?"+ Math.random();
+            jQuery.ajax({
+                type : 'POST',
+                contentType : 'application/json',
+                url : url,
+                dataType : 'json',
+                success : function(data) {
+                    $("#deptId").html("");
+                    $.each(data, function (i, item) {
+                        jQuery("#deptId").append("<option value="+ item.deptId+" mgName="+item.mgName+">"+ item.deptName+"</option>");
+                        if(i==0){
+                            $("#mgName").val(item.mgName);
+                        }
+                    });
+                }
+            });
+        }
+
+        function changerDept() {
+            $("#mgName").val(jQuery("#deptId option:selected").attr("mgName"));
+        }
+
+
+        function setTicketId(mark){
+            $.ajax({
+                type:"POST",
+                url: CONTEXT_PATH+'/ticket/getTicketId',
+                async: false,
+                datatype:"JSON",
+                data:{ticketType:mark},
+                success: function (res) {
+                    $("#ticketId").val(res);
+                }
+            })
+        }
+
+
+        function createLxTicket(v){
+            var titleInfo="确认要创建工单?";
+            if(v!=undefined && v=="save"){
+                $("#saveOrCreateFlag").val(v)
+                $("#status").val("0");
+                titleInfo="确认要暂存该工单?";
+            }
+            Ewin.confirm({ message: titleInfo }).on(function (e) {
+                if (!e) {
+                    return;
+                }
+                clickOk();
+            });
+
+        }
+        function clickOk(){
+            var _url = CONTEXT_PATH + "/ticket/createWorkOrder?" + Math.random();
+            $("#workOrder").ajaxSubmit({
+                type: 'POST',
+                url: _url,
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (data.status == "success") {
+                        frameElement.api.close();
+                        Ewin.alert(data.message);
+                    } else {
+                        Ewin.alert(data.message);
+                    }
+
+                }
+            });
+        }
+
+
+
+
+
+
+
+        //datetimepicker中多次（包括第二次点击）点击input框时日期选择器不显示，经过查阅和多次测试，需要使用鼠标监听触发，具体方法如下：
+        /* 点击input框时加载监听事件*/
+        $(".timepicker").each(function () {
+            this.addEventListener('click',myfunc);
+        })
+
+        function myfunc(e){
+            e.currentTarget.blur();
+        }
+    </script>

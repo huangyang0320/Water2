@@ -1,0 +1,199 @@
+@charset "utf-8";
+
+*:not(input) {
+	-moz-user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    -khtml-user-select:none;
+    user-select:none;
+}
+::-webkit-input-placeholder { color:#000; font-size: 13px; font-family: 'Microsoft YaHei';}
+::-moz-placeholder { color:#000; font-size: 13px; font-family: 'Microsoft YaHei';}
+:-ms-input-placeholder { color:#000; font-size: 13px; font-family: 'Microsoft YaHei';}
+input:-moz-placeholder { color:#000; font-size: 13px; font-family: 'Microsoft YaHei';}
+
+html {
+	width: 100%;
+	min-width: 990px;
+	height: 100%;
+	min-height: 628px;
+	overflow: auto;
+}
+
+body {
+	position: relative;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-size: 14px;
+	font-family: 'Microsoft YaHei';
+	background: url(../images/bodyBK.png);
+	background-repeat: repeat-x;
+	background-position: center;
+	overflow: hidden;
+}
+
+.wrapper {
+	position: absolute;
+	width: 1366px;
+	height: 618px;
+	left: 50%;
+	margin-left: -683px; 
+	top: 50%;
+	margin-top: -304px;
+}
+
+/*top-bar*/
+.top-bar {
+	position: relative;
+	width: 100%;
+	height: 75px;
+	padding-left: 238px;
+}
+
+.top-bar .logo {
+	text-align: right;
+	float: left;
+}
+
+.top-bar .title {
+	height: 100%;
+	margin-left: 20px;
+	color: #0e4870;
+	font-size: 36px;
+	line-height: 75px;
+	letter-spacing: 5px;
+	float: left;
+}
+
+/*main-container*/
+.main-container {
+	position: relative;
+	width: 100%;
+	height: 441px;
+	margin-top: 35px;
+	background: url(../images/mainBK.jpg) no-repeat center center;
+}
+
+.main-container .content {
+	position: relative;
+	width: 990px;
+	height: 100%;
+	margin: 0 auto;
+}
+
+.main-container .content .back-hover1 {
+	position: absolute;
+	width: 310px;
+	height: 373px;
+	top: 33px;
+	right: 0;
+	border-radius: 3px;
+	-moz-box-shadow: 3px 3px 3px #666;
+	box-shadow: 3px 3px 3px #666;
+	background-color: #fff;
+	opacity: 0.4;
+}
+
+.main-container .content .back-hover2 {
+	position: absolute;
+	width: 290px;
+	height: 348px;
+	top: 46px;
+	right: 10px;
+	border-radius: 3px;
+	-moz-box-shadow: 1px 1px 3px #888;
+	box-shadow: 1px 1px 3px #888;
+	background-color: #fff;
+	opacity: 0.7;
+}
+
+.main-container .content .login-container {
+	position: absolute;
+	width: 290px;
+	height: 348px;
+	top: 46px;
+	right: 10px;
+	padding: 13px;
+}
+
+.main-container .content .login-container label {
+	display: block;
+	width: 100%;
+	height: 45px;
+	margin-top: 15px;
+	font-size: 20px;
+	text-align: center;
+	border-bottom: 1px solid #9b9b9b;
+	letter-spacing: 2px;
+}
+
+.main-container .content .login-container input {
+	display: block;
+	width: 234px;
+	height: 34px;
+	margin: 40px auto 0 auto;
+	padding: 0 30px 0 9px;
+	border: 1px solid #b1b1b1;
+	border-radius: 3px;
+	outline: none;
+}
+
+.main-container .content .login-container input:focus {
+	border-color: #666;
+}
+
+.main-container .content .login-container input.username {
+	margin-top: 50px;
+	background: url(../images/name-icon.png) no-repeat center right;
+}
+
+.main-container .content .login-container input.userpwd {
+	background: url(../images/pwd-icon.png) no-repeat center right;
+}
+
+.main-container .content .login-container button {
+	display: block;
+	width: 90px;
+	height: 35px;
+	margin: 35px 14px 0 0;
+	color: #fff;
+	font-size: 16px;
+	font-family: 'Microsoft YaHei';
+	border: none;
+	border-radius: 3px;
+	background-color: #0e4870;
+	outline: none;
+	float: right;
+	cursor: pointer;
+}
+
+.main-container .content .login-container button:hover {
+	background-color: #125a8c;
+}
+
+/*footer*/
+.footer {
+	position: relative;
+	width: 100%;
+	height: 102px;
+	padding-top: 52px;
+	font-size: 12px;
+	text-align: center;
+	letter-spacing: 1px;
+}
+
+/*error-box*/
+.error-box {
+	display: none;
+	position: absolute;
+	width: 234px;
+	height: 30px;
+	top: 80px;
+	left: 28px;
+	color: red;
+	font-size: 12px;
+	line-height: 30px;
+	text-align: center;
+}

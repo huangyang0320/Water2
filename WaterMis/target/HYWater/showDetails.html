@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>消息提示信息</title>
+    <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.css">
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            color: #020b1c;
+            font-size: 14px;
+            font-family: 'Microsoft YaHei';
+        }
+        .wrapper {
+            position: relative;
+            width: 100%;
+            height: auto;
+            padding-top: 5px;
+        }
+
+        .alarm-head {
+            width: 100%;
+            height: auto;
+        }
+        .alarm-head ul, .alarm-body ul {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .alarm-head ul>li {
+            font-size: 14px;
+            margin: 3px 0px;
+        }
+        .alarm-head ul>li>span, .alarm-body ul>li>span{
+            display: inline-block;
+            text-align: center;
+        }
+        .alarm-body ul>li {
+            border-top: 1px solid #BECEF5;
+        }
+
+        .closeTips{
+            float: right;
+            cursor: pointer;
+            padding: 1px 6px;
+        }
+        .closeTips:hover{
+            background: #cfd1d3;
+            color: #fff;
+        }
+        /* myscroll */
+        .alarm-body {
+            width: 100%;
+            height: 100%;
+            margin-top: 5px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .alarm-body ul>li {
+            height: 30px;
+            line-height: 30px;
+            font-size: 13px;
+        }
+        .alarm-body ul>li:hover{
+            background-color:#eef3ff ;
+        }
+       /* .alarm-body ul>li .btn{
+            display: inline-block;
+            padding: 0px 2px;
+            margin: 0px 3px;
+            border: 1px #ccc solid;
+            line-height: 20px;
+        }
+        .alarm-body ul>li .btn:hover{
+            background-color: #275ab7;
+            border-color:#275ab7 ;
+            color: #fff;
+        }*/
+        .alarmTitle{
+            height: 36px;
+            font-size: 16px;
+            padding: 8px;
+            background: #0278E7;
+            box-sizing: border-box;
+            border-bottom: 1px solid #e0e4e6;
+        }
+        .alarm-head span{
+            font-weight: 700;
+        }
+        #alarmtable{
+            max-height:200px;
+            overflow-y:auto;
+        }
+        a:hover{
+            cursor:pointer
+        }
+
+        td{
+            text-align:center;
+        }
+    </style>
+<!--    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
+<!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>-->
+
+</head>
+<body>
+<div>
+    <div class="alarmTitle" style="color: #fff;">
+        消息提示
+        <span class="closeTips" onclick="window.parent.window.closeDetailsTips()" title="关闭" style="    color: #fff;">X</span>
+        <span class="closeTips" id="resetStatus" title="" style="color: #fff;">全部忽略</span>
+    </div>
+    <div class="content">
+        <table style="width:100%" class="list-group" id="content">
+
+        </table>
+    </div>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModalDetails" tabindex="9999999" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">消息详细</h4>
+                </div>
+                <div class="modal-body">
+                    <table class='list-group' style="width:100%" id="detailsContent">
+                    </table>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+    <!-- jQuery Js -->
+    <script src="static/assets/js/jquery-1.10.2.js"></script>
+    <script src="static/assets/js/jquery-form.js"></script>
+    <script src="static/assets/js/scroll.js"></script>
+    <!--&lt;!&ndash; Bootstrap Js &ndash;&gt;-->
+    <script src="static/assets/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.3/dist/bootstrap-table.min.js"></script>
+    <script>
+        var ROOT_PATH = function getContextPath() {
+            var pathName = document.location.pathname;
+            var index = pathName.substr(1).indexOf("/");
+            return pathName.substr(0, index + 1);
+        }();
+
+        /**
+         * context path for the application
+         */
+        var CONTEXT_PATH = ROOT_PATH + "/a";
+        $(function(){
+            loadDetails();
+            /*$.post(CONTEXT_PATH + "/biz/notice/getDetailsList", function(result) {
+                $("#content").html("");
+                for(var i=0;i<result.length;i++){
+                    $("#content").append("<tr class='list-group-item'><td>消息标题："+result[i]["noticeTitle"]+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>消息类型："+result[i]["noticeType"]+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><a ref='javascrip:void(0);' value='"+result[i]["id"]+"'>详情</a></td><tr/>");
+                }
+                $("#content a").each(function(index,item){
+                    $(this).click(function(){
+                        var id=$(this).attr("value");
+                        $.post(CONTEXT_PATH + "/biz/notice/getDetailsById",{"id":id}, function(result) {
+                            if(result!=null&&result.length>0){
+                                $("#detailsContent").html("");
+                                $("#detailsContent").append("<tr class='list-group-item'><td>工单标题：</td><td>"+result[0]["noticeTitle"]+"</td></tr><tr class='list-group-item'><td>工单类型：</td><td>"+result[0]["noticeType"]+"</td></tr><tr class='list-group-item'><td></td><td>通知内容："+result[0]["noticeContent"]+"</td></tr>");
+                            }
+                            $("#myModalDetails").modal("show")
+                            //点击查看后重新设置对应的消息
+                            loadDetails();
+                        });
+                    })
+                });
+            });*/
+            $("#resetStatus").click(function(){
+                $.post(CONTEXT_PATH + "/biz/notice/resetStatus",function(res) {
+                    if(res>0){
+                        loadDetails();
+                        // 20200430 全部忽略时隐藏弹窗 xth
+                        window.parent.window.closeDetailsTips()
+                    }
+                });
+            })
+
+            $('#myModalDetails').on('hide.bs.modal', function () {
+                window.parent.window.isShow=true;
+                window.parent.window.showDetails();
+            })
+        })
+        function loadDetails(){
+            $.post(CONTEXT_PATH + "/biz/notice/getDetailsList", function(result) {
+                if(window.parent.window.isShow) {
+                    $("#content").html("");
+                    for (var i = 0; i < result.length; i++) {
+                        $("#content").append("<tr class='list-group-item'><td>你有新的【" + result[i]["noticeType"] + "】,请前往工单管理-->待办工单页面处理</td><td><a ref='javascrip:void(0);' value='" + result[i]["id"] + "'>详情</a></td><tr/>");
+                    }
+                    $("#content a").each(function (index, item) {
+                        $(this).click(function () {
+                            window.parent.window.isShow = false;
+                            var id = $(this).attr("value");
+                            $.post(CONTEXT_PATH + "/biz/notice/getDetailsById", {"id": id}, function (result) {
+                                if (result != null && result.length > 0) {
+                                    $("#detailsContent").html("");
+                                    $("#detailsContent").append("<tr class='list-group-item'><td>工单类型：</td><td>" + result[0]["noticeType"] + "</td></tr>");
+                                    $("#detailsContent").append("<tr class='list-group-item'><td>当前环节：</td><td>" + result[0]["noticeTitle"] + "</td></tr>");
+                                    $("#detailsContent").append("<tr class='list-group-item'><td>创建人：</td><td>" + result[0]["createByName"] + "</td></tr>");
+                                    $("#detailsContent").append("<tr class='list-group-item'><td>创建时间：</td><td>" + result[0]["createDate"] + "</td></tr>");
+                                    /*$("#detailsContent").append("<tr class='list-group-item'><td></td><td>通知内容：" + result[0]["noticeContent"] + "</td></tr>");*/
+
+                                }
+                                $("#myModalDetails").modal("show")
+                                //点击查看后重新设置对应的消息
+                                loadDetails();
+                            });
+                        })
+                    });
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

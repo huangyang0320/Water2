@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wapwag.woss.modules.sys.dao.ProjectDao" >
+  <resultMap id="BaseResultMap" type="com.wapwag.woss.modules.sys.entity.Project" >
+    <id column="id" property="projectId" jdbcType="VARCHAR" />
+    <result column="name" property="projectName" jdbcType="VARCHAR" />
+    <result column="region_id" property="regionId" jdbcType="VARCHAR" />
+    <result column="PROJECT_MANAGER" property="projectManager" jdbcType="VARCHAR" />
+    <result column="PROJECT_ADDRESS" property="projectAddress" jdbcType="VARCHAR" />
+    <result column="PROJECT_MEMO" property="projectMemo" jdbcType="VARCHAR" />
+    <result column="SALESMAN" property="salesman" jdbcType="VARCHAR" />
+    <result column="CONTRACT_TYPE" property="contractType" jdbcType="VARCHAR" />
+    <result column="BUYER_NAME" property="buyerName" jdbcType="VARCHAR" />
+    <result column="BUYER_CONTACTS_NAME" property="buyerContactsName" jdbcType="VARCHAR" />
+    <result column="SIGN_DATE" property="signDate" jdbcType="TIMESTAMP" />
+    <result column="ARRIVAL_DATE" property="arrivalDate" jdbcType="TIMESTAMP" />
+    <result column="YJTS_DATE" property="yjtsDate" jdbcType="TIMESTAMP" />
+    <result column="HTQD_DW" property="htqdDw" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    project_id, PROJECT_NAME, region_id, PROJECT_MANAGER, PROJECT_ADDRESS, PROJECT_MEMO, 
+    SALESMAN, CONTRACT_TYPE, BUYER_NAME, BUYER_CONTACTS_NAME, SIGN_DATE, ARRIVAL_DATE, 
+    YJTS_DATE, HTQD_DW
+  </sql>
+
+	<select id="getProjectNameAndId" resultType="com.wapwag.woss.modules.sys.entity.Project">
+		select
+		p.id as projectId,
+		p.name as projectName
+		from project p
+	</select>
+	
+	<!-- 角色下的项目 -->
+	<select id="getProjectNameAndIdAndRole" resultType="com.wapwag.woss.modules.sys.entity.Project">
+		SELECT
+		pi.id AS projectId,
+		pi. NAME AS projectName
+		FROM
+		project pi
+		LEFT JOIN pump_house phi ON phi.id_project = pi.id
+		LEFT JOIN device di ON di.ID_PUMP_HOUSE = phi.id
+		LEFT JOIN services se ON se.ID_DEVICE = di.ID
+		WHERE
+		se.id IS NOT NULL
+		AND di.ID IN (
+		SELECT
+		AUTHOBJECT_ID
+		FROM
+		permission_info pi
+		WHERE
+		AUTH_TYPE = 'DEVICE'
+		AND ROLE_ID IN (
+		SELECT
+		ROLE_ID
+		FROM
+		sys_user_role
+		WHERE
+		user_id = #{userId}
+		)
+		OR ROLE_ID IN (
+		SELECT
+		role_id
+		FROM
+		sys_office_role_new
+		WHERE
+		office_id = (
+		SELECT
+		office_id
+		FROM
+		sys_user
+		WHERE
+		id = #{userId}
+		)
+		)
+		)
+		AND di.ID_PUMP_HOUSE IS NOT NULL
+		AND di.del_flag = '0'
+		GROUP BY
+		pi.id
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from project
+    where project_id = #{projectId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from project
+    where project_id = #{projectId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wapwag.woss.modules.sys.entity.Project" >
+    insert into project (project_id, PROJECT_NAME, region_id, 
+      PROJECT_MANAGER, PROJECT_ADDRESS, PROJECT_MEMO, 
+      SALESMAN, CONTRACT_TYPE, BUYER_NAME, 
+      BUYER_CONTACTS_NAME, SIGN_DATE, ARRIVAL_DATE, 
+      YJTS_DATE, HTQD_DW)
+    values (#{projectId,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, #{regionId,jdbcType=VARCHAR}, 
+      #{projectManager,jdbcType=VARCHAR}, #{projectAddress,jdbcType=VARCHAR}, #{projectMemo,jdbcType=VARCHAR}, 
+      #{salesman,jdbcType=VARCHAR}, #{contractType,jdbcType=VARCHAR}, #{buyerName,jdbcType=VARCHAR}, 
+      #{buyerContactsName,jdbcType=VARCHAR}, #{signDate,jdbcType=TIMESTAMP}, #{arrivalDate,jdbcType=TIMESTAMP}, 
+      #{yjtsDate,jdbcType=TIMESTAMP}, #{htqdDw,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wapwag.woss.modules.sys.entity.Project" >
+    insert into project
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="projectName != null" >
+        PROJECT_NAME,
+      </if>
+      <if test="regionId != null" >
+        region_id,
+      </if>
+      <if test="projectManager != null" >
+        PROJECT_MANAGER,
+      </if>
+      <if test="projectAddress != null" >
+        PROJECT_ADDRESS,
+      </if>
+      <if test="projectMemo != null" >
+        PROJECT_MEMO,
+      </if>
+      <if test="salesman != null" >
+        SALESMAN,
+      </if>
+      <if test="contractType != null" >
+        CONTRACT_TYPE,
+      </if>
+      <if test="buyerName != null" >
+        BUYER_NAME,
+      </if>
+      <if test="buyerContactsName != null" >
+        BUYER_CONTACTS_NAME,
+      </if>
+      <if test="signDate != null" >
+        SIGN_DATE,
+      </if>
+      <if test="arrivalDate != null" >
+        ARRIVAL_DATE,
+      </if>
+      <if test="yjtsDate != null" >
+        YJTS_DATE,
+      </if>
+      <if test="htqdDw != null" >
+        HTQD_DW,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="regionId != null" >
+        #{regionId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectManager != null" >
+        #{projectManager,jdbcType=VARCHAR},
+      </if>
+      <if test="projectAddress != null" >
+        #{projectAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="projectMemo != null" >
+        #{projectMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="salesman != null" >
+        #{salesman,jdbcType=VARCHAR},
+      </if>
+      <if test="contractType != null" >
+        #{contractType,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerName != null" >
+        #{buyerName,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerContactsName != null" >
+        #{buyerContactsName,jdbcType=VARCHAR},
+      </if>
+      <if test="signDate != null" >
+        #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="arrivalDate != null" >
+        #{arrivalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yjtsDate != null" >
+        #{yjtsDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="htqdDw != null" >
+        #{htqdDw,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wapwag.woss.modules.sys.entity.Project" >
+    update project
+    <set >
+      <if test="projectName != null" >
+        PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="regionId != null" >
+        region_id = #{regionId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectManager != null" >
+        PROJECT_MANAGER = #{projectManager,jdbcType=VARCHAR},
+      </if>
+      <if test="projectAddress != null" >
+        PROJECT_ADDRESS = #{projectAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="projectMemo != null" >
+        PROJECT_MEMO = #{projectMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="salesman != null" >
+        SALESMAN = #{salesman,jdbcType=VARCHAR},
+      </if>
+      <if test="contractType != null" >
+        CONTRACT_TYPE = #{contractType,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerName != null" >
+        BUYER_NAME = #{buyerName,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerContactsName != null" >
+        BUYER_CONTACTS_NAME = #{buyerContactsName,jdbcType=VARCHAR},
+      </if>
+      <if test="signDate != null" >
+        SIGN_DATE = #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="arrivalDate != null" >
+        ARRIVAL_DATE = #{arrivalDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yjtsDate != null" >
+        YJTS_DATE = #{yjtsDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="htqdDw != null" >
+        HTQD_DW = #{htqdDw,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where project_id = #{projectId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wapwag.woss.modules.sys.entity.Project" >
+    update project
+    set PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      region_id = #{regionId,jdbcType=VARCHAR},
+      PROJECT_MANAGER = #{projectManager,jdbcType=VARCHAR},
+      PROJECT_ADDRESS = #{projectAddress,jdbcType=VARCHAR},
+      PROJECT_MEMO = #{projectMemo,jdbcType=VARCHAR},
+      SALESMAN = #{salesman,jdbcType=VARCHAR},
+      CONTRACT_TYPE = #{contractType,jdbcType=VARCHAR},
+      BUYER_NAME = #{buyerName,jdbcType=VARCHAR},
+      BUYER_CONTACTS_NAME = #{buyerContactsName,jdbcType=VARCHAR},
+      SIGN_DATE = #{signDate,jdbcType=TIMESTAMP},
+      ARRIVAL_DATE = #{arrivalDate,jdbcType=TIMESTAMP},
+      YJTS_DATE = #{yjtsDate,jdbcType=TIMESTAMP},
+      HTQD_DW = #{htqdDw,jdbcType=VARCHAR}
+    where project_id = #{projectId,jdbcType=VARCHAR}
+  </update>
+</mapper>

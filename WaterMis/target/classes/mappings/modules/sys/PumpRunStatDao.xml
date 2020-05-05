@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wapwag.woss.modules.sys.dao.PumpRunStatDao">
+
+	<select id="pumpHistoryMaxTime" resultType="java.lang.String">
+		select date_time from
+		stat_pump_run_status order by date_time desc limit 0,1
+	</select>
+	<update id="addPumpRunStat">
+		insert ignore into stat_pump_run_status
+		select
+		* from (
+		select sv.id_device,sv.id_service,substring(f.memo ,1,2)
+		memo,substring(sv.date_time,1,13) date_time,'1','0' from
+		${tableName} sv join services s on s.id =
+		sv.id_service
+		join function f on f.id = s.id_function
+		where
+		(f.memo like
+		'%工频运行%' or
+		f.memo like '%变频运行%' or f.memo like '%水泵运行%') and
+		sv.date_time &gt;
+		#{beginTime}
+		and sv.date_time &lt; #{endTime}
+		and pv >
+		0
+		) vv group by
+		id_device,memo
+	</update>
+	<update id="addNullRunStat">
+		insert ignore into stat_pump_run_status values
+		('','','',#{beginTime},'0','0')
+	</update>
+	<!-- 泵运行统计 -->
+	<select id="qrychangeDevices" resultType="java.lang.String">
+		select
+		concat(id_device,tag_name) from stat_pump_run_status
+		where date_time = #{beginTime}
+		and concat(id_device,tag_name) not in
+		(select concat(id_device,tag_name)
+		from
+		stat_pump_run_status where date_time = #{endTime} )
+	</select>
+	<update id="modChangeStatus">
+		update stat_pump_run_status set status = '1' where
+		date_time =
+		#{beginTime} and
+		concat(id_device,tag_name) in (
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			#{item}
+		</foreach>
+		)
+	</update>
+</mapper>
